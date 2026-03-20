@@ -44,7 +44,7 @@ export default function Login() {
       footer={
         <>
           <p className="text-xs text-neutral-400">
-            &copy; 2026 One Team. All right reserved
+            &copy; 2026 One Team. All right reserved  
           </p>
           <p className="text-xs text-neutral-400">
             HIPPAA-compliant secure platform
