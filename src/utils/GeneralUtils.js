@@ -1,0 +1,60 @@
+import dayjs from "dayjs";
+
+/**
+ * Extract a user-friendly error message from an Axios error.
+ */
+export function formatErrorMessage(error) {
+  const data = error?.response?.data;
+
+  if (typeof data?.message === "string") return data.message;
+  if (Array.isArray(data?.message)) return data.message.join(" | ");
+  if (typeof data === "string") return data;
+
+  return error?.message || "Something went wrong";
+}
+
+/**
+ * Format a date string using dayjs.
+ */
+export function formatDate(date, format = "MMM DD, YYYY") {
+  return date ? dayjs(date).utc().format(format) : "";
+}
+
+/**
+ * Deep clone a plain object (no functions / special types).
+ */
+export function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * Get a nested value from an object by dot-separated path.
+ * getNestedValue({ a: { b: 1 } }, "a.b") => 1
+ */
+export function getNestedValue(obj, path, defaultValue = undefined) {
+  return path.split(".").reduce((acc, key) => acc?.[key], obj) ?? defaultValue;
+}
+
+/**
+ * Set a nested value on an object by dot-separated path (mutates).
+ */
+export function setNestedValue(obj, path, value) {
+  const keys = path.split(".");
+  let current = obj;
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (!current[keys[i]]) current[keys[i]] = {};
+    current = current[keys[i]];
+  }
+  current[keys[keys.length - 1]] = value;
+  return obj;
+}
+
+/**
+ * Convert an array of objects to label/value pairs for dropdowns.
+ */
+export function toLabelValue(arr, labelKey = "name", valueKey = "id") {
+  return (arr || []).map((item) => ({
+    label: item[labelKey],
+    value: item[valueKey],
+  }));
+}

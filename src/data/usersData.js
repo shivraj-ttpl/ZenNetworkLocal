@@ -1,0 +1,22 @@
+export const USERS_COLUMNS_SORT_KEYS = {
+  NAME: "full_name",
+  EMAIL: "email",
+  ROLE: "role",
+  STATUS: "status",
+  CREATED: "created_at",
+};
+
+export const usersData = [
+  { id: 1, name: "Sarah Johnson", email: "sarah.johnson@zanenetwork.com", role: "Case Worker", status: "Active", department: "Care Management", lastLogin: "2026-03-19" },
+  { id: 2, name: "Michael Chen", email: "michael.chen@zanenetwork.com", role: "Admin", status: "Active", department: "IT Operations", lastLogin: "2026-03-20" },
+  { id: 3, name: "Emily Rodriguez", email: "emily.rod@zanenetwork.com", role: "Supervisor", status: "Active", department: "Care Management", lastLogin: "2026-03-18" },
+  { id: 4, name: "David Kim", email: "david.kim@zanenetwork.com", role: "Provider", status: "Inactive", department: "Behavioral Health", lastLogin: "2026-02-15" },
+  { id: 5, name: "Jessica Patel", email: "jessica.patel@zanenetwork.com", role: "Case Worker", status: "Active", department: "Care Management", lastLogin: "2026-03-20" },
+  { id: 6, name: "Robert Williams", email: "r.williams@zanenetwork.com", role: "Admin", status: "Active", department: "IT Operations", lastLogin: "2026-03-17" },
+  { id: 7, name: "Amanda Foster", email: "a.foster@zanenetwork.com", role: "Case Worker", status: "Pending", department: "Social Services", lastLogin: null },
+  { id: 8, name: "James Thompson", email: "j.thompson@zanenetwork.com", role: "Provider", status: "Active", department: "Primary Care", lastLogin: "2026-03-19" },
+  { id: 9, name: "Lisa Martinez", email: "l.martinez@zanenetwork.com", role: "Supervisor", status: "Active", department: "Quality Assurance", lastLogin: "2026-03-20" },
+  { id: 10, name: "Thomas Brown", email: "t.brown@zanenetwork.com", role: "Case Worker", status: "Inactive", department: "Care Management", lastLogin: "2026-01-30" },
+  { id: 11, name: "Rachel Green", email: "r.green@zanenetwork.com", role: "Provider", status: "Active", department: "Pediatrics", lastLogin: "2026-03-18" },
+  { id: 12, name: "Kevin Anderson", email: "k.anderson@zanenetwork.com", role: "Case Worker", status: "Active", department: "Social Services", lastLogin: "2026-03-20" },
+];
