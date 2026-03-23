@@ -1,8 +1,11 @@
 import { useState, useMemo, useCallback } from "react";
 import { Table, buildColumns, SORT_ORDER } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
+import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
+import AsyncSelectDropdown from "@/components/commonComponents/selectDropdown/AsyncSelectDropdown";
 import { usersData, USERS_COLUMNS_SORT_KEYS } from "@/data/usersData";
 import Icon from "@/components/icons/Icon";
+import ActionDropdown from "@/components/commonComponents/actionDropdown";
 
 // ─── Status badge ──────────────────────────────────────────
 const STATUS_STYLES = {
@@ -19,35 +22,51 @@ function StatusBadge({ status }) {
   );
 }
 
-// ─── Action dropdown (simple) ──────────────────────────────
-function ActionCell() {
-  const [open, setOpen] = useState(false);
+// ─── Static dropdown options ───────────────────────────────
+const ROLE_OPTIONS = [
+  { label: "Admin", value: "admin" },
+  { label: "Case Worker", value: "case_worker" },
+  { label: "Supervisor", value: "supervisor" },
+  { label: "Provider", value: "provider" },
+  { label: "Billing Specialist", value: "billing" },
+];
 
-  return (
-    <div className="relative flex flex-col ">
-      <button
-        className="p-1 cursor-pointer rounded hover:bg-neutral-100 transition-colors"
-        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
-        onBlur={() => setTimeout(() => setOpen(false), 150)}
-      >
-        <Icon name="EllipsisVertical" size={16} className="text-neutral-500" />
-      </button>
-      {open && (
-        <div className="absolute flex flex-col right-0 top-full mt-1 w-36 bg-surface border border-border-light rounded-lg shadow-lg z-50 py-1">
-          <button className="w-full text-left px-3 py-2 text-sm hover:bg-neutral-50 text-text-primary">
-            Edit
-          </button>
-          <button className="w-full text-left px-3 py-2 text-sm hover:bg-neutral-50 text-text-primary">
-            View Profile
-          </button>
-          <button className="w-full text-left px-3 py-2 text-sm hover:bg-error-50 text-error-500">
-            Deactivate
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
+const STATUS_OPTIONS = [
+  { label: "Active", value: "Active" },
+  { label: "Inactive", value: "Inactive" },
+  { label: "Pending", value: "Pending" },
+];
+
+const DEPARTMENT_OPTIONS = [
+  { label: "Nursing", value: "nursing" },
+  { label: "Cardiology", value: "cardiology" },
+  { label: "Primary Care", value: "primary_care" },
+  { label: "Behavioral Health", value: "behavioral_health" },
+  { label: "Administration", value: "administration" },
+  { label: "IT", value: "it" },
+];
+
+// ─── Mock async fetch (simulates API) ─────────────────────
+const mockFetchProviders = async ({ search, page, limit }) => {
+  // Simulate network delay
+  await new Promise((r) => setTimeout(r, 600));
+
+  const allProviders = Array.from({ length: 53 }, (_, i) => ({
+    id: i + 1,
+    name: `Provider ${String(i + 1).padStart(3, "0")}`,
+    specialty: ["Cardiology", "Neurology", "Pediatrics", "Oncology"][i % 4],
+  }));
+
+  const filtered = search
+    ? allProviders.filter((p) => p.name.toLowerCase().includes(search.toLowerCase()))
+    : allProviders;
+
+  const start = (page - 1) * limit;
+  return {
+    data: filtered.slice(start, start + limit),
+    totalRecords: filtered.length,
+  };
+};
 
 // ─── Dashboard ─────────────────────────────────────────────
 export default function Dashboard() {
@@ -56,6 +75,12 @@ export default function Dashboard() {
   const [selectedRows, setSelectedRows] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+
+  // Dropdown states
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedStatuses, setSelectedStatuses] = useState([]);
+  const [selectedDepartments, setSelectedDepartments] = useState([]);
+  const [selectedProvider, setSelectedProvider] = useState(null);
 
   // In real usage this would call an API saga — here we sort + paginate client-side for demo
   const sortedData = useMemo(() => {
@@ -154,7 +179,15 @@ export default function Dashboard() {
           sticky: "right",
           width: 80,
           align: "center",
-          render: () => <ActionCell />,
+          render: () => (
+            <ActionDropdown
+              options={[
+                { label: "Edit", value: "edit", onClickCb: () => {} },
+                { label: "View Profile", value: "view_profile", onClickCb: () => {} },
+                { label: "Deactivate", value: "deactivate", onClickCb: () => {} },
+              ]}
+            />
+          ),
         },
       ]),
     []
@@ -163,7 +196,64 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-     
+
+      {/* ── Dropdown Demos ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Single Select (static) */}
+        <SelectDropdown
+          label="Role"
+          name="role"
+          placeholder="Select Role"
+          options={ROLE_OPTIONS}
+          value={selectedRole}
+          onChange={setSelectedRole}
+          isSearchable
+        />
+
+        {/* Multi Select (static) */}
+        <SelectDropdown
+          label="Status"
+          name="status"
+          placeholder="Filter by Status"
+          options={STATUS_OPTIONS}
+          value={selectedStatuses}
+          onChange={setSelectedStatuses}
+          isMulti
+          selectAll
+        />
+
+        {/* Multi Select with search (static) */}
+        <SelectDropdown
+          label="Department"
+          name="department"
+          placeholder="Select Departments"
+          options={DEPARTMENT_OPTIONS}
+          value={selectedDepartments}
+          onChange={setSelectedDepartments}
+          isMulti
+          isSearchable
+        />
+
+        {/* Async Select with infinite scroll */}
+        <AsyncSelectDropdown
+          label="Provider"
+          name="provider"
+          placeholder="Search Providers..."
+          value={selectedProvider}
+          onChange={setSelectedProvider}
+          // fetchOptions={mockFetchProviders}
+          url="providers"
+          labelKey="name"
+          valueKey="id"
+          limit={10}
+          renderOption={(opt) => (
+            <div className="flex flex-col">
+              <span className="font-medium">{opt.name}</span>
+              <span className="text-xs text-neutral-400">{opt.specialty}</span>
+            </div>
+          )}
+        />
+      </div>
 
       <Table
         columns={columns}
@@ -185,8 +275,8 @@ export default function Dashboard() {
       />
 
       <Pagination
-        totalRecords={totalRecords}
-        totalPages={totalPages}
+        totalRecords={100}
+        totalPages={10}
         currentPage={page}
         currentLimit={limit}
         onPageChange={(p) => setPage(p)}

@@ -1,0 +1,195 @@
+@import "react-big-calendar/lib/css/react-big-calendar.css";
+
+/* ═══════════════════════════════════════════════════════
+ * react-big-calendar — Provider Availability overrides
+ * Scoped under .rbc-provider-availability
+ * ═══════════════════════════════════════════════════════ */
+
+.rbc-provider-availability .rbc-calendar {
+  font-family: "Inter", sans-serif;
+  background: #ffffff;
+}
+
+/* ── Month view container ── */
+.rbc-provider-availability .rbc-month-view {
+  border: none;
+  border-radius: 0;
+}
+
+/* ── Header row (Mon Tue Wed ...) ── */
+.rbc-provider-availability .rbc-header {
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: none;
+  border-bottom: 1px solid #E5E7EB;
+  border-left: 1px solid #E5E7EB;
+  background: #ffffff;
+}
+
+.rbc-provider-availability .rbc-header:first-child {
+  border-left: none;
+}
+
+/* ── Row borders ── */
+.rbc-provider-availability .rbc-month-row {
+  border-top: 1px solid #E5E7EB;
+  min-height: 110px;
+}
+
+.rbc-provider-availability .rbc-month-row:first-child {
+  border-top: none;
+}
+
+/* ── Day cells ── */
+.rbc-provider-availability .rbc-day-bg {
+  border-left: 1px solid #E5E7EB;
+  background: #ffffff;
+}
+
+.rbc-provider-availability .rbc-day-bg:first-child {
+  border-left: none;
+}
+
+.rbc-provider-availability .rbc-off-range-bg {
+  background: #FBFBFB;
+}
+
+/* ── Date labels ── */
+.rbc-provider-availability .rbc-date-cell {
+  padding: 6px 8px 2px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.rbc-provider-availability .rbc-date-cell button {
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.rbc-provider-availability .rbc-off-range .rbc-date-cell,
+.rbc-provider-availability .rbc-date-cell.rbc-off-range {
+  color: #D1D5DB;
+}
+
+/* ── Today highlight ── */
+.rbc-provider-availability .rbc-today {
+  background: #ffffff;
+}
+
+.rbc-provider-availability .rbc-now .rbc-button-link {
+  background: #357A6F;
+  color: #ffffff;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-weight: 600;
+}
+
+/* ── Events (availability cards) ── */
+.rbc-provider-availability .rbc-event {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0 4px 2px;
+  outline: none;
+  box-shadow: none;
+}
+
+.rbc-provider-availability .rbc-event:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.rbc-provider-availability .rbc-event-content {
+  font-size: 12px;
+}
+
+.rbc-provider-availability .rbc-row-segment {
+  padding: 0 4px 2px;
+}
+
+.rbc-provider-availability .rbc-show-more {
+  font-size: 11px;
+  color: #357A6F;
+  font-weight: 500;
+  padding: 0 8px;
+  background: transparent;
+}
+
+/* ── Availability card — normal (teal) ── */
+.rbc-availability-card {
+  border-radius: 4px;
+  border-left: 3px solid #357A6F;
+  background: #E6F2F0;
+  padding: 4px 8px;
+}
+
+.rbc-availability-card__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #255C54;
+  line-height: 1.3;
+}
+
+.rbc-availability-card__slots {
+  font-size: 10px;
+  color: #4B5563;
+  line-height: 1.3;
+}
+
+/* ── Availability card — warning (red) ── */
+.rbc-availability-card--warning {
+  border-left-color: #F87171;
+  background: #FEF2F2;
+}
+
+.rbc-availability-card--warning .rbc-availability-card__label {
+  color: #991B1B;
+}
+
+/* ── Block Day card ── */
+.rbc-availability-block {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+  background: #FBFBFB;
+  padding: 4px 8px;
+}
+
+.rbc-availability-block-stripes {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    #9CA3AF 4px,
+    #9CA3AF 5px
+  );
+}
+
+.rbc-availability-block-label {
+  position: relative;
+  font-size: 11px;
+  font-weight: 500;
+  color: #4B5563;
+}
+
+/* ── Remove unwanted borders/backgrounds ── */
+.rbc-provider-availability .rbc-month-header {
+  border-bottom: none;
+}
+
+.rbc-provider-availability .rbc-event.rbc-selected {
+  background: transparent;
+  box-shadow: none;
+}
+
+.rbc-provider-availability .rbc-event-overlaps {
+  box-shadow: none;
+}

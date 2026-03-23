@@ -19,11 +19,11 @@ export default function AuthLayout({ children, footer }) {
         <img
           src={logo}
           alt="OneTeam Logo"
-          className="h-[50px] mb-8"
+          className="h-12.5 mb-8"
         />
 
         {/* Card */}
-        <div className="w-full max-w-[600px] bg-neutral-100 rounded-2xl shadow-sm px-8 py-10">
+        <div className="w-full max-w-150 bg-neutral-100 rounded-2xl shadow-sm px-8 py-10">
           {children}
         </div>
 

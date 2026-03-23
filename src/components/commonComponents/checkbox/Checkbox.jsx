@@ -17,6 +17,20 @@ const VARIANTS = {
     disabled: "bg-secondary-200 border-secondary-200",
     disabledUnchecked: "bg-neutral-100 border-neutral-200",
   },
+  teal: {
+    base: "border-neutral-300",
+    hover: "group-hover:border-primary-400",
+    focus: "ring-primary-100",
+    checked: "bg-primary-500 border-primary-500",
+    disabled: "bg-primary-200 border-primary-200",
+    disabledUnchecked: "bg-neutral-100 border-neutral-200",
+  },
+};
+
+const SIZES = {
+  sm: "h-3.5 w-3.5",
+  md: "h-4 w-4",
+  lg: "h-5 w-5",
 };
 
 export default function Checkbox({
@@ -26,7 +40,9 @@ export default function Checkbox({
   indeterminate = false,
   onChange,
   disabled = false,
+  readOnly = false,
   variant = "primary",
+  size = "md",
   className = "",
   ...props
 }) {
@@ -42,7 +58,7 @@ export default function Checkbox({
   const isActive = checked || indeterminate;
 
   const boxClasses = [
-    "h-4 w-4 rounded border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-150",
+    `${SIZES[size] || SIZES.md} rounded border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-150`,
     disabled
       ? isActive
         ? colors.disabled
@@ -65,7 +81,8 @@ export default function Checkbox({
         type="checkbox"
         name={name}
         checked={checked}
-        onChange={disabled ? undefined : onChange}
+        onChange={disabled || readOnly ? undefined : onChange}
+        readOnly={readOnly}
         disabled={disabled}
         className="sr-only"
         {...props}

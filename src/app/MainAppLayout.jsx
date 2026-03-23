@@ -1,11 +1,12 @@
 import { Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectGlobalLoading } from "@/core/store/loadingSlice";
+import Navbar from "@/components/commonComponents/navbar/Navbar";
 
 // Global full-screen loader
 function GlobalLoader() {
   return (
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40">
+    <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/40">
       <div className="text-white text-lg">Loading...</div>
     </div>
   );
@@ -16,16 +17,12 @@ export default function MainAppLayout() {
 
   return (
     <div className="flex h-screen">
-
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar placeholder */}
-        <header className="h-14 bg-white border-b border-gray-200 flex items-center px-4 shrink-0">
-          <span className="text-gray-700 font-medium">Navbar</span>
-        </header>
+        <Navbar />
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto p-4 bg-gray-50">
+        <main className="flex-1 overflow-auto p-3 max-h-[calc(100vh-64px)] bg-page-bg">
           {isGlobalLoading && <GlobalLoader />}
           <Outlet />
         </main>

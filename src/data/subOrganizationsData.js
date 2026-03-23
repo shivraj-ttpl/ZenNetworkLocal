@@ -1,0 +1,362 @@
+// ─── Sub-Organizations List ─────────────────────────────
+export const subOrganizationsData = [
+  { id: "sub-org-1", subOrgId: "A4431", name: "Jupiter Hospital", address: "123 Main Street, Springfield, IL 62704, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-2", subOrgId: "A4431", name: "Life Point Multispecialty", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-3", subOrgId: "A4431", name: "Shalby Hospital", address: "456 Oak Avenue, Austin, TX 73301, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-4", subOrgId: "A4431", name: "Courtney Henry", address: "89 Pinecrest Drive, Denver, CO 80203, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-5", subOrgId: "A4431", name: "Billroth Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-6", subOrgId: "A4431", name: "Life Point Multispecialty", address: "55 Maplewood Lane, Boston, MA 02115, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-7", subOrgId: "A4431", name: "Jupiter Hospital", address: "300 Elm Street, Columbus, OH 43215, USA", createdDate: "12/11/1985", status: "Inactive" },
+  { id: "sub-org-8", subOrgId: "A4431", name: "Life Point Multispecialty", address: "123 Main Street, Springfield, IL 62704, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-9", subOrgId: "A4431", name: "Shalby Hospital", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-10", subOrgId: "A4431", name: "Billroth Hospital", address: "456 Oak Avenue, Austin, TX 73301, USA", createdDate: "12/11/1985", status: "Inactive" },
+  { id: "sub-org-11", subOrgId: "A4431", name: "Jupiter Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-12", subOrgId: "A4431", name: "Life Point Multispecialty", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "08/24/1985", status: "Active" },
+  { id: "sub-org-13", subOrgId: "A4431", name: "Shalby Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-14", subOrgId: "A4431", name: "Billroth Hospital", address: "89 Pinecrest Drive, Denver, CO 80203, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-15", subOrgId: "A4431", name: "Jupiter Hospital", address: "123 Main Street, Springfield, IL 62704, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-16", subOrgId: "A4431", name: "Life Point Multispecialty", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-17", subOrgId: "A4431", name: "Shalby Hospital", address: "456 Oak Avenue, Austin, TX 73301, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-18", subOrgId: "A4431", name: "Courtney Henry", address: "89 Pinecrest Drive, Denver, CO 80203, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-19", subOrgId: "A4431", name: "Billroth Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-20", subOrgId: "A4431", name: "Life Point Multispecialty", address: "55 Maplewood Lane, Boston, MA 02115, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-21", subOrgId: "A4431", name: "Jupiter Hospital", address: "300 Elm Street, Columbus, OH 43215, USA", createdDate: "12/11/1985", status: "Inactive" },
+  { id: "sub-org-22", subOrgId: "A4431", name: "Life Point Multispecialty", address: "123 Main Street, Springfield, IL 62704, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-23", subOrgId: "A4431", name: "Shalby Hospital", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-24", subOrgId: "A4431", name: "Billroth Hospital", address: "456 Oak Avenue, Austin, TX 73301, USA", createdDate: "12/11/1985", status: "Inactive" },
+  { id: "sub-org-25", subOrgId: "A4431", name: "Jupiter Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-26", subOrgId: "A4431", name: "Life Point Multispecialty", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "08/24/1985", status: "Active" },
+  { id: "sub-org-27", subOrgId: "A4431", name: "Shalby Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-28", subOrgId: "A4431", name: "Billroth Hospital", address: "89 Pinecrest Drive, Denver, CO 80203, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-29", subOrgId: "A4431", name: "Jupiter Hospital", address: "123 Main Street, Springfield, IL 62704, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-30", subOrgId: "A4431", name: "Life Point Multispecialty", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-31", subOrgId: "A4431", name: "Shalby Hospital", address: "456 Oak Avenue, Austin, TX 73301, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-32", subOrgId: "A4431", name: "Courtney Henry", address: "89 Pinecrest Drive, Denver, CO 80203, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-33", subOrgId: "A4431", name: "Billroth Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-34", subOrgId: "A4431", name: "Life Point Multispecialty", address: "55 Maplewood Lane, Boston, MA 02115, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-35", subOrgId: "A4431", name: "Jupiter Hospital", address: "300 Elm Street, Columbus, OH 43215, USA", createdDate: "12/11/1985", status: "Inactive" },
+  { id: "sub-org-36", subOrgId: "A4431", name: "Life Point Multispecialty", address: "123 Main Street, Springfield, IL 62704, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-37", subOrgId: "A4431", name: "Shalby Hospital", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-38", subOrgId: "A4431", name: "Billroth Hospital", address: "456 Oak Avenue, Austin, TX 73301, USA", createdDate: "12/11/1985", status: "Inactive" },
+  { id: "sub-org-39", subOrgId: "A4431", name: "Jupiter Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-40", subOrgId: "A4431", name: "Life Point Multispecialty", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "08/24/1985", status: "Active" },
+  { id: "sub-org-41", subOrgId: "A4431", name: "Shalby Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-42", subOrgId: "A4431", name: "Billroth Hospital", address: "89 Pinecrest Drive, Denver, CO 80203, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-43", subOrgId: "A4431", name: "Jupiter Hospital", address: "123 Main Street, Springfield, IL 62704, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-44", subOrgId: "A4431", name: "Life Point Multispecialty", address: "742 Evergreen Terrace, Seattle, WA 98109, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-45", subOrgId: "A4431", name: "Shalby Hospital", address: "456 Oak Avenue, Austin, TX 73301, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-46", subOrgId: "A4431", name: "Courtney Henry", address: "89 Pinecrest Drive, Denver, CO 80203, USA", createdDate: "12/11/1985", status: "Active" },
+  { id: "sub-org-47", subOrgId: "A4431", name: "Billroth Hospital", address: "2100 Lakeview Blvd, Orlando, FL 32801, USA", createdDate: "11/10/1985", status: "Active" },
+  { id: "sub-org-48", subOrgId: "A4431", name: "Life Point Multispecialty", address: "55 Maplewood Lane, Boston, MA 02115, USA", createdDate: "08/24/1985", status: "Inactive" },
+  { id: "sub-org-49", subOrgId: "A4431", name: "Jupiter Hospital", address: "300 Elm Street, Columbus, OH 43215, USA", createdDate: "12/11/1985", status: "Inactive" },
+  { id: "sub-org-50", subOrgId: "A4431", name: "Life Point Multispecialty", address: "123 Main Street, Springfield, IL 62704, USA", createdDate: "11/10/1985", status: "Active" },
+];
+
+// ─── Sub-Org Profile Data ───────────────────────────────
+export const subOrgProfiles = {
+  "sub-org-1": {
+    id: "sub-org-1",
+    name: "Jupiter Hospital",
+    organization: "HealthCare Corporation",
+    address: "123 Main Street, Springfield, IL 62704, USA",
+    status: "Active",
+    stats: { providerGroup: 8, totalProviders: 45, totalPatient: 1250, activeUsers: 62 },
+    contactInfo: {
+      contactNumber: "+1 800-555-0199",
+      createdOn: "05/10/2018",
+      emailAddress: "contact@northregion.health",
+      website: "www.northregionhealthcare.com",
+    },
+    adminContact: {
+      administrator: "Dr. Jennifer Adams",
+      contactNumber: "+1 800-555-0199",
+      emailAddress: "Jennifer@northregion.health",
+    },
+  },
+};
+
+export function getSubOrgProfile(subOrgId) {
+  if (subOrgProfiles[subOrgId]) return subOrgProfiles[subOrgId];
+  const org = subOrganizationsData.find((o) => o.id === subOrgId);
+  return {
+    id: subOrgId,
+    name: org?.name || "Unknown Organization",
+    organization: "HealthCare Corporation",
+    address: org?.address || "N/A",
+    status: org?.status || "Active",
+    stats: { providerGroup: 8, totalProviders: 45, totalPatient: 1250, activeUsers: 62 },
+    contactInfo: {
+      contactNumber: "+1 800-555-0199",
+      createdOn: "05/10/2018",
+      emailAddress: "contact@northregion.health",
+      website: "www.northregionhealthcare.com",
+    },
+    adminContact: {
+      administrator: "Dr. Jennifer Adams",
+      contactNumber: "+1 800-555-0199",
+      emailAddress: "Jennifer@northregion.health",
+    },
+  };
+}
+
+// ─── STATUS_OPTIONS ─────────────────────────────────────
+export const STATUS_OPTIONS = [
+  { label: "Active", value: "Active" },
+  { label: "Inactive", value: "Inactive" },
+];
+
+// ─── Provider Groups ────────────────────────────────────
+export const providerGroupsData = [
+  { id: "pg-1", name: "Evergreen Facility", specialties: ["Obstetrics", "General Surgery", "Cardiology", "Anesthesiology"], email: "sf08@example.com", address: "3517 W. Gray St. Utica", contact: "(808) 555-0111", status: "Inactive" },
+  { id: "pg-2", name: "Compassion Center", specialties: ["Rehabilitation Medicine", "Gastroenterology"], email: "jd01@example.com", address: "2118 Thornridge Cir. Syracuse", contact: "(480) 555-0103", status: "Active" },
+  { id: "pg-3", name: "Hope Hospital", specialties: ["Neurology", "Nutrition"], email: "da10@example.com", address: "6391 Elgin St. Celina", contact: "(303) 555-0105", status: "Inactive" },
+  { id: "pg-4", name: "Healing Hands", specialties: ["Sports Medicine", "Psychiatry"], email: "js02@example.com", address: "4140 Parker Rd. Allentown", contact: "(208) 555-0112", status: "Active" },
+  { id: "pg-5", name: "Evergreen Facility", specialties: ["Emergency Medicine", "Forensic Medicine"], email: "tu07@example.com", address: "2972 Westheimer Rd. Santa Ana", contact: "(603) 555-0123", status: "Inactive" },
+  { id: "pg-6", name: "Community Health", specialties: ["Toxicology", "Pain Management"], email: "cd06@example.com", address: "4517 Washington Ave. Manchester", contact: "(629) 555-0129", status: "Active" },
+  { id: "pg-7", name: "Lifeline Group", specialties: ["Cybernetics", "Telemedicine"], email: "bo05@example.com", address: "8502 Preston Rd. Inglewood", contact: "(702) 555-0122", status: "Inactive" },
+];
+
+// ─── Provider Group Profile Data ────────────────────────
+export const providerGroupProfiles = {
+  "pg-1": {
+    id: "pg-1",
+    name: "Evergreen Facility",
+    email: "evergreen@example.com",
+    contact: "(209) 555-0104",
+    specialties: ["Family Medicine", "Internal Medicine", "Pediatrics"],
+    website: "www.evergreen.com",
+    timezone: "-",
+    bio: "Sunrise Family Care Group is a multidisciplinary team providing comprehensive primary and preventive care. Our providers focus on patient-centered treatment, chronic condition management, wellness planning, and accessible care for individuals and families of all ages.",
+    addressInfo: {
+      address: "1428 Meadowbrook Lane, Suite 205, Dallas Texas, United States, 75201",
+      billingAddress: "1428 Meadowbrook Lane, Suite 205, Dallas Texas, United States, 75201",
+    },
+    adminContact: {
+      administratorName: "Laura Mitchell",
+      emailAddress: "lauramitchell@example.com",
+      contactNumber: "(209) 555-0104",
+    },
+  },
+};
+
+export function getProviderGroupProfile(pgId) {
+  if (providerGroupProfiles[pgId]) return providerGroupProfiles[pgId];
+  const pg = providerGroupsData.find((p) => p.id === pgId);
+  return {
+    id: pgId,
+    name: pg?.name || "Unknown Provider Group",
+    email: pg?.email || "info@example.com",
+    contact: pg?.contact || "(000) 000-0000",
+    specialties: pg?.specialties || [],
+    website: "www.example.com",
+    timezone: "-",
+    bio: "A dedicated healthcare provider group offering comprehensive medical services across multiple specialties.",
+    addressInfo: {
+      address: "1428 Meadowbrook Lane, Suite 205, Dallas Texas, United States, 75201",
+      billingAddress: "1428 Meadowbrook Lane, Suite 205, Dallas Texas, United States, 75201",
+    },
+    adminContact: {
+      administratorName: "Laura Mitchell",
+      emailAddress: "lauramitchell@example.com",
+      contactNumber: "(209) 555-0104",
+    },
+  };
+}
+
+// ─── Providers ──────────────────────────────────────────
+export const providersData = [
+  { id: 1, name: "Alexa Stuart", multiProvider: true, access: true, specialties: ["Obstetrics", "General Surgery", "Cardiology", "Anesthesiology"], role: "Care Manager", email: "supp...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "10/12/2025, 10:20 AM", status: "Inactive" },
+  { id: 2, name: "Ralph Edwards", multiProvider: true, access: true, specialties: ["Rehabilitation Medicine", "Gastroenterology"], role: "Care Coordinator", email: "feed...", emailVerified: true, contact: "(480) 555-0103", lastLogin: "03/24/2025, 01:00 PM", status: "Active" },
+  { id: 3, name: "Kathryn Murphy", multiProvider: true, access: true, specialties: ["Neurology", "Nutrition"], role: "Care Coordinator", email: "inqui...", emailVerified: true, contact: "(303) 555-0105", lastLogin: "05/06/2025, 11:30 AM", status: "Inactive" },
+  { id: 4, name: "Courtney Henry", multiProvider: true, access: true, specialties: ["Sports Medicine", "Psychiatry"], role: "Care Manager", email: "hello...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "05/06/2025, 11:30 AM", status: "Active" },
+  { id: 5, name: "Arlene McCoy", multiProvider: true, access: false, specialties: ["Emergency Medicine", "Forensic Medicine"], role: "Care Coordinator", email: "cust...", emailVerified: true, contact: "(208) 555-0112", lastLogin: "02/06/2025, 02:30 PM", status: "Active" },
+  { id: 6, name: "Cody Fisher", multiProvider: true, access: true, specialties: ["Toxicology", "Pain Management"], role: "Care Manager", email: "admi...", emailVerified: true, contact: "(603) 555-0123", lastLogin: "02/06/2026, 03:20 PM", status: "Active" },
+  { id: 7, name: "Savannah Nguy...", multiProvider: true, access: true, specialties: ["Rehabilitation Medicine", "Gastroenterology"], role: "Care Coordinator", email: "team...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "06/28/2026, 02:20 PM", status: "Active" },
+  { id: 8, name: "Albert Flores", multiProvider: true, access: true, specialties: ["Sports Medicine", "Psychiatry"], role: "Care Manager", email: "supp...", emailVerified: true, contact: "(208) 555-0112", lastLogin: "05/06/2026, 11:30 AM", status: "Inactive" },
+  { id: 9, name: "Dynamic Strate...", multiProvider: true, access: true, specialties: ["Cybernetics", "Telemedicine"], role: "Care Coordinator", email: "cont...", emailVerified: true, contact: "(629) 555-0129", lastLogin: "12/24/2026, 02:20 PM", status: "Active" },
+  { id: 10, name: "Savannah Nguy...", multiProvider: true, access: true, specialties: ["Neurology", "Nutrition"], role: "Care Coordinator", email: "info...", emailVerified: true, contact: "(702) 555-0122", lastLogin: "07/20/2026, 02:20 PM", status: "Active" },
+  { id: 11, name: "Alexa Stuart", multiProvider: true, access: true, specialties: ["Obstetrics", "General Surgery"], role: "Care Manager", email: "supp...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "10/12/2025, 10:20 AM", status: "Active" },
+  { id: 12, name: "Ralph Edwards", multiProvider: true, access: false, specialties: ["Rehabilitation Medicine", "Gastroenterology"], role: "Care Coordinator", email: "feed...", emailVerified: true, contact: "(480) 555-0103", lastLogin: "03/24/2025, 01:00 PM", status: "Active" },
+  { id: 13, name: "Kathryn Murphy", multiProvider: true, access: true, specialties: ["Neurology", "Nutrition"], role: "Care Coordinator", email: "inqui...", emailVerified: true, contact: "(303) 555-0105", lastLogin: "05/06/2025, 11:30 AM", status: "Inactive" },
+  { id: 14, name: "Courtney Henry", multiProvider: true, access: true, specialties: ["Sports Medicine", "Psychiatry"], role: "Care Manager", email: "hello...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "05/06/2025, 11:30 AM", status: "Active" },
+  { id: 15, name: "Arlene McCoy", multiProvider: true, access: false, specialties: ["Emergency Medicine", "Forensic Medicine"], role: "Care Coordinator", email: "cust...", emailVerified: true, contact: "(208) 555-0112", lastLogin: "02/06/2025, 02:30 PM", status: "Active" },
+  { id: 16, name: "Cody Fisher", multiProvider: true, access: true, specialties: ["Toxicology", "Pain Management"], role: "Care Manager", email: "admi...", emailVerified: true, contact: "(603) 555-0123", lastLogin: "02/06/2026, 03:20 PM", status: "Active" },
+  { id: 17, name: "Savannah Nguy...", multiProvider: true, access: true, specialties: ["Rehabilitation Medicine", "Gastroenterology"], role: "Care Coordinator", email: "team...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "06/28/2026, 02:20 PM", status: "Inactive" },
+  { id: 18, name: "Albert Flores", multiProvider: true, access: true, specialties: ["Sports Medicine", "Psychiatry"], role: "Care Manager", email: "supp...", emailVerified: true, contact: "(208) 555-0112", lastLogin: "05/06/2026, 11:30 AM", status: "Active" },
+  { id: 19, name: "Dynamic Strate...", multiProvider: true, access: true, specialties: ["Cybernetics", "Telemedicine"], role: "Care Coordinator", email: "cont...", emailVerified: true, contact: "(629) 555-0129", lastLogin: "12/24/2026, 02:20 PM", status: "Active" },
+  { id: 20, name: "Savannah Nguy...", multiProvider: true, access: true, specialties: ["Neurology", "Nutrition"], role: "Care Coordinator", email: "info...", emailVerified: true, contact: "(702) 555-0122", lastLogin: "07/20/2026, 02:20 PM", status: "Active" },
+  { id: 21, name: "Alexa Stuart", multiProvider: true, access: true, specialties: ["Obstetrics", "General Surgery"], role: "Care Manager", email: "supp...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "10/12/2025, 10:20 AM", status: "Active" },
+  { id: 22, name: "Ralph Edwards", multiProvider: true, access: true, specialties: ["Rehabilitation Medicine"], role: "Care Coordinator", email: "feed...", emailVerified: true, contact: "(480) 555-0103", lastLogin: "03/24/2025, 01:00 PM", status: "Active" },
+  { id: 23, name: "Kathryn Murphy", multiProvider: true, access: true, specialties: ["Neurology", "Nutrition"], role: "Care Coordinator", email: "inqui...", emailVerified: true, contact: "(303) 555-0105", lastLogin: "05/06/2025, 11:30 AM", status: "Inactive" },
+  { id: 24, name: "Courtney Henry", multiProvider: true, access: true, specialties: ["Sports Medicine", "Psychiatry"], role: "Care Manager", email: "hello...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "05/06/2025, 11:30 AM", status: "Active" },
+  { id: 25, name: "Arlene McCoy", multiProvider: true, access: false, specialties: ["Emergency Medicine", "Forensic Medicine"], role: "Care Coordinator", email: "cust...", emailVerified: true, contact: "(208) 555-0112", lastLogin: "02/06/2025, 02:30 PM", status: "Inactive" },
+  { id: 26, name: "Cody Fisher", multiProvider: true, access: true, specialties: ["Toxicology", "Pain Management"], role: "Care Manager", email: "admi...", emailVerified: true, contact: "(603) 555-0123", lastLogin: "02/06/2026, 03:20 PM", status: "Active" },
+  { id: 27, name: "Savannah Nguy...", multiProvider: true, access: true, specialties: ["Rehabilitation Medicine", "Gastroenterology"], role: "Care Coordinator", email: "team...", emailVerified: true, contact: "(808) 555-0111", lastLogin: "06/28/2026, 02:20 PM", status: "Active" },
+  { id: 28, name: "Albert Flores", multiProvider: true, access: true, specialties: ["Sports Medicine", "Psychiatry"], role: "Care Manager", email: "supp...", emailVerified: true, contact: "(208) 555-0112", lastLogin: "05/06/2026, 11:30 AM", status: "Active" },
+  { id: 29, name: "Dynamic Strate...", multiProvider: true, access: true, specialties: ["Cybernetics", "Telemedicine"], role: "Care Coordinator", email: "cont...", emailVerified: true, contact: "(629) 555-0129", lastLogin: "12/24/2026, 02:20 PM", status: "Active" },
+  { id: 30, name: "Savannah Nguy...", multiProvider: true, access: true, specialties: ["Neurology", "Nutrition"], role: "Care Coordinator", email: "info...", emailVerified: true, contact: "(702) 555-0122", lastLogin: "07/20/2026, 02:20 PM", status: "Active" },
+];
+
+// ─── Patients ───────────────────────────────────────────
+export const patientsData = [
+  { id: 1, patientId: "P123", firstName: "Devon", lastName: "Lane", dob: "10/27/1989", primaryCareManager: "Floyd Miles", secondaryCareManager: "Cameron Williamson", enrollmentStatus: "Not Enrolled", enrolledPrograms: [] },
+  { id: 2, patientId: "P123", firstName: "Ralph", lastName: "Edwards", dob: "11/22/1985", primaryCareManager: "Eleanor Pena", secondaryCareManager: "Savannah Nguyen", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 3, patientId: "P234", firstName: "Kathryn", lastName: "Murphy", dob: "09/24/1988", primaryCareManager: "Kathryn Murphy", secondaryCareManager: "Arlene McCoy", enrollmentStatus: "Enrolled", enrolledPrograms: [], inactive: true },
+  { id: 4, patientId: "P213", firstName: "Courtney", lastName: "Henry", dob: "08/23/1989", primaryCareManager: "Guy Hawkins", secondaryCareManager: "Floyd Miles", enrollmentStatus: "Not Enrolled", enrolledPrograms: ["PCM"] },
+  { id: 5, patientId: "P343", firstName: "Arlene", lastName: "McCoy", dob: "04/14/1993", primaryCareManager: "Cameron Williamson", secondaryCareManager: "Esther Howard", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 6, patientId: "P345", firstName: "Cody", lastName: "Fisher", dob: "12/26/1989", primaryCareManager: "Courtney Henry", secondaryCareManager: "Kathryn Murphy", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 7, patientId: "P678", firstName: "Savannah", lastName: "Nguyen", dob: "07/28/1989", primaryCareManager: "Kristin Watson", secondaryCareManager: "Guy Hawkins", enrollmentStatus: "Enrolled", enrolledPrograms: [], inactive: true },
+  { id: 8, patientId: "P676", firstName: "Albert", lastName: "Flores", dob: "12/12/1980", primaryCareManager: "Savannah Nguyen", secondaryCareManager: "Eleanor Pena", enrollmentStatus: "Not Enrolled", enrolledPrograms: ["RPM", "CCM"] },
+  { id: 9, patientId: "P678", firstName: "Dynamic", lastName: "Strategies", dob: "11/01/1994", primaryCareManager: "Theresa Webb", secondaryCareManager: "Courtney Henry", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM"] },
+  { id: 10, patientId: "P456", firstName: "Savannah", lastName: "Nguyen", dob: "03/29/1983", primaryCareManager: "Arlene McCoy", secondaryCareManager: "Jane Cooper", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM"] },
+  { id: 11, patientId: "P234", firstName: "Kathryn", lastName: "Murphy", dob: "05/05/1992", primaryCareManager: "Marvin McKinney", secondaryCareManager: "Kristin Watson", enrollmentStatus: "Not Enrolled", enrolledPrograms: [] },
+  { id: 12, patientId: "P678", firstName: "Arlene", lastName: "McCoy", dob: "05/05/1992", primaryCareManager: "Bessie Cooper", secondaryCareManager: "Marvin McKinney", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 13, patientId: "P678", firstName: "Courtney", lastName: "Henry", dob: "03/06/1991", primaryCareManager: "Esther Howard", secondaryCareManager: "Theresa Webb", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM", "CCM"] },
+  { id: 14, patientId: "P245", firstName: "Albert", lastName: "Flores", dob: "12/08/1990", primaryCareManager: "Jane Cooper", secondaryCareManager: "Bessie Cooper", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 15, patientId: "P123", firstName: "Devon", lastName: "Lane", dob: "10/27/1989", primaryCareManager: "Floyd Miles", secondaryCareManager: "Cameron Williamson", enrollmentStatus: "Not Enrolled", enrolledPrograms: [] },
+  { id: 16, patientId: "P123", firstName: "Ralph", lastName: "Edwards", dob: "11/22/1985", primaryCareManager: "Eleanor Pena", secondaryCareManager: "Savannah Nguyen", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 17, patientId: "P234", firstName: "Kathryn", lastName: "Murphy", dob: "09/24/1988", primaryCareManager: "Kathryn Murphy", secondaryCareManager: "Arlene McCoy", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 18, patientId: "P213", firstName: "Courtney", lastName: "Henry", dob: "08/23/1989", primaryCareManager: "Guy Hawkins", secondaryCareManager: "Floyd Miles", enrollmentStatus: "Not Enrolled", enrolledPrograms: ["PCM"] },
+  { id: 19, patientId: "P343", firstName: "Arlene", lastName: "McCoy", dob: "04/14/1993", primaryCareManager: "Cameron Williamson", secondaryCareManager: "Esther Howard", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 20, patientId: "P345", firstName: "Cody", lastName: "Fisher", dob: "12/26/1989", primaryCareManager: "Courtney Henry", secondaryCareManager: "Kathryn Murphy", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 21, patientId: "P678", firstName: "Savannah", lastName: "Nguyen", dob: "07/28/1989", primaryCareManager: "Kristin Watson", secondaryCareManager: "Guy Hawkins", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 22, patientId: "P676", firstName: "Albert", lastName: "Flores", dob: "12/12/1980", primaryCareManager: "Savannah Nguyen", secondaryCareManager: "Eleanor Pena", enrollmentStatus: "Not Enrolled", enrolledPrograms: ["RPM", "CCM"] },
+  { id: 23, patientId: "P678", firstName: "Dynamic", lastName: "Strategies", dob: "11/01/1994", primaryCareManager: "Theresa Webb", secondaryCareManager: "Courtney Henry", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM"] },
+  { id: 24, patientId: "P456", firstName: "Savannah", lastName: "Nguyen", dob: "03/29/1983", primaryCareManager: "Arlene McCoy", secondaryCareManager: "Jane Cooper", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM"] },
+  { id: 25, patientId: "P234", firstName: "Kathryn", lastName: "Murphy", dob: "05/05/1992", primaryCareManager: "Marvin McKinney", secondaryCareManager: "Kristin Watson", enrollmentStatus: "Not Enrolled", enrolledPrograms: [] },
+  { id: 26, patientId: "P678", firstName: "Arlene", lastName: "McCoy", dob: "05/05/1992", primaryCareManager: "Bessie Cooper", secondaryCareManager: "Marvin McKinney", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 27, patientId: "P678", firstName: "Courtney", lastName: "Henry", dob: "03/06/1991", primaryCareManager: "Esther Howard", secondaryCareManager: "Theresa Webb", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM", "CCM"] },
+  { id: 28, patientId: "P245", firstName: "Albert", lastName: "Flores", dob: "12/08/1990", primaryCareManager: "Jane Cooper", secondaryCareManager: "Bessie Cooper", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 29, patientId: "P123", firstName: "Devon", lastName: "Lane", dob: "10/27/1989", primaryCareManager: "Floyd Miles", secondaryCareManager: "Cameron Williamson", enrollmentStatus: "Not Enrolled", enrolledPrograms: [] },
+  { id: 30, patientId: "P123", firstName: "Ralph", lastName: "Edwards", dob: "11/22/1985", primaryCareManager: "Eleanor Pena", secondaryCareManager: "Savannah Nguyen", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 31, patientId: "P234", firstName: "Kathryn", lastName: "Murphy", dob: "09/24/1988", primaryCareManager: "Kathryn Murphy", secondaryCareManager: "Arlene McCoy", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 32, patientId: "P213", firstName: "Courtney", lastName: "Henry", dob: "08/23/1989", primaryCareManager: "Guy Hawkins", secondaryCareManager: "Floyd Miles", enrollmentStatus: "Not Enrolled", enrolledPrograms: ["PCM"] },
+  { id: 33, patientId: "P343", firstName: "Arlene", lastName: "McCoy", dob: "04/14/1993", primaryCareManager: "Cameron Williamson", secondaryCareManager: "Esther Howard", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 34, patientId: "P345", firstName: "Cody", lastName: "Fisher", dob: "12/26/1989", primaryCareManager: "Courtney Henry", secondaryCareManager: "Kathryn Murphy", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 35, patientId: "P678", firstName: "Savannah", lastName: "Nguyen", dob: "07/28/1989", primaryCareManager: "Kristin Watson", secondaryCareManager: "Guy Hawkins", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 36, patientId: "P676", firstName: "Albert", lastName: "Flores", dob: "12/12/1980", primaryCareManager: "Savannah Nguyen", secondaryCareManager: "Eleanor Pena", enrollmentStatus: "Not Enrolled", enrolledPrograms: ["RPM", "CCM"] },
+  { id: 37, patientId: "P678", firstName: "Dynamic", lastName: "Strategies", dob: "11/01/1994", primaryCareManager: "Theresa Webb", secondaryCareManager: "Courtney Henry", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM"] },
+  { id: 38, patientId: "P456", firstName: "Savannah", lastName: "Nguyen", dob: "03/29/1983", primaryCareManager: "Arlene McCoy", secondaryCareManager: "Jane Cooper", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM"] },
+  { id: 39, patientId: "P234", firstName: "Kathryn", lastName: "Murphy", dob: "05/05/1992", primaryCareManager: "Marvin McKinney", secondaryCareManager: "Kristin Watson", enrollmentStatus: "Not Enrolled", enrolledPrograms: [] },
+  { id: 40, patientId: "P678", firstName: "Arlene", lastName: "McCoy", dob: "05/05/1992", primaryCareManager: "Bessie Cooper", secondaryCareManager: "Marvin McKinney", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 41, patientId: "P678", firstName: "Courtney", lastName: "Henry", dob: "03/06/1991", primaryCareManager: "Esther Howard", secondaryCareManager: "Theresa Webb", enrollmentStatus: "Enrolled", enrolledPrograms: ["RPM", "CCM"] },
+  { id: 42, patientId: "P245", firstName: "Albert", lastName: "Flores", dob: "12/08/1990", primaryCareManager: "Jane Cooper", secondaryCareManager: "Bessie Cooper", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 43, patientId: "P123", firstName: "Devon", lastName: "Lane", dob: "10/27/1989", primaryCareManager: "Floyd Miles", secondaryCareManager: "Cameron Williamson", enrollmentStatus: "Not Enrolled", enrolledPrograms: [] },
+  { id: 44, patientId: "P123", firstName: "Ralph", lastName: "Edwards", dob: "11/22/1985", primaryCareManager: "Eleanor Pena", secondaryCareManager: "Savannah Nguyen", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 45, patientId: "P234", firstName: "Kathryn", lastName: "Murphy", dob: "09/24/1988", primaryCareManager: "Kathryn Murphy", secondaryCareManager: "Arlene McCoy", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 46, patientId: "P213", firstName: "Courtney", lastName: "Henry", dob: "08/23/1989", primaryCareManager: "Guy Hawkins", secondaryCareManager: "Floyd Miles", enrollmentStatus: "Not Enrolled", enrolledPrograms: ["PCM"] },
+  { id: 47, patientId: "P343", firstName: "Arlene", lastName: "McCoy", dob: "04/14/1993", primaryCareManager: "Cameron Williamson", secondaryCareManager: "Esther Howard", enrollmentStatus: "Enrolled", enrolledPrograms: ["CCM"] },
+  { id: 48, patientId: "P345", firstName: "Cody", lastName: "Fisher", dob: "12/26/1989", primaryCareManager: "Courtney Henry", secondaryCareManager: "Kathryn Murphy", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 49, patientId: "P678", firstName: "Savannah", lastName: "Nguyen", dob: "07/28/1989", primaryCareManager: "Kristin Watson", secondaryCareManager: "Guy Hawkins", enrollmentStatus: "Enrolled", enrolledPrograms: [] },
+  { id: 50, patientId: "P676", firstName: "Albert", lastName: "Flores", dob: "12/12/1980", primaryCareManager: "Savannah Nguyen", secondaryCareManager: "Eleanor Pena", enrollmentStatus: "Not Enrolled", enrolledPrograms: ["RPM", "CCM"] },
+];
+
+// ─── Users ──────────────────────────────────────────────
+export const usersData = [
+  { id: 1, name: "Alexa Stuart", email: "support@yourdomain.com", emailVerified: true, role: "Admin", status: "Inactive" },
+  { id: 2, name: "Ralph Edwards", email: "inquiries@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 3, name: "Kathryn Murphy", email: "feedback@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Active" },
+  { id: 4, name: "Courtney Henry", email: "hello.world@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 5, name: "Arlene McCoy", email: "customercare@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 6, name: "Cody Fisher", email: "admin@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 7, name: "Savannah Nguyen", email: "team@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Inactive" },
+  { id: 8, name: "Albert Flores", email: "supportdesk@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 9, name: "Dynamic Strategies", email: "contactus@yourdomain.com", emailVerified: true, role: "Admin", status: "Inactive" },
+  { id: 10, name: "Savannah Nguyen", email: "info@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 11, name: "Alexa Stuart", email: "support@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 12, name: "Ralph Edwards", email: "inquiries@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 13, name: "Kathryn Murphy", email: "feedback@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Active" },
+  { id: 14, name: "Courtney Henry", email: "hello.world@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 15, name: "Arlene McCoy", email: "customercare@yourdomain.com", emailVerified: true, role: "Admin", status: "Inactive" },
+  { id: 16, name: "Cody Fisher", email: "admin@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 17, name: "Savannah Nguyen", email: "team@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Active" },
+  { id: 18, name: "Albert Flores", email: "supportdesk@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 19, name: "Dynamic Strategies", email: "contactus@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 20, name: "Savannah Nguyen", email: "info@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 21, name: "Alexa Stuart", email: "support@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 22, name: "Ralph Edwards", email: "inquiries@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 23, name: "Kathryn Murphy", email: "feedback@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Inactive" },
+  { id: 24, name: "Courtney Henry", email: "hello.world@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 25, name: "Arlene McCoy", email: "customercare@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 26, name: "Cody Fisher", email: "admin@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 27, name: "Savannah Nguyen", email: "team@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Active" },
+  { id: 28, name: "Albert Flores", email: "supportdesk@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 29, name: "Dynamic Strategies", email: "contactus@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 30, name: "Savannah Nguyen", email: "info@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 31, name: "Alexa Stuart", email: "support@yourdomain.com", emailVerified: true, role: "Admin", status: "Inactive" },
+  { id: 32, name: "Ralph Edwards", email: "inquiries@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 33, name: "Kathryn Murphy", email: "feedback@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Active" },
+  { id: 34, name: "Courtney Henry", email: "hello.world@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 35, name: "Arlene McCoy", email: "customercare@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 36, name: "Cody Fisher", email: "admin@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 37, name: "Savannah Nguyen", email: "team@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Active" },
+  { id: 38, name: "Albert Flores", email: "supportdesk@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 39, name: "Dynamic Strategies", email: "contactus@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 40, name: "Savannah Nguyen", email: "info@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 41, name: "Alexa Stuart", email: "support@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 42, name: "Ralph Edwards", email: "inquiries@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 43, name: "Kathryn Murphy", email: "feedback@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Inactive" },
+  { id: 44, name: "Courtney Henry", email: "hello.world@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 45, name: "Arlene McCoy", email: "customercare@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 46, name: "Cody Fisher", email: "admin@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+  { id: 47, name: "Savannah Nguyen", email: "team@yourdomain.com", emailVerified: false, role: "Case Worker", status: "Active" },
+  { id: 48, name: "Albert Flores", email: "supportdesk@yourdomain.com", emailVerified: true, role: "Supervisor", status: "Active" },
+  { id: 49, name: "Dynamic Strategies", email: "contactus@yourdomain.com", emailVerified: true, role: "Admin", status: "Active" },
+  { id: 50, name: "Savannah Nguyen", email: "info@yourdomain.com", emailVerified: true, role: "Provider", status: "Active" },
+];
+
+// ─── Configuration ──────────────────────────────────────
+export const configurationData = {
+  callerIdVerification: {
+    callerId: "97-1234567",
+    isVerified: true,
+  },
+  senderEmailVerification: {
+    callerId: "Not Verified",
+    isVerified: false,
+  },
+};
+
+// ─── Select Action Options (Patients) ───────────────────
+export const SELECT_ACTION_OPTIONS = [
+  { label: "Enroll", value: "Enroll" },
+  { label: "Discharge", value: "Discharge" },
+];
+
+// ─── Fee Schedule ───────────────────────────────────────
+export const feeScheduleData = [
+  { id: 1, programName: "CCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+  { id: 2, programName: "TCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 60 },
+  { id: 3, programName: "CCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+  { id: 4, programName: "CCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+  { id: 5, programName: "TCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+  { id: 6, programName: "CCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+  { id: 7, programName: "CCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+  { id: 8, programName: "CCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+  { id: 9, programName: "TCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+  { id: 10, programName: "CCM", cptCode: "99490", startDate: "10/12/2026", endDate: "10/12/2026", rate: 50 },
+];
+
+// ─── Provider Availability ──────────────────────────────
+// type: "available" | "block"
+// mode: "in-person" | "virtual"
+export const providerAvailabilityData = [
+  { date: "2025-12-01", type: "available", mode: "in-person", slots: 5 },
+  { date: "2025-12-01", type: "available", mode: "virtual", slots: 3 },
+  { date: "2025-12-02", type: "available", mode: "in-person", slots: 10 },
+  { date: "2025-12-02", type: "available", mode: "virtual", slots: 20 },
+  { date: "2025-12-11", type: "available", mode: "in-person", slots: 10 },
+  { date: "2025-12-11", type: "available", mode: "virtual", slots: 20 },
+  { date: "2025-12-15", type: "available", mode: "in-person", slots: 10 },
+  { date: "2025-12-15", type: "available", mode: "virtual", slots: 20 },
+  { date: "2025-12-17", type: "available", mode: "in-person", slots: 10 },
+  { date: "2025-12-17", type: "available", mode: "virtual", slots: 20 },
+  { date: "2025-12-18", type: "block", mode: null, slots: 0 },
+  { date: "2025-12-19", type: "available", mode: "in-person", slots: 10, variant: "warning" },
+  { date: "2025-12-19", type: "available", mode: "virtual", slots: 20 },
+];
+
+export const APPOINTMENT_MODE_OPTIONS = [
+  { label: "In Person", value: "in-person" },
+  { label: "Virtual", value: "virtual" },
+];

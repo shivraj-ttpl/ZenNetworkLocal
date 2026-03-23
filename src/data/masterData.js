@@ -1,0 +1,194 @@
+// ─── ICD Codes ──────────────────────────────────────────
+export const icdCodesData = [
+  { id: 1, code: "E11.9", description: "Type 2 Diabetes Mellitus without complications", isFavorite: true },
+  { id: 2, code: "I10", description: "Essential (primary) hypertension", isFavorite: false },
+  { id: 3, code: "J45.909", description: "Unspecified asthma, uncomplicated", isFavorite: true },
+  { id: 4, code: "E11.9", description: "Type 2 Diabetes Mellitus without complications", isFavorite: false },
+  { id: 5, code: "I10", description: "Essential (primary) hypertension", isFavorite: true },
+  { id: 6, code: "J45.909", description: "Unspecified asthma, uncomplicated", isFavorite: true },
+  { id: 7, code: "E11.9", description: "Type 2 Diabetes Mellitus without complications", isFavorite: false },
+  { id: 8, code: "I10", description: "Essential (primary) hypertension", isFavorite: false },
+  { id: 9, code: "J45.909", description: "Unspecified asthma, uncomplicated", isFavorite: true },
+  { id: 10, code: "E11.9", description: "Type 2 Diabetes Mellitus without complications", isFavorite: false },
+  { id: 11, code: "I10", description: "Essential (primary) hypertension", isFavorite: false },
+  { id: 12, code: "J45.909", description: "Unspecified asthma, uncomplicated", isFavorite: false },
+  { id: 13, code: "E11.9", description: "Type 2 Diabetes Mellitus without complications", isFavorite: true },
+  { id: 14, code: "I10", description: "Essential (primary) hypertension", isFavorite: true },
+  { id: 15, code: "J45.909", description: "Unspecified asthma, uncomplicated", isFavorite: false },
+  { id: 16, code: "E11.9", description: "Type 2 Diabetes Mellitus without complications", isFavorite: true },
+  { id: 17, code: "I10", description: "Essential (primary) hypertension", isFavorite: false },
+  { id: 18, code: "J45.909", description: "Unspecified asthma, uncomplicated", isFavorite: true },
+  { id: 19, code: "E11.9", description: "Type 2 Diabetes Mellitus without complications", isFavorite: false },
+  { id: 20, code: "I10", description: "Essential (primary) hypertension", isFavorite: true },
+];
+
+// ─── CPT Codes ──────────────────────────────────────────
+export const cptCodesData = [
+  { id: 1, code: "99213", description: "Office or other outpatient visit, established patient", isFavorite: true },
+  { id: 2, code: "99214", description: "Office or other outpatient visit, moderate complexity", isFavorite: false },
+  { id: 3, code: "99203", description: "Office or other outpatient visit, new patient", isFavorite: true },
+  { id: 4, code: "99395", description: "Periodic preventive medicine, 18-39 years", isFavorite: false },
+  { id: 5, code: "99215", description: "Office or other outpatient visit, high complexity", isFavorite: true },
+  { id: 6, code: "99232", description: "Subsequent hospital care, moderate complexity", isFavorite: true },
+  { id: 7, code: "99291", description: "Critical care, first 30-74 minutes", isFavorite: false },
+  { id: 8, code: "99204", description: "Office or other outpatient visit, new patient, moderate", isFavorite: false },
+  { id: 9, code: "99396", description: "Periodic preventive medicine, 40-64 years", isFavorite: true },
+  { id: 10, code: "99212", description: "Office or other outpatient visit, straightforward", isFavorite: false },
+  { id: 11, code: "99283", description: "Emergency department visit, moderate severity", isFavorite: true },
+  { id: 12, code: "99285", description: "Emergency department visit, high severity", isFavorite: false },
+  { id: 13, code: "99233", description: "Subsequent hospital care, high complexity", isFavorite: true },
+  { id: 14, code: "99223", description: "Initial hospital care, high complexity", isFavorite: false },
+  { id: 15, code: "99381", description: "Initial preventive medicine, infant", isFavorite: true },
+  { id: 16, code: "99243", description: "Office consultation, moderate complexity", isFavorite: false },
+  { id: 17, code: "99244", description: "Office consultation, moderate-high complexity", isFavorite: true },
+  { id: 18, code: "99386", description: "Initial preventive medicine, 40-64 years", isFavorite: false },
+  { id: 19, code: "99211", description: "Office or other outpatient visit, minimal", isFavorite: true },
+  { id: 20, code: "99205", description: "Office or other outpatient visit, new patient, high", isFavorite: false },
+];
+
+// ─── LONIC Codes ────────────────────────────────────────
+export const lonicCodesData = [
+  { id: 1, code: "2345-7", description: "Glucose [Mass/volume] in Serum or Plasma", isFavorite: true },
+  { id: 2, code: "4548-4", description: "Hemoglobin A1c/Hemoglobin.total in Blood", isFavorite: false },
+  { id: 3, code: "2093-3", description: "Cholesterol [Mass/volume] in Serum or Plasma", isFavorite: true },
+  { id: 4, code: "2571-8", description: "Triglyceride [Mass/volume] in Serum or Plasma", isFavorite: false },
+  { id: 5, code: "2160-0", description: "Creatinine [Mass/volume] in Serum or Plasma", isFavorite: true },
+  { id: 6, code: "6299-2", description: "Urea nitrogen [Mass/volume] in Blood", isFavorite: true },
+  { id: 7, code: "2823-3", description: "Potassium [Moles/volume] in Serum or Plasma", isFavorite: false },
+  { id: 8, code: "2951-2", description: "Sodium [Moles/volume] in Serum or Plasma", isFavorite: false },
+  { id: 9, code: "1742-6", description: "Alanine aminotransferase in Serum or Plasma", isFavorite: true },
+  { id: 10, code: "1920-8", description: "Aspartate aminotransferase in Serum or Plasma", isFavorite: false },
+  { id: 11, code: "718-7", description: "Hemoglobin [Mass/volume] in Blood", isFavorite: true },
+  { id: 12, code: "6690-2", description: "Leukocytes [#/volume] in Blood", isFavorite: false },
+  { id: 13, code: "787-2", description: "MCV [Entitic volume]", isFavorite: true },
+  { id: 14, code: "789-8", description: "Erythrocytes [#/volume] in Blood", isFavorite: false },
+  { id: 15, code: "777-3", description: "Platelets [#/volume] in Blood", isFavorite: true },
+  { id: 16, code: "2085-9", description: "HDL Cholesterol [Mass/volume]", isFavorite: false },
+  { id: 17, code: "13457-7", description: "LDL Cholesterol [Mass/volume] calc", isFavorite: true },
+  { id: 18, code: "2339-0", description: "Glucose [Mass/volume] in Blood", isFavorite: false },
+  { id: 19, code: "3094-0", description: "Urea nitrogen [Mass/volume] in Serum", isFavorite: true },
+  { id: 20, code: "14959-1", description: "Microalbumin [Mass/volume] in Urine", isFavorite: false },
+];
+
+// ─── SNOMED CT Codes ────────────────────────────────────
+export const snomedCodesData = [
+  { id: 1, code: "73211009", description: "Diabetes mellitus", isFavorite: true },
+  { id: 2, code: "38341003", description: "Hypertensive disorder", isFavorite: false },
+  { id: 3, code: "195967001", description: "Asthma", isFavorite: true },
+  { id: 4, code: "44054006", description: "Diabetes mellitus type 2", isFavorite: false },
+  { id: 5, code: "59621000", description: "Essential hypertension", isFavorite: true },
+  { id: 6, code: "233678006", description: "Childhood asthma", isFavorite: true },
+  { id: 7, code: "35489007", description: "Depressive disorder", isFavorite: false },
+  { id: 8, code: "13645005", description: "Chronic obstructive lung disease", isFavorite: false },
+  { id: 9, code: "84114007", description: "Heart failure", isFavorite: true },
+  { id: 10, code: "49436004", description: "Atrial fibrillation", isFavorite: false },
+  { id: 11, code: "22298006", description: "Myocardial infarction", isFavorite: true },
+  { id: 12, code: "230690007", description: "Cerebrovascular accident", isFavorite: false },
+  { id: 13, code: "70995007", description: "Pulmonary embolism", isFavorite: true },
+  { id: 14, code: "431855005", description: "Chronic kidney disease stage 1", isFavorite: false },
+  { id: 15, code: "46635009", description: "Diabetes mellitus type 1", isFavorite: true },
+  { id: 16, code: "40930008", description: "Hypothyroidism", isFavorite: false },
+  { id: 17, code: "34095006", description: "Dehydration", isFavorite: true },
+  { id: 18, code: "267036007", description: "Dyspnea", isFavorite: false },
+  { id: 19, code: "25064002", description: "Headache", isFavorite: true },
+  { id: 20, code: "386661006", description: "Fever", isFavorite: false },
+];
+
+// ─── HCPCS Codes ────────────────────────────────────────
+export const hcpcsCodesData = [
+  { id: 1, code: "A0425", description: "Ground mileage, per statute mile", isFavorite: true },
+  { id: 2, code: "A4253", description: "Blood glucose test strips, 50 per box", isFavorite: false },
+  { id: 3, code: "E0601", description: "Continuous positive airway pressure device", isFavorite: true },
+  { id: 4, code: "J0585", description: "Injection, onabotulinumtoxinA, 1 unit", isFavorite: false },
+  { id: 5, code: "G0008", description: "Administration of influenza virus vaccine", isFavorite: true },
+  { id: 6, code: "G0009", description: "Administration of pneumococcal vaccine", isFavorite: true },
+  { id: 7, code: "G0010", description: "Administration of hepatitis B vaccine", isFavorite: false },
+  { id: 8, code: "J1745", description: "Injection, infliximab, 10 mg", isFavorite: false },
+  { id: 9, code: "J3301", description: "Injection, triamcinolone acetonide, 10 mg", isFavorite: true },
+  { id: 10, code: "L3000", description: "Foot, insert, removable, molded to patient model", isFavorite: false },
+  { id: 11, code: "Q4001", description: "Casting supplies, body cast", isFavorite: true },
+  { id: 12, code: "A4550", description: "Surgical trays", isFavorite: false },
+  { id: 13, code: "E0260", description: "Hospital bed, semi-electric", isFavorite: true },
+  { id: 14, code: "K0001", description: "Standard wheelchair", isFavorite: false },
+  { id: 15, code: "L0180", description: "Cervical, multiple post collar", isFavorite: true },
+  { id: 16, code: "A6402", description: "Sterile gauze conforming bandage", isFavorite: false },
+  { id: 17, code: "E0486", description: "Oral device/appliance for neuromuscular disorders", isFavorite: true },
+  { id: 18, code: "J0171", description: "Injection, adrenalin, epinephrine, 0.1 mg", isFavorite: false },
+  { id: 19, code: "G0101", description: "Cervical or vaginal cancer screening", isFavorite: true },
+  { id: 20, code: "G0105", description: "Colorectal cancer screening, colonoscopy", isFavorite: false },
+];
+
+// ─── Conditions ─────────────────────────────────────────
+export const conditionsData = [
+  { id: 1, name: "Hypertension", icdCode: "I10", description: "High blood pressure, increasing risk of heart disease and stroke.", createdDate: "10/27/2024", isFavorite: true },
+  { id: 2, name: "Type 1 and Type 2 Diabetes", icdCode: "E10.9", description: "Chronic condition affecting blood sugar regulation.", createdDate: "12/10/2024", isFavorite: false },
+  { id: 3, name: "Asthma", icdCode: "J45.909", description: "Lung disease causing breathing difficulties.", createdDate: "11/25/2024", isFavorite: true },
+  { id: 4, name: "Chronic Kidney Disease (CKD)", icdCode: "N18.9", description: "Respiratory condition causing airway inflammation and wheezing.", createdDate: "08/28/2024", isFavorite: false },
+  { id: 5, name: "Depression", icdCode: "F32.9", description: "Gradual loss of kidney function, leading to waste buildup.", createdDate: "10/27/2024", isFavorite: true },
+  { id: 6, name: "Hypertension", icdCode: "M19.90", description: "Joint degeneration causing pain and stiffness.", createdDate: "12/10/2024", isFavorite: false },
+  { id: 7, name: "Type 1 and Type 2 Diabetes", icdCode: "E78.5", description: "Autoimmune disease causing joint inflammation and deformity.", createdDate: "11/25/2024", isFavorite: true },
+  { id: 8, name: "Asthma", icdCode: "J44.9", description: "Persistent sadness and loss of interest in activities.", createdDate: "08/28/2024", isFavorite: false },
+  { id: 9, name: "Chronic Kidney Disease (CKD)", icdCode: "E78.5", description: "Digestive disorder causing abdominal pain and irregular bowels.", createdDate: "10/27/2024", isFavorite: true },
+  { id: 10, name: "Depression", icdCode: "N18.9", description: "High blood pressure, increasing risk of heart disease and stroke.", createdDate: "12/10/2024", isFavorite: false },
+  { id: 11, name: "Chronic Kidney Disease (CKD)", icdCode: "N18.9", description: "Chronic condition affecting blood sugar regulation.", createdDate: "11/25/2024", isFavorite: true },
+  { id: 12, name: "Hypertension", icdCode: "E78.5", description: "Chronic condition affecting blood sugar regulation.", createdDate: "08/28/2024", isFavorite: false },
+  { id: 13, name: "Type 1 and Type 2 Diabetes", icdCode: "E66.9", description: "Autoimmune disease causing joint inflammation and deformity.", createdDate: "10/27/2024", isFavorite: true },
+  { id: 14, name: "Asthma", icdCode: "O30.9", description: "High blood pressure, increasing risk of heart disease and stroke.", createdDate: "12/10/2024", isFavorite: false },
+];
+
+// ─── Care Plans ─────────────────────────────────────────
+export const carePlansData = [
+  { id: 1, name: "Diabetes (Type 1)", description: "Comprehensive Diabetes care plan", duration: "12 months", isFavorite: true },
+  { id: 2, name: "Diabetes Management", description: "Blood pressure management plan - Goal Care Plan", duration: "6 months", isFavorite: false },
+  { id: 3, name: "Hypertension Control", description: "Comprehensive Diabetes care plan", duration: "12 months", isFavorite: true },
+  { id: 4, name: "Diabetes Management", description: "Blood pressure management plan", duration: "6 months", isFavorite: false },
+];
+
+// ─── Assessments ────────────────────────────────────────
+export const assessmentsData = [
+  { id: 1, name: "PRAPARE", description: "Patient Health Questionnaire - Depression", createdDateTime: "10/10/2023, 3:00:00 AM", lastModified: "10/12/2025", totalQuestions: 80, isFavorite: true },
+  { id: 2, name: "AHC HRSN Screening", description: "Generalized Anxiety Disorder Assessment", createdDateTime: "11/10/2023, 9:00:02 PM", lastModified: "08/28/2025", totalQuestions: 43, isFavorite: true },
+  { id: 3, name: "Family Medicine Intake and Annual Form", description: "Patient Health Questionnaire - Depression", createdDateTime: "01/10/2023, 9:00:02 PM", lastModified: "09/23/2025", totalQuestions: 26, isFavorite: true },
+  { id: 4, name: "Standard Depression Screening", description: "Patient Health Questionnaire - Depression", createdDateTime: "01/10/2023, 9:00:02 PM", lastModified: "09/23/2025", totalQuestions: 26, isFavorite: false },
+];
+
+// ─── Payers ─────────────────────────────────────────────
+export const PAYER_TYPE_OPTIONS = [
+  { label: "Government", value: "Government" },
+  { label: "Private", value: "Private" },
+];
+
+export const payersData = [
+  { id: 1, name: "Medicare", type: "Government", status: "Inactive", isFavorite: true },
+  { id: 2, name: "Blue Cross Blue Shield", type: "Private", status: "Active", isFavorite: false },
+  { id: 3, name: "Continental Allied Health & Life Assurance C...", type: "Private", status: "Active", isFavorite: true },
+  { id: 4, name: "Blue Cross Blue Shield", type: "Government", status: "Active", isFavorite: false },
+  { id: 5, name: "Medicare", type: "Private", status: "Inactive", isFavorite: true },
+  { id: 6, name: "Blue Cross Blue Shield", type: "Government", status: "Active", isFavorite: true },
+  { id: 7, name: "Medicare", type: "Private", status: "Inactive", isFavorite: false },
+  { id: 8, name: "Blue Cross Blue Shield", type: "Government", status: "Active", isFavorite: false },
+  { id: 9, name: "Medicare", type: "Private", status: "Inactive", isFavorite: true },
+  { id: 10, name: "Blue Cross Blue Shield", type: "Private", status: "Active", isFavorite: false },
+  { id: 11, name: "Blue Cross Blue Shield", type: "Private", status: "Inactive", isFavorite: true },
+  { id: 12, name: "Medicare", type: "Government", status: "Active", isFavorite: false },
+  { id: 13, name: "Blue Cross Blue Shield", type: "Private", status: "Active", isFavorite: true },
+  { id: 14, name: "Medicare", type: "Government", status: "Inactive", isFavorite: true },
+];
+
+// ─── Education ──────────────────────────────────────────
+export const educationData = [
+  { id: 1, fileName: "Diabetes: Care Instructions", specialty: "Ophthalmology", fileType: "PDF", uploadedOn: "12/11/2024", uploadedBy: "Jane Cooper", isFavorite: true },
+  { id: 2, fileName: "Admission Note", specialty: "Cardiology", fileType: "PNG", uploadedOn: "11/10/2024", uploadedBy: "Ralph Edwards", isFavorite: false },
+  { id: 3, fileName: "Vital Signs Flow Sheet", specialty: "Family Medicine", fileType: "JPEG", uploadedOn: "08/24/2024", uploadedBy: "Cameron Williamson", isFavorite: true },
+  { id: 4, fileName: "Nutritional Facts: Care Instructions", specialty: "Neurology", fileType: "PDF", uploadedOn: "12/11/2024", uploadedBy: "Eleanor Pena", isFavorite: false },
+  { id: 5, fileName: "Vital Signs Flow Sheet", specialty: "Ophthalmology", fileType: "PDF", uploadedOn: "11/10/2024", uploadedBy: "Esther Howard", isFavorite: true },
+  { id: 6, fileName: "Knee Pain: Care Instructions", specialty: "Cardiology", fileType: "PDF", uploadedOn: "08/24/2024", uploadedBy: "Floyd Miles", isFavorite: true },
+  { id: 7, fileName: "Stomach Pain: Care Instructions", specialty: "Family Medicine", fileType: "PNG", uploadedOn: "12/11/2024", uploadedBy: "Kathryn Murphy", isFavorite: false },
+  { id: 8, fileName: "Referral Letter", specialty: "Neurology", fileType: "PDF", uploadedOn: "11/10/2024", uploadedBy: "Albert Flores", isFavorite: true },
+  { id: 9, fileName: "Vital Signs Flow Sheet", specialty: "Ophthalmology", fileType: "JPEG", uploadedOn: "08/24/2024", uploadedBy: "Marvin McKinney", isFavorite: true },
+  { id: 10, fileName: "Stomach Pain: Care Instructions", specialty: "Cardiology", fileType: "PNG", uploadedOn: "12/11/2024", uploadedBy: "Jenny Wilson", isFavorite: false },
+  { id: 11, fileName: "Vital Signs Flow Sheet", specialty: "Family Medicine", fileType: "PDF", uploadedOn: "11/10/2024", uploadedBy: "Bessie Cooper", isFavorite: false },
+  { id: 12, fileName: "Vital Signs Flow Sheet", specialty: "Neurology", fileType: "JPEG", uploadedOn: "08/24/2024", uploadedBy: "Courtney Henry", isFavorite: false },
+  { id: 13, fileName: "Referral Letter", specialty: "Ophthalmology", fileType: "PDF", uploadedOn: "12/11/2024", uploadedBy: "Jerome Bell", isFavorite: true },
+  { id: 14, fileName: "Stomach Pain: Care Instructions", specialty: "Cardiology", fileType: "PNG", uploadedOn: "11/10/2024", uploadedBy: "Annette Black", isFavorite: true },
+];

@@ -11,6 +11,10 @@ const VARIANTS = {
     "bg-transparent hover:bg-neutral-100 text-neutral-600",
   link:
     "bg-transparent text-secondary hover:text-secondary-link underline-offset-4 hover:underline p-0 h-auto",
+  primaryTeal:
+    "bg-primary hover:bg-primary-600 text-text-inverse",
+  outlineTeal:
+    "bg-transparent hover:bg-primary-50 text-primary border border-primary",
 };
 
 const SIZES = {

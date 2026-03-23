@@ -4,10 +4,12 @@ import { lazy, Suspense, useMemo } from "react";
 // Add your custom SVG icons here. These take priority over lucide.
 import CloseIcon from "./vectors/CloseIcon";
 import SearchIcon from "./vectors/SearchIcon";
+import SubOrgIcon from "./vectors/SubOrgIcon";
 
 const localIcons = {
   close: CloseIcon,
   search: SearchIcon,
+  suborg: SubOrgIcon,
   // Add more:
   // bell: BellIcon,
   // filter: FilterIcon,

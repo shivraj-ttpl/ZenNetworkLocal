@@ -28,6 +28,18 @@ function SharedRoute({ children, useLayout = false }) {
   return children;
 }
 
+function renderChildren(children) {
+  return children?.map((child) =>
+    child.index ? (
+      <Route key="index" index element={<child.element />} />
+    ) : (
+      <Route key={child.path} path={child.path} element={<child.element />}>
+        {renderChildren(child.children)}
+      </Route>
+    )
+  );
+}
+
 function PageLoader() {
   return (
     <div className="flex items-center justify-center h-screen">
@@ -81,13 +93,7 @@ export default function AppRouter() {
                 path={route.path}
                 element={<route.element />}
               >
-                {route.children?.map((child) => (
-                  <Route
-                    key={child.path}
-                    path={child.path}
-                    element={<child.element />}
-                  />
-                ))}
+                {renderChildren(route.children)}
               </Route>
             ))}
           </Route>

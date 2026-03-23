@@ -1,0 +1,164 @@
+import { useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
+
+import Avatar from '@/components/commonComponents/avatar/Avatar';
+import Button from '@/components/commonComponents/button/Button';
+import Icon from '@/components/icons/Icon';
+import { organizationProfile } from '@/data/settingsData';
+
+const STATS = [
+  { icon: 'Building2', label: 'Sub-Organizations', key: 'subOrganizations' },
+  { icon: 'users-round', label: 'Provider Group', key: 'providerGroup' },
+  { icon: 'Stethoscope', label: 'Total Providers', key: 'totalProviders' },
+  { icon: 'user-round-check', label: 'Total Patient', key: 'totalPatient' },
+  { icon: 'Monitor', label: 'System Users', key: 'systemUsers' },
+];
+
+const CONTACT_FIELDS = [
+  { label: 'Email Address', key: 'emailAddress', isLink: true },
+  { label: 'Contact Number', key: 'contactNumber' },
+  { label: 'Fax', key: 'fax' },
+  { label: 'Website', key: 'website', isLink: true },
+  { label: 'Address', key: 'address' },
+];
+
+const ORG_DETAIL_FIELDS = [
+  { label: 'Created On', key: 'createdOn' },
+  { label: 'Organization Type', key: 'organizationType' },
+  { label: 'Description', key: 'description' },
+];
+
+const ADMIN_FIELDS = [
+  { label: 'Administrator Name', key: 'name' },
+  { label: 'Email Address', key: 'emailAddress', isLink: true },
+  { label: 'Contact Number', key: 'contactNumber' },
+];
+
+function LabelValue({ label, value, isLink }) {
+  return (
+    <div className="flex items-start gap-2 text-sm">
+      <span className="text-neutral-500 min-w-32">{label}</span>
+      <span className="text-neutral-500">:</span>
+      {isLink ? (
+        <a href="#" className="text-primary-700 hover:underline">
+          {value}
+        </a>
+      ) : (
+        <span className="text-text-primary">{value}</span>
+      )}
+    </div>
+  );
+}
+
+export default function SettingsProfile() {
+  const { setToolbar } = useOutletContext();
+
+  useEffect(() => {
+    setToolbar(
+      <Button variant="primaryTeal" size="sm">
+        <Icon name="Pencil" size={14} />
+        Edit Organization Profile
+      </Button>,
+    );
+    return () => setToolbar(null);
+  }, [setToolbar]);
+
+  return (
+    <div className="px-5 pb-5 ">
+      <div className="border border-border-light rounded-lg p-5">
+        <div className="flex items-start gap-4 mb-6">
+          <Avatar name={organizationProfile.name} size="xl" variant="square" />
+          <div className="flex-1 gap-3">
+              <span className="text-base font-medium text-text-primary ">
+                {organizationProfile.name}
+              </span>
+              <div className="space-y-1.5 text-sm mt-3">
+                <LabelValue
+                  label="Legal Name"
+                  value={organizationProfile.legalName}
+                />
+                <LabelValue
+                  label="License Number"
+                  value={organizationProfile.licenseNumber}
+                />
+                <LabelValue label="Tax ID" value={organizationProfile.taxId} />
+              </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-5 gap-4 mb-6">
+          {STATS.map((stat) => (
+            <div
+              key={stat.key}
+              className="border border-border-light rounded-lg p-4 flex items-center gap-3"
+            >
+              <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center">
+                <Icon name={stat.icon} size={18} className="text-primary-600" />
+              </div>
+              <div>
+                <p className="text-xs text-neutral-500">{stat.label}</p>
+                <p className="text-lg font-semibold text-text-primary">
+                  {organizationProfile.stats[stat.key]}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
+                Contact Information
+              </h3>
+              <div className="space-y-3">
+                {CONTACT_FIELDS.map((item) => (
+                  <LabelValue
+                    key={item.key}
+                    label={item.label}
+                    value={organizationProfile.contactInfo[item.key]}
+                    isLink={item.isLink}
+                  />
+                ))}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
+                Organization Details
+              </h3>
+              <div className="space-y-3">
+                {ORG_DETAIL_FIELDS.map((item) => (
+                  <LabelValue
+                    key={item.key}
+                    label={item.label}
+                    value={organizationProfile.organizationDetails[item.key]}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
+              Administrative Contact
+            </h3>
+            <div className="space-y-6">
+              {organizationProfile.adminContacts.map((contact, idx) => (
+                <div key={idx} className="space-y-3">
+                  {ADMIN_FIELDS.map((item) => (
+                    <LabelValue
+                      key={`${idx}-${item.key}`}
+                      label={item.label}
+                      value={contact[item.key]}
+                      isLink={item.isLink}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

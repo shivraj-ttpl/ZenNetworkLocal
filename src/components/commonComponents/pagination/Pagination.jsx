@@ -51,7 +51,7 @@ export default function Pagination({
           <select
             value={currentLimit}
             onChange={(e) => onLimitChange?.(Number(e.target.value))}
-            className="bg-transparent border border-border rounded px-1.5 py-0.5 text-sm text-text-primary cursor-pointer focus:outline-none focus:border-primary"
+            className="bg-transparent  rounded px-1.5 py-0.5 text-sm text-text-primary cursor-pointer focus:outline-none focus:border-primary"
           >
             {limitOptions.map((opt) => (
               <option key={opt} value={opt}>
@@ -67,14 +67,7 @@ export default function Pagination({
 
       {/* Right: Page navigation */}
       <div className="flex items-center gap-1">
-        {/* First page */}
-        <NavButton
-          onClick={() => onPageChange?.(1)}
-          disabled={isFirst}
-          aria-label="First page"
-        >
-          <Icon name="ChevronsLeft" size={16} />
-        </NavButton>
+        
 
         {/* Previous */}
         <NavButton
@@ -82,7 +75,7 @@ export default function Pagination({
           disabled={isFirst}
           aria-label="Previous page"
         >
-          <Icon name="ChevronLeft" size={16} />
+          <Icon name="chevron-first" size={16} />
         </NavButton>
 
         {/* Page numbers */}
@@ -117,17 +110,10 @@ export default function Pagination({
           disabled={isLast}
           aria-label="Next page"
         >
-          <Icon name="ChevronRight" size={16} />
+          <Icon name="chevron-last" size={16} />
         </NavButton>
 
-        {/* Last page */}
-        <NavButton
-          onClick={() => onPageChange?.(totalPages)}
-          disabled={isLast}
-          aria-label="Last page"
-        >
-          <Icon name="ChevronsRight" size={16} />
-        </NavButton>
+      
       </div>
     </div>
   );
