@@ -31,11 +31,18 @@ const sliceConfig = {
       state.drawerMode = "";
       state.editData = null;
     },
+    openImportModal: (state, action) => {
+      state.importModalFor = action.payload;
+    },
+    closeImportModal: (state) => {
+      state.importModalFor = "";
+    },
   },
   initialReducerState: {
     drawerOpenFrom: "",
     drawerMode: "",
     editData: null,
+    importModalFor: "",
   },
 };
 
@@ -47,4 +54,4 @@ export function registerReducer() {
   slice = store.reducerManager.add(sliceConfig);
 }
 
-export const { setDrawerOpenFrom, setDrawerMode, setEditData, setOpenAddDrawer, setOpenEditDrawer, closeDrawer } = slice.actions;
+export const { setDrawerOpenFrom, setDrawerMode, setEditData, setOpenAddDrawer, setOpenEditDrawer, closeDrawer, openImportModal, closeImportModal } = slice.actions;

@@ -4,9 +4,11 @@ import { useDispatch } from "react-redux";
 import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
 import Button from "@/components/commonComponents/button/Button";
 import Icon from "@/components/icons/Icon";
-import { setOpenAddDrawer } from "./codesSlice";
-import AddCodeDrawer from "../Components/AddCodeDrawer";
+import { setOpenAddDrawer, openImportModal } from "./codesSlice";
+
 import { PATH_TO_LABEL } from "./constant";
+import AddCodeDrawer from "./Components/AddCodeDrawer";
+import ImportCodes from "./Components/ImportCodes";
 
 const TABS = [
   { label: "ICD Code", path: "/master-data/codes", end: true },
@@ -33,7 +35,7 @@ export default function CodesContainer() {
   useEffect(() => {
     setToolbar(
       <>
-        <Button variant="outlineTeal" size="sm">
+        <Button variant="outlineTeal" size="sm" onClick={() => dispatch(openImportModal(codeLabel))}>
           <Icon name="Plus" size={14} />
           Import {codeLabel} Codes
         </Button>
@@ -96,6 +98,7 @@ export default function CodesContainer() {
       <Outlet context={{ showArchive, search, codeLabel }} />
 
       <AddCodeDrawer />
+      <ImportCodes />
     </div>
   );
 }
