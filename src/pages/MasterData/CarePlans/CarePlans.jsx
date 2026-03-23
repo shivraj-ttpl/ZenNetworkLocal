@@ -4,8 +4,10 @@ import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
 import Icon from "@/components/icons/Icon";
 import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
+import Button from "@/components/commonComponents/button/Button";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { carePlansData } from "@/data/masterData";
+import ViewCarePlanDrawer from "./components/ViewCarePlanDrawer";
 
 export default function CarePlans() {
   const { setToolbar } = useOutletContext();
@@ -15,6 +17,7 @@ export default function CarePlans() {
   const [showArchive, setShowArchive] = useState(false);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+  const [showAddDrawer, setShowAddDrawer] = useState(false);
 
   useEffect(() => {
     setToolbar(
@@ -36,6 +39,10 @@ export default function CarePlans() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
+        <Button variant="primaryTeal" size="sm" onClick={() => setShowAddDrawer(true)}>
+          <Icon name="Plus" size={14} />
+          Add Care Plan
+        </Button>
       </>
     );
     return () => setToolbar(null);
@@ -92,7 +99,7 @@ export default function CarePlans() {
             <ActionDropdown
               options={[
                 { label: "Edit", value: "edit", onClickCb: () => {} },
-                { label: "View", value: "view", onClickCb: () => {} },
+                { label: "View", value: "view", onClickCb: () => setShowAddDrawer(true) },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
@@ -121,6 +128,8 @@ export default function CarePlans() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+
+      <ViewCarePlanDrawer open={showAddDrawer} onClose={() => setShowAddDrawer(false)} />
     </div>
   );
 }
