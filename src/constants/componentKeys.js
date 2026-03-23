@@ -2,6 +2,6 @@
 export const COMPONENT_KEYS = {
   MAIN_APP: "MAIN_APP",
   DASHBOARD: "DASHBOARD",
-  // Add more as you create pages:
-
+  CODES: "CODES",
+  CONDITIONS: "CONDITIONS",
 };

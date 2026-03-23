@@ -1,8 +1,12 @@
 import { useState, useMemo, useEffect } from "react";
 import { NavLink, Outlet, useLocation, Navigate, useOutletContext } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
 import Button from "@/components/commonComponents/button/Button";
 import Icon from "@/components/icons/Icon";
+import { setOpenAddDrawer } from "./codesSlice";
+import AddCodeDrawer from "../Components/AddCodeDrawer";
+import { PATH_TO_LABEL } from "./constant";
 
 const TABS = [
   { label: "ICD Code", path: "/master-data/codes", end: true },
@@ -12,14 +16,6 @@ const TABS = [
   { label: "HCPCS Code", path: "/master-data/codes/hcpcs" },
 ];
 
-const PATH_TO_LABEL = {
-  "/master-data/codes": "ICD",
-  "/master-data/codes/cpt": "CPT",
-  "/master-data/codes/lonic": "LONIC",
-  "/master-data/codes/snomed-ct": "SNOMED CT",
-  "/master-data/codes/hcpcs": "HCPCS",
-};
-
 function getCodeLabel(pathname) {
   const match = Object.entries(PATH_TO_LABEL).find(([path]) => pathname === path);
   return match ? match[1] : "ICD";
@@ -27,12 +23,13 @@ function getCodeLabel(pathname) {
 
 export default function CodesContainer() {
   const location = useLocation();
+  const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const [showArchive, setShowArchive] = useState(false);
   const [search, setSearch] = useState("");
+  // useFlexCleanup(componentKey);
 
   const codeLabel = useMemo(() => getCodeLabel(location.pathname), [location.pathname]);
-
   useEffect(() => {
     setToolbar(
       <>
@@ -40,14 +37,14 @@ export default function CodesContainer() {
           <Icon name="Plus" size={14} />
           Import {codeLabel} Codes
         </Button>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenAddDrawer(codeLabel))}>
           <Icon name="Plus" size={14} />
           Add {codeLabel} Code
         </Button>
       </>
     );
     return () => setToolbar(null);
-  }, [setToolbar, codeLabel]);
+  }, [setToolbar, codeLabel, dispatch]);
 
   if (location.pathname === "/master-data/codes/") {
     return <Navigate to="/master-data/codes" replace />;
@@ -96,7 +93,9 @@ export default function CodesContainer() {
         </div>
       </div>
 
-      <Outlet context={{ showArchive, search }} />
+      <Outlet context={{ showArchive, search, codeLabel }} />
+
+      <AddCodeDrawer />
     </div>
   );
 }
