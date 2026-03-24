@@ -11,7 +11,12 @@ import NutritionGoals from './steps/NutritionGoals';
 import ExerciseGoals from './steps/ExerciseGoals';
 import SelfCareStressGoals from './steps/SelfCareStressGoals';
 import MedicationAdherenceGoals from './steps/MedicationAdherenceGoals';
+import HomeTrackingGoals from './steps/HomeTrackingGoals';
+import CareFollowUpGoals from './steps/CareFollowUpGoals';
+import PlanForSuccess from './steps/PlanForSuccess';
 import StepPlaceholder from './steps/StepPlaceholder';
+import { setCloseDrawer } from '../carePlansSlice';
+import { useDispatch } from 'react-redux';
 
 const INITIAL_VALUES = {
   lifeGoals: {
@@ -265,6 +270,111 @@ const INITIAL_VALUES = {
       stopFeelWorse: { lastValue: 'Some of the time', currentValue: '', strategy: '' },
     },
   },
+  homeTrackingGoals: {
+    heightFeet: '',
+    heightInches: '',
+    weight: '',
+    bmiValue: '',
+    idealWeight: '',
+    fingerStickGlucometer: '',
+    continuousGlucose: '',
+    bloodPressureCuff: '',
+    systolicBPToday: '',
+    diastolicBPToday: '',
+    pulseToday: '',
+    lowGlucoseLastWeek: '',
+    highGlucoseLastWeek: '',
+    measures: {
+      bmi: {
+        lastValue: '30.4',
+        lastDate: '12/15/2025',
+        currentValue: '',
+        currentDate: null,
+        goal: '',
+      },
+      systolicBP: {
+        lastValue: '138',
+        lastDate: '12/15/2025',
+        currentValue: '',
+        currentDate: null,
+        goal: '',
+      },
+      diastolicBP: {
+        lastValue: '88',
+        lastDate: '12/15/2025',
+        currentValue: '',
+        currentDate: null,
+        goal: '',
+      },
+      pulse: {
+        lastValue: '92',
+        lastDate: '12/15/2025',
+        currentValue: '',
+        currentDate: null,
+        goal: '',
+      },
+      lowGlucose: {
+        lastValue: '72',
+        lastDate: '12/15/2025',
+        currentValue: '',
+        currentDate: null,
+        goal: '',
+      },
+      highGlucose: {
+        lastValue: '198',
+        lastDate: '12/15/2025',
+        currentValue: '',
+        currentDate: null,
+        goal: '',
+      },
+    },
+  },
+  careFollowUpGoals: {
+    primaryCareVisit: { dateReferred: null, placeReferred: '', dateCompleted: null },
+    clinicalPharmacists: { dateReferred: null, placeReferred: '', dateCompleted: null },
+    diabetesNutritionist: { dateReferred: null, placeReferred: '', dateCompleted: null },
+    physicalTherapist: { dateReferred: null, placeReferred: '', dateCompleted: null },
+    socialServiceVisit: { dateReferred: null, placeReferred: '', dateCompleted: null },
+    eyeExam: { dateReferred: null, placeReferred: '', dateCompleted: null },
+    footExam: { dateReferred: null, placeReferred: '', dateCompleted: null },
+    counseling: { dateReferred: null, placeReferred: '', dateCompleted: null },
+  },
+  planForSuccess: {
+    barriers: {
+      transportation: { checked: false, solutions: {}, planNotes: '' },
+      childElderCare: { checked: false, solutions: {}, planNotes: '' },
+      workPrevents: { checked: false, solutions: {}, planNotes: '' },
+      forgettingMedications: { checked: false, solutions: {}, planNotes: '' },
+      costMedications: { checked: false, solutions: {}, planNotes: '' },
+      dietRestrictions: { checked: false, solutions: {}, planNotes: '' },
+      lowBloodSugar: { checked: false, solutions: {}, planNotes: '' },
+      lackFamilySupport: { checked: false, solutions: {}, planNotes: '' },
+      workScheduleConflicts: { checked: false, solutions: {}, planNotes: '' },
+    },
+    expectedOutcomes: {
+      hba1cBelow7: false,
+      reducedRisk: false,
+      betterEnergy: false,
+      improvedAdherence: false,
+      weightLoss: false,
+      bloodSugarReadings: false,
+      bloodPressureBelow: false,
+      betterQuality: false,
+      other: false,
+      otherSpecify: '',
+    },
+    confidence: '',
+    additionalNotes: '',
+    followUp: {
+      oneDay: false,
+      oneWeek: false,
+      oneMonth: false,
+      threeMonths: false,
+      sixMonths: false,
+      other: false,
+      otherSpecify: '',
+    },
+  },
 };
 
 function StepContent({ stepId, formikProps }) {
@@ -285,6 +395,12 @@ function StepContent({ stepId, formikProps }) {
       return <SelfCareStressGoals {...formikProps} />;
     case 7:
       return <MedicationAdherenceGoals {...formikProps} />;
+    case 8:
+      return <HomeTrackingGoals {...formikProps} />;
+    case 9:
+      return <CareFollowUpGoals {...formikProps} />;
+    case 10:
+      return <PlanForSuccess {...formikProps} />;
     default:
       return <StepPlaceholder title={step?.label || ''} />;
   }
@@ -293,7 +409,7 @@ function StepContent({ stepId, formikProps }) {
 export default function ViewCarePlanDrawer({ open, onClose }) {
   const [activeStep, setActiveStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState(new Set());
-
+  const dispatch=useDispatch()
   const totalSteps = CARE_PLAN_STEPS.length;
   const currentStepLabel =
     CARE_PLAN_STEPS.find((s) => s.id === activeStep)?.label || '';
@@ -301,8 +417,8 @@ export default function ViewCarePlanDrawer({ open, onClose }) {
   const handleClose = useCallback(() => {
     setActiveStep(1);
     setCompletedSteps(new Set());
-    onClose();
-  }, [onClose]);
+    dispatch(setCloseDrawer());
+  }, [dispatch]);
 
   const handleNext = useCallback(() => {
     setCompletedSteps((prev) => new Set([...prev, activeStep]));
@@ -372,9 +488,10 @@ export default function ViewCarePlanDrawer({ open, onClose }) {
             variant="primaryTeal"
             size="sm"
             type="button"
-            onClick={isLastStep ? undefined : handleNext}
+            onClick={isLastStep ? handleClose : handleNext}
+            className="px-10"
           >
-            {isLastStep ? 'Submit' : 'Next'}
+            {isLastStep ? 'Finish' : 'Next'}
           </Button>
         </div>
       }

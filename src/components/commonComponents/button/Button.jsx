@@ -15,6 +15,8 @@ const VARIANTS = {
     "bg-primary hover:bg-primary-600 text-text-inverse",
   outlineTeal:
     "bg-transparent hover:bg-primary-50 text-primary border border-primary",
+  brandPrimary:
+    "bg-[#007DCE] hover:bg-[#006bb3] text-text-inverse",
 };
 
 const SIZES = {

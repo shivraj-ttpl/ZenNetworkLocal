@@ -238,7 +238,7 @@ const FileUpload = ({
           size="sm"
           type="button"
           onClick={onDownloadTemplate}
-          className="self-start !text-primary-500 !px-0"
+          className="self-start !text-primary-500 !px-0 mt-2"
         >
           {downloadTemplateLabel}
         </Button>
