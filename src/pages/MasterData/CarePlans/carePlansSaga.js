@@ -7,16 +7,16 @@ import MasterDataService from '@/services/appDataService/MasterDataService';
 
 import {
   componentKey,
-  setPayersList,
+  setCarePlansList,
   setTotalRecords,
   setTotalPages,
-} from './payersSlice';
+} from './carePlansSlice';
 
-export const payersActions = createSagaActions(componentKey, [
-  'fetchPayers',
+export const carePlansActions = createSagaActions(componentKey, [
+  'fetchCarePlans',
 ]);
 
-function* fetchPayersSaga() {
+function* fetchCarePlansSaga() {
   const state = yield select((s) => s[componentKey]);
   const { page, limit, search, showArchived } = state;
 
@@ -25,11 +25,11 @@ function* fetchPayersSaga() {
   if (showArchived) params.showArchived = showArchived;
 
   yield* apiCall({
-    loadingKey: LOADING_KEYS.PAYERS_GET_LIST,
-    apiFunc: () => MasterDataService.getPayers(params),
+    loadingKey: LOADING_KEYS.CARE_PLANS_GET_LIST,
+    apiFunc: () => MasterDataService.getCarePlans(params),
     onSuccess: function* (response) {
       const { data, meta } = response.data.data;
-      yield put(setPayersList(data));
+      yield put(setCarePlansList(data));
       yield put(setTotalRecords(meta.total));
       yield put(setTotalPages(meta.totalPages));
     },
@@ -38,7 +38,7 @@ function* fetchPayersSaga() {
 
 function* rootSaga() {
   yield all([
-    takeLatest(payersActions.fetchPayers().type, fetchPayersSaga),
+    takeLatest(carePlansActions.fetchCarePlans().type, fetchCarePlansSaga),
   ]);
 }
 

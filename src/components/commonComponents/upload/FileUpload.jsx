@@ -20,8 +20,8 @@ const FILE_TYPE_CONFIG = {
   svg: { icon: "Image", color: "text-purple-500", bg: "bg-purple-50" },
   mp4: { icon: "Video", color: "text-pink-500", bg: "bg-pink-50" },
   mov: { icon: "Video", color: "text-pink-500", bg: "bg-pink-50" },
-  mp3: { icon: "Music", color: "text-teal-500", bg: "bg-teal-50" },
-  wav: { icon: "Music", color: "text-teal-500", bg: "bg-teal-50" },
+  mp3: { icon: "Music", color: "text-cyan-500", bg: "bg-cyan-50" },
+  wav: { icon: "Music", color: "text-cyan-500", bg: "bg-cyan-50" },
   zip: { icon: "Archive", color: "text-yellow-600", bg: "bg-yellow-50" },
   rar: { icon: "Archive", color: "text-yellow-600", bg: "bg-yellow-50" },
 };
@@ -189,7 +189,7 @@ const FileUpload = ({
 
       {selectedFile && (
         <div className="flex items-center gap-3 p-3 rounded-lg border border-neutral-200 bg-neutral-50">
-          <div className={`w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg ${getFileConfig(selectedFile.name).bg}`}>
+          <div className={`w-10 h-10 shrink-0 flex items-center justify-center rounded-lg ${getFileConfig(selectedFile.name).bg}`}>
             {selectedFile.name.toLowerCase().endsWith(".pdf") ? (
               <img src={PdfIcon} alt="PDF" className="w-6 h-6 object-contain" />
             ) : (
@@ -211,7 +211,7 @@ const FileUpload = ({
           <button
             type="button"
             onClick={handleRemove}
-            className="flex-shrink-0 text-neutral-400 hover:text-error-500 transition-colors"
+            className="shrink-0 text-neutral-400 hover:text-error-500 transition-colors"
           >
             <Icon name="X" size={18} />
           </button>
@@ -238,7 +238,7 @@ const FileUpload = ({
           size="sm"
           type="button"
           onClick={onDownloadTemplate}
-          className="self-start !text-primary-500 !px-0 mt-2"
+          className="self-start text-primary-500! px-0! mt-2"
         >
           {downloadTemplateLabel}
         </Button>

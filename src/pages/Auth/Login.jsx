@@ -14,6 +14,7 @@ import {LOADING_KEYS} from "../../constants/loadingKeys"
 import { setLoggedInUser, setIsAuthenticated, setCurrentUserRole } from "./authSlice";
 import { showToast } from "../../utils/toastUtils";
 import {TOASTER_VARIANT} from "../../core/store/notificationSlice"
+import { toastMessages } from "../../constants/toastMessages";
 
 const fields = [
   {
@@ -40,7 +41,7 @@ export default function Login() {
   const handleLogin = (values) => {
 
     dispatch(postLogin({payload:values, onSuccessCb:(res)=>{
-      showToast("Logged in successfully", TOASTER_VARIANT.SUCCESS)
+      showToast(toastMessages?.loginSuccessMessage, TOASTER_VARIANT.SUCCESS)
       localStorage.setItem("token", res?.data?.data?.accessToken);
       localStorage.setItem("user", JSON.stringify(res?.data?.data?.user));
       dispatch(setLoggedInUser(res?.data?.data?.user));

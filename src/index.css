@@ -9,17 +9,17 @@
    * Usage:  bg-primary, text-primary-dark, border-neutral-300, etc.
    * ═══════════════════════════════════════════════════════ */
 
-  /* ── Primary (Teal) ── action buttons, active states, links, steppers */
-  --color-primary-50: #E6F2F0;
-  --color-primary-100: #C1DFD9;
-  --color-primary-200: #98CBC2;
-  --color-primary-300: #6EB7AB;
-  --color-primary-400: #4FA899;
-  --color-primary-500: #357A6F;
-  --color-primary-600: #2E6D63;
-  --color-primary-700: #255C54;
-  --color-primary-800: #1D4B44;
-  --color-primary-900: #123A34;
+  /* ── Primary (Blue) ── action buttons, active states, links, steppers */
+  --color-primary-50: #E6F3FC;
+  --color-primary-100: #C2E2F8;
+  --color-primary-200: #8DC7F1;
+  --color-primary-300: #58ACEB;
+  --color-primary-400: #2394E4;
+  --color-primary-500: #007DCE;
+  --color-primary-600: #006FB8;
+  --color-primary-700: #005D9B;
+  --color-primary-800: #004B7E;
+  --color-primary-900: #003961;
   --color-primary: var(--color-primary-500);
   --color-primary-light: var(--color-primary-100);
   --color-primary-dark: var(--color-primary-700);
@@ -137,4 +137,29 @@ body {
 
 #datepicker-portal .react-datepicker-popper {
   z-index: 9999 !important;
+}
+
+/* ===== Chrome, Edge, Safari (WebKit) ===== */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.5);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 116, 139, 0.8);
+}
+
+/* ===== Firefox ===== */
+* {
+  scrollbar-width: thin; /* auto | thin | none */
+  scrollbar-color: rgba(100, 116, 139, 0.5) transparent;
 }
