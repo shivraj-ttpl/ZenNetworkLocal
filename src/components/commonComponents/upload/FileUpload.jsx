@@ -20,8 +20,8 @@ const FILE_TYPE_CONFIG = {
   svg: { icon: "Image", color: "text-purple-500", bg: "bg-purple-50" },
   mp4: { icon: "Video", color: "text-pink-500", bg: "bg-pink-50" },
   mov: { icon: "Video", color: "text-pink-500", bg: "bg-pink-50" },
-  mp3: { icon: "Music", color: "text-teal-500", bg: "bg-teal-50" },
-  wav: { icon: "Music", color: "text-teal-500", bg: "bg-teal-50" },
+  mp3: { icon: "Music", color: "text-cyan-500", bg: "bg-cyan-50" },
+  wav: { icon: "Music", color: "text-cyan-500", bg: "bg-cyan-50" },
   zip: { icon: "Archive", color: "text-yellow-600", bg: "bg-yellow-50" },
   rar: { icon: "Archive", color: "text-yellow-600", bg: "bg-yellow-50" },
 };

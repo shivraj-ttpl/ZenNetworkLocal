@@ -81,7 +81,7 @@
 }
 
 .rbc-provider-availability .rbc-now .rbc-button-link {
-  background: #357A6F;
+  background: var(--color-primary-500);
   color: #ffffff;
   border-radius: 4px;
   padding: 2px 6px;
@@ -113,24 +113,24 @@
 
 .rbc-provider-availability .rbc-show-more {
   font-size: 11px;
-  color: #357A6F;
+  color: var(--color-primary-500);
   font-weight: 500;
   padding: 0 8px;
   background: transparent;
 }
 
-/* ── Availability card — normal (teal) ── */
+/* ── Availability card — normal (primary) ── */
 .rbc-availability-card {
   border-radius: 4px;
-  border-left: 3px solid #357A6F;
-  background: #E6F2F0;
+  border-left: 3px solid var(--color-primary-500);
+  background: var(--color-primary-50);
   padding: 4px 8px;
 }
 
 .rbc-availability-card__label {
   font-size: 11px;
   font-weight: 600;
-  color: #255C54;
+  color: var(--color-primary-700);
   line-height: 1.3;
 }
 
