@@ -1,18 +1,29 @@
 import { useEffect } from "react";
 import { useParams, useOutletContext } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Icon from "@/components/icons/Icon";
 import Button from "@/components/commonComponents/button/Button";
 import Avatar from "@/components/commonComponents/avatar/Avatar";
 import { getSubOrgProfile } from "@/data/subOrganizationsData";
+import { componentKey, setOpenEditDrawer, registerReducer } from "./subOrgProfileSlice";
+import EditProfileDrawer from "./Components/EditProfileDrawer";
 
 export default function SubOrgProfile() {
   const { subOrgId } = useParams();
   const profile = getSubOrgProfile(subOrgId);
   const { setToolbar } = useOutletContext();
+  const dispatch = useDispatch();
+
+
+  const { drawerOpen, editData } = useSelector((state) => state[componentKey] ?? {});
+
+  const handleEditProfile = () => {
+    dispatch(setOpenEditDrawer(profile));
+  };
 
   useEffect(() => {
     setToolbar(
-      <Button variant="primaryTeal" size="sm">
+      <Button variant="primaryTeal" size="sm" onClick={handleEditProfile}>
         <Icon name="Pencil" size={14} />
         Edit Profile
       </Button>
@@ -106,6 +117,8 @@ export default function SubOrgProfile() {
           </div>
         </div>
       </div>
+
+      <EditProfileDrawer open={drawerOpen} editData={editData} />
     </div>
   );
 }

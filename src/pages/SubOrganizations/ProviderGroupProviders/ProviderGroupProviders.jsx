@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
 import Icon from "@/components/icons/Icon";
@@ -8,9 +9,15 @@ import Button from "@/components/commonComponents/button/Button";
 import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { providersData, STATUS_OPTIONS } from "@/data/subOrganizationsData";
+import ToggleSwitch from "@/components/commonComponents/toggleSwitch/ToggleSwitch";
+import { componentKey, setOpenAddDrawer, setOpenEditDrawer, setOpenViewModal, setOpenStatusModal } from "./providerGroupProvidersSlice";
+import AddProviderDrawer from "./Components/AddProviderDrawer";
+import ViewProviderModal from "./Components/ViewProviderModal";
+import StatusChangeModal from "./Components/StatusChangeModal";
 
 export default function ProviderGroupProviders() {
   const { setToolbar } = useOutletContext();
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState("");
@@ -18,6 +25,8 @@ export default function ProviderGroupProviders() {
   const [statusFilter, setStatusFilter] = useState(null);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+
+  const { drawerOpen, drawerMode, editData, viewModalOpen, viewData, statusModalOpen, statusChangeRow } = useSelector((state) => state[componentKey] ?? {});
 
   useEffect(() => {
     setToolbar(
@@ -36,14 +45,14 @@ export default function ProviderGroupProviders() {
         <div className="w-32">
           <SelectDropdown name="status" placeholder="Status" options={STATUS_OPTIONS} value={statusFilter} onChange={(val) => { setStatusFilter(val); setPage(1); }} />
         </div>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenAddDrawer())}>
           <Icon name="Plus" size={14} />
           Add Provider
         </Button>
       </>
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search, statusFilter]);
+  }, [setToolbar, showArchive, search, statusFilter, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -143,26 +152,33 @@ export default function ProviderGroupProviders() {
           header: "Status",
           accessorKey: "status",
           width: 120,
-          render: (row) => <span className={row.status === "Active" ? "text-success-700 font-medium" : "text-neutral-400"}>{row.status}</span>,
+          render: (row) => (
+            <ToggleSwitch
+              name={`status-${row.id}`}
+              checked={row.status === "Active"}
+              onChangeCb={() => dispatch(setOpenStatusModal(row))}
+              showLabel={false}
+            />
+          ),
         },
         {
           id: "actions",
           header: "Action",
-          sticky:"right",
+          sticky: "right",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
-                { label: "View", value: "view", onClickCb: () => {} },
-                { label: "Edit", value: "edit", onClickCb: () => {} },
+                { label: "View", value: "view", onClickCb: () => dispatch(setOpenViewModal(row)) },
+                { label: "Edit", value: "edit", onClickCb: () => dispatch(setOpenEditDrawer(row)) },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch]
   );
 
   return (
@@ -184,6 +200,9 @@ export default function ProviderGroupProviders() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+      <AddProviderDrawer open={drawerOpen} drawerMode={drawerMode} editData={editData} />
+      <ViewProviderModal open={viewModalOpen} viewData={viewData} />
+      <StatusChangeModal open={statusModalOpen} statusChangeRow={statusChangeRow} />
     </div>
   );
 }
