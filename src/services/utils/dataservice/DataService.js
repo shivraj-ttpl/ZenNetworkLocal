@@ -1,8 +1,8 @@
 import axios from "axios";
 import store from "@/core/store/store";
 import { setGlobalLoading } from "@/core/store/loadingSlice";
-
 import { deepTrimStrings, isMultipartOrBinary } from "@/utils/sanitizeUtils";
+import { handle401Error } from "@/services/utils/tokenRefreshHandler";
 
 const BASE_URL = import.meta.env.VITE_API_URL 
 
@@ -28,6 +28,8 @@ axios.interceptors.request.use(
     if (config.data && !isMultipartOrBinary(config)) {
       config.data = deepTrimStrings(config.data);
     }
+    //  uncomment when using ngrok BE server
+    // config.headers["ngrok-skip-browser-warning"] = "true";
 
     return config;
   },
@@ -48,14 +50,7 @@ axios.interceptors.response.use(
       if (activeRequests === 0) store.dispatch(setGlobalLoading(false));
     }
 
-    // Auto-handle 401 — redirect to login
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      window.location.href = "/login";
-    }
-
-    return Promise.reject(error);
+    return handle401Error(error);
   }
 );
 

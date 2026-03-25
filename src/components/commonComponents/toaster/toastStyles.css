@@ -1,100 +1,130 @@
 /*
  * Custom react-toastify overrides.
- * Uses design tokens from index.css (@theme) — change colors there,
- * toasts update automatically.
- *
- * Design: white card + colored left border + circle ring/dot icon
+ * Design: tinted card + colored left border + circle ring/dot icon + title/description
  */
 
 :root {
   --toast-font-family: "Inter", sans-serif;
-  --toast-border-radius: 8px;
+  --toast-border-radius: 10px;
   --toast-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  --toast-min-height: 52px;
-  --toast-padding: 12px 14px 12px 0;
-  --toast-left-border: 4px;
-  --toast-icon-size: 22px;
-  --toast-icon-dot: 8px;
+  --toast-min-height: 60px;
+  --toast-padding: 18px 18px 18px 10px;
+  --toast-icon-size: 20px;
 }
 
 /* ── Base toast ── */
 .Toastify__toast {
   font-family: var(--toast-font-family);
-  border-radius: var(--toast-border-radius);
-  box-shadow: var(--toast-shadow);
+  border-radius: var(--toast-border-radius) !important;
+  box-shadow: var(--toast-shadow) !important;
   min-height: var(--toast-min-height);
-  padding: var(--toast-padding);
+  padding: var(--toast-padding) !important;
   font-size: 13px;
-  font-weight: 600;
   line-height: 1.45;
-  background: var(--color-surface, #ffffff);
-  color: var(--color-neutral-800, #1F2937);
-  border-left: var(--toast-left-border) solid transparent;
+  color: var(--color-neutral-800, #1f2937);
   gap: 12px;
+  border: 0.5px solid var(--_toast-accent) !important;
+  align-items: flex-start;
 }
 
-/* ── Hide the default SVG icons ── */
+/* ── Hide the default SVG icons completely ── */
+.Toastify__toast-icon > svg,
 .Toastify__toast-icon svg {
-  display: none;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* ── Custom circle ring + dot icon via CSS ── */
 .Toastify__toast-icon {
-  width: var(--toast-icon-size);
-  height: var(--toast-icon-size);
-  min-width: var(--toast-icon-size);
+  width: var(--toast-icon-size) !important;
+  height: var(--toast-icon-size) !important;
+  min-width: var(--toast-icon-size) !important;
   border-radius: 50%;
-  border: 1.5px solid var(--_toast-accent);
-  display: flex;
+  border: 2px solid var(--_toast-accent);
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  margin-inline-end: 0;
+  margin-inline-end: 0 !important;
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 .Toastify__toast-icon::after {
   content: "";
-  width: var(--toast-icon-dot);
-  height: var(--toast-icon-dot);
   border-radius: 50%;
   background: var(--_toast-accent);
 }
 
-/* ── Per-variant accent color ── */
-.Toastify__toast--success {
-  --_toast-accent: var(--color-success-500, #22C55E);
-  border-left-color: var(--_toast-accent);
+/* ── Title + description text inside toast body ── */
+.Toastify__toast-body {
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 1;
 }
 
-.Toastify__toast--error {
-  --_toast-accent: var(--color-error-500, #EF4444);
-  border-left-color: var(--_toast-accent);
+.toast-content__title {
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--color-neutral-900, #111827);
+  line-height: 1.4;
 }
 
-.Toastify__toast--warning {
-  --_toast-accent: var(--color-warning-500, #EAB308);
-  border-left-color: var(--_toast-accent);
+.toast-content__message {
+  font-weight: 200;
+  font-size: 13px;
+  color: var(--color-neutral-600, #4b5563);
+  line-height: 1.4;
+  margin-top: 2px;
 }
 
+/* Info */
 .Toastify__toast--info {
-  --_toast-accent: var(--color-primary-400, #4FA899);
-  border-left-color: var(--_toast-accent);
+  --_toast-accent: #2f8f83;
+  --_toast-border: #7cc4b8;
+  background: #e6f4f1 !important;
 }
 
-/* ── Progress bar uses variant accent ── */
-.Toastify__toast--success .Toastify__progress-bar,
-.Toastify__toast--error .Toastify__progress-bar,
-.Toastify__toast--warning .Toastify__progress-bar,
-.Toastify__toast--info .Toastify__progress-bar {
-  background: var(--_toast-accent);
-  height: 3px;
+/* Error */
+.Toastify__toast--error {
+  --_toast-accent: #d66363;
+  --_toast-border: #f5a3a3;
+  background: #fdecec !important;
+}
+
+/* Success */
+.Toastify__toast--success {
+  --_toast-accent: #2e8b57;
+  --_toast-border: #8fd19e;
+  background: #eaf7ef !important;
+}
+
+/* Warning */
+.Toastify__toast--warning {
+  --_toast-accent: #d9822b;
+  --_toast-border: #f2b880;
+  background: #fff4e6 !important;
+}
+
+/* Default */
+.Toastify__toast--default {
+  --_toast-accent: #8c8c8c;
+  --_toast-border: #d6d6d6;
+  background: #f5f5f5 !important;
+}
+
+/* ── Progress bar ── */
+.Toastify__progress-bar {
+  background: var(--_toast-accent) !important;
+  height: 0px !important;
 }
 
 /* ── Close button ── */
 .Toastify__close-button {
-  color: var(--color-neutral-400, #9CA3AF);
-  opacity: 0.8;
+  color: var(--color-neutral-400, #9ca3af) !important;
+  opacity: 0.7;
   align-self: flex-start;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 .Toastify__close-button:hover {
@@ -102,6 +132,6 @@
 }
 
 .Toastify__close-button > svg {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
 }

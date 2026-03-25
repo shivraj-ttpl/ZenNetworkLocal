@@ -1,7 +1,6 @@
 import { lazy } from 'react';
 
 // Lazy-loaded pages
-const Dashboard = lazy(() => import('@/pages/Dashboard/Dashboard'));
 
 // Container layouts (render <Outlet />)
 const MasterDataContainer = lazy(
@@ -124,11 +123,6 @@ const UserProfile = lazy(
  */
 export const routeConfig = [
   {
-    path: '/dashboard',
-    element: Dashboard,
-    label: 'Dashboard',
-  },
-  {
     path: '/master-data',
     element: MasterDataContainer,
     label: 'Master Data',
@@ -249,7 +243,7 @@ export const routeConfig = [
   },
 ];
 
-// Public-only routes (redirect to dashboard if already logged in)
+// Public-only routes (redirect to master data if already logged in)
 export const publicRouteConfig = [
   {
     path: '/login',

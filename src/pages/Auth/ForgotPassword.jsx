@@ -1,12 +1,17 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Formik, Form } from "formik";
+import { Formik } from "formik";
+import { useDispatch } from "react-redux";
 import { Icon } from "@/components/icons";
 import AuthLayout from "./AuthLayout";
 import Input from "@/components/commonComponents/input/Input";
 import Button from "@/components/commonComponents/button/Button";
 import { getValidationSchema } from "@/utils/formUtils";
 import { FORM_FIELDS_NAMES } from "./constant";
+import { authActions } from "./authSaga";
+import { useLoadingKey } from "@/hooks/useLoadingKey";
+import { LOADING_KEYS } from "@/constants/loadingKeys";
+import { showToast } from "@/utils/toastUtils";
+import { TOASTER_VARIANT } from "@/core/store/notificationSlice";
 
 const fields = [
   {
@@ -20,21 +25,26 @@ const fields = [
 const validationSchema = getValidationSchema(fields);
 
 export default function ForgotPassword() {
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { postForgotPassword } = authActions;
+  const isLoading = useLoadingKey(LOADING_KEYS.AUTH_POST_FORGOT_PASSWORD);
 
   const handleSubmit = (values) => {
-    setLoading(true);
-    // Replace with actual API dispatch
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    dispatch(
+      postForgotPassword({
+        payload: values,
+        onSuccessCb: (res) => {
+          showToast(
+            res?.data?.data?.message,
+            TOASTER_VARIANT.SUCCESS,
+          );
+        },
+      }),
+    );
   };
 
   return (
-    <AuthLayout
-      
-    >
-      {/* Heading */}
+    <AuthLayout>
       <h1 className="text-2xl font-medium text-center text-text-primary mb-2">
         Forgot Your Password
       </h1>
@@ -44,14 +54,13 @@ export default function ForgotPassword() {
         reset link.
       </p>
 
-      {/* Form */}
       <Formik
         initialValues={{ [FORM_FIELDS_NAMES.EMAIL]: "" }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, errors, touched, handleChange, handleBlur }) => (
-          <Form className="flex flex-col gap-5">
+        {({ values, errors, touched, handleChange, handleBlur, handleSubmit: formikSubmit }) => (
+          <form onSubmit={formikSubmit} className="flex flex-col gap-5">
             <Input
               label="Email Address"
               name={FORM_FIELDS_NAMES.EMAIL}
@@ -69,15 +78,14 @@ export default function ForgotPassword() {
               variant="primary"
               size="lg"
               fullWidth
-              loading={loading}
+              loading={isLoading}
             >
               Send Reset Link
             </Button>
-          </Form>
+          </form>
         )}
       </Formik>
 
-      {/* Divider */}
       <div className="border-t border-border-light mt-6 pt-5">
         <Link
           to="/login"
