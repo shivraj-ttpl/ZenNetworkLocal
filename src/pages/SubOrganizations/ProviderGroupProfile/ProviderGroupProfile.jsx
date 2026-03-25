@@ -1,18 +1,28 @@
 import { useEffect } from "react";
 import { useParams, useOutletContext } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Icon from "@/components/icons/Icon";
 import Button from "@/components/commonComponents/button/Button";
 import Avatar from "@/components/commonComponents/avatar/Avatar";
 import { getProviderGroupProfile } from "@/data/subOrganizationsData";
+import { componentKey, setOpenEditDrawer } from "../ProviderGroupList/providerGroupListSlice";
+import AddProviderGroupDrawer from "../ProviderGroupList/Components/AddProviderGroupDrawer";
 
 export default function ProviderGroupProfile() {
   const { providerGroupId } = useParams();
   const profile = getProviderGroupProfile(providerGroupId);
   const { setToolbar } = useOutletContext();
+  const dispatch = useDispatch();
+
+  const { drawerOpen, drawerMode, editData } = useSelector((state) => state[componentKey] ?? {});
+
+  const handleEditProfile = () => {
+    dispatch(setOpenEditDrawer(profile));
+  };
 
   useEffect(() => {
     setToolbar(
-      <Button variant="primaryTeal" size="sm">
+      <Button variant="primaryTeal" size="sm" onClick={handleEditProfile}>
         <Icon name="Pencil" size={14} />
         Edit Provider Group
       </Button>
@@ -46,8 +56,6 @@ export default function ProviderGroupProfile() {
                   )}
                 </div>
               ))}
-
-              
             </div>
             <span className="flex items-center p-2 rounded-2xl gap-1.5 text-sm font-medium text-[#287F7C] bg-neutral-250">
                 <span className="w-2 h-2 rounded-full bg-[#287F7C]" />
@@ -95,6 +103,8 @@ export default function ProviderGroupProfile() {
           </div>
         </div>
       </div>
+
+      <AddProviderGroupDrawer open={drawerOpen} drawerMode={drawerMode} editData={editData} />
     </div>
   );
 }

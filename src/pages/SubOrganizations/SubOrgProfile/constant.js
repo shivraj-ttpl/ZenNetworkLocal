@@ -1,0 +1,31 @@
+export const FORM_FIELDS_NAMES = {
+  SUB_ORG_NAME: "subOrgName",
+  CONTACT_NUMBER: "contactNumber",
+  EMAIL: "email",
+  WEBSITE: "website",
+  ADDRESS_LINE_1: "addressLine1",
+  ADDRESS_LINE_2: "addressLine2",
+  STATE: "state",
+  COUNTRY: "country",
+  CITY: "city",
+  ZIP_CODE: "zipCode",
+};
+
+export const STATE_OPTIONS = [
+  { label: "California", value: "CA" },
+  { label: "Texas", value: "TX" },
+  { label: "New York", value: "NY" },
+  { label: "Florida", value: "FL" },
+  { label: "Illinois", value: "IL" },
+  { label: "Ohio", value: "OH" },
+  { label: "Colorado", value: "CO" },
+  { label: "Massachusetts", value: "MA" },
+  { label: "Washington", value: "WA" },
+  { label: "Oregon", value: "OR" },
+];
+
+export const COUNTRY_OPTIONS = [
+  { label: "United States", value: "US" },
+  { label: "Canada", value: "CA" },
+  { label: "Mexico", value: "MX" },
+];

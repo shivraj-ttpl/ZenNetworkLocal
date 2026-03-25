@@ -9,6 +9,7 @@ import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectD
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { subOrganizationsData, STATUS_OPTIONS } from "@/data/subOrganizationsData";
 import ToggleSwitch from "../../../components/commonComponents/toggleSwitch/ToggleSwitch";
+import AddSubOrgDrawer from "./Components/AddSubOrgDrawer";
 
 export default function SubOrgList() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export default function SubOrgList() {
   const [statusFilter, setStatusFilter] = useState(null);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+  const [showAddDrawer, setShowAddDrawer] = useState(false);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -182,7 +184,7 @@ export default function SubOrgList() {
             />
           </div>
         </div>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryTeal" size="sm" onClick={() => setShowAddDrawer(true)}>
           <Icon name="Plus" size={14} />
           Add New
         </Button>
@@ -209,6 +211,7 @@ export default function SubOrgList() {
           }}
         />
       </div>
+      <AddSubOrgDrawer open={showAddDrawer} onClose={() => setShowAddDrawer(false)} />
     </div>
   );
 }
