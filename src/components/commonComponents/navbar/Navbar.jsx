@@ -30,7 +30,7 @@ function AvatarDropdown() {
         <div className="absolute right-0 top-full mt-2 w-44 bg-surface border border-border-light rounded-lg shadow-lg z-50 py-1">
           <button
             type="button"
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-neutral-50 text-text-primary"
+            className="w-full cursor-pointer flex items-center gap-2 px-3 py-2 text-sm hover:bg-neutral-50 text-text-primary"
             onClick={() => {
               navigate('/user-profile');
               setOpen(false);
@@ -41,9 +41,9 @@ function AvatarDropdown() {
           </button>
           <button
             type="button"
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-error-50 text-error-500"
+            className="w-full cursor-pointer flex items-center gap-2 px-3 py-2 text-sm hover:bg-error-50 text-error-500"
             onClick={() => {
-              navigate('/login');
+              window.__handleLogout()
               setOpen(false);
             }}
           >

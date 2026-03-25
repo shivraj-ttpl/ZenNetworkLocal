@@ -1,12 +1,17 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Formik, Form } from "formik";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Formik } from "formik";
+import { useDispatch } from "react-redux";
 import AuthLayout from "./AuthLayout";
 import Input from "@/components/commonComponents/input/Input";
 import Button from "@/components/commonComponents/button/Button";
 import PasswordRules from "./PasswordRules";
 import { getValidationSchema } from "@/utils/formUtils";
 import { FORM_FIELDS_NAMES, VALIDATION_REGEX } from "./constant";
+import { authActions } from "./authSaga";
+import { useLoadingKey } from "@/hooks/useLoadingKey";
+import { LOADING_KEYS } from "@/constants/loadingKeys";
+import { showToast } from "@/utils/toastUtils";
+import { TOASTER_VARIANT } from "@/core/store/notificationSlice";
 
 const fields = [
   {
@@ -32,20 +37,30 @@ const validationSchema = getValidationSchema(fields);
 
 export default function SetPassword() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const { postSetPassword } = authActions;
+  const isLoading = useLoadingKey(LOADING_KEYS.AUTH_POST_SET_PASSWORD);
 
   const handleSubmit = (values) => {
-    setLoading(true);
-    // Replace with actual API dispatch
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/login");
-    }, 1000);
+    dispatch(
+      postSetPassword({
+        payload: {
+          token,
+          password: values[FORM_FIELDS_NAMES.PASSWORD],
+          confirmPassword: values[FORM_FIELDS_NAMES.CONFIRM_PASSWORD],
+        },
+        onSuccessCb: (res) => {
+          showToast(res?.data?.data?.message, TOASTER_VARIANT.SUCCESS);
+          navigate("/login");
+        },
+      }),
+    );
   };
 
   return (
     <AuthLayout>
-      {/* Heading */}
       <h1 className="text-2xl font-medium text-center text-text-primary mb-1">
         Set Your Password
       </h1>
@@ -53,7 +68,6 @@ export default function SetPassword() {
         Create a strong password to secure your account.
       </p>
 
-      {/* Form */}
       <Formik
         initialValues={{
           [FORM_FIELDS_NAMES.PASSWORD]: "",
@@ -62,8 +76,8 @@ export default function SetPassword() {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, errors, touched, handleChange, handleBlur }) => (
-          <Form className="flex flex-col gap-5">
+        {({ values, errors, touched, handleChange, handleBlur, handleSubmit: formikSubmit }) => (
+          <form onSubmit={formikSubmit} className="flex flex-col gap-5">
             <input type="text" name="username" autoComplete="username" className="hidden" aria-hidden="true" tabIndex={-1} />
             <Input
               label="Password"
@@ -98,11 +112,11 @@ export default function SetPassword() {
               variant="primary"
               size="lg"
               fullWidth
-              loading={loading}
+              loading={isLoading}
             >
               Set Password
             </Button>
-          </Form>
+          </form>
         )}
       </Formik>
     </AuthLayout>

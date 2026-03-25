@@ -3,17 +3,18 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "@/components/commonComponents/toaster/toastStyles.css";
 import store from "@/core/store/store";
-import AppRouter from "@/routes/AppRouter";
 import ToastListener from "@/components/commonComponents/toaster/ToastListener";
+import MainApp from "./app/MainApp";
 
 export default function App() {
+
   return (
     <Provider store={store}>
-      <AppRouter />
+      <MainApp/>
       <ToastContainer
         position="top-right"
         autoClose={4000}
-        hideProgressBar={false}
+        hideProgressBar={true}
         newestOnTop
         closeOnClick
         pauseOnHover

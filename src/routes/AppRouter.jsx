@@ -1,7 +1,16 @@
-import { Suspense } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, useEffect } from "react";
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { routeConfig, publicRouteConfig, sharedRouteConfig } from "./routeConfig";
 import MainAppLayout from "@/app/MainAppLayout";
+import { setNavigateRef } from "@/utils/navigationService";
+
+function NavigationSetter() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    setNavigateRef(navigate);
+  }, [navigate]);
+  return null;
+}
 
 
 
@@ -15,7 +24,7 @@ function ProtectedRoute({ children }) {
 // Redirect away from login/signup if already authenticated
 function PublicOnlyRoute({ children }) {
   const token = localStorage.getItem("token");
-  if (token) return <Navigate to="/dashboard" replace />;
+  if (token) return <Navigate to="/master-data" replace />;
   return children;
 }
 
@@ -51,6 +60,7 @@ function PageLoader() {
 export default function AppRouter() {
   return (
     <BrowserRouter>
+      <NavigationSetter />
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* Public-only routes (login, signup — redirect if already logged in) */}
@@ -99,7 +109,7 @@ export default function AppRouter() {
           </Route>
 
           {/* Catch-all */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/master-data" replace />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

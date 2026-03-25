@@ -6,9 +6,13 @@ import { addNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice
  *
  * Usage:
  *   showToast("Saved successfully", TOASTER_VARIANT.SUCCESS);
- *   showToast("Something went wrong");          // defaults to ERROR
- *   showToast("Heads up!", TOASTER_VARIANT.INFO);
+ *   showToast("Something went wrong");                      // defaults to ERROR
+ *   showToast("Upload complete", TOASTER_VARIANT.SUCCESS, "3 files processed");
  */
-export const showToast = (message, variant = TOASTER_VARIANT.ERROR) => {
-  store.dispatch(addNotification({ message, variant }));
+export const showToast = (
+  message,
+  variant = TOASTER_VARIANT.ERROR,
+  description
+) => {
+  store.dispatch(addNotification({ message, variant, description }));
 };

@@ -1,12 +1,19 @@
-import { useState } from "react";
+
 import { useNavigate, Link } from "react-router-dom";
 import { Formik, Form } from "formik";
+import {useDispatch} from "react-redux"
 import AuthLayout from "./AuthLayout";
 import Input from "@/components/commonComponents/input/Input";
 import Button from "@/components/commonComponents/button/Button";
 import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
 import { getValidationSchema } from "@/utils/formUtils";
 import { FORM_FIELDS_NAMES, VALIDATION_REGEX } from "./constant";
+import { authActions } from "./authSaga";
+import { useLoadingKey } from "../../hooks/useLoadingKey";
+import {LOADING_KEYS} from "../../constants/loadingKeys"
+import { setLoggedInUser, setIsAuthenticated, setCurrentUserRole } from "./authSlice";
+import { showToast } from "../../utils/toastUtils";
+import {TOASTER_VARIANT} from "../../core/store/notificationSlice"
 
 const fields = [
   {
@@ -27,16 +34,21 @@ const validationSchema = getValidationSchema(fields);
 
 export default function Login() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
+  const dispatch = useDispatch();
+  const {postLogin} = authActions
+  const isLoginLoading = useLoadingKey(LOADING_KEYS.AUTH_POST_LOGIN)
   const handleLogin = (values) => {
-    setLoading(true);
-    // Replace with actual login dispatch
-    setTimeout(() => {
-      localStorage.setItem("token", "demo-token");
-      setLoading(false);
-      navigate("/dashboard");
-    }, 1000);
+
+    dispatch(postLogin({payload:values, onSuccessCb:(res)=>{
+      showToast("Logged in successfully", TOASTER_VARIANT.SUCCESS)
+      localStorage.setItem("token", res?.data?.data?.accessToken);
+      localStorage.setItem("user", JSON.stringify(res?.data?.data?.user));
+      dispatch(setLoggedInUser(res?.data?.data?.user));
+      dispatch(setIsAuthenticated(true));
+      dispatch(setCurrentUserRole(res?.data?.data?.user?.userType));
+      navigate("/master-data")
+    }}))
+
   };
 
   return (
@@ -70,7 +82,7 @@ export default function Login() {
         validationSchema={validationSchema}
         onSubmit={handleLogin}
       >
-        {({ values, errors, touched, handleChange, handleBlur, setFieldValue }) => (
+        {({ values, errors, touched, handleChange, handleBlur, setFieldValue , handleSubmit}) => (
           <Form className="flex flex-col gap-5">
             <Input
               label="Email Address"
@@ -118,11 +130,11 @@ export default function Login() {
             </div>
 
             <Button
-              type="submit"
               variant="primary"
+              onClick={handleSubmit}
               size="lg"
               fullWidth
-              loading={loading}
+              loading={isLoginLoading}
             >
               Login
             </Button>

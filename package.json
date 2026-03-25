@@ -7,9 +7,17 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@chromatic-com/storybook": "5.0.1",
+    "@eslint/js": "^9.39.1",
+    "@storybook/addon-a11y": "10.2.14",
+    "@storybook/addon-docs": "10.2.14",
+    "@storybook/addon-onboarding": "10.2.14",
+    "@storybook/react-vite": "10.2.14",
     "@reduxjs/toolkit": "^2.11.2",
     "@tailwindcss/vite": "^4.2.2",
     "@tanstack/react-table": "^8.21.3",
