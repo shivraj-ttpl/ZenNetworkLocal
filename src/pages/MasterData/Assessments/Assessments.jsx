@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
@@ -6,8 +7,11 @@ import Icon from "@/components/icons/Icon";
 import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { assessmentsData } from "@/data/masterData";
+import { setOpenViewDrawer } from "./assessmentsSlice";
+import ViewAssessmentDrawer from "./Components/ViewAssessmentDrawer";
 
 export default function Assessments() {
+  const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -94,18 +98,17 @@ export default function Assessments() {
           header: "Action",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
-                { label: "Edit", value: "edit", onClickCb: () => {} },
-                { label: "View", value: "view", onClickCb: () => {} },
+                { label: "View", value: "view", onClickCb: () => dispatch(setOpenViewDrawer(row)) },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch]
   );
 
   return (
@@ -127,6 +130,8 @@ export default function Assessments() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+
+      <ViewAssessmentDrawer />
     </div>
   );
 }
