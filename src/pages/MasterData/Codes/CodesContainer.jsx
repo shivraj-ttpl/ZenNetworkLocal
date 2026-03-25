@@ -1,54 +1,124 @@
-import { useState, useMemo, useEffect } from "react";
-import { NavLink, Outlet, useLocation, Navigate, useOutletContext } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import Button from "@/components/commonComponents/button/Button";
-import Icon from "@/components/icons/Icon";
-import { setOpenAddDrawer, openImportModal } from "./codesSlice";
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Navigate,
+  NavLink,
+  Outlet,
+  useLocation,
+  useOutletContext,
+} from 'react-router-dom';
 
-import { PATH_TO_LABEL } from "./constant";
-import AddCodeDrawer from "./Components/AddCodeDrawer";
-import ImportCodes from "./Components/ImportCodes";
+import Button from '@/components/commonComponents/button/Button';
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import Icon from '@/components/icons/Icon';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+
+import { codesActions, registerSaga } from './codeSaga';
+import {
+  componentKey,
+  openImportModal,
+  registerReducer,
+  resetCodesListState,
+  setOpenAddDrawer,
+  setSearch,
+  setShowArchived,
+} from './codesSlice';
+import AddCodeDrawer from './Components/AddCodeDrawer';
+import ImportCodes from './Components/ImportCodes';
+import { CODE_TYPE_MAP, PATH_TO_LABEL } from './constant';
+
+const { fetchCodes } = codesActions;
+const EMPTY_STATE = {};
 
 const TABS = [
-  { label: "ICD Code", path: "/master-data/codes", end: true },
-  { label: "CPT Code", path: "/master-data/codes/cpt" },
-  { label: "LONIC Code", path: "/master-data/codes/lonic" },
-  { label: "SNOMED CT Code", path: "/master-data/codes/snomed-ct" },
-  { label: "HCPCS Code", path: "/master-data/codes/hcpcs" },
+  { label: 'ICD Code', path: '/master-data/codes', end: true },
+  { label: 'CPT Code', path: '/master-data/codes/cpt' },
+  { label: 'LONIC Code', path: '/master-data/codes/lonic' },
+  { label: 'SNOMED CT Code', path: '/master-data/codes/snomed-ct' },
+  { label: 'HCPCS Code', path: '/master-data/codes/hcpcs' },
 ];
 
 function getCodeLabel(pathname) {
-  const match = Object.entries(PATH_TO_LABEL).find(([path]) => pathname === path);
-  return match ? match[1] : "ICD";
+  const match = Object.entries(PATH_TO_LABEL).find(
+    ([path]) => pathname === path,
+  );
+  return match ? match[1] : 'ICD';
 }
 
 export default function CodesContainer() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
-  const [showArchive, setShowArchive] = useState(false);
-  const [search, setSearch] = useState("");
-  // useFlexCleanup(componentKey);
 
-  const codeLabel = useMemo(() => getCodeLabel(location.pathname), [location.pathname]);
+  const {
+    search = '',
+    showArchived = false,
+    page = 1,
+    limit = 20,
+    refreshFlag = 0,
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
+
+  const codeLabel = useMemo(
+    () => getCodeLabel(location.pathname),
+    [location.pathname],
+  );
+
+  const codeType = useMemo(
+    () => CODE_TYPE_MAP[codeLabel] || 'icd',
+    [codeLabel],
+  );
+
+  const debouncedSearch = useDebounce(search);
+
+  useEffect(() => {
+    registerReducer();
+    registerSaga();
+  }, []);
+
+  useFlexCleanup(componentKey);
+
+  useEffect(() => {
+    dispatch(resetCodesListState());
+  }, [dispatch, codeType]);
+
+  useEffect(() => {
+    dispatch(fetchCodes({ type: codeType }));
+  }, [
+    dispatch,
+    codeType,
+    page,
+    limit,
+    debouncedSearch,
+    showArchived,
+    refreshFlag,
+  ]);
+
   useEffect(() => {
     setToolbar(
       <>
-        <Button variant="outlineTeal" size="sm" onClick={() => dispatch(openImportModal(codeLabel))}>
+        <Button
+          variant="outlineTeal"
+          size="sm"
+          onClick={() => dispatch(openImportModal(codeLabel))}
+        >
           <Icon name="Plus" size={14} />
           Import {codeLabel} Codes
         </Button>
-        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenAddDrawer(codeLabel))}>
+        <Button
+          variant="primaryTeal"
+          size="sm"
+          onClick={() => dispatch(setOpenAddDrawer(codeLabel))}
+        >
           <Icon name="Plus" size={14} />
           Add {codeLabel} Code
         </Button>
-      </>
+      </>,
     );
     return () => setToolbar(null);
   }, [setToolbar, codeLabel, dispatch]);
 
-  if (location.pathname === "/master-data/codes/") {
+  if (location.pathname === '/master-data/codes/') {
     return <Navigate to="/master-data/codes" replace />;
   }
 
@@ -64,8 +134,8 @@ export default function CodesContainer() {
               className={({ isActive }) =>
                 `pb-2 text-xs font-normal border-b-2 transition-colors ${
                   isActive
-                    ? "text-primary-700 border-primary"
-                    : "text-neutral-400 border-transparent hover:text-neutral-600"
+                    ? 'text-primary-700 border-primary'
+                    : 'text-neutral-400 border-transparent hover:text-neutral-600'
                 }`
               }
             >
@@ -77,8 +147,8 @@ export default function CodesContainer() {
         <div className="flex items-center gap-4">
           <Checkbox
             label="Show Archive"
-            checked={showArchive}
-            onChange={() => setShowArchive((prev) => !prev)}
+            checked={showArchived}
+            onChange={() => dispatch(setShowArchived(!showArchived))}
             variant="teal"
             size="sm"
           />
@@ -87,7 +157,7 @@ export default function CodesContainer() {
             <input
               type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => dispatch(setSearch(e.target.value))}
               placeholder={`Search by ${codeLabel} Code or Description`}
               className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
             />
@@ -95,7 +165,7 @@ export default function CodesContainer() {
         </div>
       </div>
 
-      <Outlet context={{ showArchive, search, codeLabel }} />
+      <Outlet context={{ codeLabel, codeType }} />
 
       <AddCodeDrawer />
       <ImportCodes />

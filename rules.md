@@ -289,3 +289,86 @@ Code **must not** be merged if:
 ## 18. Final Rule
 
 If anything touches shared logic, affects multiple modules, or modifies common components → **ask before implementing. Never assume.**
+
+
+## 19. Steps for API Inegrations 
+
+API Integration Guidelines
+
+1. Project Structure
+Always analyze the existing folder and file structure first.
+Do not introduce new patterns — strictly follow the current project structure.
+Maintain consistency with existing modules (e.g., auth).
+
+2. Constants Usage
+
+All component keys must be imported from:
+
+src/constants/componentKey
+
+Loading keys must be defined in:
+
+src/constants/loadingKeys
+
+Toast messages must be defined in:
+
+src/constants/toastMessages
+
+3. API Calls
+Every API call must be wrapped using the apiCall wrapper.
+Each API call must have a unique loadingKey.
+Never hardcode loading states — always use the centralized loadingKeys.
+
+4. Service Layer
+Create service files based on base URLs (e.g., auth, user, etc.).
+Example:
+If base URL = auth → use/create authDataService.js
+Add all related API methods inside the corresponding service file.
+Do NOT create a new service file if one already exists for the same base URL.
+
+5. Saga Implementation
+Follow the same saga structure used in the auth module.
+Ensure:
+Proper separation of concerns
+Reusable and consistent saga patterns
+
+6. Slice & State Management
+Follow existing slice structure strictly.
+Keep state management consistent with other modules.
+Avoid introducing new patterns unless explicitly required.
+
+7. GET API Handling (Data Refresh Pattern)
+For every GET API  (if needed):
+Add a refresh flag in the slice.
+
+Initial value should be:
+
+refreshFlag: 0
+Update this flag with Date.now() when refresh is needed.
+
+Use this flag in useEffect dependency to trigger saga dispatch:
+
+useEffect(() => {
+  dispatch(fetchData());
+}, [refreshFlag]);
+
+8. Filters & Sorting
+Store all filters and sorting parameters in the slice.
+Do NOT manage filters in component-level state.
+Always use slice state when calling APIs.
+
+9. Toast Messages
+Do not hardcode toast messages.
+
+Always use messages from:
+
+toastMessages constants
+
+10. Consistency (Most Important Rule)
+Follow existing conventions strictly.
+Ensure:
+Consistent naming
+Predictable structure
+Reusable patterns
+Avoid unnecessary deviations or custom implementations.
+

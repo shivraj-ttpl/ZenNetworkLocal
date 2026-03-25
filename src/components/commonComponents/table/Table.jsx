@@ -1,18 +1,35 @@
-import { useMemo, useCallback, useRef } from "react";
 import {
-  useReactTable,
-  getCoreRowModel,
   flexRender,
-} from "@tanstack/react-table";
-import { computeStickyOffsets, getCellStyle, getCellClasses, SORT_ORDER } from "./tableHelpers";
-import Icon from "@/components/icons/Icon";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { useCallback, useMemo, useRef } from 'react';
+
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import TableSkeleton from '@/components/commonComponents/skeletons/TableSkeleton';
+import Icon from '@/components/icons/Icon';
+
+import {
+  computeStickyOffsets,
+  getCellClasses,
+  getCellStyle,
+  SORT_ORDER,
+} from './tableHelpers';
 
 // ─── Size variants ──────────────────────────────────────────
 const SIZE_CLASSES = {
-  sm: { cell: "px-[16px] py-[8px] text-[14px]", header: "px-[16px] py-[10px] text-[12px]" },
-  md: { cell: "px-[17px] py-[10px] text-[16px]", header: "px-[17px] py-[12px] text-[14px]" },
-  lg: { cell: "px-[18px] py-[12px] text-[18px]", header: "px-[18px] py-[14px] text-[16px]" },
+  sm: {
+    cell: 'px-[16px] py-[8px] text-[14px]',
+    header: 'px-[16px] py-[10px] text-[12px]',
+  },
+  md: {
+    cell: 'px-[17px] py-[10px] text-[16px]',
+    header: 'px-[17px] py-[12px] text-[14px]',
+  },
+  lg: {
+    cell: 'px-[18px] py-[12px] text-[18px]',
+    header: 'px-[18px] py-[14px] text-[16px]',
+  },
 };
 
 /**
@@ -53,7 +70,7 @@ const SIZE_CLASSES = {
 export default function Table({
   columns,
   data = [],
-  size = "md",
+  size = 'md',
   stickyHeader = true,
   maxHeight,
 
@@ -65,7 +82,7 @@ export default function Table({
   // Selection
   selectable = false,
   selectAll = true,
-  selectId = "id",
+  selectId = 'id',
   selectedRows = {},
   onSelectionChange,
   isRowDisabled,
@@ -73,8 +90,8 @@ export default function Table({
   onMaxExceeded,
 
   // Customisation
-  className = "",
-  emptyMessage = "No data available",
+  className = '',
+  emptyMessage = 'No data available',
   onRowClick,
   rowClassName,
   loading = false,
@@ -87,14 +104,12 @@ export default function Table({
     if (!selectable) return null;
 
     return {
-      id: "_select",
+      id: '_select',
       header: ({ table }) => {
         if (!selectAll) return null;
 
         const allRows = table.getRowModel().rows;
-        const enabledRows = allRows.filter(
-          (r) => !(isRowDisabled?.(r.original))
-        );
+        const enabledRows = allRows.filter((r) => !isRowDisabled?.(r.original));
         const allChecked =
           enabledRows.length > 0 &&
           enabledRows.every((r) => selectedRows[r.original[selectId]]);
@@ -112,7 +127,10 @@ export default function Table({
                 enabledRows.forEach((r) => delete next[r.original[selectId]]);
               } else {
                 for (const r of enabledRows) {
-                  if (maxSelection && Object.keys(next).length >= maxSelection) {
+                  if (
+                    maxSelection &&
+                    Object.keys(next).length >= maxSelection
+                  ) {
                     onMaxExceeded?.(maxSelection);
                     break;
                   }
@@ -148,15 +166,24 @@ export default function Table({
           />
         );
       },
-      meta: { width: 48, align: "center", sticky: null },
+      meta: { width: 48, align: 'center', sticky: null },
       enableSorting: false,
     };
-  }, [selectable, selectAll, selectedRows, selectId, isRowDisabled, maxSelection, onSelectionChange, onMaxExceeded]);
+  }, [
+    selectable,
+    selectAll,
+    selectedRows,
+    selectId,
+    isRowDisabled,
+    maxSelection,
+    onSelectionChange,
+    onMaxExceeded,
+  ]);
 
   // ─── Merge selection column with user columns ─────────────
   const allColumns = useMemo(
     () => (selectionColumn ? [selectionColumn, ...columns] : columns),
-    [selectionColumn, columns]
+    [selectionColumn, columns],
   );
 
   // ─── TanStack Table instance ──────────────────────────────
@@ -165,8 +192,8 @@ export default function Table({
     columns: allColumns,
     getCoreRowModel: getCoreRowModel(),
     getRowId: (row) => String(row[selectId]),
-    manualSorting: true,         // always manual
-    enableSorting: false,        // we handle sort UI ourselves
+    manualSorting: true, // always manual
+    enableSorting: false, // we handle sort UI ourselves
   });
 
   const headerGroups = table.getHeaderGroups();
@@ -176,7 +203,7 @@ export default function Table({
   const visibleColumns = table.getVisibleFlatColumns();
   const stickyOffsets = useMemo(
     () => computeStickyOffsets(visibleColumns),
-    [visibleColumns]
+    [visibleColumns],
   );
 
   // ─── Sort handler ─────────────────────────────────────────
@@ -195,7 +222,7 @@ export default function Table({
         onSortChange?.(null, null); // clear sort
       }
     },
-    [sortKey, sortOrder, onSortChange]
+    [sortKey, sortOrder, onSortChange],
   );
 
   // ─── Sort icon ────────────────────────────────────────────
@@ -211,8 +238,8 @@ export default function Table({
           size={12}
           className={
             isActive && sortOrder === SORT_ORDER.ASC
-              ? "text-primary"
-              : "text-neutral-300"
+              ? 'text-primary'
+              : 'text-neutral-300'
           }
         />
         <Icon
@@ -220,8 +247,8 @@ export default function Table({
           size={12}
           className={
             isActive && sortOrder === SORT_ORDER.DESC
-              ? "text-primary"
-              : "text-neutral-300"
+              ? 'text-primary'
+              : 'text-neutral-300'
           }
         />
       </span>
@@ -230,17 +257,22 @@ export default function Table({
 
   // ─── Render ───────────────────────────────────────────────
   return (
-    <div className={`relative rounded-lg border border-border-light overflow-hidden ${className}`}>
+    <div
+      className={`relative rounded-lg border border-border-light overflow-hidden ${className}`}
+    >
       <div
         ref={scrollRef}
-        className="overflow-auto"
+        className={loading ? 'overflow-hidden' : 'overflow-auto'}
         style={maxHeight ? { maxHeight } : undefined}
       >
         <table className="min-w-full table-fixed border-collapse">
           {/* ── Header ── */}
-          <thead className={stickyHeader ? "sticky top-0 z-30" : ""}>
+          <thead className={stickyHeader ? 'sticky top-0 z-30' : ''}>
             {headerGroups.map((headerGroup) => (
-              <tr key={headerGroup.id} className="bg-neutral-100 border-b border-border-light">
+              <tr
+                key={headerGroup.id}
+                className="bg-neutral-100 border-b border-border-light"
+              >
                 {headerGroup.headers.map((header) => {
                   const isSortable = header.column.columnDef.enableSorting;
 
@@ -251,16 +283,21 @@ export default function Table({
                         ${sizeClasses.header}
                         font-semibold text-neutral-600  tracking-wider whitespace-nowrap
                         select-none
-                        ${isSortable ? "cursor-pointer hover:bg-neutral-200 transition-colors" : ""}
+                        ${isSortable ? 'cursor-pointer hover:bg-neutral-200 transition-colors' : ''}
                         ${getCellClasses(header.column, stickyOffsets, true)}
                       `}
                       style={getCellStyle(header.column, stickyOffsets)}
-                      onClick={isSortable ? () => handleSort(header.column) : undefined}
+                      onClick={
+                        isSortable ? () => handleSort(header.column) : undefined
+                      }
                     >
                       <span className="inline-flex items-center">
                         {header.isPlaceholder
                           ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
                         {isSortable && renderSortIcon(header.column)}
                       </span>
                     </th>
@@ -272,7 +309,12 @@ export default function Table({
 
           {/* ── Body ── */}
           <tbody>
-            {rows.length === 0 && !loading ? (
+            {loading ? (
+              <TableSkeleton
+                columnCount={visibleColumns.length}
+                cellClassName={sizeClasses.cell}
+              />
+            ) : rows.length === 0 ? (
               <tr>
                 <td
                   colSpan={visibleColumns.length}
@@ -283,7 +325,7 @@ export default function Table({
               </tr>
             ) : (
               rows.map((row) => {
-                const extraClasses = rowClassName?.(row.original) || "";
+                const extraClasses = rowClassName?.(row.original) || '';
 
                 return (
                   <tr
@@ -291,10 +333,12 @@ export default function Table({
                     className={`
                       border-b border-border-light last:border-b-0
                       hover:bg-neutral-50 transition-colors
-                      ${onRowClick ? "cursor-pointer" : ""}
+                      ${onRowClick ? 'cursor-pointer' : ''}
                       ${extraClasses}
                     `}
-                    onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                    onClick={
+                      onRowClick ? () => onRowClick(row.original) : undefined
+                    }
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td
@@ -306,7 +350,10 @@ export default function Table({
                         `}
                         style={getCellStyle(cell.column, stickyOffsets)}
                       >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
                       </td>
                     ))}
                   </tr>
@@ -316,17 +363,6 @@ export default function Table({
           </tbody>
         </table>
       </div>
-
-      {/* ── Loading overlay ── */}
-      {loading && (
-        <div className="absolute inset-0 bg-surface/60 flex items-center justify-center z-40">
-          <div className="flex items-center gap-3 text-sm text-neutral-500">
-            <div className="loader-dot" style={{ animationDelay: "0s" }} />
-            <div className="loader-dot" style={{ animationDelay: "0.2s" }} />
-            <div className="loader-dot" style={{ animationDelay: "0.4s" }} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }

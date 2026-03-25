@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 /**
  * Extract a user-friendly error message from an Axios error.
@@ -6,18 +6,18 @@ import dayjs from "dayjs";
 export function formatErrorMessage(error) {
   const data = error?.response?.data;
 
-  if (typeof data?.message === "string") return data.message;
-  if (Array.isArray(data?.message)) return data.message.join(" | ");
-  if (typeof data === "string") return data;
+  if (typeof data?.message === 'string') return data.message;
+  if (Array.isArray(data?.message)) return data.message.join(' | ');
+  if (typeof data === 'string') return data;
 
-  return error?.message || "Something went wrong";
+  return error?.message || 'Something went wrong';
 }
 
 /**
  * Format a date string using dayjs.
  */
-export function formatDate(date, format = "MMM DD, YYYY") {
-  return date ? dayjs(date).utc().format(format) : "";
+export function formatDate(date, format = 'MMM DD, YYYY') {
+  return date ? dayjs(date).utc().format(format) : '';
 }
 
 /**
@@ -32,14 +32,14 @@ export function deepClone(obj) {
  * getNestedValue({ a: { b: 1 } }, "a.b") => 1
  */
 export function getNestedValue(obj, path, defaultValue = undefined) {
-  return path.split(".").reduce((acc, key) => acc?.[key], obj) ?? defaultValue;
+  return path.split('.').reduce((acc, key) => acc?.[key], obj) ?? defaultValue;
 }
 
 /**
  * Set a nested value on an object by dot-separated path (mutates).
  */
 export function setNestedValue(obj, path, value) {
-  const keys = path.split(".");
+  const keys = path.split('.');
   let current = obj;
   for (let i = 0; i < keys.length - 1; i++) {
     if (!current[keys[i]]) current[keys[i]] = {};
@@ -52,9 +52,29 @@ export function setNestedValue(obj, path, value) {
 /**
  * Convert an array of objects to label/value pairs for dropdowns.
  */
-export function toLabelValue(arr, labelKey = "name", valueKey = "id") {
+export function toLabelValue(arr, labelKey = 'name', valueKey = 'id') {
   return (arr || []).map((item) => ({
     label: item[labelKey],
     value: item[valueKey],
   }));
+}
+
+/**
+ * Trigger a file download from an Axios blob response.
+ * @param {*}      responseData - response.data (Blob / ArrayBuffer)
+ * @param {string} fileName     - name for the downloaded file
+ * @param {string} [mimeType]   - MIME type (default "application/octet-stream")
+ */
+export function downloadBlobFile(
+  responseData,
+  fileName,
+  mimeType = 'application/octet-stream',
+) {
+  const blob = new Blob([responseData], { type: mimeType });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  link.click();
+  window.URL.revokeObjectURL(url);
 }

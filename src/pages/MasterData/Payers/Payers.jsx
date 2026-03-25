@@ -1,39 +1,77 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useOutletContext } from "react-router-dom";
-import { Table, buildColumns } from "@/components/commonComponents/table";
-import Pagination from "@/components/commonComponents/pagination/Pagination";
-import Icon from "@/components/icons/Icon";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import ActionDropdown from "@/components/commonComponents/actionDropdown";
-import ToggleSwitch from "@/components/commonComponents/toggleSwitch/ToggleSwitch";
-import { payersData } from "@/data/masterData";
-import { setOpenEditDrawer, setOpenStatusModal } from "./payersSlice";
-import { PAYER_TYPE_OPTIONS } from "./constant";
-import AddPayersDropdown from "./Components/AddPayersDropdown";
-import AddPayerDrawer from "./Components/AddPayerDrawer";
-import ImportPayersDrawer from "./Components/ImportPayersDrawer";
-import StatusChangeModal from "./Components/StatusChangeModal";
+import { useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useOutletContext } from 'react-router-dom';
+
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import Pagination from '@/components/commonComponents/pagination/Pagination';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import { Table, buildColumns } from '@/components/commonComponents/table';
+import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
+import Icon from '@/components/icons/Icon';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+
+import AddPayerDrawer from './Components/AddPayerDrawer';
+import AddPayersDropdown from './Components/AddPayersDropdown';
+import ImportPayersDrawer from './Components/ImportPayersDrawer';
+import StatusChangeModal from './Components/StatusChangeModal';
+import { PAYER_TYPE_OPTIONS } from './constant';
+import { payersActions, registerSaga } from './payersSaga';
+import {
+  componentKey,
+  registerReducer,
+  setPage,
+  setLimit,
+  setSearch,
+  setShowArchived,
+  setPayerType,
+  setOpenEditDrawer,
+  setOpenStatusModal,
+} from './payersSlice';
+
+const { fetchPayers } = payersActions;
+const EMPTY_STATE = {};
 
 export default function Payers() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
-  const [search, setSearch] = useState("");
-  const [showArchive, setShowArchive] = useState(false);
-  const [payerType, setPayerType] = useState(null);
-  const [sortKey, setSortKey] = useState(null);
-  const [sortOrder, setSortOrder] = useState(null);
+
+  const {
+    payersList = [],
+    totalRecords = 0,
+    totalPages = 0,
+    page = 1,
+    limit = 10,
+    search = '',
+    showArchived = false,
+    payerType = null,
+    refreshFlag = 0,
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
+
+  const isLoading = useLoadingKey(LOADING_KEYS.PAYERS_GET_LIST);
+  const debouncedSearch = useDebounce(search);
+
+  useEffect(() => {
+    registerReducer();
+    registerSaga();
+  }, []);
+
+  useFlexCleanup(componentKey);
+
+  useEffect(() => {
+    dispatch(fetchPayers());
+  }, [dispatch, page, limit, debouncedSearch, showArchived, refreshFlag]);
 
   useEffect(() => {
     setToolbar(
       <>
         <Checkbox
           label="Show Archive"
-          checked={showArchive}
-          onChange={() => setShowArchive((p) => !p)}
+          checked={showArchived}
+          onChange={() => dispatch(setShowArchived(!showArchived))}
           variant="teal"
           size="sm"
         />
@@ -43,7 +81,7 @@ export default function Payers() {
             type="text"
             placeholder="Search by Payer Name"
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
@@ -53,61 +91,50 @@ export default function Payers() {
             placeholder="Payer Type"
             options={PAYER_TYPE_OPTIONS}
             value={payerType}
-            onChangeCb={(val) => { setPayerType(val); setPage(1); }}
+            onChangeCb={(val) => dispatch(setPayerType(val))}
           />
         </div>
         <AddPayersDropdown />
-      </>
+      </>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search, payerType, dispatch]);
+  }, [setToolbar, showArchived, search, payerType, dispatch]);
 
-  const handleSortChange = useCallback((key, order) => {
-    setSortKey(key);
-    setSortOrder(order);
-  }, []);
-
-  const filteredData = useMemo(() => {
-    let data = payersData;
-    if (search) {
-      const term = search.toLowerCase();
-      data = data.filter((item) => item.name.toLowerCase().includes(term));
-    }
-    if (payerType) {
-      data = data.filter((item) => item.type === payerType.value);
-    }
-    return data;
-  }, [search, payerType]);
-
-  const totalPages = Math.ceil(filteredData.length / limit);
-
-  const paginatedData = useMemo(
+  const tableData = useMemo(
     () =>
-      filteredData
-        .slice((page - 1) * limit, page * limit)
-        .map((item, i) => ({
-          ...item,
-          srNo: String((page - 1) * limit + i + 1).padStart(2, "0"),
-        })),
-    [filteredData, page, limit]
+      payersList.map((item, i) => ({
+        ...item,
+        srNo: String((page - 1) * limit + i + 1).padStart(2, '0'),
+      })),
+    [payersList, page, limit],
+  );
+
+  const handlePageChange = useCallback(
+    (p) => dispatch(setPage(p)),
+    [dispatch],
+  );
+
+  const handleLimitChange = useCallback(
+    (l) => dispatch(setLimit(l)),
+    [dispatch],
   );
 
   const columns = useMemo(
     () =>
       buildColumns([
-        { id: "srNo", header: "Sr. No", accessorKey: "srNo", width: 70 },
-        { id: "name", header: "Name", accessorKey: "name" },
-        { id: "type", header: "Type", accessorKey: "type", width: 140 },
+        { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
+        { id: 'name', header: 'Name', accessorKey: 'name' },
+        { id: 'type', header: 'Type', accessorKey: 'type', width: 140 },
         {
-          id: "status",
-          header: "Status",
-          accessorKey: "status",
+          id: 'status',
+          header: 'Status',
+          accessorKey: 'status',
           width: 120,
           render: (row) => (
             <div onClick={(e) => e.stopPropagation()}>
               <ToggleSwitch
                 name={`status-${row.id}`}
-                checked={row.status === "Active"}
+                checked={row.status === 'Active'}
                 onChangeCb={() => dispatch(setOpenStatusModal(row))}
                 activeLabel="Active"
                 inactiveLabel="Inactive"
@@ -116,54 +143,63 @@ export default function Payers() {
           ),
         },
         {
-          id: "favorites",
-          header: "Favorites",
+          id: 'favorites',
+          header: 'Favorites',
           width: 100,
-          align: "center",
+          align: 'center',
           render: (row) => (
-            <span className={row.isFavorite ? "text-primary-700" : "text-neutral-400"}>
-              {row.isFavorite ? "✓" : "-"}
+            <span
+              className={
+                row.isFavorite ? 'text-primary-700' : 'text-neutral-400'
+              }
+            >
+              {row.isFavorite ? '✓' : '-'}
             </span>
           ),
         },
         {
-          id: "actions",
-          header: "Action",
+          id: 'actions',
+          header: 'Action',
           width: 70,
-          align: "center",
+          align: 'center',
           render: (row) => (
             <ActionDropdown
               options={[
-                { label: "Edit", value: "edit", onClickCb: () => dispatch(setOpenEditDrawer(row)) },
-                { label: "Archive", value: "archive", onClickCb: () => {} },
+                {
+                  label: 'Edit',
+                  value: 'edit',
+                  onClickCb: () => dispatch(setOpenEditDrawer(row)),
+                },
+                {
+                  label: 'Archive',
+                  value: 'archive',
+                  onClickCb: () => {},
+                },
               ]}
             />
           ),
         },
       ]),
-    [dispatch]
+    [dispatch],
   );
 
   return (
     <div className="px-5 pb-4">
       <Table
         columns={columns}
-        data={paginatedData}
+        data={tableData}
         size="sm"
-        maxHeight="475px"
-        sortKey={sortKey}
-        sortOrder={sortOrder}
-        onSortChange={handleSortChange}
+        maxHeight="calc(100vh - 300px)"
+        loading={isLoading}
       />
       <Pagination
-        totalRecords={filteredData.length}
+        totalRecords={totalRecords}
         totalPages={totalPages}
         currentPage={page}
         currentLimit={limit}
-        onPageChange={setPage}
-        onLimitChange={(val) => { setLimit(val); setPage(1); }}
+        onPageChange={handlePageChange}
+        onLimitChange={handleLimitChange}
       />
-
       <AddPayerDrawer />
       <ImportPayersDrawer />
       <StatusChangeModal />
