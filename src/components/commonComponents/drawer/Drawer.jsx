@@ -70,8 +70,8 @@ function Drawer({
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className={`flex justify-between items-center ${
-            !hideHeaderBorder && "p-3 border-b border-[#E9E9E9]"
+          className={`flex justify-between items-center bg-neutral-250 p-3 ${
+            !hideHeaderBorder ? "border-b border-[#E9E9E9]" : ""
           }`}
         >
           <div className="flex flex-col">

@@ -1,15 +1,23 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
 import Icon from "@/components/icons/Icon";
 import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import Button from "@/components/commonComponents/button/Button";
 import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
-import { payersData, PAYER_TYPE_OPTIONS } from "@/data/masterData";
+import ToggleSwitch from "@/components/commonComponents/toggleSwitch/ToggleSwitch";
+import { payersData } from "@/data/masterData";
+import { setOpenEditDrawer, setOpenStatusModal } from "./payersSlice";
+import { PAYER_TYPE_OPTIONS } from "./constant";
+import AddPayersDropdown from "./Components/AddPayersDropdown";
+import AddPayerDrawer from "./Components/AddPayerDrawer";
+import ImportPayersDrawer from "./Components/ImportPayersDrawer";
+import StatusChangeModal from "./Components/StatusChangeModal";
 
 export default function Payers() {
+  const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -45,17 +53,14 @@ export default function Payers() {
             placeholder="Payer Type"
             options={PAYER_TYPE_OPTIONS}
             value={payerType}
-            onChange={(val) => { setPayerType(val); setPage(1); }}
+            onChangeCb={(val) => { setPayerType(val); setPage(1); }}
           />
         </div>
-        <Button variant="primaryTeal" size="sm">
-          <Icon name="Plus" size={14} />
-          Add Payers
-        </Button>
+        <AddPayersDropdown />
       </>
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search, payerType]);
+  }, [setToolbar, showArchive, search, payerType, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -99,9 +104,15 @@ export default function Payers() {
           accessorKey: "status",
           width: 120,
           render: (row) => (
-            <span className={row.status === "Active" ? "text-success-700 font-medium" : "text-neutral-400"}>
-              {row.status}
-            </span>
+            <div onClick={(e) => e.stopPropagation()}>
+              <ToggleSwitch
+                name={`status-${row.id}`}
+                checked={row.status === "Active"}
+                onChangeCb={() => dispatch(setOpenStatusModal(row))}
+                activeLabel="Active"
+                inactiveLabel="Inactive"
+              />
+            </div>
           ),
         },
         {
@@ -120,18 +131,17 @@ export default function Payers() {
           header: "Action",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
-                { label: "Edit", value: "edit", onClickCb: () => {} },
-                { label: "View", value: "view", onClickCb: () => {} },
+                { label: "Edit", value: "edit", onClickCb: () => dispatch(setOpenEditDrawer(row)) },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch]
   );
 
   return (
@@ -153,6 +163,10 @@ export default function Payers() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+
+      <AddPayerDrawer />
+      <ImportPayersDrawer />
+      <StatusChangeModal />
     </div>
   );
 }

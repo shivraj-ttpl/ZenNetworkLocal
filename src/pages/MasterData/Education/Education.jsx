@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
@@ -7,8 +8,13 @@ import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
 import Button from "@/components/commonComponents/button/Button";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { educationData } from "@/data/masterData";
+import { setOpenAddDrawer, setOpenEditDrawer, setOpenViewModal } from "./educationSlice";
+import AddMaterialDrawer from "./Components/AddMaterialDrawer";
+import ViewEducationModal from "./Components/ViewEducationModal";
+import FilterDropdown from "./Components/FilterDropdown";
 
 export default function Education() {
+  const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -16,6 +22,12 @@ export default function Education() {
   const [showArchive, setShowArchive] = useState(false);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+  const [filters, setFilters] = useState({ specialty: null, fileType: null });
+
+  const handleFilterApply = useCallback((newFilters) => {
+    setFilters(newFilters);
+    setPage(1);
+  }, []);
 
   useEffect(() => {
     setToolbar(
@@ -37,17 +49,15 @@ export default function Education() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <button className="p-2 rounded-lg border border-border hover:bg-neutral-50 transition-colors cursor-pointer">
-          <Icon name="SlidersHorizontal" size={14} className="text-neutral-500" />
-        </button>
-        <Button variant="primaryTeal" size="sm">
+        <FilterDropdown onApply={handleFilterApply} />
+        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenAddDrawer())}>
           <Icon name="Plus" size={14} />
           Add Material
         </Button>
       </>
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search]);
+  }, [setToolbar, showArchive, search, dispatch, handleFilterApply]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -55,10 +65,23 @@ export default function Education() {
   }, []);
 
   const filteredData = useMemo(() => {
-    if (!search) return educationData;
-    const term = search.toLowerCase();
-    return educationData.filter((item) => item.fileName.toLowerCase().includes(term));
-  }, [search]);
+    let data = educationData;
+
+    if (search) {
+      const term = search.toLowerCase();
+      data = data.filter((item) => item.fileName.toLowerCase().includes(term));
+    }
+
+    if (filters.specialty) {
+      data = data.filter((item) => item.specialty === filters.specialty);
+    }
+
+    if (filters.fileType) {
+      data = data.filter((item) => item.fileType === filters.fileType);
+    }
+
+    return data;
+  }, [search, filters]);
 
   const totalPages = Math.ceil(filteredData.length / limit);
 
@@ -98,18 +121,20 @@ export default function Education() {
           header: "Action",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
-                { label: "Edit", value: "edit", onClickCb: () => {} },
-                { label: "View", value: "view", onClickCb: () => {} },
+                { label: "Edit", value: "edit", onClickCb: () => { dispatch(setOpenEditDrawer(row)); } },
+                { label: "View", value: "view", onClickCb: () => dispatch(setOpenViewModal(row)) },
+                { label: "Download", value: "download", onClickCb: () => {} },
+                { label: "Add to Favorites", value: "add_to_favorites", onClickCb: () => {} },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch]
   );
 
   return (
@@ -131,6 +156,9 @@ export default function Education() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+
+      <AddMaterialDrawer />
+      <ViewEducationModal />
     </div>
   );
 }

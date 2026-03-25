@@ -54,10 +54,10 @@ export default function Input({
           autoComplete={autoComplete || AUTO_COMPLETE_MAP[name] || AUTO_COMPLETE_MAP[type] || "off"}
           disabled={disabled}
           className={`
-            w-full h-11 px-4 rounded-lg border bg-surface
+            w-full h-10 px-4 rounded-lg border bg-surface
             text-sm text-neutral-800 placeholder-text-placeholder
             outline-none transition-colors
-            focus:border-secondary focus:ring-1 focus:ring-secondary
+            focus:border-primary focus:ring-[0.5] focus:ring-primary
             disabled:bg-neutral-50 disabled:cursor-not-allowed
             ${showError ? "border-error-400" : "border-border"}
             ${isPassword ? "pr-11" : ""}

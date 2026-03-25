@@ -59,7 +59,7 @@ export default function PhoneInput({
           phone-input-wrapper
           w-full h-12 rounded-lg border bg-surface overflow-hidden
           transition-colors
-          focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary
+          focus-within:border-primary focus-within:ring-[0.5] focus-within:ring-primary
           ${disabled ? "bg-neutral-50 cursor-not-allowed opacity-60" : ""}
           ${showError ? "border-error-400" : "border-border"}
         `}

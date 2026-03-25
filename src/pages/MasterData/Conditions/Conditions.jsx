@@ -1,15 +1,19 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
 import Icon from "@/components/icons/Icon";
 import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
 import Button from "@/components/commonComponents/button/Button";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
+import { setOpenAddDrawer, setOpenEditDrawer } from "./conditionsSlice";
+import AddConditionDrawer from "./Components/AddConditionDrawer";
 import { conditionsData } from "@/data/masterData";
 
 export default function Conditions() {
   const { setToolbar } = useOutletContext();
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState("");
@@ -37,14 +41,14 @@ export default function Conditions() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenAddDrawer())}>
           <Icon name="Plus" size={14} />
           Add Condition
         </Button>
       </>
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search]);
+  }, [setToolbar, showArchive, search, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -108,22 +112,23 @@ export default function Conditions() {
           header: "Action",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
-                { label: "Edit", value: "edit", onClickCb: () => {} },
-                { label: "View", value: "view", onClickCb: () => {} },
+                { label: "Edit", value: "edit", onClickCb: () => dispatch(setOpenEditDrawer(row)) },
+                { label: "Add to Favorites", value: "addToFavorites", onClickCb: () => {} },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch]
   );
 
   return (
     <div className="px-5 pb-4">
+      <AddConditionDrawer />
       <Table
         columns={columns}
         data={paginatedData}

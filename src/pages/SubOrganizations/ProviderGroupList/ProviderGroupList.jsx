@@ -8,6 +8,7 @@ import Button from "@/components/commonComponents/button/Button";
 import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { providerGroupsData, STATUS_OPTIONS } from "@/data/subOrganizationsData";
+import ToggleSwitch from "../../../components/commonComponents/toggleSwitch/ToggleSwitch";
 
 export default function ProviderGroupList() {
   const { subOrgId } = useParams();
@@ -129,9 +130,11 @@ export default function ProviderGroupList() {
           accessorKey: "status",
           width: 120,
           render: (row) => (
-            <span className={row.status === "Active" ? "text-success-700 font-medium" : "text-neutral-400"}>
-              {row.status}
-            </span>
+            <ToggleSwitch
+              name={`status-${row.id}`}
+              checked={row.status}
+              showLabel={false}
+            />
           ),
         },
         {

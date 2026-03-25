@@ -180,7 +180,7 @@ export default function SelectDropdown({
             "text-sm text-left outline-none transition-colors",
             "flex items-center justify-between gap-2",
             "disabled:bg-neutral-50 disabled:cursor-not-allowed",
-            isOpen ? "border-secondary ring-1 ring-secondary" : "",
+            isOpen ? "border-primary ring-[0.5] ring-primary" : "",
             showError ? "border-error-400" : !isOpen ? "border-border" : "",
           ]
             .filter(Boolean)

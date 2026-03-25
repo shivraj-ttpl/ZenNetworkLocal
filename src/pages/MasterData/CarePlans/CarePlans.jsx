@@ -1,13 +1,19 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
 import Icon from "@/components/icons/Icon";
 import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
+import Button from "@/components/commonComponents/button/Button";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
+import { useFlexCleanup } from "@/hooks/useFlexCleanup";
 import { carePlansData } from "@/data/masterData";
+import { componentKey, setOpenAddDrawer, setOpenEditDrawer, setCloseDrawer } from "./carePlansSlice";
+import ViewCarePlanDrawer from "./components/ViewCarePlanDrawer";
 
 export default function CarePlans() {
+  const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -15,6 +21,10 @@ export default function CarePlans() {
   const [showArchive, setShowArchive] = useState(false);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+
+  // useFlexCleanup(componentKey);
+
+  const drawerOpen = useSelector((state) => state[componentKey]?.drawerOpen ?? false);
 
   useEffect(() => {
     setToolbar(
@@ -39,7 +49,7 @@ export default function CarePlans() {
       </>
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search]);
+  }, [setToolbar, showArchive, search, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -88,18 +98,18 @@ export default function CarePlans() {
           header: "Action",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
-                { label: "Edit", value: "edit", onClickCb: () => {} },
-                { label: "View", value: "view", onClickCb: () => {} },
+                { label: "View", value: "view", onClickCb: () => dispatch(setOpenAddDrawer()) },
+                { label: "Add to Favorites", value: "add_to_favorites", onClickCb: () => {} },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch]
   );
 
   return (
@@ -121,6 +131,8 @@ export default function CarePlans() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+
+      <ViewCarePlanDrawer open={drawerOpen} onClose={() => dispatch(setCloseDrawer())} />
     </div>
   );
 }

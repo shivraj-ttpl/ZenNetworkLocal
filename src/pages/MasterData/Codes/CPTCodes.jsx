@@ -1,10 +1,15 @@
 import { useState, useMemo, useCallback } from "react";
+import { useOutletContext } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
+import { setOpenEditDrawer } from "./codesSlice";
 import { cptCodesData } from "@/data/masterData";
 
 export default function CPTCodes() {
+  const { codeLabel } = useOutletContext();
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
 
@@ -57,18 +62,18 @@ export default function CPTCodes() {
           header: "Action",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
-                { label: "Edit", value: "edit", onClickCb: () => {} },
-                { label: "View", value: "view", onClickCb: () => {} },
+                { label: "Edit", value: "edit", onClickCb: () => dispatch(setOpenEditDrawer({ codeLabel, data: row })) },
+                { label: "Add to Favorites", value: "addToFavorites", onClickCb: () => {} },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch, codeLabel]
   );
 
   const handlePageChange = useCallback((p) => setPage(p), []);
