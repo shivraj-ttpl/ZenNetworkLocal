@@ -1,10 +1,15 @@
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Button from '@/components/commonComponents/button/Button';
 import Icon from '@/components/icons/Icon';
 import { organizationProfile } from '@/data/settingsData';
+
+import "./settingsProfileSaga";
+import EditOrganizationProfileDrawer from './Components/EditOrganizationProfileDrawer';
+import { componentKey, setOpenEditDrawer } from './settingsProfileSlice';
 
 const STATS = [
   { icon: 'Building2', label: 'Sub-Organizations', key: 'subOrganizations' },
@@ -52,23 +57,32 @@ function LabelValue({ label, value, isLink }) {
 
 export default function SettingsProfile() {
   const { setToolbar } = useOutletContext();
+  const dispatch = useDispatch();
+  const { drawerOpen, drawerMode, editData } = useSelector(
+    (state) => state[componentKey] ?? {},
+  );
 
   useEffect(() => {
     setToolbar(
-      <Button variant="primaryTeal" size="sm">
+      <Button
+        variant="primaryTeal"
+        size="sm"
+        onClick={() => dispatch(setOpenEditDrawer(organizationProfile))}
+      >
         <Icon name="Pencil" size={14} />
         Edit Organization Profile
       </Button>,
     );
     return () => setToolbar(null);
-  }, [setToolbar]);
+  }, [setToolbar, dispatch]);
 
   return (
-    <div className="px-5 pb-5 ">
-      <div className="border border-border-light rounded-lg p-5">
-        <div className="flex items-start gap-4 mb-6">
-          <Avatar name={organizationProfile.name} size="xl" variant="square" />
-          <div className="flex-1 gap-3">
+    <>
+      <div className="px-5 pb-5 ">
+        <div className="border border-border-light rounded-lg p-5">
+          <div className="flex items-start gap-4 mb-6">
+            <Avatar name={organizationProfile.name} size="xl" variant="square" />
+            <div className="flex-1 gap-3">
               <span className="text-base font-medium text-text-primary ">
                 {organizationProfile.name}
               </span>
@@ -157,8 +171,15 @@ export default function SettingsProfile() {
               ))}
             </div>
           </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      <EditOrganizationProfileDrawer
+        open={drawerOpen}
+        drawerMode={drawerMode}
+        editData={editData}
+      />
+    </>
   );
 }

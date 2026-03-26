@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
 import Icon from "@/components/icons/Icon";
@@ -8,9 +9,13 @@ import Button from "@/components/commonComponents/button/Button";
 import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { patientsData, SELECT_ACTION_OPTIONS } from "@/data/subOrganizationsData";
+import { componentKey, setOpenEditDrawer, setOpenUploadModal } from "./providerGroupPatientsSlice";
+import EditPatientDrawer from "./Components/EditPatientDrawer";
+import UploadCsvDrawer from "./Components/UploadCsvDrawer";
 
 export default function ProviderGroupPatients() {
   const { setToolbar } = useOutletContext();
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState("");
@@ -18,6 +23,8 @@ export default function ProviderGroupPatients() {
   const [selectAction, setSelectAction] = useState(null);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+
+  const { drawerOpen, editData, uploadModalOpen } = useSelector((state) => state[componentKey] ?? {});
 
   useEffect(() => {
     setToolbar(
@@ -49,15 +56,14 @@ export default function ProviderGroupPatients() {
             onChange={(val) => setSelectAction(val)}
           />
         </div>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenUploadModal())}>
           <Icon name="Upload" size={14} />
           Upload CSV File
         </Button>
-        
       </>
     );
     return () => setToolbar(null);
-  }, [setToolbar, showInactivePatients, search, selectAction]);
+  }, [setToolbar, showInactivePatients, search, selectAction, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -132,18 +138,18 @@ export default function ProviderGroupPatients() {
           header: "Action",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
                 { label: "View", value: "view", onClickCb: () => {} },
-                { label: "Edit", value: "edit", onClickCb: () => {} },
+                { label: "Edit", value: "edit", onClickCb: () => dispatch(setOpenEditDrawer(row)) },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch]
   );
 
   return (
@@ -167,6 +173,8 @@ export default function ProviderGroupPatients() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+      <EditPatientDrawer open={drawerOpen} editData={editData} />
+      <UploadCsvDrawer open={uploadModalOpen} />
     </div>
   );
 }

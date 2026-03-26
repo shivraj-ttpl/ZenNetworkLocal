@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Table, buildColumns } from "@/components/commonComponents/table";
 import Pagination from "@/components/commonComponents/pagination/Pagination";
 import Icon from "@/components/icons/Icon";
@@ -8,9 +9,19 @@ import Button from "@/components/commonComponents/button/Button";
 import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { usersData, STATUS_OPTIONS } from "@/data/subOrganizationsData";
+import {
+  componentKey,
+  setOpenAddDrawer,
+  setOpenEditDrawer,
+  setOpenViewModal,
+} from "./providerGroupUsersSlice";
+import "./providerGroupUsersSaga";
+import AddUserDrawer from "./Components/AddUserDrawer";
+import ViewUserModal from "./Components/ViewUserModal";
 
 export default function ProviderGroupUsers() {
   const { setToolbar } = useOutletContext();
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState("");
@@ -18,6 +29,10 @@ export default function ProviderGroupUsers() {
   const [statusFilter, setStatusFilter] = useState(null);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+
+  const { drawerOpen, drawerMode, editData, viewModalOpen, viewData } = useSelector(
+    (state) => state[componentKey] ?? {}
+  );
 
   useEffect(() => {
     setToolbar(
@@ -36,14 +51,14 @@ export default function ProviderGroupUsers() {
         <div className="w-32">
           <SelectDropdown name="status" placeholder="Status" options={STATUS_OPTIONS} value={statusFilter} onChange={(val) => { setStatusFilter(val); setPage(1); }} />
         </div>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenAddDrawer())}>
           <Icon name="Plus" size={14} />
           Add Users
         </Button>
       </>
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search, statusFilter]);
+  }, [setToolbar, showArchive, search, statusFilter, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -118,18 +133,18 @@ export default function ProviderGroupUsers() {
           header: "Action",
           width: 70,
           align: "center",
-          render: () => (
+          render: (row) => (
             <ActionDropdown
               options={[
-                { label: "View", value: "view", onClickCb: () => {} },
-                { label: "Edit", value: "edit", onClickCb: () => {} },
+                { label: "View", value: "view", onClickCb: () => dispatch(setOpenViewModal(row)) },
+                { label: "Edit", value: "edit", onClickCb: () => dispatch(setOpenEditDrawer(row)) },
                 { label: "Archive", value: "archive", onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    []
+    [dispatch]
   );
 
   return (
@@ -151,6 +166,8 @@ export default function ProviderGroupUsers() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+      <AddUserDrawer open={drawerOpen} drawerMode={drawerMode} editData={editData} />
+      <ViewUserModal open={viewModalOpen} viewData={viewData} />
     </div>
   );
 }

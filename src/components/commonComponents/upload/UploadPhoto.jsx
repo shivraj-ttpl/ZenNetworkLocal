@@ -101,21 +101,26 @@ const UploadPhoto = ({
       )}
 
       {selectedFile && (
-        <div className="relative rounded-lg border border-neutral-200 bg-neutral-50 overflow-hidden">
-          <img
-            src={preview}
-            alt="preview"
-            className="w-full h-auto object-contain rounded-lg"
-          />
+        <div className="flex flex-col items-start gap-2">
+          <div className="relative w-full rounded-lg border border-neutral-200 bg-neutral-50 overflow-hidden">
+            <img
+              src={preview}
+              alt="preview"
+              className="w-full h-auto object-contain rounded-lg"
+            />
+          </div>
+
           <button
             type="button"
-            onClick={handleRemove}
-            className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full bg-white/80 text-neutral-500 hover:text-error-500 hover:bg-white shadow-sm cursor-pointer"
+            onClick={() => inputRef.current?.click()}
+            disabled={disabled}
+            className="text-primary-700 underline font-medium text-sm hover:text-primary-900 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <Icon name="X" size={14} />
+            Update a Photo
           </button>
-          <p className="text-xs text-text-secondary truncate px-2 py-1.5 border-t border-neutral-200 bg-white">
-            {selectedFile.name}
+
+          <p className="text-xs text-text-secondary">
+            .png, .jpg, up to {maxFileSize}MB.
           </p>
         </div>
       )}
