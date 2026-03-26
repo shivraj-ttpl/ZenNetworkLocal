@@ -261,7 +261,7 @@ export default function ViewAssessmentDrawer() {
       footerButton={
         <div className="flex justify-between w-full px-2 pb-2">
           {!isFirstStep ? (
-            <Button variant="outlineTeal" size="sm" type="button" onClick={handlePrev}>
+            <Button variant="outlineBlue" size="sm" type="button" onClick={handlePrev}>
               Previous
             </Button>
           ) : (
@@ -270,7 +270,7 @@ export default function ViewAssessmentDrawer() {
             </Button>
           )}
           <Button
-            variant="primaryTeal"
+            variant="primaryBlue"
             size="sm"
             type="button"
             onClick={isLastStep ? handleClose : handleNext}

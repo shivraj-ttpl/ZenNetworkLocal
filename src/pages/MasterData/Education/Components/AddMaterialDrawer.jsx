@@ -99,7 +99,7 @@ export default function AddMaterialDrawer() {
 
             <div className="flex justify-between gap-2 mt-auto pt-4 border-t border-[#E9E9E9]">
               <Button
-                variant="outlineTeal"
+                variant="outlineBlue"
                 size="sm"
                 type="button"
                 onClick={() => {
@@ -110,7 +110,7 @@ export default function AddMaterialDrawer() {
                 Cancel
               </Button>
               <Button
-                variant="primaryTeal"
+                variant="primaryBlue"
                 size="sm"
                 type="button"
                 onClick={handleSubmit}

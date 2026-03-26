@@ -11,9 +11,9 @@ const VARIANTS = {
     "bg-transparent hover:bg-neutral-100 text-neutral-600",
   link:
     "bg-transparent text-secondary hover:text-secondary-link underline-offset-4 hover:underline p-0 h-auto",
-  primaryTeal:
+  primaryBlue:
     "bg-primary hover:bg-primary-600 text-text-inverse",
-  outlineTeal:
+  outlineBlue:
     "bg-transparent hover:bg-primary-50 text-primary border border-primary",
   brandPrimary:
     "bg-[#007DCE] hover:bg-[#006bb3] text-text-inverse",

@@ -22,7 +22,7 @@ export default function ProviderGroupUsers() {
   useEffect(() => {
     setToolbar(
       <>
-        <Checkbox label="Show Archive" checked={showArchive} onChange={() => setShowArchive((p) => !p)} variant="teal" size="sm" />
+        <Checkbox label="Show Archive" checked={showArchive} onChange={() => setShowArchive((p) => !p)} variant="blue" size="sm" />
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
@@ -36,7 +36,7 @@ export default function ProviderGroupUsers() {
         <div className="w-32">
           <SelectDropdown name="status" placeholder="Status" options={STATUS_OPTIONS} value={statusFilter} onChange={(val) => { setStatusFilter(val); setPage(1); }} />
         </div>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryBlue" size="sm">
           <Icon name="Plus" size={14} />
           Add Users
         </Button>

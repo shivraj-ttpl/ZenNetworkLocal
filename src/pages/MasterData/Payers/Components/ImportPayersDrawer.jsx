@@ -43,11 +43,11 @@ export default function ImportPayersDrawer() {
       width="max-w-[700px] w-[700px]"
       footerButton={
         <div className="flex justify-between w-full">
-          <Button variant="outlineTeal" size="sm" type="button" onClick={handleClose}>
+          <Button variant="outlineBlue" size="sm" type="button" onClick={handleClose}>
             Cancel
           </Button>
           <Button
-            variant="primaryTeal"
+            variant="primaryBlue"
             size="sm"
             type="button"
             onClick={handleImport}

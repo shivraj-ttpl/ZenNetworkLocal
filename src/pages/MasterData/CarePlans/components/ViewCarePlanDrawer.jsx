@@ -476,7 +476,7 @@ export default function ViewCarePlanDrawer({ open, onClose }) {
       footerButton={
         <div className="flex items-center justify-between w-full px-4 py-2">
           <Button
-            variant="outlineTeal"
+            variant="outlineBlue"
             size="sm"
             type="button"
             onClick={isFirstStep ? handleClose : handlePrev}
@@ -485,7 +485,7 @@ export default function ViewCarePlanDrawer({ open, onClose }) {
             Previous
           </Button>
           <Button
-            variant="primaryTeal"
+            variant="primaryBlue"
             size="sm"
             type="button"
             onClick={isLastStep ? handleClose : handleNext}

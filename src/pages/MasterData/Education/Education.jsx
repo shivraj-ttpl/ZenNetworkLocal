@@ -89,7 +89,7 @@ export default function Education() {
           label="Show Archive"
           checked={showArchived}
           onChange={() => dispatch(setShowArchived(!showArchived))}
-          variant="teal"
+          variant="blue"
           size="sm"
         />
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50">
@@ -104,7 +104,7 @@ export default function Education() {
         </div>
         <FilterDropdown onApply={handleFilterApply} />
         <Button
-          variant="primaryTeal"
+          variant="primaryBlue"
           size="sm"
           onClick={() => dispatch(setOpenAddDrawer())}
         >

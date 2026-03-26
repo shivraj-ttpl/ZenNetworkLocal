@@ -148,7 +148,7 @@ export default function MedicationAdherenceGoals({
                     key={`${question.key}-last-${opt}`}
                     name={`${prefix}.lastValue`}
                     label={opt}
-                    variant="teal"
+                    variant="blue"
                     checked={qData.lastValue === opt}
                     onChange={() => setFieldValue(`${prefix}.lastValue`, opt)}
                   />

@@ -32,7 +32,7 @@ export default function SettingsReports() {
 
   useEffect(() => {
     setToolbar(
-      <Button variant="primaryTeal" size="sm">
+      <Button variant="primaryBlue" size="sm">
         <Icon name="Download" size={14} />
         Export
       </Button>,

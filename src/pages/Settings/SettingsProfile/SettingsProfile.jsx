@@ -55,7 +55,7 @@ export default function SettingsProfile() {
 
   useEffect(() => {
     setToolbar(
-      <Button variant="primaryTeal" size="sm">
+      <Button variant="primaryBlue" size="sm">
         <Icon name="Pencil" size={14} />
         Edit Organization Profile
       </Button>,

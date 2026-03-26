@@ -17,7 +17,7 @@ const VARIANTS = {
     disabled: "bg-secondary-200 border-secondary-200",
     disabledUnchecked: "bg-neutral-100 border-neutral-200",
   },
-  teal: {
+  blue: {
     base: "border-neutral-300",
     hover: "group-hover:border-primary-400",
     focusRing: "group-focus-within:ring-2 group-focus-within:ring-primary-100",

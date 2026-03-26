@@ -118,7 +118,7 @@ export default function AddConditionDrawer() {
                 Cancel
               </Button>
               <Button
-                variant="primaryTeal"
+                variant="primaryBlue"
                 size="sm"
                 type="button"
                 onClick={handleSubmit}

@@ -155,7 +155,7 @@ export default function SubOrgList() {
               setShowArchive((p) => !p);
               setPage(1);
             }}
-            variant="teal"
+            variant="blue"
             size="sm"
           />
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60">
@@ -184,7 +184,7 @@ export default function SubOrgList() {
             />
           </div>
         </div>
-        <Button variant="primaryTeal" size="sm" onClick={() => setShowAddDrawer(true)}>
+        <Button variant="primaryBlue" size="sm" onClick={() => setShowAddDrawer(true)}>
           <Icon name="Plus" size={14} />
           Add New
         </Button>

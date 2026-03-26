@@ -98,7 +98,7 @@ export default function CodesContainer() {
     setToolbar(
       <>
         <Button
-          variant="outlineTeal"
+          variant="outlineBlue"
           size="sm"
           onClick={() => dispatch(openImportModal(codeLabel))}
         >
@@ -106,7 +106,7 @@ export default function CodesContainer() {
           Import {codeLabel} Codes
         </Button>
         <Button
-          variant="primaryTeal"
+          variant="primaryBlue"
           size="sm"
           onClick={() => dispatch(setOpenAddDrawer(codeLabel))}
         >
@@ -149,7 +149,7 @@ export default function CodesContainer() {
             label="Show Archive"
             checked={showArchived}
             onChange={() => dispatch(setShowArchived(!showArchived))}
-            variant="teal"
+            variant="blue"
             size="sm"
           />
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-65">
