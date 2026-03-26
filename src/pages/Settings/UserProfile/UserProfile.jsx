@@ -5,6 +5,15 @@ import {
   orgAdminUserProfile,
   subOrgAdminUserProfile,
 } from '@/data/settingsData';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  componentKey,
+  setCloseDrawer,
+  setOpenEditDrawer,
+} from './userProfileSlice';
+import EditSubOrganizationProfileDrawer from './Components/EditSubOrganizationProfileDrawer';
+import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
+import EditOrganizationUserProfileDrawer from './Components/EditOrganizationUserProfileDrawer';
 
 function LabelValue({ label, value, isLink }) {
   return (
@@ -282,16 +291,21 @@ function SubOrgAdminProfile({ profile }) {
 }
 
 export default function UserProfile() {
-  const isOrgAdmin = true;
+  const { drawerOpen } = useSelector((state) => state[componentKey] || {});
+  const { isOrgAdmin } = useCurrentUserRole();
   const profile = isOrgAdmin ? orgAdminUserProfile : subOrgAdminUserProfile;
-
+  const dispatch = useDispatch();
   return (
     <div className="bg-surface h-full rounded-xl border border-border-light overflow-y-auto">
       <div className="flex items-center justify-between px-5 pt-4 pb-3">
         <h2 className="text-base font-semibold text-text-primary">
           {isOrgAdmin ? 'Profile' : 'Profile'}
         </h2>
-        <Button variant="primaryBlue" size="sm">
+        <Button
+          variant="primaryBlue"
+          size="sm"
+          onClick={() => dispatch(setOpenEditDrawer())}
+        >
           <Icon name="Pencil" size={14} />
           Edit Profile
         </Button>
@@ -303,6 +317,19 @@ export default function UserProfile() {
           <SubOrgAdminProfile profile={profile} />
         )}
       </div>
+      {isOrgAdmin ? (
+        <EditOrganizationUserProfileDrawer
+          open={drawerOpen}
+          handleClose={() => dispatch(setCloseDrawer())}
+          editData={profile}
+        />
+      ) : (
+        <EditSubOrganizationProfileDrawer
+          open={drawerOpen}
+          handleClose={() => dispatch(setCloseDrawer())}
+          editData={profile}
+        />
+      )}
     </div>
   );
 }

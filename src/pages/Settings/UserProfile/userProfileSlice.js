@@ -1,16 +1,12 @@
-import { COMPONENT_KEYS } from "@/constants/componentKeys";
 import store from "@/core/store/store";
+import { COMPONENT_KEYS } from "@/constants/componentKeys";
 
-export const componentKey = COMPONENT_KEYS.SETTING_USER_PROFILE;
+export const componentKey = COMPONENT_KEYS.USER_PROFILE;
 
 const sliceConfig = {
   key: componentKey,
   addedReducers: {
-    setOpenAddDrawer: (state) => {
-      state.drawerOpen = true;
-      state.drawerMode = "add";
-      state.editData = null;
-    },
+
     setOpenEditDrawer: (state, action) => {
       state.drawerOpen = true;
       state.drawerMode = "edit";
@@ -35,9 +31,4 @@ export function registerReducer() {
   slice = store.reducerManager.add(sliceConfig);
 }
 
-export const {
-  setOpenAddDrawer,
-  setOpenEditDrawer,
-  setCloseDrawer,
-} = slice.actions;
-
+export const { setOpenAddDrawer, setOpenEditDrawer, setCloseDrawer } = slice.actions;
