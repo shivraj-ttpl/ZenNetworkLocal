@@ -46,7 +46,7 @@ export default function FamilyHistory({ values, setFieldValue }) {
                     <Checkbox
                       checked={!!fh[condition]?.[member]}
                       onChange={() => handleToggle(condition, member)}
-                      variant="teal"
+                      variant="blue"
                     />
                   </td>
                 ))}

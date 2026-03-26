@@ -89,7 +89,7 @@ export default function FilterDropdown({ onApply }) {
           </div>
 
           <div className="flex justify-end px-4 pb-4">
-            <Button variant="primaryTeal" size="sm" onClick={handleApply}>
+            <Button variant="primaryBlue" size="sm" onClick={handleApply}>
               Apply
             </Button>
           </div>

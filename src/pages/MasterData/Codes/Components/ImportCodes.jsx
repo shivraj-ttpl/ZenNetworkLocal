@@ -59,7 +59,7 @@ export default function ImportCodes() {
       footerButton={
         <div className="flex justify-between w-full">
           <Button
-            variant="outlineTeal"
+            variant="outlineBlue"
             size="sm"
             type="button"
             onClick={handleClose}
@@ -67,7 +67,7 @@ export default function ImportCodes() {
             Cancel
           </Button>
           <Button
-            variant="primaryTeal"
+            variant="primaryBlue"
             size="sm"
             type="button"
             onClick={handleImport}

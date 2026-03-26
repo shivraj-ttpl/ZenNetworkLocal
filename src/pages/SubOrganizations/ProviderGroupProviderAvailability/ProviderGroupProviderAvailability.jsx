@@ -76,7 +76,7 @@ export default function ProviderGroupProviderAvailability() {
             onChange={(val) => setAppointmentMode(val)}
           />
         </div>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryBlue" size="sm">
           <Icon name="Pencil" size={14} />
           Configure Provider Availability
         </Button>

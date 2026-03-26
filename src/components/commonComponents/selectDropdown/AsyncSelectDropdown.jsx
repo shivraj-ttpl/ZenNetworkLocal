@@ -409,7 +409,7 @@ export default function AsyncSelectDropdown({
                     >
                       {isMulti && (
                         <span className="pointer-events-none">
-                          <Checkbox checked={selected} readOnly variant="teal" size="sm" />
+                          <Checkbox checked={selected} readOnly variant="blue" size="sm" />
                         </span>
                       )}
                       {renderOption ? (

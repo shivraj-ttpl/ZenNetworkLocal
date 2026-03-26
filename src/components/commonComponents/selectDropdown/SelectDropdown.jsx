@@ -260,7 +260,7 @@ export default function SelectDropdown({
                       checked={allSelected}
                       indeterminate={!allSelected && hasValue}
                       readOnly
-                      variant="teal"
+                      variant="blue"
                       size="sm"
                     />
                   </span>
@@ -288,7 +288,7 @@ export default function SelectDropdown({
                     >
                       {isMulti && (
                         <span className="pointer-events-none">
-                          <Checkbox checked={selected} readOnly variant="teal" size="sm" />
+                          <Checkbox checked={selected} readOnly variant="blue" size="sm" />
                         </span>
                       )}
                       {renderOption ? (

@@ -45,7 +45,7 @@ export default function Immunizations({ values, setFieldValue }) {
                   <Checkbox
                     checked={!!imm[vaccine.name]?.received}
                     onChange={() => handleToggle(vaccine.name, "received")}
-                    variant="teal"
+                    variant="blue"
                   />
                 </td>
                 <td className="px-4 py-3 text-center text-text-secondary">-</td>
@@ -53,7 +53,7 @@ export default function Immunizations({ values, setFieldValue }) {
                   <Checkbox
                     checked={!!imm[vaccine.name]?.doNotWant}
                     onChange={() => handleToggle(vaccine.name, "doNotWant")}
-                    variant="teal"
+                    variant="blue"
                   />
                 </td>
               </tr>

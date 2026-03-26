@@ -29,7 +29,7 @@ export default function StatusChangeModal() {
       customClasses="w-full max-w-[600px] mx-4"
       footerButton={
         <div className="flex justify-between w-full">
-          <Button variant="outlineTeal" size="sm" type="button" onClick={handleClose}>
+          <Button variant="outlineBlue" size="sm" type="button" onClick={handleClose}>
             Cancel
           </Button>
           <Button variant="brandPrimary" size="sm" type="button" onClick={handleConfirm}>

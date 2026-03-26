@@ -291,7 +291,7 @@ export default function UserProfile() {
         <h2 className="text-base font-semibold text-text-primary">
           {isOrgAdmin ? 'Profile' : 'Profile'}
         </h2>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryBlue" size="sm">
           <Icon name="Pencil" size={14} />
           Edit Profile
         </Button>

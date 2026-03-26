@@ -47,7 +47,7 @@ export default function SettingsLabels() {
           label="Set Default"
           checked={setDefault}
           onChange={() => setSetDefault((prev) => !prev)}
-          variant="teal"
+          variant="blue"
           size="sm"
         />
       </>,
@@ -107,7 +107,7 @@ export default function SettingsLabels() {
       </div>
 
       <div className="flex justify-end mt-4">
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryBlue" size="sm">
           Save
         </Button>
       </div>

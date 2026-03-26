@@ -31,10 +31,10 @@ export default function ProviderGroupConfiguration() {
               placeholder="Enter Caller ID"
               className="w-full h-10 px-4 rounded-lg border border-border bg-surface text-sm outline-none focus:border-secondary focus:ring-1 focus:ring-secondary text-neutral-800 placeholder-text-placeholder"
             />
-            <Checkbox label="Verify ID" variant="teal" size="sm" />
+            <Checkbox label="Verify ID" variant="blue" size="sm" />
           </div>
           <div className="flex justify-end mt-4">
-            <Button variant="primaryTeal" size="sm">Create Caller ID</Button>
+            <Button variant="primaryBlue" size="sm">Create Caller ID</Button>
           </div>
         </div>
 
@@ -55,7 +55,7 @@ export default function ProviderGroupConfiguration() {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <Button variant="primaryTeal" size="sm">Verify</Button>
+            <Button variant="primaryBlue" size="sm">Verify</Button>
           </div>
         </div>
       </div>

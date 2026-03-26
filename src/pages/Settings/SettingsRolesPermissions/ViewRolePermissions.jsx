@@ -16,7 +16,7 @@ export default function ViewRolePermissions() {
   useEffect(() => {
     setToolbar(
       <Button
-        variant="primaryTeal"
+        variant="primaryBlue"
         size="sm"
         onClick={() => navigate('/settings/roles-permissions/create')}
       >
@@ -102,7 +102,7 @@ export default function ViewRolePermissions() {
             <strong>{role?.roleName || 'Primary Care Provider'}</strong>
           </span>
           <Button
-            variant="outlineTeal"
+            variant="outlineBlue"
             size="sm"
             onClick={() =>
               navigate(`/settings/roles-permissions/${roleId}/edit`)

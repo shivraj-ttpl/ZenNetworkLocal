@@ -77,10 +77,10 @@ containers → pages → components (hierarchy)
 | Services | PascalCase + `DataService` | `DashboardDataService.js` |
 
 ## Common Components Available
-- `Button` — variants: primary, secondary, outline, ghost, link, primaryTeal, outlineTeal
+- `Button` — variants: primary, secondary, outline, ghost, link, primaryBlue, outlineBlue
 - `Input` — with label, error/touched, required, password toggle
 - `TextArea` — with Formik ErrorMessage built-in, label, isRequired
-- `Checkbox` — variants: primary, secondary, teal
+- `Checkbox` — variants: primary, secondary, blue
 - `SelectDropdown` — static single/multi select
 - `AsyncSelectDropdown` — API-driven with infinite scroll
 - `Table` — TanStack React Table wrapper with buildColumns helper

@@ -207,7 +207,7 @@ export default function EditProfileDrawer({ open, editData }) {
             {/* Footer */}
             <div className="flex justify-between gap-2 mt-auto pt-4 border-t border-[#E9E9E9]">
               <Button
-                variant="outlineTeal"
+                variant="outlineBlue"
                 size="sm"
                 type="button"
                 onClick={() => {
@@ -218,7 +218,7 @@ export default function EditProfileDrawer({ open, editData }) {
                 Cancel
               </Button>
               <Button
-                variant="primaryTeal"
+                variant="primaryBlue"
                 size="sm"
                 type="button"
                 onClick={handleSubmit}
