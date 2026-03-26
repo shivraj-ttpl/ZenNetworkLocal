@@ -4,7 +4,7 @@ export default function HorizontalStepBar({ steps, activeStep, completedSteps = 
   const activeLabel = steps.find((s) => s.id === activeStep)?.label || "";
 
   return (
-    <div className="w-full px-4 py-4 border-b border-border bg-surface flex-shrink-0">
+    <div className="w-full px-4 py-4 border-b border-border bg-surface shrink-0">
       <div className="flex items-center min-w-max overflow-x-auto zenera-scrollbar pb-2">
         {steps.map((step, index) => {
           const isActive = activeStep === step.id;

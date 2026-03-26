@@ -1,19 +1,32 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects';
 
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { toastMessages } from '@/constants/toastMessages';
+import {
+  addNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
 import { apiCall, createSagaActions } from '@/core/store/sagaHelpers';
 import store from '@/core/store/store';
 import MasterDataService from '@/services/appDataService/MasterDataService';
+import { downloadBlobFile } from '@/utils/GeneralUtils';
 
 import {
   componentKey,
   setEducationList,
   setTotalRecords,
   setTotalPages,
+  setCloseDrawer,
+  setRefreshEducation,
 } from './educationSlice';
 
 export const educationActions = createSagaActions(componentKey, [
   'fetchEducation',
+  'createEducation',
+  'updateEducation',
+  'toggleFavorite',
+  'archiveEducation',
+  'downloadEducation',
 ]);
 
 function* fetchEducationSaga() {
@@ -39,9 +52,106 @@ function* fetchEducationSaga() {
   });
 }
 
+function* createEducationSaga(action) {
+  const { data } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.EDUCATION_POST_CREATE,
+    apiFunc: () => MasterDataService.createEducation(data),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: toastMessages.educationCreatedSuccess,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setCloseDrawer());
+      yield put(setRefreshEducation());
+    },
+  });
+}
+
+function* updateEducationSaga(action) {
+  const { id, data } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.EDUCATION_PATCH_UPDATE,
+    apiFunc: () => MasterDataService.updateEducation(id, data),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: toastMessages.educationUpdatedSuccess,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setCloseDrawer());
+      yield put(setRefreshEducation());
+    },
+  });
+}
+
+function* toggleFavoriteSaga(action) {
+  const { id } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.EDUCATION_PATCH_FAVORITE,
+    apiFunc: () => MasterDataService.toggleEducationFavorite(id),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: toastMessages.educationFavoriteToggled,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setRefreshEducation());
+    },
+  });
+}
+
+function* archiveEducationSaga(action) {
+  const { id, isArchived } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.EDUCATION_PATCH_ARCHIVE,
+    apiFunc: () =>
+      isArchived
+        ? MasterDataService.unarchiveEducation(id)
+        : MasterDataService.archiveEducation(id),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: isArchived
+            ? toastMessages.educationUnarchivedSuccess
+            : toastMessages.educationArchivedSuccess,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setRefreshEducation());
+    },
+  });
+}
+
+function* downloadEducationSaga(action) {
+  const { id, fileName } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.EDUCATION_GET_DOWNLOAD,
+    apiFunc: () => MasterDataService.downloadEducation(id),
+    // eslint-disable-next-line require-yield
+    onSuccess: function* (response) {
+      downloadBlobFile(response.data, fileName || 'download');
+    },
+  });
+}
+
 function* rootSaga() {
   yield all([
     takeLatest(educationActions.fetchEducation().type, fetchEducationSaga),
+    takeLatest(educationActions.createEducation().type, createEducationSaga),
+    takeLatest(educationActions.updateEducation().type, updateEducationSaga),
+    takeLatest(educationActions.toggleFavorite().type, toggleFavoriteSaga),
+    takeLatest(educationActions.archiveEducation().type, archiveEducationSaga),
+    takeLatest(educationActions.downloadEducation().type, downloadEducationSaga),
   ]);
 }
 

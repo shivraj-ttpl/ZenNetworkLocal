@@ -4,7 +4,7 @@ export default function AssessmentStepSidebar({ steps, activeStep, completedStep
   const totalSteps = steps.length;
 
   return (
-    <nav className="w-56 flex-shrink-0 bg-surface overflow-y-auto">
+    <nav className="w-56 shrink-0 bg-surface overflow-y-auto">
       <div className="px-4 py-5 border-r border-border h-full">
         {steps.map((step, index) => {
           const isActive = activeStep === step.id;
@@ -20,7 +20,7 @@ export default function AssessmentStepSidebar({ steps, activeStep, completedStep
               >
                 <span
                   className={`
-                    w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0
+                    w-7 h-7 rounded-full flex items-center justify-center shrink-0
                     text-xs font-semibold transition-colors
                     ${isCompleted
                       ? "bg-green-500 text-white"

@@ -19,6 +19,8 @@ import AddPayersDropdown from './Components/AddPayersDropdown';
 import ImportPayersDrawer from './Components/ImportPayersDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
 import { PAYER_TYPE_OPTIONS } from './constant';
+import { toPascalCaseWithSpaces } from '@/utils/GeneralUtils';
+
 import { payersActions, registerSaga } from './payersSaga';
 import {
   componentKey,
@@ -32,7 +34,7 @@ import {
   setOpenStatusModal,
 } from './payersSlice';
 
-const { fetchPayers } = payersActions;
+const { fetchPayers, togglePayerFavorite, archivePayer } = payersActions;
 const EMPTY_STATE = {};
 
 export default function Payers() {
@@ -44,7 +46,7 @@ export default function Payers() {
     totalRecords = 0,
     totalPages = 0,
     page = 1,
-    limit = 10,
+    limit = 20,
     search = '',
     showArchived = false,
     payerType = null,
@@ -63,7 +65,15 @@ export default function Payers() {
 
   useEffect(() => {
     dispatch(fetchPayers());
-  }, [dispatch, page, limit, debouncedSearch, showArchived, refreshFlag]);
+  }, [
+    dispatch,
+    page,
+    limit,
+    debouncedSearch,
+    showArchived,
+    payerType,
+    refreshFlag,
+  ]);
 
   useEffect(() => {
     setToolbar(
@@ -75,7 +85,7 @@ export default function Payers() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50 max-[1149px]:min-w-0 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -85,13 +95,13 @@ export default function Payers() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <div className="w-40">
+        <div className="w-40 max-[1149px]:w-auto max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             name="payerType"
             placeholder="Payer Type"
             options={PAYER_TYPE_OPTIONS}
             value={payerType}
-            onChangeCb={(val) => dispatch(setPayerType(val))}
+            onChange={(val) => dispatch(setPayerType(val))}
           />
         </div>
         <AddPayersDropdown />
@@ -109,10 +119,7 @@ export default function Payers() {
     [payersList, page, limit],
   );
 
-  const handlePageChange = useCallback(
-    (p) => dispatch(setPage(p)),
-    [dispatch],
-  );
+  const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
 
   const handleLimitChange = useCallback(
     (l) => dispatch(setLimit(l)),
@@ -124,7 +131,16 @@ export default function Payers() {
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
         { id: 'name', header: 'Name', accessorKey: 'name' },
-        { id: 'type', header: 'Type', accessorKey: 'type', width: 140 },
+        {
+          id: 'type',
+          header: 'Type',
+          accessorKey: 'payerType',
+          render: (row) => (
+            <span>{toPascalCaseWithSpaces(row?.payerType)}</span>
+          ),
+
+          width: 140,
+        },
         {
           id: 'status',
           header: 'Status',
@@ -134,7 +150,7 @@ export default function Payers() {
             <div onClick={(e) => e.stopPropagation()}>
               <ToggleSwitch
                 name={`status-${row.id}`}
-                checked={row.status === 'Active'}
+                checked={row.status === 'ACTIVE'}
                 onChangeCb={() => dispatch(setOpenStatusModal(row))}
                 activeLabel="Active"
                 inactiveLabel="Inactive"
@@ -162,22 +178,41 @@ export default function Payers() {
           header: 'Action',
           width: 70,
           align: 'center',
-          render: (row) => (
-            <ActionDropdown
-              options={[
-                {
-                  label: 'Edit',
-                  value: 'edit',
-                  onClickCb: () => dispatch(setOpenEditDrawer(row)),
-                },
-                {
-                  label: 'Archive',
-                  value: 'archive',
-                  onClickCb: () => {},
-                },
-              ]}
-            />
-          ),
+          render: (row) => {
+            const isActive = row.status === 'ACTIVE';
+            const options = [
+              {
+                label: 'Edit',
+                value: 'edit',
+                onClickCb: () => dispatch(setOpenEditDrawer(row)),
+              },
+            ];
+
+            if (isActive) {
+              options.push({
+                label: row.isFavorite
+                  ? 'Remove from Favorites'
+                  : 'Add to Favorites',
+                value: 'toggleFavorite',
+                onClickCb: () =>
+                  dispatch(togglePayerFavorite({ id: row.id })),
+              });
+            } else {
+              options.push({
+                label: row.isArchived ? 'Unarchive' : 'Archive',
+                value: 'archive',
+                onClickCb: () =>
+                  dispatch(
+                    archivePayer({
+                      id: row.id,
+                      isArchived: row.isArchived,
+                    }),
+                  ),
+              });
+            }
+
+            return <ActionDropdown options={options} />;
+          },
         },
       ]),
     [dispatch],

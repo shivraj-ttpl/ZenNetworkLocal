@@ -24,8 +24,9 @@ import {
   setCloseDrawer,
 } from './carePlansSlice';
 import ViewCarePlanDrawer from './components/ViewCarePlanDrawer';
+import { formatDate } from '../../../utils/GeneralUtils';
 
-const { fetchCarePlans } = carePlansActions;
+const { fetchCarePlans, toggleFavorite, archiveCarePlan } = carePlansActions;
 const EMPTY_STATE = {};
 
 export default function CarePlans() {
@@ -68,7 +69,7 @@ export default function CarePlans() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60 max-[1149px]:min-w-0 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -113,10 +114,11 @@ export default function CarePlans() {
           accessorKey: 'description',
         },
         {
-          id: 'duration',
-          header: 'Duration',
-          accessorKey: 'duration',
+          id: 'updatedAt',
+          header: 'Updated Date',
+          accessorKey: 'updatedAt',
           width: 130,
+          render: (row) => formatDate(row.updatedAt),
         },
         {
           id: 'favorites',
@@ -147,14 +149,23 @@ export default function CarePlans() {
                   onClickCb: () => dispatch(setOpenAddDrawer()),
                 },
                 {
-                  label: 'Add to Favorites',
-                  value: 'add_to_favorites',
-                  onClickCb: () => {},
+                  label: row.isFavorite
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites',
+                  value: 'toggleFavorite',
+                  onClickCb: () =>
+                    dispatch(toggleFavorite({ id: row.id })),
                 },
                 {
-                  label: 'Archive',
+                  label: row.isArchived ? 'Unarchive' : 'Archive',
                   value: 'archive',
-                  onClickCb: () => {},
+                  onClickCb: () =>
+                    dispatch(
+                      archiveCarePlan({
+                        id: row.id,
+                        isArchived: row.isArchived,
+                      }),
+                    ),
                 },
               ]}
             />

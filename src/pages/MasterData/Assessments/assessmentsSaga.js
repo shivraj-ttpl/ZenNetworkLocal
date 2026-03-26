@@ -1,6 +1,11 @@
 import { all, put, select, takeLatest } from 'redux-saga/effects';
 
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { toastMessages } from '@/constants/toastMessages';
+import {
+  addNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
 import { apiCall, createSagaActions } from '@/core/store/sagaHelpers';
 import store from '@/core/store/store';
 import MasterDataService from '@/services/appDataService/MasterDataService';
@@ -10,10 +15,13 @@ import {
   setAssessmentsList,
   setTotalRecords,
   setTotalPages,
+  setRefreshAssessments,
 } from './assessmentsSlice';
 
 export const assessmentsActions = createSagaActions(componentKey, [
   'fetchAssessments',
+  'toggleFavorite',
+  'archiveAssessment',
 ]);
 
 function* fetchAssessmentsSaga() {
@@ -36,9 +44,55 @@ function* fetchAssessmentsSaga() {
   });
 }
 
+function* toggleFavoriteSaga(action) {
+  const { id } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.ASSESSMENTS_PATCH_FAVORITE,
+    apiFunc: () => MasterDataService.toggleAssessmentFavorite(id),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: toastMessages.assessmentFavoriteToggled,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setRefreshAssessments());
+    },
+  });
+}
+
+function* archiveAssessmentSaga(action) {
+  const { id, isArchived } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.ASSESSMENTS_PATCH_ARCHIVE,
+    apiFunc: () =>
+      isArchived
+        ? MasterDataService.unarchiveAssessment(id)
+        : MasterDataService.archiveAssessment(id),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: isArchived
+            ? toastMessages.assessmentUnarchivedSuccess
+            : toastMessages.assessmentArchivedSuccess,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setRefreshAssessments());
+    },
+  });
+}
+
 function* rootSaga() {
   yield all([
     takeLatest(assessmentsActions.fetchAssessments().type, fetchAssessmentsSaga),
+    takeLatest(assessmentsActions.toggleFavorite().type, toggleFavoriteSaga),
+    takeLatest(
+      assessmentsActions.archiveAssessment().type,
+      archiveAssessmentSaga,
+    ),
   ]);
 }
 

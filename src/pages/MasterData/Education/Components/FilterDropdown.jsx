@@ -48,7 +48,7 @@ export default function FilterDropdown({ onApply }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 bg-surface rounded-lg border border-border shadow-lg w-[300px]">
+        <div className="absolute right-0 top-full mt-1 z-50 bg-surface rounded-lg border border-border shadow-lg w-75">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <span className="text-sm font-semibold text-text-primary">
               Filter
@@ -76,7 +76,7 @@ export default function FilterDropdown({ onApply }) {
               placeholder="Select Specialty"
               options={SPECIALTY_OPTIONS}
               value={specialty}
-              onChangeCb={(selected) => setSpecialty(selected)}
+              onChange={(selected) => setSpecialty(selected)}
             />
             <SelectDropdown
               label="File Type"
@@ -84,7 +84,7 @@ export default function FilterDropdown({ onApply }) {
               placeholder="Select File Type"
               options={FILE_TYPE_OPTIONS}
               value={fileType}
-              onChangeCb={(selected) => setFileType(selected)}
+              onChange={(selected) => setFileType(selected)}
             />
           </div>
 

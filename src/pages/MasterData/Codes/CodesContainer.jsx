@@ -124,15 +124,15 @@ export default function CodesContainer() {
 
   return (
     <div className="px-5 pb-4 space-y-3">
-      <div className="flex items-center justify-between">
-        <nav className="flex items-center gap-6">
+      <div className="flex items-center justify-between max-[1149px]:flex-wrap max-[1149px]:gap-3">
+        <nav className="flex items-center gap-6 max-[1149px]:gap-4 max-[1149px]:overflow-x-auto">
           {TABS.map((tab) => (
             <NavLink
               key={tab.path}
               to={tab.path}
               end={tab.end}
               className={({ isActive }) =>
-                `pb-2 text-xs font-normal border-b-2 transition-colors ${
+                `pb-2 text-xs font-normal border-b-2 transition-colors whitespace-nowrap ${
                   isActive
                     ? 'text-primary-700 border-primary'
                     : 'text-neutral-400 border-transparent hover:text-neutral-600'
@@ -144,7 +144,7 @@ export default function CodesContainer() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 max-[1149px]:w-full">
           <Checkbox
             label="Show Archive"
             checked={showArchived}
@@ -152,7 +152,7 @@ export default function CodesContainer() {
             variant="blue"
             size="sm"
           />
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-65">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-65 max-[1149px]:min-w-0 max-[1149px]:flex-1">
             <Icon name="Search" size={14} className="text-neutral-400" />
             <input
               type="text"
