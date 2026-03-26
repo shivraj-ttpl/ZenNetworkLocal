@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
@@ -6,10 +7,22 @@ import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
 import { permissionsData, rolesData } from '@/data/settingsData';
 
+import {
+  componentKey,
+  setOpenCreateRoleModal,
+} from './settingsRolesPermissionsSlice';
+import './settingsRolesPermissionsSaga';
+
+import CreateRoleModal from './Components/CreateRoleModal';
+
 export default function ViewRolePermissions() {
   const { setToolbar } = useOutletContext();
   const { roleId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const state = useSelector((s) => s[componentKey]);
+
+  const { createRoleModalOpen } = state || {};
 
   const role = useMemo(() => rolesData.find((r) => r.id === roleId), [roleId]);
 
@@ -18,13 +31,13 @@ export default function ViewRolePermissions() {
       <Button
         variant="primaryBlue"
         size="sm"
-        onClick={() => navigate('/settings/roles-permissions/create')}
+        onClick={() => dispatch(setOpenCreateRoleModal())}
       >
-        <Icon name="Plus" size={14} />+ Create Role
+        <Icon name="Plus" size={14} />Create Role
       </Button>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, navigate]);
+  }, [setToolbar, dispatch]);
 
   const tableData = useMemo(
     () =>
@@ -120,6 +133,8 @@ export default function ViewRolePermissions() {
         size="sm"
         maxHeight="calc(100vh - 280px)"
       />
+
+      <CreateRoleModal open={createRoleModalOpen} />
     </div>
   );
 }

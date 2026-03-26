@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
@@ -7,18 +8,32 @@ import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
+import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import { rolesData } from '@/data/settingsData';
-import ToggleSwitch from '../../../components/commonComponents/toggleSwitch/ToggleSwitch';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+
+import {
+  componentKey,
+  setOpenCreateRoleModal,
+} from './settingsRolesPermissionsSlice';
+import './settingsRolesPermissionsSaga';
+
+import CreateRoleModal from './Components/CreateRoleModal';
 
 export default function SettingsRolesPermissions() {
   const { setToolbar } = useOutletContext();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const state = useSelector((s) => s[componentKey]);
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
   const [showArchive, setShowArchive] = useState(false);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
+
+  const { createRoleModalOpen } = state || {};
 
   useEffect(() => {
     setToolbar(
@@ -46,14 +61,14 @@ export default function SettingsRolesPermissions() {
         <Button
           variant="primaryBlue"
           size="sm"
-          onClick={() => navigate('/settings/roles-permissions/create')}
+          onClick={() => dispatch(setOpenCreateRoleModal())}
         >
-          <Icon name="Plus" size={14} />+ Create Roles
+          <Icon name="Plus" size={14} />Create Roles
         </Button>
       </>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search, navigate]);
+  }, [setToolbar, showArchive, search, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -62,7 +77,8 @@ export default function SettingsRolesPermissions() {
 
   const handleRowClick = useCallback(
     (role) => {
-      navigate(`/settings/roles-permissions/${role.id}/view`);
+      console.log("role",role)
+      navigate(`/settings/roles-permissions/${role}/view`);
     },
     [navigate],
   );
@@ -93,8 +109,28 @@ export default function SettingsRolesPermissions() {
   const columns = useMemo(
     () =>
       buildColumns([
-        { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-        { id: 'roleName', header: 'Role Name', accessorKey: 'roleName' },
+        {
+          id: 'srNo',
+          header: 'Sr. No',
+          accessorKey: 'srNo',
+          width: 70,
+        },
+        {
+          id: 'roleName',
+          header: 'Role Name',
+          accessorKey: 'roleName',
+          render: (row) => (
+            <span
+              className=' cursor-pointer hover:underline'
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRowClick(row?.id);
+              }}
+            >
+              {row?.roleName}
+            </span>
+          ),
+        },
         { id: 'createdBy', header: 'Created By', accessorKey: 'createdBy' },
         {
           id: 'createdDate',
@@ -102,7 +138,11 @@ export default function SettingsRolesPermissions() {
           accessorKey: 'createdDate',
         },
         { id: 'updateBy', header: 'Update By', accessorKey: 'updateBy' },
-        { id: 'updateDate', header: 'Update Date', accessorKey: 'updateDate' },
+        {
+          id: 'updateDate',
+          header: 'Update Date',
+          accessorKey: 'updateDate',
+        },
         {
           id: 'status',
           header: 'Status',
@@ -123,9 +163,23 @@ export default function SettingsRolesPermissions() {
           render: (row) => (
             <ActionDropdown
               options={[
-                { label: "View", value: "view", onClickCb: () => navigate(`/settings/roles-permissions/${row.id}/view`) },
-                { label: "Edit", value: "edit", onClickCb: () => navigate(`/settings/roles-permissions/${row.id}/edit`) },
-                { label: "Archive", value: "archive", onClickCb: () => {} },
+                {
+                  label: 'View',
+                  value: 'view',
+                  onClickCb: () =>
+                    navigate(`/settings/roles-permissions/${row.id}/view`),
+                },
+                {
+                  label: 'Edit',
+                  value: 'edit',
+                  onClickCb: () =>
+                    navigate(`/settings/roles-permissions/${row.id}/edit`),
+                },
+                {
+                  label: 'Archive',
+                  value: 'archive',
+                  onClickCb: () => {},
+                },
               ]}
             />
           ),
@@ -144,7 +198,7 @@ export default function SettingsRolesPermissions() {
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
-        onRowClick={handleRowClick}
+        // onRowClick={handleRowClick}
       />
       <Pagination
         totalRecords={filteredData.length}
@@ -157,6 +211,8 @@ export default function SettingsRolesPermissions() {
           setPage(1);
         }}
       />
+
+      <CreateRoleModal open={createRoleModalOpen} />
     </div>
   );
 }
