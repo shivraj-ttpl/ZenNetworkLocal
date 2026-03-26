@@ -6,15 +6,19 @@ import Icon from "@/components/icons/Icon";
 import Button from "@/components/commonComponents/button/Button";
 import ActionDropdown from "@/components/commonComponents/actionDropdown";
 import { feeScheduleData } from "@/data/subOrganizationsData";
-
+import { componentKey, setOpenAddDrawer } from "../ProviderGroupFeeSchedule/providerGroupFeeScheduleSlice";
+import { useDispatch, useSelector } from "react-redux";
+import AddFeeScheduleDrawer from '../ProviderGroupFeeSchedule/Components/AddFeeScheduleDrawer'
 export default function ProviderGroupFeeSchedule() {
   const { setToolbar } = useOutletContext();
+ const { drawerOpen, drawerMode, editData } = useSelector(
+    (state) => state[componentKey] ?? {})
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
-
+  const dispatch=useDispatch()
   useEffect(() => {
     setToolbar(
       <>
@@ -28,7 +32,7 @@ export default function ProviderGroupFeeSchedule() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <Button variant="primaryBlue" size="sm">
+        <Button variant="primaryBlue" size="sm" onClick={()=>dispatch(setOpenAddDrawer())}>
           <Icon name="Plus" size={14} />
           Add Fee Schedule
         </Button>
@@ -113,6 +117,7 @@ export default function ProviderGroupFeeSchedule() {
         onPageChange={setPage}
         onLimitChange={(val) => { setLimit(val); setPage(1); }}
       />
+      <AddFeeScheduleDrawer open={drawerOpen} drawerMode={drawerMode} editData={editData}/>
     </div>
   );
 }

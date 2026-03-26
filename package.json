@@ -13,7 +13,11 @@
   },
   "dependencies": {
     "@chromatic-com/storybook": "5.0.1",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@eslint/js": "^9.39.1",
+    "@mui/material": "^7.3.9",
+    "@mui/x-date-pickers": "^8.27.2",
     "@reduxjs/toolkit": "^2.11.2",
     "@storybook/addon-a11y": "10.2.14",
     "@storybook/addon-docs": "10.2.14",
