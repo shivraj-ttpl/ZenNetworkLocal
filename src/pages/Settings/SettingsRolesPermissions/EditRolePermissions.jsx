@@ -22,7 +22,7 @@ function ChangesTooltip({ changes }) {
       </span>
 
       {visible && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-[520px]">
+        <div className="absolute right-0 top-full mt-2 z-50 w-130">
           <div className="relative bg-surface border border-border-light rounded-xl shadow-lg p-4">
             <div className="absolute -top-2 right-6 w-4 h-4 bg-surface border-l border-t border-border-light rotate-45" />
 
@@ -109,7 +109,7 @@ export default function EditRolePermissions() {
   useEffect(() => {
     setToolbar(
       <Button
-        variant="primaryTeal"
+        variant="primaryBlue"
         size="sm"
         onClick={() => navigate('/settings/roles-permissions/create')}
       >
@@ -207,7 +207,7 @@ export default function EditRolePermissions() {
                 checked={isAllChecked('view')}
                 indeterminate={isSomeChecked('view')}
                 onChange={() => handleToggleAll('view')}
-                variant="teal"
+                variant="blue"
                 size="sm"
               />
               View
@@ -217,7 +217,7 @@ export default function EditRolePermissions() {
             <Checkbox
               checked={row.view}
               onChange={() => handleToggle(row._index, 'view')}
-              variant="teal"
+              variant="blue"
             />
           ),
         },
@@ -229,7 +229,7 @@ export default function EditRolePermissions() {
                 checked={isAllChecked('create')}
                 indeterminate={isSomeChecked('create')}
                 onChange={() => handleToggleAll('create')}
-                variant="teal"
+                variant="blue"
                 size="sm"
               />
               Create
@@ -239,7 +239,7 @@ export default function EditRolePermissions() {
             <Checkbox
               checked={row.create}
               onChange={() => handleToggle(row._index, 'create')}
-              variant="teal"
+              variant="blue"
             />
           ),
         },
@@ -251,7 +251,7 @@ export default function EditRolePermissions() {
                 checked={isAllChecked('noAccess')}
                 indeterminate={isSomeChecked('noAccess')}
                 onChange={() => handleToggleAll('noAccess')}
-                variant="teal"
+                variant="blue"
                 size="sm"
               />
               No Access
@@ -261,7 +261,7 @@ export default function EditRolePermissions() {
             <Checkbox
               checked={row.noAccess}
               onChange={() => handleToggle(row._index, 'noAccess')}
-              variant="teal"
+              variant="blue"
             />
           ),
         },
@@ -294,7 +294,7 @@ export default function EditRolePermissions() {
           >
             Cancel
           </Button>
-          <Button variant="primaryTeal" size="sm">
+          <Button variant="primaryBlue" size="sm">
             Save Changes
           </Button>
         </div>

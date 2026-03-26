@@ -65,7 +65,7 @@ export default function SettingsProfile() {
   useEffect(() => {
     setToolbar(
       <Button
-        variant="primaryTeal"
+        variant="primaryBlue"
         size="sm"
         onClick={() => dispatch(setOpenEditDrawer(organizationProfile))}
       >

@@ -1,21 +1,35 @@
-import { useState, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import ModalComponent from "@/components/commonComponents/modal/ModalComponent";
-import FileUpload from "@/components/commonComponents/upload/FileUpload";
-import Button from "@/components/commonComponents/button/Button";
-import { componentKey, closeImportModal } from "@/pages/MasterData/Codes/codesSlice";
+import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import Button from '@/components/commonComponents/button/Button';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+import FileUpload from '@/components/commonComponents/upload/FileUpload';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import { codesActions } from '@/pages/MasterData/Codes/codeSaga';
+import {
+  closeImportModal,
+  componentKey,
+} from '@/pages/MasterData/Codes/codesSlice';
+import { CODE_TYPE_MAP } from '@/pages/MasterData/Codes/constant';
+
+const { downloadTemplate, importCodes } = codesActions;
+const EMPTY_STATE = {};
 
 export default function ImportCodes() {
   const dispatch = useDispatch();
-  const importModalFor = useSelector((state) => state[componentKey]?.importModalFor ?? "");
+  const { importModalFor = '' } = useSelector(
+    (state) => state[componentKey] ?? EMPTY_STATE,
+  );
   const isOpen = Boolean(importModalFor);
+  const isImporting = useLoadingKey(LOADING_KEYS.CODES_POST_IMPORT);
 
   const [file, setFile] = useState(null);
-  const [fileError, setFileError] = useState("");
+  const [fileError, setFileError] = useState('');
 
   const handleClose = () => {
     setFile(null);
-    setFileError("");
+    setFileError('');
     dispatch(closeImportModal());
   };
 
@@ -25,12 +39,14 @@ export default function ImportCodes() {
   }, []);
 
   const handleDownloadTemplate = () => {
-    // TODO: dispatch saga action to download CSV template
+    const type = CODE_TYPE_MAP[importModalFor];
+    dispatch(downloadTemplate({ type }));
   };
 
   const handleImport = () => {
     if (!file || fileError) return;
-    // TODO: dispatch saga action to upload/import file
+    const type = CODE_TYPE_MAP[importModalFor];
+    dispatch(importCodes({ type, file }));
     handleClose();
   };
 
@@ -41,22 +57,25 @@ export default function ImportCodes() {
       close={handleClose}
       customClasses="w-full max-w-[966px] mx-4"
       footerButton={
-        <>
-        <div className="flex justify-between w-[100%]">
-          <Button variant="outlineTeal" size="sm"  type="button" onClick={handleClose}>
+        <div className="flex justify-between w-full">
+          <Button
+            variant="outlineBlue"
+            size="sm"
+            type="button"
+            onClick={handleClose}
+          >
             Cancel
           </Button>
           <Button
-            variant="primaryTeal"
+            variant="primaryBlue"
             size="sm"
             type="button"
             onClick={handleImport}
-            disabled={!file || Boolean(fileError)}
+            disabled={!file || Boolean(fileError) || isImporting}
           >
-            Import
+            {isImporting ? 'Importing...' : 'Import'}
           </Button>
-          </div>
-        </>
+        </div>
       }
     >
       <div className="flex flex-col gap-4">
@@ -64,7 +83,7 @@ export default function ImportCodes() {
           Upload a file to import {importModalFor} codes into the system.
         </p>
         <FileUpload
-          allowedFileTypes={[".csv"]}
+          allowedFileTypes={['.csv']}
           maxFileSize={5}
           onFileSelect={handleFileSelect}
           showDownloadTemplate

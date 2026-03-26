@@ -4,7 +4,7 @@ const VARIANTS = {
   primary: {
     base: "border-neutral-300",
     hover: "group-hover:border-primary",
-    focus: "ring-primary-100",
+    focusRing: "group-focus-within:ring-2 group-focus-within:ring-primary-100",
     checked: "bg-primary border-primary",
     disabled: "bg-primary-200 border-primary-200",
     disabledUnchecked: "bg-neutral-100 border-neutral-200",
@@ -12,15 +12,15 @@ const VARIANTS = {
   secondary: {
     base: "border-neutral-300",
     hover: "group-hover:border-secondary",
-    focus: "ring-secondary-100",
+    focusRing: "group-focus-within:ring-2 group-focus-within:ring-secondary-100",
     checked: "bg-secondary border-secondary",
     disabled: "bg-secondary-200 border-secondary-200",
     disabledUnchecked: "bg-neutral-100 border-neutral-200",
   },
-  teal: {
+  blue: {
     base: "border-neutral-300",
     hover: "group-hover:border-primary-400",
-    focus: "ring-primary-100",
+    focusRing: "group-focus-within:ring-2 group-focus-within:ring-primary-100",
     checked: "bg-primary-500 border-primary-500",
     disabled: "bg-primary-200 border-primary-200",
     disabledUnchecked: "bg-neutral-100 border-neutral-200",
@@ -66,7 +66,7 @@ export default function Checkbox({
       : isActive
         ? colors.checked
         : `${colors.base} ${colors.hover}`,
-    !disabled && !isActive && "group-focus-within:ring-4 group-focus-within:" + colors.focus,
+    !disabled && colors.focusRing,
   ]
     .filter(Boolean)
     .join(" ");

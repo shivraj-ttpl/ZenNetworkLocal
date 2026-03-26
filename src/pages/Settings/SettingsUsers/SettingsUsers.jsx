@@ -25,7 +25,7 @@ export default function SettingsUsers() {
           label="Show Archive"
           checked={showArchive}
           onChange={() => setShowArchive((p) => !p)}
-          variant="teal"
+          variant="blue"
           size="sm"
         />
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56">
@@ -48,7 +48,7 @@ export default function SettingsUsers() {
             className="text-neutral-500"
           />
         </button>
-        <Button variant="primaryTeal" size="sm">
+        <Button variant="primaryBlue" size="sm">
           <Icon name="Plus" size={14} />
           Add User
         </Button>

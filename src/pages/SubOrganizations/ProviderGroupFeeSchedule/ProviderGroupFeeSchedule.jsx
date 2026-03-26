@@ -32,7 +32,7 @@ export default function ProviderGroupFeeSchedule() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <Button variant="primaryTeal" size="sm" onClick={()=>dispatch(setOpenAddDrawer())}>
+        <Button variant="primaryBlue" size="sm" onClick={()=>dispatch(setOpenAddDrawer())}>
           <Icon name="Plus" size={14} />
           Add Fee Schedule
         </Button>

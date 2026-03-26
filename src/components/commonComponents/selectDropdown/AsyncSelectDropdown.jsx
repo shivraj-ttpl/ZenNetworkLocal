@@ -319,7 +319,7 @@ export default function AsyncSelectDropdown({
             "text-sm text-left outline-none transition-colors",
             "flex items-center justify-between gap-2",
             "disabled:bg-neutral-50 disabled:cursor-not-allowed",
-            isOpen ? "border-primary ring-[0.5] ring-primary" : "",
+            isOpen ? "border-primary ring-[0.5] " : "",
             showError ? "border-error-400" : !isOpen ? "border-border" : "",
           ]
             .filter(Boolean)
@@ -409,7 +409,7 @@ export default function AsyncSelectDropdown({
                     >
                       {isMulti && (
                         <span className="pointer-events-none">
-                          <Checkbox checked={selected} readOnly variant="teal" size="sm" />
+                          <Checkbox checked={selected} readOnly variant="blue" size="sm" />
                         </span>
                       )}
                       {renderOption ? (

@@ -27,7 +27,7 @@ export default function SettingsRolesPermissions() {
           label="Show Archive"
           checked={showArchive}
           onChange={() => setShowArchive((p) => !p)}
-          variant="teal"
+          variant="blue"
           size="sm"
         />
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56">
@@ -44,7 +44,7 @@ export default function SettingsRolesPermissions() {
           />
         </div>
         <Button
-          variant="primaryTeal"
+          variant="primaryBlue"
           size="sm"
           onClick={() => navigate('/settings/roles-permissions/create')}
         >

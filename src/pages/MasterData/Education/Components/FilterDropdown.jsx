@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from "react";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import Button from "@/components/commonComponents/button/Button";
-import Icon from "@/components/icons/Icon";
-import { SPECIALTY_OPTIONS, FILE_TYPE_OPTIONS } from "../constant";
+import { useState, useRef, useEffect } from 'react';
+
+import Button from '@/components/commonComponents/button/Button';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import Icon from '@/components/icons/Icon';
+
+import { SPECIALTY_OPTIONS, FILE_TYPE_OPTIONS } from '../constant';
 
 export default function FilterDropdown({ onApply }) {
   const [open, setOpen] = useState(false);
@@ -17,9 +19,9 @@ export default function FilterDropdown({ onApply }) {
       }
     };
     if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
 
   const handleReset = () => {
@@ -47,9 +49,10 @@ export default function FilterDropdown({ onApply }) {
 
       {open && (
         <div className="absolute right-0 top-full mt-1 z-50 bg-surface rounded-lg border border-border shadow-lg w-[300px]">
-          {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <span className="text-sm font-semibold text-text-primary">Filter</span>
+            <span className="text-sm font-semibold text-text-primary">
+              Filter
+            </span>
             <div className="flex items-center gap-2">
               <button
                 className="text-neutral-400 hover:text-neutral-600 cursor-pointer"
@@ -66,7 +69,6 @@ export default function FilterDropdown({ onApply }) {
             </div>
           </div>
 
-          {/* Body */}
           <div className="flex flex-col gap-4 p-4">
             <SelectDropdown
               label="Specialty"
@@ -76,7 +78,6 @@ export default function FilterDropdown({ onApply }) {
               value={specialty}
               onChangeCb={(selected) => setSpecialty(selected)}
             />
-
             <SelectDropdown
               label="File Type"
               name="filterFileType"
@@ -87,9 +88,8 @@ export default function FilterDropdown({ onApply }) {
             />
           </div>
 
-          {/* Footer */}
           <div className="flex justify-end px-4 pb-4">
-            <Button variant="primaryTeal" size="sm" onClick={handleApply}>
+            <Button variant="primaryBlue" size="sm" onClick={handleApply}>
               Apply
             </Button>
           </div>

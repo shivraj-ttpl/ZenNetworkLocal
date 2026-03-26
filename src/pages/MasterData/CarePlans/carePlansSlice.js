@@ -1,30 +1,65 @@
-import store from "@/core/store/store";
-import { COMPONENT_KEYS } from "@/constants/componentKeys";
+import store from '@/core/store/store';
+import { COMPONENT_KEYS } from '@/constants/componentKeys';
 
 export const componentKey = COMPONENT_KEYS.CARE_PLANS;
 
 const sliceConfig = {
   key: componentKey,
   addedReducers: {
+    setCarePlansList: (state, action) => {
+      state.carePlansList = action.payload;
+    },
+    setTotalRecords: (state, action) => {
+      state.totalRecords = action.payload;
+    },
+    setTotalPages: (state, action) => {
+      state.totalPages = action.payload;
+    },
+    setPage: (state, action) => {
+      state.page = action.payload;
+    },
+    setLimit: (state, action) => {
+      state.limit = action.payload;
+      state.page = 1;
+    },
+    setSearch: (state, action) => {
+      state.search = action.payload;
+      state.page = 1;
+    },
+    setShowArchived: (state, action) => {
+      state.showArchived = action.payload;
+      state.page = 1;
+    },
+    setRefreshCarePlans: (state) => {
+      state.refreshFlag = Date.now();
+    },
     setOpenAddDrawer: (state) => {
       state.drawerOpen = true;
-      state.drawerMode = "add";
+      state.drawerMode = 'add';
       state.editData = null;
     },
     setOpenEditDrawer: (state, action) => {
       state.drawerOpen = true;
-      state.drawerMode = "edit";
+      state.drawerMode = 'edit';
       state.editData = action.payload;
     },
     setCloseDrawer: (state) => {
       state.drawerOpen = false;
-      state.drawerMode = "";
+      state.drawerMode = '';
       state.editData = null;
     },
   },
   initialReducerState: {
+    carePlansList: [],
+    totalRecords: 0,
+    totalPages: 0,
+    page: 1,
+    limit: 10,
+    search: '',
+    showArchived: false,
+    refreshFlag: 0,
     drawerOpen: false,
-    drawerMode: "",
+    drawerMode: '',
     editData: null,
   },
 };
@@ -35,4 +70,16 @@ export function registerReducer() {
   slice = store.reducerManager.add(sliceConfig);
 }
 
-export const { setOpenAddDrawer, setOpenEditDrawer, setCloseDrawer } = slice.actions;
+export const {
+  setCarePlansList,
+  setTotalRecords,
+  setTotalPages,
+  setPage,
+  setLimit,
+  setSearch,
+  setShowArchived,
+  setRefreshCarePlans,
+  setOpenAddDrawer,
+  setOpenEditDrawer,
+  setCloseDrawer,
+} = slice.actions;

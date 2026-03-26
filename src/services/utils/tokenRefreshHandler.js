@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const REFRESH_URL = `${import.meta.env.VITE_API_URL}/auth/refresh-token`;
+const REFRESH_URL = `${import.meta.env.VITE_API_URL}/auth/refresh`;
 
 let isRefreshing = false;
 let failedQueue = [];

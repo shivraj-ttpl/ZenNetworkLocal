@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import Icon from "@/components/icons/Icon";
 
-const LIMIT_OPTIONS = [10, 25, 50, 100];
+const LIMIT_OPTIONS = [10, 20, 25, 50, 100];
 
 /**
  * Standalone Pagination component — works with any list/table.

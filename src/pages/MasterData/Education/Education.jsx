@@ -1,42 +1,95 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useOutletContext } from "react-router-dom";
-import { Table, buildColumns } from "@/components/commonComponents/table";
-import Pagination from "@/components/commonComponents/pagination/Pagination";
-import Icon from "@/components/icons/Icon";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import Button from "@/components/commonComponents/button/Button";
-import ActionDropdown from "@/components/commonComponents/actionDropdown";
-import { educationData } from "@/data/masterData";
-import { setOpenAddDrawer, setOpenEditDrawer, setOpenViewModal } from "./educationSlice";
-import AddMaterialDrawer from "./Components/AddMaterialDrawer";
-import ViewEducationModal from "./Components/ViewEducationModal";
-import FilterDropdown from "./Components/FilterDropdown";
+import { useEffect, useMemo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useOutletContext } from 'react-router-dom';
+
+import Button from '@/components/commonComponents/button/Button';
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import Pagination from '@/components/commonComponents/pagination/Pagination';
+import { Table, buildColumns } from '@/components/commonComponents/table';
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
+import Icon from '@/components/icons/Icon';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+
+import AddMaterialDrawer from './Components/AddMaterialDrawer';
+import FilterDropdown from './Components/FilterDropdown';
+import ViewEducationModal from './Components/ViewEducationModal';
+import { educationActions, registerSaga } from './educationSaga';
+import {
+  componentKey,
+  registerReducer,
+  setPage,
+  setLimit,
+  setSearch,
+  setShowArchived,
+  setFilterSpecialty,
+  setFilterFileType,
+  setOpenAddDrawer,
+  setOpenEditDrawer,
+  setOpenViewModal,
+} from './educationSlice';
+
+const { fetchEducation } = educationActions;
+const EMPTY_STATE = {};
 
 export default function Education() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
-  const [search, setSearch] = useState("");
-  const [showArchive, setShowArchive] = useState(false);
-  const [sortKey, setSortKey] = useState(null);
-  const [sortOrder, setSortOrder] = useState(null);
-  const [filters, setFilters] = useState({ specialty: null, fileType: null });
 
-  const handleFilterApply = useCallback((newFilters) => {
-    setFilters(newFilters);
-    setPage(1);
+  const {
+    educationList = [],
+    totalRecords = 0,
+    totalPages = 0,
+    page = 1,
+    limit = 10,
+    search = '',
+    showArchived = false,
+    filterSpecialty = null,
+    filterFileType = null,
+    refreshFlag = 0,
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
+
+  const isLoading = useLoadingKey(LOADING_KEYS.EDUCATION_GET_LIST);
+  const debouncedSearch = useDebounce(search);
+
+  useEffect(() => {
+    registerReducer();
+    registerSaga();
   }, []);
+
+  useFlexCleanup(componentKey);
+
+  useEffect(() => {
+    dispatch(fetchEducation());
+  }, [
+    dispatch,
+    page,
+    limit,
+    debouncedSearch,
+    showArchived,
+    filterSpecialty,
+    filterFileType,
+    refreshFlag,
+  ]);
+
+  const handleFilterApply = useCallback(
+    (filters) => {
+      dispatch(setFilterSpecialty(filters.specialty));
+      dispatch(setFilterFileType(filters.fileType));
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     setToolbar(
       <>
         <Checkbox
           label="Show Archive"
-          checked={showArchive}
-          onChange={() => setShowArchive((p) => !p)}
-          variant="teal"
+          checked={showArchived}
+          onChange={() => dispatch(setShowArchived(!showArchived))}
+          variant="blue"
           size="sm"
         />
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50">
@@ -45,118 +98,149 @@ export default function Education() {
             type="text"
             placeholder="Search by File Name"
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
         <FilterDropdown onApply={handleFilterApply} />
-        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenAddDrawer())}>
+        <Button
+          variant="primaryBlue"
+          size="sm"
+          onClick={() => dispatch(setOpenAddDrawer())}
+        >
           <Icon name="Plus" size={14} />
           Add Material
         </Button>
-      </>
+      </>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search, dispatch, handleFilterApply]);
+  }, [setToolbar, showArchived, search, dispatch, handleFilterApply]);
 
-  const handleSortChange = useCallback((key, order) => {
-    setSortKey(key);
-    setSortOrder(order);
-  }, []);
-
-  const filteredData = useMemo(() => {
-    let data = educationData;
-
-    if (search) {
-      const term = search.toLowerCase();
-      data = data.filter((item) => item.fileName.toLowerCase().includes(term));
-    }
-
-    if (filters.specialty) {
-      data = data.filter((item) => item.specialty === filters.specialty);
-    }
-
-    if (filters.fileType) {
-      data = data.filter((item) => item.fileType === filters.fileType);
-    }
-
-    return data;
-  }, [search, filters]);
-
-  const totalPages = Math.ceil(filteredData.length / limit);
-
-  const paginatedData = useMemo(
+  const tableData = useMemo(
     () =>
-      filteredData
-        .slice((page - 1) * limit, page * limit)
-        .map((item, i) => ({
-          ...item,
-          srNo: String((page - 1) * limit + i + 1).padStart(2, "0"),
-        })),
-    [filteredData, page, limit]
+      educationList.map((item, i) => ({
+        ...item,
+        srNo: String((page - 1) * limit + i + 1).padStart(2, '0'),
+      })),
+    [educationList, page, limit],
+  );
+
+  const handlePageChange = useCallback(
+    (p) => dispatch(setPage(p)),
+    [dispatch],
+  );
+
+  const handleLimitChange = useCallback(
+    (l) => dispatch(setLimit(l)),
+    [dispatch],
   );
 
   const columns = useMemo(
     () =>
       buildColumns([
-        { id: "srNo", header: "Sr. No", accessorKey: "srNo", width: 70 },
-        { id: "fileName", header: "File Name", accessorKey: "fileName" },
-        { id: "specialty", header: "Specialty", accessorKey: "specialty", width: 160 },
-        { id: "fileType", header: "File Type", accessorKey: "fileType", width: 100 },
-        { id: "uploadedOn", header: "Uploaded On", accessorKey: "uploadedOn", width: 130 },
-        { id: "uploadedBy", header: "Uploaded By", accessorKey: "uploadedBy", width: 160 },
+        { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
         {
-          id: "favorites",
-          header: "Favorites",
+          id: 'fileName',
+          header: 'File Name',
+          accessorKey: 'fileName',
+        },
+        {
+          id: 'specialty',
+          header: 'Specialty',
+          accessorKey: 'specialty',
+          width: 160,
+        },
+        {
+          id: 'fileType',
+          header: 'File Type',
+          accessorKey: 'fileType',
           width: 100,
-          align: "center",
+        },
+        {
+          id: 'uploadedOn',
+          header: 'Uploaded On',
+          accessorKey: 'uploadedOn',
+          width: 130,
+        },
+        {
+          id: 'uploadedBy',
+          header: 'Uploaded By',
+          accessorKey: 'uploadedBy',
+          width: 160,
+        },
+        {
+          id: 'favorites',
+          header: 'Favorites',
+          width: 100,
+          align: 'center',
           render: (row) => (
-            <span className={row.isFavorite ? "text-primary-700" : "text-neutral-400"}>
-              {row.isFavorite ? "✓" : "-"}
+            <span
+              className={
+                row.isFavorite ? 'text-primary-700' : 'text-neutral-400'
+              }
+            >
+              {row.isFavorite ? '✓' : '-'}
             </span>
           ),
         },
         {
-          id: "actions",
-          header: "Action",
+          id: 'actions',
+          header: 'Action',
           width: 70,
-          align: "center",
+          align: 'center',
           render: (row) => (
             <ActionDropdown
               options={[
-                { label: "Edit", value: "edit", onClickCb: () => { dispatch(setOpenEditDrawer(row)); } },
-                { label: "View", value: "view", onClickCb: () => dispatch(setOpenViewModal(row)) },
-                { label: "Download", value: "download", onClickCb: () => {} },
-                { label: "Add to Favorites", value: "add_to_favorites", onClickCb: () => {} },
-                { label: "Archive", value: "archive", onClickCb: () => {} },
+                {
+                  label: 'Edit',
+                  value: 'edit',
+                  onClickCb: () => dispatch(setOpenEditDrawer(row)),
+                },
+                {
+                  label: 'View',
+                  value: 'view',
+                  onClickCb: () => dispatch(setOpenViewModal(row)),
+                },
+                {
+                  label: 'Download',
+                  value: 'download',
+                  onClickCb: () => {},
+                },
+                {
+                  label: 'Add to Favorites',
+                  value: 'add_to_favorites',
+                  onClickCb: () => {},
+                },
+                {
+                  label: 'Archive',
+                  value: 'archive',
+                  onClickCb: () => {},
+                },
               ]}
             />
           ),
         },
       ]),
-    [dispatch]
+    [dispatch],
   );
 
   return (
     <div className="px-5 pb-4">
       <Table
         columns={columns}
-        data={paginatedData}
+        data={tableData}
         size="sm"
-        maxHeight="475px"
-        sortKey={sortKey}
-        sortOrder={sortOrder}
-        onSortChange={handleSortChange}
+        maxHeight="calc(100vh - 300px)"
+        loading={isLoading}
       />
       <Pagination
-        totalRecords={filteredData.length}
+        totalRecords={totalRecords}
         totalPages={totalPages}
         currentPage={page}
         currentLimit={limit}
-        onPageChange={setPage}
-        onLimitChange={(val) => { setLimit(val); setPage(1); }}
+        onPageChange={handlePageChange}
+        onLimitChange={handleLimitChange}
       />
-
       <AddMaterialDrawer />
       <ViewEducationModal />
     </div>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-import OneTeamLogo from '@/assets/brand/OneTeam.png';
+import OneTeamLogo from '@/assets/brand/OneTeam-Logo.png';
 import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Icon from '@/components/icons/Icon';
 import { routeConfig } from '@/routes/routeConfig';
@@ -61,7 +61,7 @@ export default function Navbar() {
     <nav className="bg-surface border-b border-border-light">
       {/* Top bar — logo + avatar */}
       <div className="flex items-center bg-neutral-250 justify-between px-6 h-8 py-6">
-        <img src={OneTeamLogo} alt="OneTeam" className="h-3" />
+        <img src={OneTeamLogo} alt="OneTeam" className="h-8" />
         <AvatarDropdown />
       </div>
 

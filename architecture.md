@@ -111,7 +111,7 @@ src/
 - Uses `@theme` directive (Tailwind v4 native — no `tailwind.config.js`)
 - **Font**: Inter (Google Fonts, preconnected in `index.html`)
 - **Design tokens**:
-  - Primary (Teal): `--color-primary-50` to `--color-primary-900` — buttons, active states
+  - Primary (Blue): `--color-primary-50` to `--color-primary-900` — buttons, active states
   - Secondary (Purple): `--color-secondary-50` to `--color-secondary-900` — auth buttons, accents, form focus
   - Neutral: 50–900 — backgrounds, borders, text
   - Semantic: success (green), error (red), warning (amber), info (blue)
@@ -256,7 +256,7 @@ DataService (base class — Axios wrapper)
 |---|---|---|
 | **Button** | variant (primary/secondary/outline/ghost/link), size (sm/md/lg), loading, fullWidth | Primary = secondary purple color |
 | **Input** | label, name, type, error, touched, required | Auto password toggle, autocomplete map |
-| **Checkbox** | checked, indeterminate, variant (primary/secondary/teal), size | Custom visual, supports forms |
+| **Checkbox** | checked, indeterminate, variant (primary/secondary/blue), size | Custom visual, supports forms |
 | **Avatar** | src, name, size (xs/sm/md/lg), online | Initials fallback |
 | **SelectDropdown** | options, value, onChange, isMulti, isSearchable, selectAll, renderOption | Static options |
 | **AsyncSelectDropdown** | url OR fetchOptions, value, onChange, isMulti, labelKey, valueKey, limit, debounceMs | Infinite scroll, server search |

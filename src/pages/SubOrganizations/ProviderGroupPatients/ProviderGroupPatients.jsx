@@ -33,7 +33,7 @@ export default function ProviderGroupPatients() {
           label="Show Inactive Patients"
           checked={showInactivePatients}
           onChange={() => setShowInactivePatients((p) => !p)}
-          variant="teal"
+          variant="blue"
           size="sm"
         />
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface w-40">
@@ -56,7 +56,7 @@ export default function ProviderGroupPatients() {
             onChange={(val) => setSelectAction(val)}
           />
         </div>
-        <Button variant="primaryTeal" size="sm" onClick={() => dispatch(setOpenUploadModal())}>
+        <Button variant="primaryBlue" size="sm" onClick={() => dispatch(setOpenUploadModal())}>
           <Icon name="Upload" size={14} />
           Upload CSV File
         </Button>

@@ -22,7 +22,7 @@ export default function ProviderGroupProfile() {
 
   useEffect(() => {
     setToolbar(
-      <Button variant="primaryTeal" size="sm" onClick={handleEditProfile}>
+      <Button variant="primaryBlue" size="sm" onClick={handleEditProfile}>
         <Icon name="Pencil" size={14} />
         Edit Provider Group
       </Button>

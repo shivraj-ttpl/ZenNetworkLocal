@@ -26,10 +26,10 @@ export default function StatusChangeModal({ open, statusChangeRow }) {
       maxChildrenHeight="max-h-[50vh]"
       footerButton={
         <div className="flex justify-between w-full">
-          <Button variant="outlineTeal" size="sm" type="button" onClick={handleClose}>
+          <Button variant="outlineBlue" size="sm" type="button" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primaryTeal" size="sm" type="button" onClick={handleConfirm}>
+          <Button variant="primaryBlue" size="sm" type="button" onClick={handleConfirm}>
             {isActive ? "Yes, Deactivate" : "Yes, Activate"}
           </Button>
         </div>

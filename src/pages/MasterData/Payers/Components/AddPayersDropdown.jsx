@@ -24,7 +24,7 @@ export default function AddPayersDropdown() {
   return (
     <div className="relative" ref={dropdownRef}>
       <Button
-        variant="primaryTeal"
+        variant="primaryBlue"
         size="sm"
         onClick={() => setOpen((prev) => !prev)}
       >

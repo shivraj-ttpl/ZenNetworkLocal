@@ -80,9 +80,9 @@
 
 /* Info */
 .Toastify__toast--info {
-  --_toast-accent: #2f8f83;
-  --_toast-border: #7cc4b8;
-  background: #e6f4f1 !important;
+  --_toast-accent: var(--color-primary-500);
+  --_toast-border: var(--color-primary-200);
+  background: var(--color-primary-50) !important;
 }
 
 /* Error */
