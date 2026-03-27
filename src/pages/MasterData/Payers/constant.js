@@ -4,9 +4,8 @@ export const FORM_FIELDS_NAMES = {
 };
 
 export const PAYER_TYPE_OPTIONS = [
-  { label: "Government", value: "Government" },
-  { label: "Private", value: "Private" },
-  { label: "Commercial", value: "Commercial" },
-  { label: "Self-Pay", value: "Self-Pay" },
-  { label: "Other", value: "Other" },
+  { label: "Public", value: "PUBLIC" },
+  { label: "Private", value: "PRIVATE" },
+  { label: "Government", value: "GOVT" },
+  { label: "Other", value: "OTHER" },
 ];

@@ -12,6 +12,8 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
+import { formatDate } from '@/utils/GeneralUtils';
+
 import { assessmentsActions, registerSaga } from './assessmentsSaga';
 import {
   componentKey,
@@ -24,7 +26,8 @@ import {
 } from './assessmentsSlice';
 import ViewAssessmentDrawer from './Components/ViewAssessmentDrawer';
 
-const { fetchAssessments } = assessmentsActions;
+const { fetchAssessments, toggleFavorite, archiveAssessment } =
+  assessmentsActions;
 const EMPTY_STATE = {};
 
 export default function Assessments() {
@@ -66,7 +69,7 @@ export default function Assessments() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60 max-[1149px]:min-w-0 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -110,17 +113,13 @@ export default function Assessments() {
           header: 'Description',
           accessorKey: 'description',
         },
-        {
-          id: 'createdAt',
-          header: 'Created Date & Time',
-          accessorKey: 'createdAt',
-          width: 200,
-        },
+
         {
           id: 'updatedAt',
-          header: 'Last Modified',
+          header: 'Updated Date',
           accessorKey: 'updatedAt',
           width: 130,
+          render: (row) => formatDate(row.updatedAt),
         },
         {
           id: 'totalQuestions',
@@ -157,9 +156,23 @@ export default function Assessments() {
                   onClickCb: () => dispatch(setOpenViewDrawer(row)),
                 },
                 {
-                  label: 'Archive',
+                  label: row.isFavorite
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites',
+                  value: 'toggleFavorite',
+                  onClickCb: () =>
+                    dispatch(toggleFavorite({ id: row.id })),
+                },
+                {
+                  label: row.isArchived ? 'Unarchive' : 'Archive',
                   value: 'archive',
-                  onClickCb: () => {},
+                  onClickCb: () =>
+                    dispatch(
+                      archiveAssessment({
+                        id: row.id,
+                        isArchived: row.isArchived,
+                      }),
+                    ),
                 },
               ]}
             />

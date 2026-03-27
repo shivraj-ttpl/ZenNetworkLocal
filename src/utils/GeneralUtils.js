@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 /**
  * Extract a user-friendly error message from an Axios error.
@@ -16,7 +19,7 @@ export function formatErrorMessage(error) {
 /**
  * Format a date string using dayjs.
  */
-export function formatDate(date, format = 'MMM DD, YYYY') {
+export function formatDate(date, format = 'MM/DD/YYYY') {
   return date ? dayjs(date).utc().format(format) : '';
 }
 
@@ -78,3 +81,13 @@ export function downloadBlobFile(
   link.click();
   window.URL.revokeObjectURL(url);
 }
+
+
+export function toPascalCaseWithSpaces (text = "") {
+    if (!text) return "";
+    return text
+      .toLowerCase()
+      .split(/[\s_-]+/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };

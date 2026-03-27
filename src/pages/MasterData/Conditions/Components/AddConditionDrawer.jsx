@@ -1,40 +1,70 @@
-import { useSelector, useDispatch } from "react-redux";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import Drawer from "@/components/commonComponents/drawer/Drawer";
-import Button from "@/components/commonComponents/button/Button";
-import Input from "@/components/commonComponents/input/Input";
-import TextArea from "@/components/commonComponents/textArea";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import { componentKey, setCloseDrawer } from "../conditionsSlice";
-import { FORM_FIELDS_NAMES, ICD_CODE_OPTIONS, CARE_PLAN_OPTIONS } from "../constant";
+import { useSelector, useDispatch } from 'react-redux';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import Button from '@/components/commonComponents/button/Button';
+import Input from '@/components/commonComponents/input/Input';
+import TextArea from '@/components/commonComponents/textArea';
+import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+
+import { componentKey, setCloseDrawer } from '../conditionsSlice';
+import { conditionsActions } from '../conditionsSaga';
+import { FORM_FIELDS_NAMES } from '../constant';
+
+const { createCondition, updateCondition } = conditionsActions;
 
 const validationSchema = Yup.object().shape({
-  [FORM_FIELDS_NAMES.CONDITION_NAME]: Yup.string().required("Condition Name is required"),
-  [FORM_FIELDS_NAMES.ICD_CODE]: Yup.object().nullable().required("ICD Code is required"),
-  [FORM_FIELDS_NAMES.CARE_PLAN]: Yup.object().nullable().required("Care Plan is required"),
+  [FORM_FIELDS_NAMES.CONDITION_NAME]: Yup.string().required(
+    'Condition Name is required',
+  ),
+  [FORM_FIELDS_NAMES.ICD_CODE]: Yup.object()
+    .nullable()
+    .required('ICD Code is required'),
+  [FORM_FIELDS_NAMES.CARE_PLAN]: Yup.object()
+    .nullable()
+    .required('Care Plan is required'),
 });
+
+const EMPTY_STATE = {};
 
 export default function AddConditionDrawer() {
   const dispatch = useDispatch();
-  const drawerOpen = useSelector((state) => state[componentKey]?.drawerOpen ?? false);
-  const drawerMode = useSelector((state) => state[componentKey]?.drawerMode ?? "");
-  const editData = useSelector((state) => state[componentKey]?.editData ?? null);
-  const isEdit = drawerMode === "edit";
+  const { drawerOpen = false, drawerMode = '', editData = null } = useSelector(
+    (state) => state[componentKey] ?? EMPTY_STATE,
+  );
+  const isEdit = drawerMode === 'edit';
+  const isCreating = useLoadingKey(LOADING_KEYS.CONDITIONS_POST_CREATE);
+  const isUpdating = useLoadingKey(LOADING_KEYS.CONDITIONS_PATCH_UPDATE);
+  const isSaving = isCreating || isUpdating;
 
   const handleClose = () => {
     dispatch(setCloseDrawer());
   };
 
-  const handleFormSubmit = (values, { resetForm }) => {
-    // TODO: dispatch saga action for add/edit
-    resetForm();
-    handleClose();
+  const handleFormSubmit = (values) => {
+    const data = {
+      name: values[FORM_FIELDS_NAMES.CONDITION_NAME],
+      codeId: values[FORM_FIELDS_NAMES.ICD_CODE]?.id ?? undefined,
+      linkedCarePlanId: values[FORM_FIELDS_NAMES.CARE_PLAN]?.id ?? undefined,
+      description: values[FORM_FIELDS_NAMES.DESCRIPTION] || undefined,
+    };
+
+    if (isEdit) {
+      dispatch(updateCondition({ id: editData?.id, data }));
+    } else {
+      dispatch(createCondition({ data }));
+    }
   };
 
-  const title = isEdit ? "Edit Condition" : "Add Condition";
-  const submitLabel = isEdit ? "Update Condition" : "Add Condition";
-
+  const title = isEdit ? 'Edit Condition' : 'Add Condition';
+  const submitLabel = isSaving
+    ? 'Saving...'
+    : isEdit
+      ? 'Update Condition'
+      : 'Add Condition';
   return (
     <Drawer
       title={title}
@@ -44,17 +74,32 @@ export default function AddConditionDrawer() {
     >
       <Formik
         initialValues={{
-          [FORM_FIELDS_NAMES.CONDITION_NAME]: editData?.name ?? "",
-          [FORM_FIELDS_NAMES.ICD_CODE]: editData?.icdCodeOption ?? null,
-          [FORM_FIELDS_NAMES.ICD_DETAILS]: editData?.icdDetails ?? "",
-          [FORM_FIELDS_NAMES.CARE_PLAN]: editData?.carePlanOption ?? null,
-          [FORM_FIELDS_NAMES.DESCRIPTION]: editData?.description ?? "",
+          [FORM_FIELDS_NAMES.CONDITION_NAME]: editData?.name ?? '',
+          [FORM_FIELDS_NAMES.ICD_CODE]: editData?.codeId
+            ? { id: editData.codeId, code: editData.code, description: editData.codeDescription }
+            : null,
+          [FORM_FIELDS_NAMES.ICD_DETAILS]: editData?.codeDescription ?? '',
+          [FORM_FIELDS_NAMES.CARE_PLAN]: editData?.linkedCarePlanId
+            ? { id: editData.linkedCarePlanId, name: editData.linkedCarePlanName }
+            : null,
+          [FORM_FIELDS_NAMES.DESCRIPTION]: editData?.description ?? '',
         }}
         validationSchema={validationSchema}
         onSubmit={handleFormSubmit}
         enableReinitialize
       >
-        {({ values, errors, touched, isValid, dirty, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm }) => (
+        {({
+          values,
+          errors,
+          touched,
+          isValid,
+          dirty,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          setFieldValue,
+          resetForm,
+        }) => (
           <Form className="flex flex-col h-full">
             <div className="flex flex-col gap-4 flex-1">
               <Input
@@ -69,30 +114,48 @@ export default function AddConditionDrawer() {
                 required
               />
 
-              <SelectDropdown
+              <AsyncSelectDropdown
                 label="ICD Code"
                 name={FORM_FIELDS_NAMES.ICD_CODE}
                 placeholder="Select Code"
-                options={ICD_CODE_OPTIONS}
+                url="dropdown-apis/codes/icd"
+                valueKey="id"
+                labelKey="code"
+                labelKey2="description"
                 value={values[FORM_FIELDS_NAMES.ICD_CODE]}
-                onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.ICD_CODE, selected)}
+                onChange={(selected) => {
+                  setFieldValue(FORM_FIELDS_NAMES.ICD_CODE, selected);
+                  setFieldValue(
+                    FORM_FIELDS_NAMES.ICD_DETAILS,
+                    selected?.description ?? '',
+                  );
+                }}
+                error={errors[FORM_FIELDS_NAMES.ICD_CODE]}
+                touched={touched[FORM_FIELDS_NAMES.ICD_CODE]}
                 required
               />
 
               <TextArea
                 name={FORM_FIELDS_NAMES.ICD_DETAILS}
-                placeholder="Enter Details"
+                placeholder="Code description will appear here"
                 value={values[FORM_FIELDS_NAMES.ICD_DETAILS]}
                 onChangeCb={handleChange}
+                disabled
               />
 
-              <SelectDropdown
+              <AsyncSelectDropdown
                 label="Care Plan"
                 name={FORM_FIELDS_NAMES.CARE_PLAN}
-                placeholder="Select Code"
-                options={CARE_PLAN_OPTIONS}
+                placeholder="Select Care Plan"
+                url="dropdown-apis/careplan"
+                valueKey="id"
+                labelKey="name"
                 value={values[FORM_FIELDS_NAMES.CARE_PLAN]}
-                onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.CARE_PLAN, selected)}
+                onChange={(selected) =>
+                  setFieldValue(FORM_FIELDS_NAMES.CARE_PLAN, selected)
+                }
+                error={errors[FORM_FIELDS_NAMES.CARE_PLAN]}
+                touched={touched[FORM_FIELDS_NAMES.CARE_PLAN]}
                 required
               />
 
@@ -107,7 +170,7 @@ export default function AddConditionDrawer() {
 
             <div className="flex justify-between gap-2 mt-auto pt-4 border-t border-[#E9E9E9]">
               <Button
-                variant="outline"
+                variant="outlineBlue"
                 size="sm"
                 type="button"
                 onClick={() => {
@@ -122,7 +185,7 @@ export default function AddConditionDrawer() {
                 size="sm"
                 type="button"
                 onClick={handleSubmit}
-                disabled={!(isValid && dirty)}
+                disabled={!(isValid && dirty) || isSaving}
               >
                 {submitLabel}
               </Button>

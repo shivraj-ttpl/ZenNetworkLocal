@@ -13,6 +13,8 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 
+import { formatDate } from '@/utils/GeneralUtils';
+
 import { conditionsActions, registerSaga } from './conditionsSaga';
 import {
   componentKey,
@@ -26,7 +28,7 @@ import {
 } from './conditionsSlice';
 import AddConditionDrawer from './Components/AddConditionDrawer';
 
-const { fetchConditions } = conditionsActions;
+const { fetchConditions, toggleFavorite, archiveCondition } = conditionsActions;
 const EMPTY_STATE = {};
 
 export default function Conditions() {
@@ -68,7 +70,7 @@ export default function Conditions() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60 max-[1149px]:min-w-0 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -121,9 +123,9 @@ export default function Conditions() {
           accessorKey: 'icdCode',
           width: 120,
           render: (row) =>
-            row.icdCode ? (
+            row.code ? (
               <span className="px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700">
-                {row.icdCode}
+                {row?.code}
               </span>
             ) : (
               '-'
@@ -139,6 +141,7 @@ export default function Conditions() {
           header: 'Created Date',
           accessorKey: 'createdAt',
           width: 130,
+          render: (row) => formatDate(row.createdAt),
         },
         {
           id: 'favorites',
@@ -169,14 +172,23 @@ export default function Conditions() {
                   onClickCb: () => dispatch(setOpenEditDrawer(row)),
                 },
                 {
-                  label: 'Add to Favorites',
-                  value: 'addToFavorites',
-                  onClickCb: () => {},
+                  label: row.isFavorite
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites',
+                  value: 'toggleFavorite',
+                  onClickCb: () =>
+                    dispatch(toggleFavorite({ id: row.id })),
                 },
                 {
-                  label: 'Archive',
+                  label: row.isArchived ? 'Unarchive' : 'Archive',
                   value: 'archive',
-                  onClickCb: () => {},
+                  onClickCb: () =>
+                    dispatch(
+                      archiveCondition({
+                        id: row.id,
+                        isArchived: row.isArchived,
+                      }),
+                    ),
                 },
               ]}
             />

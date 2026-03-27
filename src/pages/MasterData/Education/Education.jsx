@@ -16,6 +16,8 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 import AddMaterialDrawer from './Components/AddMaterialDrawer';
 import FilterDropdown from './Components/FilterDropdown';
 import ViewEducationModal from './Components/ViewEducationModal';
+import { formatDate } from '@/utils/GeneralUtils';
+
 import { educationActions, registerSaga } from './educationSaga';
 import {
   componentKey,
@@ -31,7 +33,8 @@ import {
   setOpenViewModal,
 } from './educationSlice';
 
-const { fetchEducation } = educationActions;
+const { fetchEducation, toggleFavorite, archiveEducation, downloadEducation } =
+  educationActions;
 const EMPTY_STATE = {};
 
 export default function Education() {
@@ -92,7 +95,7 @@ export default function Education() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50 max-[1149px]:min-w-0 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -161,6 +164,7 @@ export default function Education() {
           header: 'Uploaded On',
           accessorKey: 'uploadedOn',
           width: 130,
+          render: (row) => formatDate(row.uploadedOn),
         },
         {
           id: 'uploadedBy',
@@ -204,17 +208,32 @@ export default function Education() {
                 {
                   label: 'Download',
                   value: 'download',
-                  onClickCb: () => {},
+                  onClickCb: () =>
+                    dispatch(
+                      downloadEducation({
+                        id: row.id,
+                        fileName: row.fileName,
+                      }),
+                    ),
                 },
                 {
-                  label: 'Add to Favorites',
-                  value: 'add_to_favorites',
-                  onClickCb: () => {},
+                  label: row.isFavorite
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites',
+                  value: 'toggleFavorite',
+                  onClickCb: () =>
+                    dispatch(toggleFavorite({ id: row.id })),
                 },
                 {
-                  label: 'Archive',
+                  label: row.isArchived ? 'Unarchive' : 'Archive',
                   value: 'archive',
-                  onClickCb: () => {},
+                  onClickCb: () =>
+                    dispatch(
+                      archiveEducation({
+                        id: row.id,
+                        isArchived: row.isArchived,
+                      }),
+                    ),
                 },
               ]}
             />

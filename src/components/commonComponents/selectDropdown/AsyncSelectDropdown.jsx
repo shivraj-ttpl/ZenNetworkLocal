@@ -5,9 +5,11 @@ import AppDataService from "@/services/appDataService/AppDataService";
 import useDropdownPosition from "./useDropdownPosition";
 
 // ─── Helpers ───────────────────────────────────────────
-function getLabel(option, labelKey) {
+function getLabel(option, labelKey, labelKey2) {
   if (typeof option === "string") return option;
-  return option?.[labelKey] ?? "";
+  const primary = option?.[labelKey] ?? "";
+  if (!labelKey2 || !option?.[labelKey2]) return primary;
+  return `${primary} ${option[labelKey2]}`;
 }
 
 function getValue(option, valueKey) {
@@ -53,6 +55,7 @@ function resolvePath(obj, path) {
  * @param {string}   dataPath        — dot path to extract array from API response (default: "data")
  * @param {string}   totalPath       — dot path to extract total count from API response (default: "totalRecords")
  * @param {string}   labelKey        — key for display text (default: "label")
+ * @param {string}   labelKey2       — optional secondary key appended to label (e.g. "description")
  * @param {string}   valueKey        — key for value (default: "value")
  * @param {number}   limit           — items per page (default: 20)
  * @param {number}   debounceMs      — search debounce delay (default: 400)
@@ -76,6 +79,7 @@ export default function AsyncSelectDropdown({
   dataPath = "data",
   totalPath = "totalRecords",
   labelKey = "label",
+  labelKey2,
   valueKey = "value",
   limit = 20,
   debounceMs = 400,
@@ -114,10 +118,7 @@ export default function AsyncSelectDropdown({
       }
 
       // URL-based fetch via AppDataService
-      if (!url) {
-        console.warn("AsyncSelectDropdown: provide either `url` or `fetchOptions` prop.");
-        return { data: [], totalRecords: 0 };
-      }
+      if (!url) return { data: [], totalRecords: 0 };
 
       const params = {
         page: pageNum,
@@ -131,8 +132,13 @@ export default function AsyncSelectDropdown({
         signal,
       });
 
-      const items = resolvePath(response?.data, dataPath) ?? [];
-      const total = resolvePath(response?.data, totalPath) ?? Infinity;
+      const responseData = response?.data?.data;
+      const items = Array.isArray(responseData)
+        ? responseData
+        : resolvePath(responseData, dataPath) ?? [];
+      const total = Array.isArray(responseData)
+        ? responseData.length
+        : resolvePath(responseData, totalPath) ?? Infinity;
 
       return { data: items, totalRecords: total };
     },
@@ -165,7 +171,6 @@ export default function AsyncSelectDropdown({
         setPage(pageNum);
       } catch (err) {
         if (err?.name === "AbortError") return;
-        console.error("AsyncSelectDropdown fetch error:", err);
         if (!append) setOptions([]);
         setHasMore(false);
       } finally {
@@ -253,11 +258,11 @@ export default function AsyncSelectDropdown({
   const displayText = useMemo(() => {
     if (isMulti) {
       if (!Array.isArray(value) || value.length === 0) return "";
-      if (value.length === 1) return getLabel(value[0], labelKey);
+      if (value.length === 1) return getLabel(value[0], labelKey, labelKey2);
       return `${value.length} selected`;
     }
-    return value ? getLabel(value, labelKey) : "";
-  }, [value, isMulti, labelKey]);
+    return value ? getLabel(value, labelKey, labelKey2) : "";
+  }, [value, isMulti, labelKey, labelKey2]);
 
   // ── Handlers ──
   const toggle = useCallback(() => {
@@ -415,7 +420,7 @@ export default function AsyncSelectDropdown({
                       {renderOption ? (
                         renderOption(option, { isSelected: selected })
                       ) : (
-                        <span className="truncate">{getLabel(option, labelKey)}</span>
+                        <span className="truncate">{getLabel(option, labelKey, labelKey2)}</span>
                       )}
                       {selected && !isMulti && (
                         <Icon name="Check" size={16} className="ml-auto text-primary shrink-0" />

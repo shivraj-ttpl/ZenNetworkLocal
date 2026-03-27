@@ -20,15 +20,15 @@ export default function MasterDataContainer() {
 
   return (
     <div className="bg-surface h-full rounded-xl border border-border-light overflow-hidden">
-      <div className="flex items-center justify-between px-5 pt-4 pb-3">
-        <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200 w-fit">
+      <div className="flex items-center justify-between px-5 pt-4 pb-3 max-[1149px]:flex-wrap max-[1149px]:gap-3">
+        <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200 w-fit max-[1149px]:overflow-x-auto">
           {TABS.map((tab) => (
             <NavLink
               key={tab.path}
               to={tab.path}
               className={({ isActive }) =>
                 [
-                  "px-3 py-1.5 text-sm font-normal transition-colors cursor-pointer",
+                  "px-3 py-1.5 text-sm font-normal transition-colors cursor-pointer whitespace-nowrap",
                   isActive
                     ? "bg-neutral-250 text-primary-700"
                     : "text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50",
@@ -41,7 +41,7 @@ export default function MasterDataContainer() {
         </div>
 
         {toolbar && (
-          <div className="flex items-center gap-3">{toolbar}</div>
+          <div className="flex items-center gap-3 max-[1149px]:w-full max-[1149px]:flex-wrap">{toolbar}</div>
         )}
       </div>
         <Outlet context={{ setToolbar }} />

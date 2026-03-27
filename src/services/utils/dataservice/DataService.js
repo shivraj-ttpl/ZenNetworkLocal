@@ -29,7 +29,7 @@ axios.interceptors.request.use(
       config.data = deepTrimStrings(config.data);
     }
     //  uncomment when using ngrok BE server
-    // config.headers["ngrok-skip-browser-warning"] = "true";
+    config.headers["ngrok-skip-browser-warning"] = "true";
 
     return config;
   },
