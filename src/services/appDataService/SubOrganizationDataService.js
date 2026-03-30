@@ -11,7 +11,23 @@ export default class SubOrganizationDataService {
     return AppDataService.post(BASE_URL, data);
   }
 
+  static async getSubOrganizationById(id) {
+    return AppDataService.get(`${BASE_URL}/${id}`);
+  }
+
+  static async updateSubOrganization(id, data) {
+    return AppDataService.patch(`${BASE_URL}/${id}`, data);
+  }
+
   static async changeStatus(id, status) {
     return AppDataService.patch(`${BASE_URL}/${id}/status`, { status });
+  }
+
+  static async archiveSubOrganization(id) {
+    return AppDataService.patch(`${BASE_URL}/${id}/archive`);
+  }
+
+  static async unarchiveSubOrganization(id) {
+    return AppDataService.patch(`${BASE_URL}/${id}/unarchive`);
   }
 }

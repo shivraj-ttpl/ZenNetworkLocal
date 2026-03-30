@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,11 +15,11 @@ import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import { FORM_FIELDS_NAMES } from '../constant';
-import { componentKey, setDrawerOpen } from '../subOrgListSlice';
+import { componentKey, setDrawerOpen, setEditDrawer } from '../subOrgListSlice';
 import { subOrgListActions } from '../subOrgListSaga';
 import { toPascalCase } from '../../../../utils/GeneralUtils';
 
-const { createSubOrganization } = subOrgListActions;
+const { createSubOrganization, updateSubOrganization } = subOrgListActions;
 
 const emptyContact = {
   [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: '',
@@ -61,7 +61,7 @@ const fullValidationSchema = baseValidationSchema.shape({
   ),
 });
 
-const initialValues = {
+const defaultInitialValues = {
   [FORM_FIELDS_NAMES.SUB_ORG_NAME]: '',
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]: '',
   [FORM_FIELDS_NAMES.EMAIL]: '',
@@ -77,6 +77,31 @@ const initialValues = {
   [FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]: null,
   [FORM_FIELDS_NAMES.ADMIN_CONTACTS]: [{ ...emptyContact }],
 };
+
+function buildEditInitialValues(data) {
+  const addr = data.address || {};
+  const phone =
+    data.countryCode && data.contactNumber
+      ? `${data.countryCode}${data.contactNumber}`
+      : data.contactNumber || '';
+
+  return {
+    [FORM_FIELDS_NAMES.SUB_ORG_NAME]: data.name || '',
+    [FORM_FIELDS_NAMES.CONTACT_NUMBER]: phone,
+    [FORM_FIELDS_NAMES.EMAIL]: data.email || '',
+    [FORM_FIELDS_NAMES.WEBSITE]: data.website || '',
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: addr.addressLine1 || '',
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: addr.addressLine2 || '',
+    [FORM_FIELDS_NAMES.STATE]: addr.state ? { name: addr.state } : null,
+    [FORM_FIELDS_NAMES.COUNTRY]: addr.country ? { name: addr.country } : null,
+    [FORM_FIELDS_NAMES.CITY]: addr.city || '',
+    [FORM_FIELDS_NAMES.ZIP_CODE]: addr.zipCode || '',
+    [FORM_FIELDS_NAMES.COUNTY]: addr.county || '',
+    [FORM_FIELDS_NAMES.IMPORT_SUB_ORG]: null,
+    [FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]: null,
+    [FORM_FIELDS_NAMES.ADMIN_CONTACTS]: [{ ...emptyContact }],
+  };
+}
 
 function buildPayload(values, showAdminSection) {
   const payload = {
@@ -136,22 +161,46 @@ export default function AddSubOrgDrawer() {
   const drawerOpen = useSelector(
     (state) => state[componentKey]?.drawerOpen ?? false,
   );
+  const editDrawer = useSelector(
+    (state) => state[componentKey]?.editDrawer ?? { open: false, data: null },
+  );
+
+  const isEditMode = editDrawer.open && editDrawer.data;
+  const isOpen = drawerOpen || editDrawer.open;
   const isCreating = useLoadingKey(LOADING_KEYS.SUB_ORG_LIST_POST_CREATE);
+  const isUpdating = useLoadingKey(LOADING_KEYS.SUB_ORG_LIST_PATCH_UPDATE);
+  const isSubmitting = isEditMode ? isUpdating : isCreating;
+
+  const initialValues = useMemo(
+    () =>
+      isEditMode
+        ? buildEditInitialValues(editDrawer.data)
+        : defaultInitialValues,
+    [isEditMode, editDrawer.data],
+  );
 
   const handleClose = () => {
     setShowAdminSection(false);
-    dispatch(setDrawerOpen(false));
+    if (isEditMode) {
+      dispatch(setEditDrawer({ open: false, data: null }));
+    } else {
+      dispatch(setDrawerOpen(false));
+    }
   };
 
   const handleFormSubmit = (values) => {
     const data = buildPayload(values, showAdminSection);
-    dispatch(createSubOrganization({ data }));
+    if (isEditMode) {
+      dispatch(updateSubOrganization({ id: editDrawer.data.id, data }));
+    } else {
+      dispatch(createSubOrganization({ data }));
+    }
   };
 
   return (
     <Drawer
-      title="Add Sub-Organization"
-      open={drawerOpen}
+      title={isEditMode ? 'Edit Sub-Organization' : 'Add Sub-Organization'}
+      open={isOpen}
       close={handleClose}
       width="max-w-[90%] w-[90%]  lg:w-[50%]"
       footerButton={null}
@@ -178,7 +227,7 @@ export default function AddSubOrgDrawer() {
           <Form className="flex flex-col h-full">
             <div className="flex-1 overflow-y-auto  flex flex-col sm:flex-row gap-6">
               {/* Photo Upload */}
-              <div className="flex-shrink-0 w-full sm:w-[200px]">
+              <div className="shrink-0 w-full sm:w-50">
                 <UploadPhoto
                   name="profile"
                   label="Upload a Photo"
@@ -611,9 +660,15 @@ export default function AddSubOrgDrawer() {
                 size="sm"
                 type="button"
                 onClick={handleSubmit}
-                disabled={!(isValid && dirty) || isCreating}
+                disabled={!(isValid && dirty) || isSubmitting}
               >
-                {isCreating ? 'Creating...' : 'Create Sub-Organization'}
+                {isSubmitting
+                  ? isEditMode
+                    ? 'Saving...'
+                    : 'Creating...'
+                  : isEditMode
+                    ? 'Save Changes'
+                    : 'Create Sub-Organization'}
               </Button>
             </div>
           </Form>
