@@ -70,7 +70,7 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
       >
         {({ values, errors, touched, isValid, dirty, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm }) => (
           <Form className="flex flex-col h-full">
-            <div className="flex-1 overflow-y-auto zenera-scrollbar flex gap-6">
+            <div className="flex-1 overflow-y-auto  flex gap-6">
               {/* Photo Upload */}
               <div className="flex-shrink-0 w-[200px]">
                 <UploadPhoto

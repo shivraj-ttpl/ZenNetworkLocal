@@ -53,4 +53,8 @@ export const toastMessages = {
   medicationFavoriteToggled: 'Favorite status updated',
   medicationArchivedSuccess: 'Medication archived successfully',
   medicationUnarchivedSuccess: 'Medication unarchived successfully',
+
+  subOrgCreatedSuccess: 'Sub-Organization created successfully',
+  subOrgActivatedSuccess: 'Sub-Organization activated successfully',
+  subOrgDeactivatedSuccess: 'Sub-Organization deactivated successfully',
 };

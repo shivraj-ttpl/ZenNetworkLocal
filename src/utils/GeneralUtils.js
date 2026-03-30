@@ -91,3 +91,12 @@ export function toPascalCaseWithSpaces (text = "") {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
+
+  export function toPascalCase (text = "") {
+    if (!text) return "";
+    return text
+      .toLowerCase()
+      .split(/[\s_-]+/)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join("");
+  };

@@ -5,7 +5,7 @@ export default function HorizontalStepBar({ steps, activeStep, completedSteps = 
 
   return (
     <div className="w-full px-4 py-4 border-b border-border bg-surface shrink-0">
-      <div className="flex items-center min-w-max overflow-x-auto zenera-scrollbar pb-2">
+      <div className="flex items-center min-w-max overflow-x-auto  pb-2">
         {steps.map((step, index) => {
           const isActive = activeStep === step.id;
           const isCompleted = completedSteps.has(step.id);

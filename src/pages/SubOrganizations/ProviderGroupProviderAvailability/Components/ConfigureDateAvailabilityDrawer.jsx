@@ -53,7 +53,7 @@ export default function ConfigureDateAvailabilityDrawer({ open, configureDate })
     >
       <Formik initialValues={{}} onSubmit={handleSave}>
         <Form className="flex flex-col h-full">
-          <div className="flex-1 overflow-y-auto zenera-scrollbar space-y-6">
+          <div className="flex-1 overflow-y-auto  space-y-6">
             {/* Day Slot Creation */}
             <div className="space-y-4">
               <h4 className="text-sm font-semibold text-text-primary">
