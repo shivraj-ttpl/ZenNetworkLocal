@@ -1,17 +1,17 @@
-import { useState, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Formik, Form } from "formik";
-import Drawer from "@/components/commonComponents/drawer/Drawer";
-import Button from "@/components/commonComponents/button/Button";
-import AssessmentStepSidebar from "./AssessmentStepSidebar";
-import StepPlaceholder from "./sections/StepPlaceholder";
+import { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Formik, Form } from 'formik';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import Button from '@/components/commonComponents/button/Button';
+import AssessmentStepSidebar from './AssessmentStepSidebar';
+import StepPlaceholder from './sections/StepPlaceholder';
 import {
   PersonalCharacteristics,
   FamilyAndHome,
   MoneyAndResources,
   SocialEmotionalHealth,
   OptionalAdditionalQuestions,
-} from "./sections/prapare";
+} from './sections/prapare';
 import {
   LivingSituation,
   Food,
@@ -26,27 +26,30 @@ import {
   SubstanceUse,
   MentalHealth,
   Disabilities,
-} from "./sections/ahcHrsn";
+} from './sections/ahcHrsn';
 import {
   Demographics,
   ReasonForVisit,
+  HealthCareAccess,
   PromisGlobalHealth,
   Medications,
   MedicationAdherence,
   Allergies,
   PastMedicalHistory,
+  WomensHealth,
   FamilyHistory,
   LifestyleAndSocialHabits,
+  LifestyleBehaviorQuestions,
   SubstanceUseNida,
   EmotionalMentalHealth,
   SocialDeterminants,
   Immunizations,
   CancerScreeningSummary,
+  AnnualTesting,
   Signatures,
-} from "./sections/familyMedicine";
-import HorizontalStepBar from "./HorizontalStepBar";
-import { componentKey, setCloseDrawer } from "../assessmentsSlice";
-import { ASSESSMENT_STEPS_MAP, PRAPARE_STEPS } from "../constant";
+} from './sections/familyMedicine';
+import { componentKey, setCloseDrawer } from '../assessmentsSlice';
+import { ASSESSMENT_STEPS_MAP, PRAPARE_STEPS } from '../constant';
 
 // ─── Step component registry per assessment ───
 const PRAPARE_STEP_COMPONENTS = {
@@ -76,132 +79,300 @@ const AHC_HRSN_STEP_COMPONENTS = {
 const FAMILY_MEDICINE_STEP_COMPONENTS = {
   1: Demographics,
   2: ReasonForVisit,
-  3: PromisGlobalHealth,
-  4: Medications,
-  5: MedicationAdherence,
-  6: Allergies,
-  7: PastMedicalHistory,
-  8: FamilyHistory,
-  9: LifestyleAndSocialHabits,
-  10: SubstanceUseNida,
-  11: EmotionalMentalHealth,
-  12: SocialDeterminants,
-  13: Immunizations,
-  14: CancerScreeningSummary,
-  15: Signatures,
+  3: HealthCareAccess,
+  4: PromisGlobalHealth,
+  5: Medications,
+  6: MedicationAdherence,
+  7: Allergies,
+  8: PastMedicalHistory,
+  9: WomensHealth,
+  10: FamilyHistory,
+  11: LifestyleAndSocialHabits,
+  12: LifestyleBehaviorQuestions,
+  13: SubstanceUseNida,
+  14: EmotionalMentalHealth,
+  15: SocialDeterminants,
+  16: Immunizations,
+  17: CancerScreeningSummary,
+  18: AnnualTesting,
+  19: Signatures,
 };
 
 const STEP_COMPONENTS_MAP = {
   PRAPARE: PRAPARE_STEP_COMPONENTS,
-  "AHC HRSN Screening": AHC_HRSN_STEP_COMPONENTS,
-  "Family Medicine Intake and Annual Form": FAMILY_MEDICINE_STEP_COMPONENTS,
+  'AHC HRSN Screening': AHC_HRSN_STEP_COMPONENTS,
+  'Family Medicine Intake and Annual Form': FAMILY_MEDICINE_STEP_COMPONENTS,
 };
 
 const INITIAL_VALUES = {
   personalCharacteristics: {
-    ethnicity: "",
+    ethnicity: '',
     race: {},
-    farmWork: "",
-    armedForces: "",
+    farmWork: '',
+    armedForces: '',
     language: null,
   },
   familyAndHome: {
-    familyMembers: "",
-    familyMembersDecline: "",
-    housing: "",
-    worriedHousing: "",
+    familyMembers: '',
+    familyMembersDecline: '',
+    housing: '',
+    worriedHousing: '',
     country: null,
     state: null,
-    city: "",
-    zipCode: "",
+    city: '',
+    zipCode: '',
   },
   moneyAndResources: {
-    education: "",
-    work: "",
-    workOtherSpecify: "",
+    education: '',
+    work: '',
+    workOtherSpecify: '',
     insurance: {},
     income: null,
   },
   socialEmotionalHealth: {
-    socialConnection: "",
-    work: "",
-    insurance: "",
-    income: "",
-    incomeDecline: "",
+    socialConnection: '',
+    work: '',
+    insurance: '',
+    income: '',
+    incomeDecline: '',
     unableToGet: {},
-    unableToGetOther: "",
+    unableToGetOther: '',
     transportation: {},
-    stress: "",
+    stress: '',
   },
   optionalAdditionalQuestions: {
-    jailPrison: "",
-    refugee: "",
-    physicallySafe: "",
-    afraidOfPartner: "",
+    jailPrison: '',
+    refugee: '',
+    physicallySafe: '',
+    afraidOfPartner: '',
   },
   // AHC HRSN
-  livingSituation: { housing: "", problems: {} },
-  food: { worriedFoodRunOut: "", foodDidntLast: "" },
-  transportation: { lackOfTransportation: "" },
-  utilities: { threatened: "" },
-  safety: { physicallyHurt: "", insult: "", threaten: "", screamCurse: "" },
-  financialStrain: { payForBasics: "" },
-  employment: { helpWithWork: "" },
-  familyCommunitySupport: { dailyHelp: "", lonely: "" },
-  education: { otherLanguage: "", helpWithSchool: "" },
-  physicalActivity: { daysPerWeek: "", minutesPerDay: "" },
-  substanceUse: { alcohol: "", tobacco: "", prescriptionDrugs: "", illegalDrugs: "" },
-  mentalHealth: { littleInterest: "", feelingDown: "", stress: "" },
-  disabilities: { difficultyConcentrating: "", difficultyErrands: "" },
-  // Family Medicine Intake
+  livingSituation: { housing: '', problems: {} },
+  food: { worriedFoodRunOut: '', foodDidntLast: '' },
+  transportation: { lackOfTransportation: '' },
+  utilities: { threatened: '' },
+  safety: { physicallyHurt: '', insult: '', threaten: '', screamCurse: '' },
+  financialStrain: { payForBasics: '' },
+  employment: { helpWithWork: '' },
+  familyCommunitySupport: { dailyHelp: '', lonely: '' },
+  education: { otherLanguage: '', helpWithSchool: '' },
+  physicalActivity: { daysPerWeek: '', minutesPerDay: '' },
+  substanceUse: {
+    alcohol: '',
+    tobacco: '',
+    prescriptionDrugs: '',
+    illegalDrugs: '',
+  },
+  mentalHealth: { littleInterest: '', feelingDown: '', stress: '' },
+  disabilities: { difficultyConcentrating: '', difficultyErrands: '' },
+  // Family Medicine — all 19 sections
   demographics: {
-    firstName: "", middleName: "", lastName: "", dob: "", gender: "",
-    maritalStatus: "", race: "", ethnicity: "", language: "",
-    phone: "", email: "", emergencyContact: "", address: "", city: "", state: "", zipCode: "",
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    sexAtBirth: '',
+    dateOfBirth: '',
+    maritalStatus: '',
+    identifiedGender: '',
+    raceEthnicity: '',
+    preferredLanguage: '',
+    email: '',
+    primaryPhone: '',
+    secondaryPhone: '',
+    preferredContact: '',
+    pronouns: '',
+    addressLine1: '',
+    addressLine2: '',
+    state: '',
+    city: '',
+    zipCode: '',
+    county: '',
+    country: '',
+    noInsurance: false,
+    ssn: '',
+    providerMrn: '',
+    hospitalMrn: '',
+    communityMpi: '',
+    otherIdentifier1: '',
+    otherIdentifier2: '',
+    hasInternetAccess: '',
+    hasSmartPhone: '',
+    preferredContactMethod: '',
+    interestedInPrograms: '',
+    interestedInAdvisory: '',
+    informationConfirmed: false,
   },
-  reasonForVisit: { mainReason: "", symptoms: "", symptomOnset: "", healthGoals: "", additionalConcerns: "" },
+  reasonForVisit: {
+    bringsYouIn: '',
+    mattersToYou: '',
+    healthGoal1: '',
+    healthGoal2: '',
+    healthGoal3: '',
+    informationConfirmed: false,
+  },
+  healthCareAccess: {
+    hasRegularProvider: '',
+    lastWellnessVisitAmount: '',
+    lastWellnessVisitUnit: '',
+    erVisits: '',
+    overnightHospital: '',
+  },
   promisGlobalHealth: {
-    generalHealth: "", qualityOfLife: "", physicalHealth: "", mentalHealth: "",
-    socialActivities: "", carryOutActivities: "", emotionalProblems: "", fatigue: "", painLevel: "",
+    generalHealth: '',
+    qualityOfLife: '',
+    physicalHealth: '',
+    mentalHealth: '',
+    socialActivities: '',
+    carryOutActivities: '',
+    emotionalProblems: '',
+    fatigue: '',
+    averagePain: '',
+    sleepQuality: '',
   },
-  medications: [],
+  medications: { informationConfirmed: false },
   medicationAdherence: {
-    forgetMedicine: "", decidedNotToTake: "", forgetToGetPrescription: "",
-    runOutOfMedicine: "", skipBeforeDoctor: "", missWhenFeelBetter: "", missWhenFeelSick: "",
+    forgetMedicine: '',
+    decidedNotToTake: '',
+    runOutOfMedicine: '',
+    forgetToGetPrescription: '',
+    skipBeforeDoctor: '',
+    stopWhenFeelBetter: '',
+    stopWhenFeelWorse: '',
   },
-  allergies: [],
-  pastMedicalHistory: { conditions: {}, otherConditions: "", surgeries: "", additionalNotes: "" },
+  allergies: { informationConfirmed: false },
+  pastMedicalHistory: {
+    conditions: {},
+  },
+  womensHealth: {
+    timesPregnant: '',
+    children: '',
+    miscarriages: '',
+    terminations: '',
+    lastMenstrualPeriod: '',
+    usingContraception: '',
+    currentlyPregnant: '',
+  },
   familyHistory: {},
   lifestyleAndSocialHabits: {
-    exercise: "", exerciseFrequency: "", diet: "", sleepHours: "",
-    sleepProblems: "", caffeine: "", seatBelt: "", sunscreen: "",
+    satisfiedRelationships: '',
+    someoneToConfide: '',
+    qualitySleep: '',
+    stressLevel: '',
+    stressReduction: '',
+    mindfulness: '',
+    feelSafe: '',
+    satisfiedSexLife: '',
+    safeSex: '',
+    lifePurpose: '',
+    workSatisfaction: '',
+    balanceWork: '',
   },
-  substanceUseNida: { alcohol: "", tobacco: "", prescriptionDrugs: "", illegalDrugs: "" },
+  lifestyleBehaviorQuestions: {
+    height: '',
+    weight: '',
+    bmi: '',
+    idealWeight: '',
+    caffeineDrinks: '',
+    sleepHours: '',
+    waterCups: '',
+    waterOunces: '',
+    alcoholDrinks: '',
+    fruitsVegetables: '',
+    whiteFoodServings: '',
+    sugarServings: '',
+    processedFoods: '',
+    proteinGrams: '',
+    weighFood: '',
+    logFood: '',
+    cardioMinutes: '',
+    strengthMinutes: '',
+    stretchingMinutes: '',
+    selfCareFrequency: '',
+    screenTime: '',
+    mainStress: '',
+    interestedCoaching: '',
+    interestedCounseling: '',
+  },
+  substanceUseNida: {
+    tobacco: '',
+    alcohol: '',
+    prescriptionDrugs: '',
+    illegalDrugs: '',
+  },
   emotionalMentalHealth: {
-    littleInterest: "", feelingDown: "", troubleSleeping: "", feelingTired: "",
-    poorAppetite: "", feelingBad: "", troubleConcentrating: "", movingSlow: "",
-    selfHarm: "", difficulty: "",
+    littleInterest: '',
+    feelingDown: '',
+    troubleSleeping: '',
+    feelingTired: '',
+    poorAppetite: '',
+    feelingBad: '',
+    troubleConcentrating: '',
+    movingSlow: '',
+    selfHarm: '',
+    phq9Score: '',
+    phq9Severity: '',
+    nervousAnxious: '',
+    unableToControlWorrying: '',
+    worryingTooMuch: '',
+    troubleRelaxing: '',
+    beingRestless: '',
+    easilyAnnoyed: '',
+    feelingAfraid: '',
+    gad7Score: '',
+    gad7Severity: '',
+    wishedDead: '',
+    thoughtsKilling: '',
+    thoughtHow: '',
+    intentionToAct: '',
+    startedToPrepare: '',
   },
   socialDeterminants: {
-    housing: "", food: "", transportation: "", utilities: "",
-    safety: "", financialStrain: "", employment: "", education: "",
+    currentHousing: '',
+    worriedHousing: '',
+    lacked: '',
+    transportation: '',
+    feelSafe: '',
+    talkToPeople: '',
+    workSituation: '',
+    jobTitle: '',
+    workOutdoors: '',
+    education: '',
+    householdIncome: '',
+    falls: '',
+    wantHelp: '',
+    urgentNeeds: '',
+    urgentNeedsDescribe: '',
   },
-  immunizations: [],
-  cancerScreenings: [],
-  signatures: { patientName: "", patientDate: "", guardianName: "", relationship: "", additionalNotes: "" },
+  immunizations: {},
+  cancerScreenings: {},
+  annualTesting: {
+    allScreeningsDone: '',
+    allScreeningsDate: '',
+    tests: {},
+  },
+  signatures: {
+    gatheredManually: true,
+    patientSignature: null,
+    drawnSignature: null,
+    patientDate: '',
+    provider: null,
+    providerReview: '',
+    providerDate: '',
+  },
 };
 
 export default function ViewAssessmentDrawer() {
   const dispatch = useDispatch();
   const { drawerOpen = false, viewData = null } = useSelector(
-    (state) => state[componentKey] ?? {}
+    (state) => state[componentKey] ?? {},
   );
 
   const [activeStep, setActiveStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState(new Set());
 
-  const assessmentName = viewData?.name || "";
-  const isFamilyMedicine = assessmentName === "Family Medicine Intake and Annual Form";
+  const assessmentName = viewData?.name || '';
+  const isFamilyMedicine =
+    assessmentName === 'Family Medicine Intake and Annual Form';
   const steps = ASSESSMENT_STEPS_MAP[assessmentName] || PRAPARE_STEPS;
   const stepComponents = STEP_COMPONENTS_MAP[assessmentName] || {};
   const totalSteps = steps.length;
@@ -239,7 +410,7 @@ export default function ViewAssessmentDrawer() {
         setActiveStep(stepId);
       }
     },
-    [activeStep, completedSteps]
+    [activeStep, completedSteps],
   );
 
   const renderStepContent = (formikProps) => {
@@ -247,7 +418,7 @@ export default function ViewAssessmentDrawer() {
     if (StepComponent) {
       return <StepComponent {...formikProps} />;
     }
-    const stepLabel = steps.find((s) => s.id === activeStep)?.label || "";
+    const stepLabel = steps.find((s) => s.id === activeStep)?.label || '';
     return <StepPlaceholder stepLabel={stepLabel} />;
   };
 
@@ -256,16 +427,26 @@ export default function ViewAssessmentDrawer() {
       title={`${assessmentName} Assessment`}
       open={drawerOpen}
       close={handleClose}
-      width="max-w-[70%] w-[70%]"
+      width={isFamilyMedicine ? 'w-[90%] max-w-[90%]' : 'max-w-[70%] w-[70%]'}
       hideOverflow
       footerButton={
         <div className="flex justify-between w-full px-2 pb-2">
           {!isFirstStep ? (
-            <Button variant="outlineBlue" size="sm" type="button" onClick={handlePrev}>
+            <Button
+              variant="outlineBlue"
+              size="sm"
+              type="button"
+              onClick={handlePrev}
+            >
               Previous
             </Button>
           ) : (
-            <Button variant="outline" size="sm" type="button" onClick={handleClose}>
+            <Button
+              variant="outline"
+              size="sm"
+              type="button"
+              onClick={handleClose}
+            >
               Cancel
             </Button>
           )}
@@ -275,31 +456,41 @@ export default function ViewAssessmentDrawer() {
             type="button"
             onClick={isLastStep ? handleClose : handleNext}
           >
-            {isLastStep ? (assessmentName === "AHC HRSN Screening" ? "Assign to Patient" : "Close") : "Next"}
+            {isLastStep
+              ? assessmentName === 'AHC HRSN Screening'
+                ? 'Assign to Patient'
+                : isFamilyMedicine
+                ? 'Save & Finish'
+                : 'Close'
+              : 'Next'}
           </Button>
         </div>
       }
     >
-      <Formik initialValues={INITIAL_VALUES} onSubmit={() => {}} enableReinitialize>
+      <Formik
+        initialValues={INITIAL_VALUES}
+        onSubmit={() => {}}
+        enableReinitialize
+      >
         {({ values, handleChange, handleBlur, setFieldValue }) => (
-          <Form className={`flex ${isFamilyMedicine ? "flex-col h-[86vh]" : ""} min-h-0 overflow-hidden`}>
-            {isFamilyMedicine ? (
-              <HorizontalStepBar
-                steps={steps}
-                activeStep={activeStep}
-                completedSteps={completedSteps}
-                onStepClick={handleStepClick}
-              />
-            ) : (
+          <Form className="flex min-h-0 h-[86vh] overflow-hidden">
+            <div>
+              {' '}
               <AssessmentStepSidebar
                 steps={steps}
                 activeStep={activeStep}
                 completedSteps={completedSteps}
                 onStepClick={handleStepClick}
               />
-            )}
-            <div className={`${isFamilyMedicine ? "flex-1  h-[50vh]  px-6 py-4" : "flex-1 h-[86vh] pl-6"} overflow-y-auto `}>
-              {renderStepContent({ values, handleChange, handleBlur, setFieldValue })}
+            </div>
+
+            <div className="flex-1 h-full overflow-y-auto pl-6 pr-4 py-4">
+              {renderStepContent({
+                values,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+              })}
             </div>
           </Form>
         )}

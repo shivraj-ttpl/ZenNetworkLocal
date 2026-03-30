@@ -39,4 +39,7 @@ export const toastMessages = {
   subOrgCreatedSuccess: 'Sub-Organization created successfully',
   subOrgActivatedSuccess: 'Sub-Organization activated successfully',
   subOrgDeactivatedSuccess: 'Sub-Organization deactivated successfully',
+
+  intakeSubmittedSuccess: 'Family Medicine Intake form submitted successfully',
+  intakeSignatureUploadedSuccess: 'Signature uploaded successfully',
 };
