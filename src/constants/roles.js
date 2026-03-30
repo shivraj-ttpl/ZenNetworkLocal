@@ -1,0 +1,6 @@
+export const ROLES = {
+  ORG_ADMIN: 'ORG_ADMIN',
+  SUB_ORG_ADMIN: 'SUB_ORG_ADMIN',
+};
+
+export const MASTER_DATA_EDIT_ROLES = [ROLES.ORG_ADMIN];

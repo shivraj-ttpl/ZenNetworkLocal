@@ -2,15 +2,17 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { Table, buildColumns } from '@/components/commonComponents/table';
-import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useRoleAccess from '@/hooks/useRoleAccess';
 
 import { formatDate } from '@/utils/GeneralUtils';
 
@@ -33,6 +35,7 @@ const EMPTY_STATE = {};
 export default function Assessments() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
+  const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
 
   const {
     assessmentsList = [],
@@ -147,39 +150,47 @@ export default function Assessments() {
           header: 'Action',
           width: 70,
           align: 'center',
-          render: (row) => (
-            <ActionDropdown
-              options={[
-                {
-                  label: 'View',
-                  value: 'view',
-                  onClickCb: () => dispatch(setOpenViewDrawer(row)),
-                },
-                {
-                  label: row.isFavorite
-                    ? 'Remove from Favorites'
-                    : 'Add to Favorites',
-                  value: 'toggleFavorite',
-                  onClickCb: () =>
-                    dispatch(toggleFavorite({ id: row.id })),
-                },
-                {
-                  label: row.isArchived ? 'Unarchive' : 'Archive',
-                  value: 'archive',
-                  onClickCb: () =>
-                    dispatch(
-                      archiveAssessment({
-                        id: row.id,
-                        isArchived: row.isArchived,
-                      }),
-                    ),
-                },
-              ]}
-            />
-          ),
+          render: (row) =>
+            canEdit ? (
+              <ActionDropdown
+                options={[
+                  {
+                    label: 'View',
+                    value: 'view',
+                    onClickCb: () => dispatch(setOpenViewDrawer(row)),
+                  },
+                  {
+                    label: row.isFavorite
+                      ? 'Remove from Favorites'
+                      : 'Add to Favorites',
+                    value: 'toggleFavorite',
+                    onClickCb: () =>
+                      dispatch(toggleFavorite({ id: row.id })),
+                  },
+                  {
+                    label: row.isArchived ? 'Unarchive' : 'Archive',
+                    value: 'archive',
+                    onClickCb: () =>
+                      dispatch(
+                        archiveAssessment({
+                          id: row.id,
+                          isArchived: row.isArchived,
+                        }),
+                      ),
+                  },
+                ]}
+              />
+            ) : (
+              <button
+                className="text-primary-700 text-sm font-medium hover:underline cursor-pointer"
+                onClick={() => dispatch(setOpenViewDrawer(row))}
+              >
+                View
+              </button>
+            ),
         },
       ]),
-    [dispatch],
+    [dispatch, canEdit],
   );
 
   return (

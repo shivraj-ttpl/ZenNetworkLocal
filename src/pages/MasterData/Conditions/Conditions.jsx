@@ -2,16 +2,19 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { Table, buildColumns } from '@/components/commonComponents/table';
+import RoleGuard from '@/components/RoleGuard/RoleGuard';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-import ActionDropdown from '@/components/commonComponents/actionDropdown';
+import useRoleAccess from '@/hooks/useRoleAccess';
 
 import { formatDate } from '@/utils/GeneralUtils';
 
@@ -34,6 +37,7 @@ const EMPTY_STATE = {};
 export default function Conditions() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
+  const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
 
   const {
     conditionsList = [],
@@ -80,14 +84,16 @@ export default function Conditions() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <Button
-          variant="primaryBlue"
-          size="sm"
-          onClick={() => dispatch(setOpenAddDrawer())}
-        >
-          <Icon name="Plus" size={14} />
-          Add Condition
-        </Button>
+        <RoleGuard allowedRoles={MASTER_DATA_EDIT_ROLES}>
+          <Button
+            variant="primaryBlue"
+            size="sm"
+            onClick={() => dispatch(setOpenAddDrawer())}
+          >
+            <Icon name="Plus" size={14} />
+            Add Condition
+          </Button>
+        </RoleGuard>
       </>,
     );
     return () => setToolbar(null);
@@ -158,44 +164,48 @@ export default function Conditions() {
             </span>
           ),
         },
-        {
-          id: 'actions',
-          header: 'Action',
-          width: 70,
-          align: 'center',
-          render: (row) => (
-            <ActionDropdown
-              options={[
-                {
-                  label: 'Edit',
-                  value: 'edit',
-                  onClickCb: () => dispatch(setOpenEditDrawer(row)),
-                },
-                {
-                  label: row.isFavorite
-                    ? 'Remove from Favorites'
-                    : 'Add to Favorites',
-                  value: 'toggleFavorite',
-                  onClickCb: () =>
-                    dispatch(toggleFavorite({ id: row.id })),
-                },
-                {
-                  label: row.isArchived ? 'Unarchive' : 'Archive',
-                  value: 'archive',
-                  onClickCb: () =>
-                    dispatch(
-                      archiveCondition({
-                        id: row.id,
-                        isArchived: row.isArchived,
-                      }),
-                    ),
-                },
-              ]}
-            />
-          ),
-        },
+        ...(canEdit
+          ? [
+              {
+                id: 'actions',
+                header: 'Action',
+                width: 70,
+                align: 'center',
+                render: (row) => (
+                  <ActionDropdown
+                    options={[
+                      {
+                        label: 'Edit',
+                        value: 'edit',
+                        onClickCb: () => dispatch(setOpenEditDrawer(row)),
+                      },
+                      {
+                        label: row.isFavorite
+                          ? 'Remove from Favorites'
+                          : 'Add to Favorites',
+                        value: 'toggleFavorite',
+                        onClickCb: () =>
+                          dispatch(toggleFavorite({ id: row.id })),
+                      },
+                      {
+                        label: row.isArchived ? 'Unarchive' : 'Archive',
+                        value: 'archive',
+                        onClickCb: () =>
+                          dispatch(
+                            archiveCondition({
+                              id: row.id,
+                              isArchived: row.isArchived,
+                            }),
+                          ),
+                      },
+                    ]}
+                  />
+                ),
+              },
+            ]
+          : []),
       ]),
-    [dispatch],
+    [dispatch, canEdit],
   );
 
   return (
