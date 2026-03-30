@@ -35,4 +35,8 @@ export const toastMessages = {
   educationFavoriteToggled: 'Favorite status updated',
   educationArchivedSuccess: 'Material archived successfully',
   educationUnarchivedSuccess: 'Material unarchived successfully',
+
+  subOrgCreatedSuccess: 'Sub-Organization created successfully',
+  subOrgActivatedSuccess: 'Sub-Organization activated successfully',
+  subOrgDeactivatedSuccess: 'Sub-Organization deactivated successfully',
 };

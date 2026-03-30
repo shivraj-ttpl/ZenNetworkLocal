@@ -275,7 +275,7 @@ export default function EditOrganizationProfileDrawer({
           setFieldValue,
         }) => (
           <Form className="flex h-full flex-col">
-            <div className="zenera-scrollbar flex-1 overflow-y-auto p-1">
+            <div className=" flex-1 overflow-y-auto p-1">
               <div className="flex gap-6 rounded-lg border border-border-light p-5">
                 <div className="w-[200px] flex-shrink-0">
                   <UploadPhoto

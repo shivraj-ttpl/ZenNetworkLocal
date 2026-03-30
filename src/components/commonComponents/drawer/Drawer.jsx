@@ -113,7 +113,7 @@ function Drawer({
         <div
           className={`${!hideHeaderBorder && "p-[16px]"} flex-1 overflow-${
             hideOverflow ? "visible" : "auto"
-          } zenera-scrollbar ${customBodyClasses}`}
+          }  ${customBodyClasses}`}
         >
           {children}
         </div>

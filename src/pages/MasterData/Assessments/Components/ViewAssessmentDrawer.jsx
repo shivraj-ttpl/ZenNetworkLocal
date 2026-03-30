@@ -298,7 +298,7 @@ export default function ViewAssessmentDrawer() {
                 onStepClick={handleStepClick}
               />
             )}
-            <div className={`${isFamilyMedicine ? "flex-1  h-[50vh]  px-6 py-4" : "flex-1 h-[86vh] pl-6"} overflow-y-auto zenera-scrollbar`}>
+            <div className={`${isFamilyMedicine ? "flex-1  h-[50vh]  px-6 py-4" : "flex-1 h-[86vh] pl-6"} overflow-y-auto `}>
               {renderStepContent({ values, handleChange, handleBlur, setFieldValue })}
             </div>
           </Form>

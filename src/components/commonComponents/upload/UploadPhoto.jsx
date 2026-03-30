@@ -1,31 +1,31 @@
-import { useRef, useState } from "react";
-import { ErrorMessage } from "formik";
-import { Icon } from "@/components/icons";
+import { useRef, useState } from 'react';
+import { ErrorMessage } from 'formik';
+import { Icon } from '@/components/icons';
 
 const UploadPhoto = ({
-  name = "",
-  label = "Upload Photo",
+  name = '',
+  label = 'Upload Photo',
   isRequired = false,
   maxFileSize = 5,
   onFileSelect = () => {},
   error = null,
   touched = false,
   disabled = false,
-  className = "",
+  className = '',
 }) => {
   const inputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [fileError, setFileError] = useState("");
+  const [fileError, setFileError] = useState('');
 
   const handleFile = (file) => {
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      setFileError("Only image files are allowed.");
+    if (!file.type.startsWith('image/')) {
+      setFileError('Only image files are allowed.');
       setSelectedFile(null);
       setPreview(null);
-      onFileSelect(null, "Invalid file type");
+      onFileSelect(null, 'Invalid file type');
       return;
     }
 
@@ -34,27 +34,27 @@ const UploadPhoto = ({
       setFileError(`File size exceeds ${maxFileSize}MB limit.`);
       setSelectedFile(null);
       setPreview(null);
-      onFileSelect(null, "File too large");
+      onFileSelect(null, 'File too large');
       return;
     }
 
-    setFileError("");
+    setFileError('');
     setSelectedFile(file);
     setPreview(URL.createObjectURL(file));
-    onFileSelect(file, "");
+    onFileSelect(file, '');
   };
 
   const handleInputChange = (e) => {
     const file = e.target.files?.[0];
     if (file) handleFile(file);
-    e.target.value = "";
+    e.target.value = '';
   };
 
   const handleRemove = () => {
     setSelectedFile(null);
     setPreview(null);
-    setFileError("");
-    onFileSelect(null, "");
+    setFileError('');
+    onFileSelect(null, '');
   };
 
   const showError = (touched && error) || fileError;
@@ -84,16 +84,14 @@ const UploadPhoto = ({
             flex flex-col items-center justify-center gap-3 py-10 px-6
             border-2 border-dashed rounded-lg cursor-pointer
             border-neutral-300 bg-surface hover:border-primary
-            ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-            ${showError ? "border-error-400" : ""}
+            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            ${showError ? 'border-error-400' : ''}
           `}
         >
           <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-neutral-100">
             <Icon name="Image" size={22} className="text-neutral-400" />
           </div>
-          <p className="text-sm text-text-primary">
-            Click to upload image
-          </p>
+          <p className="text-sm text-text-primary">Click to upload image</p>
           <p className="text-xs text-text-secondary">
             .png, .jpg, up to {maxFileSize}MB.
           </p>
@@ -110,18 +108,21 @@ const UploadPhoto = ({
             />
           </div>
 
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            disabled={disabled}
-            className="text-primary-700 underline font-medium text-sm hover:text-primary-900 disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            Update a Photo
-          </button>
-
-          <p className="text-xs text-text-secondary">
-            .png, .jpg, up to {maxFileSize}MB.
-          </p>
+          <div className="w-full flex justify-center">
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={disabled}
+              className="text-primary underline font-medium text-sm hover:text-primary-900 disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              Update a Photo
+            </button>
+          </div>
+          <div className="w-full flex justify-center">
+            <p className="text-xs text-text-secondary text-center">
+              .png, .jpg, up to {maxFileSize}MB.
+            </p>
+          </div>
         </div>
       )}
 
@@ -133,7 +134,7 @@ const UploadPhoto = ({
         <ErrorMessage name={name}>
           {(msg) => (
             <p className="text-xs text-error-500">
-              {typeof msg === "string" ? msg : msg?.label}
+              {typeof msg === 'string' ? msg : msg?.label}
             </p>
           )}
         </ErrorMessage>

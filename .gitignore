@@ -31,3 +31,7 @@ coverage
 .bmad
 ._bmad
 .bmad_
+
+# front-end-dev (auto-generated)
+.claude/commands/front-end-dev.md
+.claude/agents/jira-ticket-implementer.md

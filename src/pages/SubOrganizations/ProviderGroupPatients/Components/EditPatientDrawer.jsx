@@ -120,7 +120,7 @@ export default function EditPatientDrawer({ open, editData }) {
               onStepClick={setActiveStep}
             />
 
-            <div className="flex-1 overflow-y-auto zenera-scrollbar p-5">
+            <div className="flex-1 overflow-y-auto  p-5">
               {activeStep === 1 && (
                 <PatientDetails
                   values={values}

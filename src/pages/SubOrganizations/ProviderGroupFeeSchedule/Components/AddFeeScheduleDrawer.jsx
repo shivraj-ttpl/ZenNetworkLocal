@@ -57,7 +57,7 @@ export default function AddFeeScheduleDrawer({ open, drawerMode, editData }) {
       >
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm }) => (
           <Form className="flex flex-col h-full">
-            <div className="flex-1 overflow-y-auto zenera-scrollbar">
+            <div className="flex-1 overflow-y-auto ">
               <div className="border border-border-light rounded-lg p-5">
                 <div className="grid grid-cols-2 gap-4">
                   <SelectDropdown

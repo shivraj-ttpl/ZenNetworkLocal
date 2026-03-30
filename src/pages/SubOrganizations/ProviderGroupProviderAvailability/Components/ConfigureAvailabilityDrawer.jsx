@@ -120,7 +120,7 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
     >
       <Formik initialValues={{}} onSubmit={handleSave}>
         <Form className="flex flex-col h-full">
-          <div className="flex-1 overflow-y-auto zenera-scrollbar space-y-6">
+          <div className="flex-1 overflow-y-auto  space-y-6">
             {/* Top Row: Time Zone, Booking Window, Start Date */}
             <div className="grid grid-cols-3 gap-4">
               <SelectDropdown

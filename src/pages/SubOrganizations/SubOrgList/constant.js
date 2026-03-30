@@ -1,5 +1,6 @@
 export const FORM_FIELDS_NAMES = {
   SUB_ORG_NAME: "subOrgName",
+  COUNTRY_CODE: "countryCode",
   CONTACT_NUMBER: "contactNumber",
   EMAIL: "email",
   WEBSITE: "website",
@@ -9,6 +10,7 @@ export const FORM_FIELDS_NAMES = {
   COUNTRY: "country",
   CITY: "city",
   ZIP_CODE: "zipCode",
+  COUNTY: "county",
   IMPORT_SUB_ORG: "importSubOrg",
   IMPORT_SUB_ORG_ADMIN: "importSubOrgAdmin",
   ADMIN_CONTACTS: "adminContacts",
@@ -48,4 +50,9 @@ export const SUB_ORG_ADMIN_OPTIONS = [
   { label: "John Smith", value: "john" },
   { label: "Jane Doe", value: "jane" },
   { label: "Robert Wilson", value: "robert" },
+];
+
+export const STATUS_OPTIONS = [
+  { label: "Active", value: "ACTIVE" },
+  { label: "Inactive", value: "INACTIVE" },
 ];
