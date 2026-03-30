@@ -8,28 +8,40 @@ import Input from '@/components/commonComponents/input/Input';
 import TextArea from '@/components/commonComponents/textArea';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-import { codesActions } from '@/pages/MasterData/Codes/codeSaga';
-import { closeDrawer, componentKey } from '@/pages/MasterData/Codes/codesSlice';
-import {
-  CODE_TYPE_MAP,
-  FORM_FIELDS_NAMES,
-  STANDALONE_CODE_TYPES,
-} from '@/pages/MasterData/Codes/constant';
 
-const { createCode, updateCode } = codesActions;
+import { codesActions } from '../codeSaga';
+import { closeDrawer, componentKey } from '../codesSlice';
+import { CODE_TYPE_MAP, SIMPLE_NAME_FORM_FIELDS } from '../constant';
+
+const { createStandalone, updateStandalone } = codesActions;
+
+const ALLERGY_SYMPTOM_LABELS = new Set(['Allergy', 'Symptom']);
 const EMPTY_STATE = {};
 
 const validationSchema = (codeLabel) =>
   Yup.object().shape({
-    [FORM_FIELDS_NAMES.CODE]: Yup.string().required(
-      `${codeLabel} Code is required`,
+    [SIMPLE_NAME_FORM_FIELDS.NAME]: Yup.string().required(
+      `${codeLabel} Name is required`,
     ),
-    [FORM_FIELDS_NAMES.DESCRIPTION]: Yup.string().required(
+    [SIMPLE_NAME_FORM_FIELDS.DESCRIPTION]: Yup.string().required(
       'Description is required',
     ),
   });
 
-export default function AddCodeDrawer() {
+function getLoadingKey(type) {
+  if (type === 'allergies') {
+    return {
+      create: LOADING_KEYS.ALLERGIES_POST_CREATE,
+      update: LOADING_KEYS.ALLERGIES_PATCH_UPDATE,
+    };
+  }
+  return {
+    create: LOADING_KEYS.SYMPTOMS_POST_CREATE,
+    update: LOADING_KEYS.SYMPTOMS_PATCH_UPDATE,
+  };
+}
+
+export default function AddAllergySymptomDrawer() {
   const dispatch = useDispatch();
   const {
     drawerOpenFrom = '',
@@ -37,12 +49,13 @@ export default function AddCodeDrawer() {
     editData = null,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
-  const codeTypeValue = CODE_TYPE_MAP[drawerOpenFrom];
-  const isOpen =
-    Boolean(codeTypeValue) && !STANDALONE_CODE_TYPES.has(codeTypeValue);
+  const isOpen = ALLERGY_SYMPTOM_LABELS.has(drawerOpenFrom);
   const isEdit = drawerMode === 'edit';
-  const isCreating = useLoadingKey(LOADING_KEYS.CODES_POST_CREATE);
-  const isUpdating = useLoadingKey(LOADING_KEYS.CODES_PATCH_UPDATE);
+  const codeType = CODE_TYPE_MAP[drawerOpenFrom] ?? 'allergies';
+  const { create: createKey, update: updateKey } = getLoadingKey(codeType);
+
+  const isCreating = useLoadingKey(createKey);
+  const isUpdating = useLoadingKey(updateKey);
   const isSubmitting = isCreating || isUpdating;
 
   const handleClose = () => {
@@ -50,25 +63,23 @@ export default function AddCodeDrawer() {
   };
 
   const handleFormSubmit = (values) => {
-    const type = codeTypeValue;
     const data = {
-      [FORM_FIELDS_NAMES.CODE]: values[FORM_FIELDS_NAMES.CODE],
-      [FORM_FIELDS_NAMES.DESCRIPTION]: values[FORM_FIELDS_NAMES.DESCRIPTION],
+      [SIMPLE_NAME_FORM_FIELDS.NAME]: values[SIMPLE_NAME_FORM_FIELDS.NAME],
+      [SIMPLE_NAME_FORM_FIELDS.DESCRIPTION]:
+        values[SIMPLE_NAME_FORM_FIELDS.DESCRIPTION],
     };
 
     if (isEdit) {
-      dispatch(updateCode({ type, id: editData?.id, data }));
+      dispatch(updateStandalone({ type: codeType, id: editData?.id, data }));
     } else {
-      dispatch(createCode({ type, data }));
+      dispatch(createStandalone({ type: codeType, data }));
     }
   };
 
-  const title = isEdit
-    ? `Edit ${drawerOpenFrom} Code`
-    : `Add ${drawerOpenFrom} Code`;
+  const title = isEdit ? `Edit ${drawerOpenFrom}` : `Add ${drawerOpenFrom}`;
   const submitLabel = isEdit
-    ? `Update ${drawerOpenFrom} Code`
-    : `Add ${drawerOpenFrom} Code`;
+    ? `Update ${drawerOpenFrom}`
+    : `Add ${drawerOpenFrom}`;
 
   return (
     <Drawer
@@ -79,8 +90,8 @@ export default function AddCodeDrawer() {
     >
       <Formik
         initialValues={{
-          [FORM_FIELDS_NAMES.CODE]: editData?.code ?? '',
-          [FORM_FIELDS_NAMES.DESCRIPTION]: editData?.description ?? '',
+          [SIMPLE_NAME_FORM_FIELDS.NAME]: editData?.name ?? '',
+          [SIMPLE_NAME_FORM_FIELDS.DESCRIPTION]: editData?.description ?? '',
         }}
         validationSchema={validationSchema(drawerOpenFrom)}
         onSubmit={handleFormSubmit}
@@ -100,23 +111,25 @@ export default function AddCodeDrawer() {
           <Form className="flex flex-col h-full">
             <div className="flex flex-col gap-4 flex-1">
               <Input
-                label={`${drawerOpenFrom} Code`}
-                name={FORM_FIELDS_NAMES.CODE}
-                placeholder="Enter Code"
-                value={values[FORM_FIELDS_NAMES.CODE]}
+                label={`${drawerOpenFrom} Name`}
+                name={SIMPLE_NAME_FORM_FIELDS.NAME}
+                placeholder={`Enter ${drawerOpenFrom} Name`}
+                value={values[SIMPLE_NAME_FORM_FIELDS.NAME]}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                error={errors[FORM_FIELDS_NAMES.CODE]}
-                touched={touched[FORM_FIELDS_NAMES.CODE]}
+                error={errors[SIMPLE_NAME_FORM_FIELDS.NAME]}
+                touched={touched[SIMPLE_NAME_FORM_FIELDS.NAME]}
                 required
               />
               <TextArea
                 label="Description"
-                name={FORM_FIELDS_NAMES.DESCRIPTION}
+                name={SIMPLE_NAME_FORM_FIELDS.DESCRIPTION}
                 placeholder="Write Description..."
-                value={values[FORM_FIELDS_NAMES.DESCRIPTION]}
+                value={values[SIMPLE_NAME_FORM_FIELDS.DESCRIPTION]}
                 onChangeCb={handleChange}
                 isRequired
+                error={errors[SIMPLE_NAME_FORM_FIELDS.DESCRIPTION]}
+                touched={touched[SIMPLE_NAME_FORM_FIELDS.DESCRIPTION]}
               />
             </div>
 

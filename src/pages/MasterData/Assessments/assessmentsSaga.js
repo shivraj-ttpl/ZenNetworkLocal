@@ -68,9 +68,7 @@ function* archiveAssessmentSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.ASSESSMENTS_PATCH_ARCHIVE,
     apiFunc: () =>
-      isArchived
-        ? MasterDataService.unarchiveAssessment(id)
-        : MasterDataService.archiveAssessment(id),
+      MasterDataService.archiveAssessment(id, { isArchived: !isArchived }),
     onSuccess: function* () {
       yield put(
         addNotification({

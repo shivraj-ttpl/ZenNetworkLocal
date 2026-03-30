@@ -114,9 +114,7 @@ function* archiveEducationSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.EDUCATION_PATCH_ARCHIVE,
     apiFunc: () =>
-      isArchived
-        ? MasterDataService.unarchiveEducation(id)
-        : MasterDataService.archiveEducation(id),
+      MasterDataService.archiveEducation(id, { isArchived: !isArchived }),
     onSuccess: function* () {
       yield put(
         addNotification({

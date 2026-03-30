@@ -109,9 +109,7 @@ function* archiveConditionSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.CONDITIONS_PATCH_ARCHIVE,
     apiFunc: () =>
-      isArchived
-        ? MasterDataService.unarchiveCondition(id)
-        : MasterDataService.archiveCondition(id),
+      MasterDataService.archiveCondition(id, { isArchived: !isArchived }),
     onSuccess: function* () {
       yield put(
         addNotification({

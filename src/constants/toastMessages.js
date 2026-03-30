@@ -36,6 +36,24 @@ export const toastMessages = {
   educationArchivedSuccess: 'Material archived successfully',
   educationUnarchivedSuccess: 'Material unarchived successfully',
 
+  allergyCreatedSuccess: 'Allergy created successfully',
+  allergyUpdatedSuccess: 'Allergy updated successfully',
+  allergyFavoriteToggled: 'Favorite status updated',
+  allergyArchivedSuccess: 'Allergy archived successfully',
+  allergyUnarchivedSuccess: 'Allergy unarchived successfully',
+
+  symptomCreatedSuccess: 'Symptom created successfully',
+  symptomUpdatedSuccess: 'Symptom updated successfully',
+  symptomFavoriteToggled: 'Favorite status updated',
+  symptomArchivedSuccess: 'Symptom archived successfully',
+  symptomUnarchivedSuccess: 'Symptom unarchived successfully',
+
+  medicationCreatedSuccess: 'Medication created successfully',
+  medicationUpdatedSuccess: 'Medication updated successfully',
+  medicationFavoriteToggled: 'Favorite status updated',
+  medicationArchivedSuccess: 'Medication archived successfully',
+  medicationUnarchivedSuccess: 'Medication unarchived successfully',
+
   subOrgCreatedSuccess: 'Sub-Organization created successfully',
   subOrgActivatedSuccess: 'Sub-Organization activated successfully',
   subOrgDeactivatedSuccess: 'Sub-Organization deactivated successfully',

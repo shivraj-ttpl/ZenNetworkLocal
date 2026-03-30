@@ -82,7 +82,7 @@ function ChangesTooltip({ changes, roleName }) {
       </span>
 
       {visible && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-[520px] min-w-[520px]">
+        <div className="absolute right-0 top-full mt-2 z-50 w-130 min-w-130">
           <div className="relative bg-surface border border-border-light rounded-xl shadow-lg overflow-hidden">
             {/* Arrow */}
             <div className="absolute -top-2 right-6 w-4 h-4 bg-surface border-l border-t border-border-light rotate-45" />
@@ -102,7 +102,7 @@ function ChangesTooltip({ changes, roleName }) {
                 <p className="text-sm text-neutral-500">No changes made</p>
               </div>
             ) : (
-              <div className="max-h-[300px] overflow-auto">
+              <div className="max-h-75 overflow-auto">
                 <Table
                   columns={changeColumns}
                   data={changeTableData}

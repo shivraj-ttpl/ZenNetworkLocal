@@ -109,7 +109,7 @@ export default function SetPassword() {
 
             <Button
               type="submit"
-              variant="primary"
+              variant="primaryBlue"
               size="lg"
               fullWidth
               loading={isLoading}

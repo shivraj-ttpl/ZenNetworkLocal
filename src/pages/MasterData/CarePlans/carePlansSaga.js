@@ -68,9 +68,7 @@ function* archiveCarePlanSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.CARE_PLANS_PATCH_ARCHIVE,
     apiFunc: () =>
-      isArchived
-        ? MasterDataService.unarchiveCarePlan(id)
-        : MasterDataService.archiveCarePlan(id),
+      MasterDataService.archiveCarePlan(id, { isArchived: !isArchived }),
     onSuccess: function* () {
       yield put(
         addNotification({
