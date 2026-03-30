@@ -44,7 +44,18 @@ export default function ForgotPassword() {
   };
 
   return (
-    <AuthLayout>
+    <AuthLayout
+    
+      footer={
+        <p className="text-sm text-neutral-400 flex flex-col">
+         <span>Do you need help? Contact our support team</span>
+         <span>Email : <a className="text-primary-500" href="mailto:support@oneteam.com">support@oneteam.com</a></span>
+         <span>9:00 AM - 5:00 PM, Monday to Friday EST</span>
+         <span>(Eastern Standard Time)</span>
+        </p>
+      }
+    >
+      {/* Heading */}
       <h1 className="text-2xl font-medium text-center text-text-primary mb-2">
         Forgot Your Password
       </h1>
@@ -75,7 +86,7 @@ export default function ForgotPassword() {
 
             <Button
               type="submit"
-              variant="primary"
+              variant="primaryBlue"
               size="lg"
               fullWidth
               loading={isLoading}

@@ -140,7 +140,7 @@ export default function Assessments() {
                 row.isFavorite ? 'text-primary-700' : 'text-neutral-400'
               }
             >
-              {row.isFavorite ? '✓' : '-'}
+              {row.isFavorite ? <Icon name="check" size={18} /> : '-'}
             </span>
           ),
         },

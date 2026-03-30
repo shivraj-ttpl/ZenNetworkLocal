@@ -19,12 +19,8 @@ export default class MasterDataService {
     return AppDataService.patch(`${BASE_URL}/codes/${type}/${id}/favorite`);
   }
 
-  static async archiveCode(type, id) {
-    return AppDataService.patch(`${BASE_URL}/codes/${type}/${id}/archive`);
-  }
-
-  static async unarchiveCode(type, id) {
-    return AppDataService.patch(`${BASE_URL}/codes/${type}/${id}/unarchive`);
+  static async archiveCode(type, id, data) {
+    return AppDataService.patch(`${BASE_URL}/codes/${type}/${id}/archive`, data);
   }
 
   static async downloadTemplate(type) {
@@ -57,12 +53,8 @@ export default class MasterDataService {
     return AppDataService.patch(`${BASE_URL}/conditions/${id}/favorite`);
   }
 
-  static async archiveCondition(id) {
-    return AppDataService.patch(`${BASE_URL}/conditions/${id}/archive`);
-  }
-
-  static async unarchiveCondition(id) {
-    return AppDataService.patch(`${BASE_URL}/conditions/${id}/unarchive`);
+  static async archiveCondition(id, data) {
+    return AppDataService.patch(`${BASE_URL}/conditions/${id}/archive`, data);
   }
 
   // ─── Payers ────────────────────────────────────────
@@ -87,12 +79,8 @@ export default class MasterDataService {
     return AppDataService.patch(`${BASE_URL}/payers/${id}/favorite`);
   }
 
-  static async archivePayer(id) {
-    return AppDataService.patch(`${BASE_URL}/payers/${id}/archive`);
-  }
-
-  static async unarchivePayer(id) {
-    return AppDataService.patch(`${BASE_URL}/payers/${id}/unarchive`);
+  static async archivePayer(id, data) {
+    return AppDataService.patch(`${BASE_URL}/payers/${id}/archive`, data);
   }
 
   static async downloadPayersTemplate() {
@@ -117,12 +105,8 @@ export default class MasterDataService {
     return AppDataService.patch(`${BASE_URL}/care-plans/${id}/favorite`);
   }
 
-  static async archiveCarePlan(id) {
-    return AppDataService.patch(`${BASE_URL}/care-plans/${id}/archive`);
-  }
-
-  static async unarchiveCarePlan(id) {
-    return AppDataService.patch(`${BASE_URL}/care-plans/${id}/unarchive`);
+  static async archiveCarePlan(id, data) {
+    return AppDataService.patch(`${BASE_URL}/care-plans/${id}/archive`, data);
   }
 
   // ─── Assessments ───────────────────────────────────
@@ -135,12 +119,8 @@ export default class MasterDataService {
     return AppDataService.patch(`${BASE_URL}/assessments/${id}/favorite`);
   }
 
-  static async archiveAssessment(id) {
-    return AppDataService.patch(`${BASE_URL}/assessments/${id}/archive`);
-  }
-
-  static async unarchiveAssessment(id) {
-    return AppDataService.patch(`${BASE_URL}/assessments/${id}/unarchive`);
+  static async archiveAssessment(id, data) {
+    return AppDataService.patch(`${BASE_URL}/assessments/${id}/archive`, data);
   }
 
   // ─── Education ─────────────────────────────────────
@@ -161,17 +141,79 @@ export default class MasterDataService {
     return AppDataService.patch(`${BASE_URL}/education/${id}/favorite`);
   }
 
-  static async archiveEducation(id) {
-    return AppDataService.patch(`${BASE_URL}/education/${id}/archive`);
-  }
-
-  static async unarchiveEducation(id) {
-    return AppDataService.patch(`${BASE_URL}/education/${id}/unarchive`);
+  static async archiveEducation(id, data) {
+    return AppDataService.patch(`${BASE_URL}/education/${id}/archive`, data);
   }
 
   static async downloadEducation(id) {
     return AppDataService.get(`${BASE_URL}/education/${id}/download`, {
       responseType: 'blob',
     });
+  }
+
+  // ─── Allergies ─────────────────────────────────────
+
+  static async getAllergies(params = {}) {
+    return AppDataService.get(`${BASE_URL}/allergies`, { params });
+  }
+
+  static async createAllergy(data) {
+    return AppDataService.post(`${BASE_URL}/allergies`, data);
+  }
+
+  static async updateAllergy(id, data) {
+    return AppDataService.patch(`${BASE_URL}/allergies/${id}`, data);
+  }
+
+  static async toggleAllergyFavorite(id) {
+    return AppDataService.patch(`${BASE_URL}/allergies/${id}/favorite`);
+  }
+
+  static async archiveAllergy(id, data) {
+    return AppDataService.patch(`${BASE_URL}/allergies/${id}/archive`, data);
+  }
+
+  // ─── Symptoms ──────────────────────────────────────
+
+  static async getSymptoms(params = {}) {
+    return AppDataService.get(`${BASE_URL}/symptoms`, { params });
+  }
+
+  static async createSymptom(data) {
+    return AppDataService.post(`${BASE_URL}/symptoms`, data);
+  }
+
+  static async updateSymptom(id, data) {
+    return AppDataService.patch(`${BASE_URL}/symptoms/${id}`, data);
+  }
+
+  static async toggleSymptomFavorite(id) {
+    return AppDataService.patch(`${BASE_URL}/symptoms/${id}/favorite`);
+  }
+
+  static async archiveSymptom(id, data) {
+    return AppDataService.patch(`${BASE_URL}/symptoms/${id}/archive`, data);
+  }
+
+  // ─── Medications ───────────────────────────────────
+
+  static async getMedications(params = {}) {
+    return AppDataService.get(`${BASE_URL}/medications`, { params });
+  }
+
+  static async createMedication(data) {
+    return AppDataService.post(`${BASE_URL}/medications`, data);
+  }
+
+  static async updateMedication(id, data) {
+    return AppDataService.patch(`${BASE_URL}/medications/${id}`, data);
+  }
+
+  static async toggleMedicationFavorite(id) {
+    return AppDataService.patch(`${BASE_URL}/medications/${id}/favorite`);
+  }
+
+  static async archiveMedication(id, data) {
+    return AppDataService.patch(`${BASE_URL}/medications/${id}/archive`, data);
   }
 }

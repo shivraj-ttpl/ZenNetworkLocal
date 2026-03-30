@@ -137,9 +137,7 @@ function* archivePayerSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.PAYERS_PATCH_ARCHIVE,
     apiFunc: () =>
-      isArchived
-        ? MasterDataService.unarchivePayer(id)
-        : MasterDataService.archivePayer(id),
+      MasterDataService.archivePayer(id, { isArchived: !isArchived }),
     onSuccess: function* () {
       yield put(
         addNotification({

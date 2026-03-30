@@ -24,11 +24,18 @@ import {
   setSearch,
   setShowArchived,
 } from './codesSlice';
+import AddAllergySymptomDrawer from './Components/AddAllergySymptomDrawer';
 import AddCodeDrawer from './Components/AddCodeDrawer';
+import AddMedicationModal from './Components/AddMedicationModal';
 import ImportCodes from './Components/ImportCodes';
-import { CODE_TYPE_MAP, PATH_TO_LABEL } from './constant';
+import {
+  CODE_TYPE_MAP,
+  PATH_TO_LABEL,
+  STANDALONE_CODE_TYPES,
+} from './constant';
 
 const { fetchCodes } = codesActions;
+
 const EMPTY_STATE = {};
 
 const TABS = [
@@ -37,6 +44,9 @@ const TABS = [
   { label: 'LONIC Code', path: '/master-data/codes/lonic' },
   { label: 'SNOMED CT Code', path: '/master-data/codes/snomed-ct' },
   { label: 'HCPCS Code', path: '/master-data/codes/hcpcs' },
+  { label: 'Allergies', path: '/master-data/codes/allergies' },
+  { label: 'Symptoms', path: '/master-data/codes/symptoms' },
+  { label: 'Medication', path: '/master-data/codes/medications' },
 ];
 
 function getCodeLabel(pathname) {
@@ -69,6 +79,11 @@ export default function CodesContainer() {
     [codeLabel],
   );
 
+  const isStandaloneType = useMemo(
+    () => STANDALONE_CODE_TYPES.has(codeType),
+    [codeType],
+  );
+
   const debouncedSearch = useDebounce(search);
 
   useEffect(() => {
@@ -83,10 +98,15 @@ export default function CodesContainer() {
   }, [dispatch, codeType]);
 
   useEffect(() => {
-    dispatch(fetchCodes({ type: codeType }));
+    if (isStandaloneType) {
+      dispatch(codesActions.fetchStandalone({ type: codeType }));
+    } else {
+      dispatch(fetchCodes({ type: codeType }));
+    }
   }, [
     dispatch,
     codeType,
+    isStandaloneType,
     page,
     limit,
     debouncedSearch,
@@ -97,26 +117,28 @@ export default function CodesContainer() {
   useEffect(() => {
     setToolbar(
       <>
-        <Button
-          variant="outlineBlue"
-          size="sm"
-          onClick={() => dispatch(openImportModal(codeLabel))}
-        >
-          <Icon name="Plus" size={14} />
-          Import {codeLabel} Codes
-        </Button>
+        {!isStandaloneType && (
+          <Button
+            variant="outlineBlue"
+            size="sm"
+            onClick={() => dispatch(openImportModal(codeLabel))}
+          >
+            <Icon name="Plus" size={14} />
+            Import {codeLabel} Codes
+          </Button>
+        )}
         <Button
           variant="primaryBlue"
           size="sm"
           onClick={() => dispatch(setOpenAddDrawer(codeLabel))}
         >
           <Icon name="Plus" size={14} />
-          Add {codeLabel} Code
+          {isStandaloneType ? `Add ${codeLabel}` : `Add ${codeLabel} Code`}
         </Button>
       </>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, codeLabel, dispatch]);
+  }, [setToolbar, codeLabel, isStandaloneType, dispatch]);
 
   if (location.pathname === '/master-data/codes/') {
     return <Navigate to="/master-data/codes" replace />;
@@ -158,7 +180,7 @@ export default function CodesContainer() {
               type="text"
               value={search}
               onChange={(e) => dispatch(setSearch(e.target.value))}
-              placeholder={`Search by ${codeLabel} Code or Description`}
+              placeholder={`Search by ${codeLabel} or Description`}
               className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
             />
           </div>
@@ -168,6 +190,8 @@ export default function CodesContainer() {
       <Outlet context={{ codeLabel, codeType }} />
 
       <AddCodeDrawer />
+      <AddAllergySymptomDrawer />
+      <AddMedicationModal />
       <ImportCodes />
     </div>
   );
