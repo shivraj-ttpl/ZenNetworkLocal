@@ -125,7 +125,7 @@ export default function SubOrgList() {
               className="text-primary-700 cursor-pointer hover:underline"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/sub-organizations/${row.id}`);
+                navigate(`/sub-organizations/${row.id}?name=${encodeURIComponent(row.name)}`);
               }}
             >
               {row.name}
@@ -180,7 +180,7 @@ export default function SubOrgList() {
               {
                 label: 'View',
                 value: 'view',
-                onClickCb: () => navigate(`/sub-organizations/${row.id}`),
+                onClickCb: () => navigate(`/sub-organizations/${row.id}?name=${encodeURIComponent(row.name)}`),
               },
               {
                 label: 'Edit',

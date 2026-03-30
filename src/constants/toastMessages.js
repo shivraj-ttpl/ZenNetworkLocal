@@ -56,6 +56,7 @@ export const toastMessages = {
 
   subOrgCreatedSuccess: 'Sub-Organization created successfully',
   subOrgUpdatedSuccess: 'Sub-Organization updated successfully',
+  subOrgProfileUpdatedSuccess: 'Sub-Organization profile updated successfully',
   subOrgActivatedSuccess: 'Sub-Organization activated successfully',
   subOrgDeactivatedSuccess: 'Sub-Organization deactivated successfully',
   subOrgArchivedSuccess: 'Sub-Organization archived successfully',

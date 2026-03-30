@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -85,6 +85,16 @@ function buildEditInitialValues(data) {
       ? `${data.countryCode}${data.contactNumber}`
       : data.contactNumber || '';
 
+  const adminContacts =
+    Array.isArray(data.admins) && data.admins.length
+      ? data.admins.map((a) => ({
+          [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: a.firstName || '',
+          [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: a.lastName || '',
+          [FORM_FIELDS_NAMES.ADMIN_EMAIL]: a.email || '',
+          [FORM_FIELDS_NAMES.ADMIN_PHONE]: a.contactNumber || '',
+        }))
+      : [{ ...emptyContact }];
+
   return {
     [FORM_FIELDS_NAMES.SUB_ORG_NAME]: data.name || '',
     [FORM_FIELDS_NAMES.CONTACT_NUMBER]: phone,
@@ -99,7 +109,7 @@ function buildEditInitialValues(data) {
     [FORM_FIELDS_NAMES.COUNTY]: addr.county || '',
     [FORM_FIELDS_NAMES.IMPORT_SUB_ORG]: null,
     [FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]: null,
-    [FORM_FIELDS_NAMES.ADMIN_CONTACTS]: [{ ...emptyContact }],
+    [FORM_FIELDS_NAMES.ADMIN_CONTACTS]: adminContacts,
   };
 }
 
@@ -167,6 +177,14 @@ export default function AddSubOrgDrawer() {
 
   const isEditMode = editDrawer.open && editDrawer.data;
   const isOpen = drawerOpen || editDrawer.open;
+  const hasExistingAdmins =
+    isEditMode &&
+    Array.isArray(editDrawer.data?.admins) &&
+    editDrawer.data.admins.length > 0;
+
+  useEffect(() => {
+    if (hasExistingAdmins) setShowAdminSection(true);
+  }, [hasExistingAdmins]);
   const isCreating = useLoadingKey(LOADING_KEYS.SUB_ORG_LIST_POST_CREATE);
   const isUpdating = useLoadingKey(LOADING_KEYS.SUB_ORG_LIST_PATCH_UPDATE);
   const isSubmitting = isEditMode ? isUpdating : isCreating;
