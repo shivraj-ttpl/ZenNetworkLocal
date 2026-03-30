@@ -13,3 +13,7 @@ export { default as SocialDeterminants } from "./SocialDeterminants";
 export { default as Immunizations } from "./Immunizations";
 export { default as CancerScreeningSummary } from "./CancerScreeningSummary";
 export { default as Signatures } from "./Signatures";
+export { default as HealthCareAccess } from "./HealthCareAccess";
+export { default as WomensHealth } from "./WomensHealth";
+export { default as LifestyleBehaviorQuestions } from "./LifestyleBehaviorQuestions";
+export { default as AnnualTesting } from "./AnnualTesting";

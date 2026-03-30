@@ -1,39 +1,51 @@
-const HEALTH_SCALE = ["Poor", "Fair", "Good", "Very Good", "Excellent"];
-
 const QUESTIONS = [
-  { key: "generalHealth", text: "1. General health" },
-  { key: "qualityOfLife", text: "2. Quality of life" },
-  { key: "physicalHealth", text: "3. Physical health" },
-  { key: "mentalHealth", text: "4. Mental health" },
-  { key: "socialActivities", text: "5. Satisfaction with social relationships" },
-  { key: "carryOutActivities", text: "6. Ability to carry out every day physical activities" },
-  { key: "emotionalProblems", text: "7. Frequency of emotional problems" },
-  { key: "fatigue", text: "8. Average fatigue" },
-  { key: "pain", text: "9. Average pain" },
-  { key: "sleepQuality", text: "10. Sleep quality" },
+  { key: 'generalHealth', text: '1.  General health:' },
+  { key: 'qualityOfLife', text: '2. Quality of life:' },
+  { key: 'physicalHealth', text: '3. Physical health:' },
+  { key: 'mentalHealth', text: '4. Mental health (mood/ability to think):' },
+  { key: 'socialActivities', text: '5. Satisfaction with social relationships:' },
+  { key: 'carryOutActivities', text: '6. Ability to carry out every day physical activities:' },
+  { key: 'emotionalProblems', text: '7. Frequency of emotional problems:' },
+  { key: 'fatigue', text: '8. Average fatigue:' },
+  { key: 'averagePain', text: '9. Average pain:' },
+  { key: 'sleepQuality', text: '10. Sleep quality:' },
 ];
 
-export default function PromisGlobalHealth({ values, handleChange }) {
+const SCALE = ['1', '2', '3', '4', '5'];
+
+export default function PromisGlobalHealth({ values, setFieldValue }) {
   const p = values?.promisGlobalHealth || {};
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-5">
+      <div>
+        <h3 className="text-base font-semibold text-text-primary">PROMIS GLOBAL Health</h3>
+        <p className="text-sm text-blue-500 mt-1">
+          (1 = Poor , 5 = Excellent)&nbsp;&nbsp;Please rate how you feel about your health
+        </p>
+      </div>
+
       {QUESTIONS.map((q) => (
         <div key={q.key} className="flex flex-col gap-2">
-          <p className="text-sm font-medium text-text-primary">{q.text}</p>
-          {HEALTH_SCALE.map((opt) => (
-            <label key={opt} className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                name={`promisGlobalHealth.${q.key}`}
-                value={opt}
-                checked={p[q.key] === opt}
-                onChange={handleChange}
-                className="w-4 h-4 accent-primary"
-              />
-              <span className="text-sm">{opt}</span>
-            </label>
-          ))}
+          <p className="text-sm text-text-primary">{q.text}</p>
+          <div className="grid grid-cols-5 gap-2">
+            {SCALE.map((val) => (
+              <label
+                key={val}
+                className="flex items-center gap-2 cursor-pointer select-none"
+              >
+                <input
+                  type="radio"
+                  name={`promisGlobalHealth.${q.key}`}
+                  value={val}
+                  checked={p[q.key] === val}
+                  onChange={() => setFieldValue(`promisGlobalHealth.${q.key}`, val)}
+                  className="accent-primary w-4 h-4"
+                />
+                <span className="text-sm text-text-primary">{val}</span>
+              </label>
+            ))}
+          </div>
         </div>
       ))}
     </div>

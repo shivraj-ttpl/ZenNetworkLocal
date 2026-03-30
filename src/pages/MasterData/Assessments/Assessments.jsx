@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from 'react';
+import { useEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
@@ -27,6 +27,7 @@ import {
   setOpenViewDrawer,
 } from './assessmentsSlice';
 import ViewAssessmentDrawer from './Components/ViewAssessmentDrawer';
+import StandardDepressionScreeningDrawer from './Components/StandardDepressionScreeningDrawer';
 
 const { fetchAssessments, toggleFavorite, archiveAssessment } =
   assessmentsActions;
@@ -36,6 +37,7 @@ export default function Assessments() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
+  const [phq9DrawerOpen, setPhq9DrawerOpen] = useState(false);
 
   const {
     assessmentsList = [],
@@ -157,7 +159,9 @@ export default function Assessments() {
                   {
                     label: 'View',
                     value: 'view',
-                    onClickCb: () => dispatch(setOpenViewDrawer(row)),
+                    onClickCb: () => row.name === 'Standard Depression Screening'
+                      ? setPhq9DrawerOpen(true)
+                      : dispatch(setOpenViewDrawer(row)),
                   },
                   {
                     label: row.isFavorite
@@ -211,6 +215,11 @@ export default function Assessments() {
         onLimitChange={handleLimitChange}
       />
       <ViewAssessmentDrawer />
+      <StandardDepressionScreeningDrawer
+        open={phq9DrawerOpen}
+        onClose={() => setPhq9DrawerOpen(false)}
+        onPrevious={() => setPhq9DrawerOpen(false)}
+      />
     </div>
   );
 }
