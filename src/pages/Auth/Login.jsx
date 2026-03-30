@@ -67,7 +67,7 @@ export default function Login() {
     >
       {/* Heading */}
       <h1 className="text-2xl font-medium text-center text-text-primary">
-        Welcome to <span className="text-secondary-accent">OneTeam</span>
+        Welcome to <span className="text-primary-500">OneTeam</span>
       </h1>
       <p className="text-sm text-text-secondary text-center mt-1 mb-8">
         Secure access to your care coordination workspace
@@ -116,7 +116,7 @@ export default function Login() {
               <Checkbox
                 label="Remember this device"
                 name={FORM_FIELDS_NAMES.REMEMBER_ME}
-                variant={"secondary"}
+                variant={"primary"}
                 checked={values[FORM_FIELDS_NAMES.REMEMBER_ME]}
                 onChange={(e) =>
                   setFieldValue(FORM_FIELDS_NAMES.REMEMBER_ME, e.target.checked)
@@ -124,20 +124,20 @@ export default function Login() {
               />
               <Link
                 to="/forgot-password"
-                className="text-sm font-medium text-secondary-link hover:text-secondary-link-hover transition-colors"
+                className="text-sm font-medium text-primary-500 hover:text-primary-500  transition-colors"
               >
                 Forgot Password?
               </Link>
             </div>
 
             <Button
-              variant="primary"
+              variant="primaryBlue"
               onClick={handleSubmit}
               size="lg"
               fullWidth
               loading={isLoginLoading}
             >
-              Login
+              Sign In
             </Button>
           </Form>
         )}

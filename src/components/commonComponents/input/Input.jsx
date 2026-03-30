@@ -57,7 +57,7 @@ export default function Input({
             w-full h-10 px-4 rounded-lg border bg-surface
             text-sm text-neutral-800 placeholder-text-placeholder
             outline-none transition-colors
-            focus:border-primary focus:ring-[0.5] focus:ring-primary
+            focus:border-primary focus:ring-[0.5]
             disabled:bg-neutral-50 disabled:cursor-not-allowed
             ${showError ? "border-error-400" : "border-border"}
             ${isPassword ? "pr-11" : ""}

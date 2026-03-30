@@ -110,7 +110,7 @@ export default function ResetPassword() {
 
             <Button
               type="submit"
-              variant="primary"
+              variant="primaryBlue"
               size="lg"
               fullWidth
               loading={isLoading}

@@ -70,6 +70,15 @@ const SNOMEDCTCodes = lazy(
   () => import('@/pages/MasterData/Codes/SNOMEDCTCodes'),
 );
 const HCPCSCodes = lazy(() => import('@/pages/MasterData/Codes/HCPCSCodes'));
+const AllergiesCodes = lazy(
+  () => import('@/pages/MasterData/Codes/AllergiesCodes'),
+);
+const SymptomsCodes = lazy(
+  () => import('@/pages/MasterData/Codes/SymptomsCodes'),
+);
+const MedicationsCodes = lazy(
+  () => import('@/pages/MasterData/Codes/MedicationsCodes'),
+);
 
 // Master Data — standalone pages
 const Conditions = lazy(
@@ -143,6 +152,13 @@ export const routeConfig = [
             label: 'SNOMED CT Code',
           },
           { path: 'hcpcs', element: HCPCSCodes, label: 'HCPCS Code' },
+          { path: 'allergies', element: AllergiesCodes, label: 'Allergies' },
+          { path: 'symptoms', element: SymptomsCodes, label: 'Symptoms' },
+          {
+            path: 'medications',
+            element: MedicationsCodes,
+            label: 'Medication',
+          },
         ],
       },
       { path: 'conditions', element: Conditions, label: 'Condition' },
