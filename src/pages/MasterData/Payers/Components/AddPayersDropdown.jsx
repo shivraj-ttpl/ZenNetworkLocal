@@ -33,7 +33,7 @@ export default function AddPayersDropdown() {
       </Button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 z-50 bg-surface rounded-lg border border-border shadow-lg min-w-[200px]">
+        <div className="absolute right-0 top-full mt-1 z-50 bg-surface rounded-lg border border-border shadow-lg min-w-50">
           <button
             className="w-full text-left px-4 py-3 text-sm text-text-primary hover:bg-neutral-50 transition-colors cursor-pointer"
             onClick={() => {

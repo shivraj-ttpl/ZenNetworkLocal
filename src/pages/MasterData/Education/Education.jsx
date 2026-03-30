@@ -2,16 +2,19 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { Table, buildColumns } from '@/components/commonComponents/table';
-import ActionDropdown from '@/components/commonComponents/actionDropdown';
+import RoleGuard from '@/components/RoleGuard/RoleGuard';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useRoleAccess from '@/hooks/useRoleAccess';
 
 import AddMaterialDrawer from './Components/AddMaterialDrawer';
 import FilterDropdown from './Components/FilterDropdown';
@@ -40,6 +43,7 @@ const EMPTY_STATE = {};
 export default function Education() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
+  const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
 
   const {
     educationList = [],
@@ -106,14 +110,16 @@ export default function Education() {
           />
         </div>
         <FilterDropdown onApply={handleFilterApply} />
-        <Button
-          variant="primaryBlue"
-          size="sm"
-          onClick={() => dispatch(setOpenAddDrawer())}
-        >
-          <Icon name="Plus" size={14} />
-          Add Material
-        </Button>
+        <RoleGuard allowedRoles={MASTER_DATA_EDIT_ROLES}>
+          <Button
+            variant="primaryBlue"
+            size="sm"
+            onClick={() => dispatch(setOpenAddDrawer())}
+          >
+            <Icon name="Plus" size={14} />
+            Add Material
+          </Button>
+        </RoleGuard>
       </>,
     );
     return () => setToolbar(null);
@@ -192,55 +198,77 @@ export default function Education() {
           header: 'Action',
           width: 70,
           align: 'center',
-          render: (row) => (
-            <ActionDropdown
-              options={[
-                {
-                  label: 'Edit',
-                  value: 'edit',
-                  onClickCb: () => dispatch(setOpenEditDrawer(row)),
-                },
-                {
-                  label: 'View',
-                  value: 'view',
-                  onClickCb: () => dispatch(setOpenViewModal(row)),
-                },
-                {
-                  label: 'Download',
-                  value: 'download',
-                  onClickCb: () =>
-                    dispatch(
-                      downloadEducation({
-                        id: row.id,
-                        fileName: row.fileName,
-                      }),
-                    ),
-                },
-                {
-                  label: row.isFavorite
-                    ? 'Remove from Favorites'
-                    : 'Add to Favorites',
-                  value: 'toggleFavorite',
-                  onClickCb: () =>
-                    dispatch(toggleFavorite({ id: row.id })),
-                },
-                {
-                  label: row.isArchived ? 'Unarchive' : 'Archive',
-                  value: 'archive',
-                  onClickCb: () =>
-                    dispatch(
-                      archiveEducation({
-                        id: row.id,
-                        isArchived: row.isArchived,
-                      }),
-                    ),
-                },
-              ]}
-            />
-          ),
+          render: (row) =>
+            canEdit ? (
+              <ActionDropdown
+                options={[
+                  {
+                    label: 'Edit',
+                    value: 'edit',
+                    onClickCb: () => dispatch(setOpenEditDrawer(row)),
+                  },
+                  {
+                    label: 'View',
+                    value: 'view',
+                    onClickCb: () => dispatch(setOpenViewModal(row)),
+                  },
+                  {
+                    label: 'Download',
+                    value: 'download',
+                    onClickCb: () =>
+                      dispatch(
+                        downloadEducation({
+                          id: row.id,
+                          fileName: row.fileName,
+                        }),
+                      ),
+                  },
+                  {
+                    label: row.isFavorite
+                      ? 'Remove from Favorites'
+                      : 'Add to Favorites',
+                    value: 'toggleFavorite',
+                    onClickCb: () =>
+                      dispatch(toggleFavorite({ id: row.id })),
+                  },
+                  {
+                    label: row.isArchived ? 'Unarchive' : 'Archive',
+                    value: 'archive',
+                    onClickCb: () =>
+                      dispatch(
+                        archiveEducation({
+                          id: row.id,
+                          isArchived: row.isArchived,
+                        }),
+                      ),
+                  },
+                ]}
+              />
+            ) : (
+              <ActionDropdown
+                options={[
+                  {
+                    label: 'View',
+                    value: 'view',
+                    onClickCb: () => dispatch(setOpenViewModal(row)),
+                  },
+                  {
+                    label: 'Download',
+                    value: 'download',
+                    onClickCb: () =>
+                      dispatch(
+                        downloadEducation({
+                          id: row.id,
+                          fileName: row.fileName,
+                        }),
+                      ),
+                  },
+                ]}
+              />
+            ),
         },
       ]),
-    [dispatch],
+    [dispatch, canEdit],
   );
 
   return (

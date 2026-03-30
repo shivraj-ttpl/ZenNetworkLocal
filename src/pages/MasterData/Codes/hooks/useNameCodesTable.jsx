@@ -4,9 +4,12 @@ import { useOutletContext } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import { buildColumns } from '@/components/commonComponents/table';
-import { LOADING_KEYS } from '@/constants/loadingKeys';
-import { useLoadingKey } from '@/hooks/useLoadingKey';
 import Icon from '@/components/icons/Icon';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useRoleAccess from '@/hooks/useRoleAccess';
+
 import { codesActions } from '../codeSaga';
 import {
   componentKey,
@@ -60,8 +63,8 @@ function renderFavorite(row) {
   );
 }
 
-function getColumnDefs(codeLabel, dispatch, codeType) {
-  return buildColumns([
+function getColumnDefs(codeLabel, dispatch, codeType, canEdit) {
+  const cols = [
     { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
     { id: 'name', header: `${codeLabel} Name`, accessorKey: 'name' },
     { id: 'description', header: 'Description', accessorKey: 'description' },
@@ -72,7 +75,10 @@ function getColumnDefs(codeLabel, dispatch, codeType) {
       align: 'center',
       render: renderFavorite,
     },
-    {
+  ];
+
+  if (canEdit) {
+    cols.push({
       id: 'actions',
       header: 'Action',
       width: 70,
@@ -82,13 +88,16 @@ function getColumnDefs(codeLabel, dispatch, codeType) {
           options={buildActionOptions(dispatch, row, codeLabel, codeType)}
         />
       ),
-    },
-  ]);
+    });
+  }
+
+  return buildColumns(cols);
 }
 
 export default function useNameCodesTable() {
   const { codeLabel, codeType } = useOutletContext();
   const dispatch = useDispatch();
+  const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
   const {
     codesList = [],
     totalRecords = 0,
@@ -109,8 +118,8 @@ export default function useNameCodesTable() {
   );
 
   const columns = useMemo(
-    () => getColumnDefs(codeLabel, dispatch, codeType),
-    [codeLabel, codeType, dispatch],
+    () => getColumnDefs(codeLabel, dispatch, codeType, canEdit),
+    [codeLabel, codeType, dispatch, canEdit],
   );
 
   const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);

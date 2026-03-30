@@ -1,31 +1,36 @@
-import { useState, useMemo } from "react";
-import { NavLink, Outlet, useParams, useNavigate, useLocation } from "react-router-dom";
-import Icon from "@/components/icons/Icon";
-import { subOrganizationsData } from "@/data/subOrganizationsData";
+import { useState, useMemo } from 'react';
+import {
+  NavLink,
+  Outlet,
+  useParams,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+} from 'react-router-dom';
+
+import Icon from '@/components/icons/Icon';
 
 export default function SubOrgDetailContainer() {
   const { subOrgId } = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
   const [toolbar, setToolbar] = useState(null);
 
-  const org = useMemo(
-    () => subOrganizationsData.find((o) => o.id === subOrgId),
-    [subOrgId]
-  );
+  const subOrgName = searchParams.get('name') || 'Sub-Organization';
 
   const isProviderGroupDetail = /\/provider-groups\/[^/]+/.test(pathname);
 
   const TABS = useMemo(
     () => [
-      { path: `/sub-organizations/${subOrgId}`, label: "Profile", end: true },
-      { path: `/sub-organizations/${subOrgId}/provider-groups`, label: "Provider Group", end: false },
+      { path: `/sub-organizations/${subOrgId}?name=${encodeURIComponent(subOrgName)}`, label: 'Profile', end: true },
+      { path: `/sub-organizations/${subOrgId}/provider-groups?name=${encodeURIComponent(subOrgName)}`, label: 'Provider Group', end: false },
     ],
-    [subOrgId]
+    [subOrgId, subOrgName],
   );
 
   if (isProviderGroupDetail) {
-    return <Outlet context={{ subOrgName: org?.name }} />;
+    return <Outlet context={{ subOrgName }} />;
   }
 
   return (
@@ -33,11 +38,11 @@ export default function SubOrgDetailContainer() {
       <div className="flex items-center justify-between gap-3 px-5 pt-4 pb-3">
         <div className="flex items-center gap-4 shrink-0">
           <button
-            onClick={() => navigate("/sub-organizations")}
+            onClick={() => navigate('/sub-organizations')}
             className="flex items-center gap-2 text-text-primary hover:text-primary-700 transition-colors cursor-pointer"
           >
             <Icon name="ArrowLeft" size={18} />
-            <span className="text-base font-medium">{org?.name || "Sub-Organization"}</span>
+            <span className="text-base font-medium">{subOrgName}</span>
           </button>
           <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200">
             {TABS.map((tab) => (
@@ -61,7 +66,7 @@ export default function SubOrgDetailContainer() {
         </div>
         {toolbar && <div className="flex items-center gap-3 flex-wrap min-w-0">{toolbar}</div>}
       </div>
-      <Outlet context={{ setToolbar, subOrgName: org?.name }} />
+      <Outlet context={{ setToolbar, subOrgName }} />
     </div>
   );
 }

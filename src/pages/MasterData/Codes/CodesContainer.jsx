@@ -10,7 +10,9 @@ import {
 
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import RoleGuard from '@/components/RoleGuard/RoleGuard';
 import Icon from '@/components/icons/Icon';
+import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 
@@ -117,24 +119,26 @@ export default function CodesContainer() {
   useEffect(() => {
     setToolbar(
       <>
-        {!isStandaloneType && (
+        <RoleGuard allowedRoles={MASTER_DATA_EDIT_ROLES}>
+          {!isStandaloneType && (
+            <Button
+              variant="outlineBlue"
+              size="sm"
+              onClick={() => dispatch(openImportModal(codeLabel))}
+            >
+              <Icon name="Plus" size={14} />
+              Import {codeLabel} Codes
+            </Button>
+          )}
           <Button
-            variant="outlineBlue"
+            variant="primaryBlue"
             size="sm"
-            onClick={() => dispatch(openImportModal(codeLabel))}
+            onClick={() => dispatch(setOpenAddDrawer(codeLabel))}
           >
             <Icon name="Plus" size={14} />
-            Import {codeLabel} Codes
+            {isStandaloneType ? `Add ${codeLabel}` : `Add ${codeLabel} Code`}
           </Button>
-        )}
-        <Button
-          variant="primaryBlue"
-          size="sm"
-          onClick={() => dispatch(setOpenAddDrawer(codeLabel))}
-        >
-          <Icon name="Plus" size={14} />
-          {isStandaloneType ? `Add ${codeLabel}` : `Add ${codeLabel} Code`}
-        </Button>
+        </RoleGuard>
       </>,
     );
     return () => setToolbar(null);

@@ -4,9 +4,12 @@ import { useOutletContext } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import { buildColumns } from '@/components/commonComponents/table';
+import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-import Icon from "@/components/icons/Icon"
+import useRoleAccess from '@/hooks/useRoleAccess';
+
 import { codesActions } from '../codeSaga';
 import {
   componentKey,
@@ -62,8 +65,8 @@ function renderFavorite(row) {
   );
 }
 
-function getColumnDefs(codeLabel, dispatch, codeType, showArchived) {
-  return buildColumns([
+function getColumnDefs(codeLabel, dispatch, codeType, showArchived, canEdit) {
+  const cols = [
     { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
     { id: 'code', header: `${codeLabel} Code`, accessorKey: 'code' },
     { id: 'description', header: 'Description', accessorKey: 'description' },
@@ -74,7 +77,10 @@ function getColumnDefs(codeLabel, dispatch, codeType, showArchived) {
       align: 'center',
       render: renderFavorite,
     },
-    {
+  ];
+
+  if (canEdit) {
+    cols.push({
       id: 'actions',
       header: 'Action',
       width: 70,
@@ -90,13 +96,16 @@ function getColumnDefs(codeLabel, dispatch, codeType, showArchived) {
           )}
         />
       ),
-    },
-  ]);
+    });
+  }
+
+  return buildColumns(cols);
 }
 
 export default function useCodesTable() {
   const { codeLabel, codeType } = useOutletContext();
   const dispatch = useDispatch();
+  const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
   const {
     codesList = [],
     totalRecords = 0,
@@ -117,8 +126,8 @@ export default function useCodesTable() {
   );
 
   const columns = useMemo(
-    () => getColumnDefs(codeLabel, dispatch, codeType, showArchived),
-    [codeLabel, codeType, dispatch, showArchived],
+    () => getColumnDefs(codeLabel, dispatch, codeType, showArchived, canEdit),
+    [codeLabel, codeType, dispatch, showArchived, canEdit],
   );
 
   const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
