@@ -1,23 +1,17 @@
 import { useEffect } from "react";
 import { useParams, useOutletContext } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import Icon from "@/components/icons/Icon";
 import Button from "@/components/commonComponents/button/Button";
 import Avatar from "@/components/commonComponents/avatar/Avatar";
 import { getProviderGroupProfile } from "@/data/subOrganizationsData";
-import { componentKey, setOpenEditDrawer } from "../ProviderGroupList/providerGroupListSlice";
-import AddProviderGroupDrawer from "../ProviderGroupList/Components/AddProviderGroupDrawer";
 
 export default function ProviderGroupProfile() {
   const { providerGroupId } = useParams();
   const profile = getProviderGroupProfile(providerGroupId);
   const { setToolbar } = useOutletContext();
-  const dispatch = useDispatch();
-
-  const { drawerOpen, drawerMode, editData } = useSelector((state) => state[componentKey] ?? {});
 
   const handleEditProfile = () => {
-    dispatch(setOpenEditDrawer(profile));
+    // TODO: integrate with provider group profile edit
   };
 
   useEffect(() => {
@@ -104,7 +98,7 @@ export default function ProviderGroupProfile() {
         </div>
       </div>
 
-      <AddProviderGroupDrawer open={drawerOpen} drawerMode={drawerMode} editData={editData} />
+      {/* TODO: integrate edit drawer with provider group profile API */}
     </div>
   );
 }

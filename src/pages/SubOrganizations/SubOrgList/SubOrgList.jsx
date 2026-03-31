@@ -34,7 +34,8 @@ import {
   setStatusModal,
 } from './subOrgListSlice';
 
-const { fetchSubOrganizations } = subOrgListActions;
+const { fetchSubOrganizations, fetchSubOrgById, archiveSubOrganization } =
+  subOrgListActions;
 const EMPTY_STATE = {};
 
 export default function SubOrgList() {
@@ -124,7 +125,7 @@ export default function SubOrgList() {
               className="text-primary-700 cursor-pointer hover:underline"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/sub-organizations/${row.id}`);
+                navigate(`/sub-organizations/${row.id}?name=${encodeURIComponent(row.name)}`);
               }}
             >
               {row.name}
@@ -174,28 +175,39 @@ export default function SubOrgList() {
           header: 'Action',
           width: 72,
           align: 'center',
-          render: (row) => (
-            <ActionDropdown
-              options={[
-                {
-                  label: 'View',
-                  value: 'view',
-                  onClickCb: () => navigate(`/sub-organizations/${row.id}`),
-                },
-                {
-                  label: 'Edit',
-                  value: 'edit',
-                },
-                {
-                  label: 'Archive',
-                  value: 'archive',
-                },
-              ]}
-            />
-          ),
+          render: (row) => {
+            const options = [
+              {
+                label: 'View',
+                value: 'view',
+                onClickCb: () => navigate(`/sub-organizations/${row.id}?name=${encodeURIComponent(row.name)}`),
+              },
+              {
+                label: 'Edit',
+                value: 'edit',
+                onClickCb: () => dispatch(fetchSubOrgById({ id: row.id })),
+              },
+            ];
+
+            if (row.status === 'INACTIVE') {
+              options.push({
+                label: row.isArchived ? 'Unarchive' : 'Archive',
+                value: 'archive',
+                onClickCb: () =>
+                  dispatch(
+                    archiveSubOrganization({
+                      id: row.id,
+                      isArchived: row.isArchived,
+                    }),
+                  ),
+              });
+            }
+
+            return <ActionDropdown options={options} />;
+          },
         },
       ]),
-    [navigate],
+    [navigate, dispatch],
   );
 
   return (

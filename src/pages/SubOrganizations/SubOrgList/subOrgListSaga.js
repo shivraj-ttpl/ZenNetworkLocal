@@ -16,14 +16,18 @@ import {
   setTotalRecords,
   setTotalPages,
   setDrawerOpen,
+  setEditDrawer,
   setRefreshList,
   setStatusModal,
 } from './subOrgListSlice';
 
 export const subOrgListActions = createSagaActions(componentKey, [
   'fetchSubOrganizations',
+  'fetchSubOrgById',
   'createSubOrganization',
+  'updateSubOrganization',
   'changeSubOrgStatus',
+  'archiveSubOrganization',
 ]);
 
 function* fetchSubOrganizationsSaga() {
@@ -68,6 +72,60 @@ function* createSubOrganizationSaga(action) {
   });
 }
 
+function* fetchSubOrgByIdSaga(action) {
+  const { id } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.SUB_ORG_LIST_GET_BY_ID,
+    apiFunc: () => SubOrganizationDataService.getSubOrganizationById(id),
+    onSuccess: function* (response) {
+      yield put(setEditDrawer({ open: true, data: response.data.data }));
+    },
+  });
+}
+
+function* updateSubOrganizationSaga(action) {
+  const { id, data } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.SUB_ORG_LIST_PATCH_UPDATE,
+    apiFunc: () => SubOrganizationDataService.updateSubOrganization(id, data),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: toastMessages.subOrgUpdatedSuccess,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setEditDrawer({ open: false, data: null }));
+      yield put(setRefreshList());
+    },
+  });
+}
+
+function* archiveSubOrganizationSaga(action) {
+  const { id, isArchived } = action.payload;
+
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.SUB_ORG_LIST_PATCH_ARCHIVE,
+    apiFunc: () =>
+      isArchived
+        ? SubOrganizationDataService.unarchiveSubOrganization(id)
+        : SubOrganizationDataService.archiveSubOrganization(id),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: isArchived
+            ? toastMessages.subOrgUnarchivedSuccess
+            : toastMessages.subOrgArchivedSuccess,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setRefreshList());
+    },
+  });
+}
+
 function* changeSubOrgStatusSaga(action) {
   const { id, status } = action.payload;
   const isActivating = status === 'ACTIVE';
@@ -94,8 +152,11 @@ function* changeSubOrgStatusSaga(action) {
 function* rootSaga() {
   yield all([
     takeLatest(subOrgListActions.fetchSubOrganizations().type, fetchSubOrganizationsSaga),
+    takeLatest(subOrgListActions.fetchSubOrgById().type, fetchSubOrgByIdSaga),
     takeLatest(subOrgListActions.createSubOrganization().type, createSubOrganizationSaga),
+    takeLatest(subOrgListActions.updateSubOrganization().type, updateSubOrganizationSaga),
     takeLatest(subOrgListActions.changeSubOrgStatus().type, changeSubOrgStatusSaga),
+    takeLatest(subOrgListActions.archiveSubOrganization().type, archiveSubOrganizationSaga),
   ]);
 }
 

@@ -1,91 +1,243 @@
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import Drawer from "@/components/commonComponents/drawer/Drawer";
-import Button from "@/components/commonComponents/button/Button";
-import Input from "@/components/commonComponents/input/Input";
-import PhoneInput from "@/components/commonComponents/phoneInput";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import UploadPhoto from "@/components/commonComponents/upload/UploadPhoto";
-import {
-  FORM_FIELDS_NAMES,
-  STATE_OPTIONS,
-  COUNTRY_OPTIONS,
-} from "../constant";
-import { setCloseDrawer } from "../subOrgProfileSlice";
+import { useState, useMemo, useEffect } from 'react';
+import { Formik, Form, FieldArray } from 'formik';
+import * as Yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { parsePhoneNumber } from 'react-phone-number-input';
 
-const validationSchema = Yup.object().shape({
-  [FORM_FIELDS_NAMES.SUB_ORG_NAME]: Yup.string().required("Sub-organization Name is required"),
-  [FORM_FIELDS_NAMES.EMAIL]: Yup.string().email("Invalid email").required("Email is required"),
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required("Address Line 1 is required"),
-  [FORM_FIELDS_NAMES.STATE]: Yup.object().nullable().required("State is required"),
-  [FORM_FIELDS_NAMES.COUNTRY]: Yup.object().nullable().required("Country is required"),
-  [FORM_FIELDS_NAMES.CITY]: Yup.string().required("City is required"),
-  [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string().required("Zip Code is required"),
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import Button from '@/components/commonComponents/button/Button';
+import Input from '@/components/commonComponents/input/Input';
+import PhoneInput from '@/components/commonComponents/phoneInput';
+import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
+import Icon from '@/components/icons/Icon';
+import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import { toPascalCase } from '@/utils/GeneralUtils';
+
+import { FORM_FIELDS_NAMES } from '../constant';
+import { componentKey, setCloseDrawer } from '../subOrgProfileSlice';
+import { subOrgProfileActions } from '../subOrgProfileSaga';
+
+const { updateProfile } = subOrgProfileActions;
+
+const emptyContact = {
+  [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: '',
+  [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: '',
+  [FORM_FIELDS_NAMES.ADMIN_EMAIL]: '',
+  [FORM_FIELDS_NAMES.ADMIN_PHONE]: '',
+};
+
+const baseValidationSchema = Yup.object().shape({
+  [FORM_FIELDS_NAMES.SUB_ORG_NAME]: Yup.string().required(
+    'Sub-organization Name is required',
+  ),
+  [FORM_FIELDS_NAMES.EMAIL]: Yup.string().email('Invalid email'),
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required(
+    'Address Line 1 is required',
+  ),
+  [FORM_FIELDS_NAMES.STATE]: Yup.object()
+    .nullable()
+    .required('State is required'),
+  [FORM_FIELDS_NAMES.CITY]: Yup.string().required('City is required'),
+  [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string()
+    .required('ZIP Code is required')
+    .matches(/^\d{5}(-\d{4})?$/, 'Enter valid ZIP (12345 or 12345-6789)'),
 });
 
-const buildInitialValues = (editData) => ({
-  [FORM_FIELDS_NAMES.SUB_ORG_NAME]: editData?.name || "",
-  [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactInfo?.contactNumber || "",
-  [FORM_FIELDS_NAMES.EMAIL]: editData?.contactInfo?.emailAddress || "",
-  [FORM_FIELDS_NAMES.WEBSITE]: editData?.contactInfo?.website || "",
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.addressLine1 || "",
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.addressLine2 || "",
-  [FORM_FIELDS_NAMES.STATE]: editData?.stateOption || null,
-  [FORM_FIELDS_NAMES.COUNTRY]: editData?.countryOption || null,
-  [FORM_FIELDS_NAMES.CITY]: editData?.city || "",
-  [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.zipCode || "",
-  photo: null,
+const fullValidationSchema = baseValidationSchema.shape({
+  [FORM_FIELDS_NAMES.ADMIN_CONTACTS]: Yup.array().of(
+    Yup.object().shape({
+      [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: Yup.string().required(
+        'First Name is required',
+      ),
+      [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: Yup.string().required(
+        'Last Name is required',
+      ),
+      [FORM_FIELDS_NAMES.ADMIN_EMAIL]: Yup.string()
+        .email('Invalid email')
+        .required('Email is required'),
+    }),
+  ),
 });
 
-export default function EditProfileDrawer({ open, editData }) {
+function buildEditInitialValues(data) {
+  const addr = data.address || {};
+  const phone =
+    data.countryCode && data.contactNumber
+      ? `${data.countryCode}${data.contactNumber}`
+      : data.contactNumber || '';
+
+  const adminContacts =
+    Array.isArray(data.admins) && data.admins.length
+      ? data.admins.map((a) => ({
+          [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: a.firstName || '',
+          [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: a.lastName || '',
+          [FORM_FIELDS_NAMES.ADMIN_EMAIL]: a.email || '',
+          [FORM_FIELDS_NAMES.ADMIN_PHONE]: a.contactNumber || '',
+        }))
+      : [{ ...emptyContact }];
+
+  return {
+    [FORM_FIELDS_NAMES.SUB_ORG_NAME]: data.name || '',
+    [FORM_FIELDS_NAMES.CONTACT_NUMBER]: phone,
+    [FORM_FIELDS_NAMES.EMAIL]: data.email || '',
+    [FORM_FIELDS_NAMES.WEBSITE]: data.website || '',
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: addr.addressLine1 || '',
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: addr.addressLine2 || '',
+    [FORM_FIELDS_NAMES.STATE]: addr.state ? { name: addr.state } : null,
+    [FORM_FIELDS_NAMES.COUNTRY]: addr.country ? { name: addr.country } : null,
+    [FORM_FIELDS_NAMES.CITY]: addr.city || '',
+    [FORM_FIELDS_NAMES.ZIP_CODE]: addr.zipCode || '',
+    [FORM_FIELDS_NAMES.COUNTY]: addr.county || '',
+    [FORM_FIELDS_NAMES.IMPORT_SUB_ORG]: null,
+    [FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]: null,
+    [FORM_FIELDS_NAMES.ADMIN_CONTACTS]: adminContacts,
+  };
+}
+
+function buildPayload(values, showAdminSection) {
+  const payload = {
+    name: values[FORM_FIELDS_NAMES.SUB_ORG_NAME],
+    address: {
+      addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1],
+      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
+      city: values[FORM_FIELDS_NAMES.CITY],
+      state: values[FORM_FIELDS_NAMES.STATE]?.name || '',
+      zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]),
+      county: values[FORM_FIELDS_NAMES.COUNTY] || undefined,
+      country: values[FORM_FIELDS_NAMES.COUNTRY]?.name,
+    },
+  };
+
+  if (values[FORM_FIELDS_NAMES.EMAIL])
+    payload.email = values[FORM_FIELDS_NAMES.EMAIL];
+  if (values[FORM_FIELDS_NAMES.CONTACT_NUMBER]) {
+    const parsed = parsePhoneNumber(values[FORM_FIELDS_NAMES.CONTACT_NUMBER]);
+    if (parsed?.countryCallingCode)
+      payload.countryCode = `+${parsed.countryCallingCode}`;
+    payload.contactNumber =
+      parsed?.nationalNumber || values[FORM_FIELDS_NAMES.CONTACT_NUMBER];
+  }
+  if (values[FORM_FIELDS_NAMES.WEBSITE])
+    payload.website = values[FORM_FIELDS_NAMES.WEBSITE];
+  if (values.profile) payload.profile = values.profile?.name;
+
+  const importedAdmins = values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN];
+  if (Array.isArray(importedAdmins) && importedAdmins.length) {
+    payload.adminUserIds = importedAdmins.map((a) => a.id);
+  }
+
+  if (showAdminSection) {
+    const adminUsers = values[FORM_FIELDS_NAMES.ADMIN_CONTACTS]
+      .filter(
+        (c) =>
+          c[FORM_FIELDS_NAMES.ADMIN_FIRST_NAME] &&
+          c[FORM_FIELDS_NAMES.ADMIN_LAST_NAME] &&
+          c[FORM_FIELDS_NAMES.ADMIN_EMAIL],
+      )
+      .map((c) => {
+        const admin = {
+          firstName: c[FORM_FIELDS_NAMES.ADMIN_FIRST_NAME],
+          lastName: c[FORM_FIELDS_NAMES.ADMIN_LAST_NAME],
+          email: c[FORM_FIELDS_NAMES.ADMIN_EMAIL],
+        };
+        if (c[FORM_FIELDS_NAMES.ADMIN_PHONE]) {
+          const parsed = parsePhoneNumber(c[FORM_FIELDS_NAMES.ADMIN_PHONE]);
+          if (parsed?.countryCallingCode)
+            admin.countryCode = `+${parsed.countryCallingCode}`;
+          admin.contactNumber =
+            parsed?.nationalNumber || c[FORM_FIELDS_NAMES.ADMIN_PHONE];
+        }
+        return admin;
+      });
+    if (adminUsers.length) payload.adminUsers = adminUsers;
+  }
+
+  return payload;
+}
+
+export default function EditProfileDrawer() {
   const dispatch = useDispatch();
+  const [showAdminSection, setShowAdminSection] = useState(false);
+  const { drawerOpen, editData } = useSelector(
+    (state) => state[componentKey] ?? {},
+  );
+  const isUpdating = useLoadingKey(LOADING_KEYS.SUB_ORG_PROFILE_PATCH_UPDATE);
+  const hasExistingAdmins =
+    Array.isArray(editData?.admins) && editData.admins.length > 0;
+
+  useEffect(() => {
+    if (hasExistingAdmins) setShowAdminSection(true);
+  }, [hasExistingAdmins]);
+
+  const initialValues = useMemo(
+    () => (editData ? buildEditInitialValues(editData) : null),
+    [editData],
+  );
 
   const handleClose = () => {
+    setShowAdminSection(false);
     dispatch(setCloseDrawer());
   };
 
-  const handleFormSubmit = (values, { resetForm }) => {
-    // TODO: dispatch saga action
-    resetForm();
-    handleClose();
+  const handleFormSubmit = (values) => {
+    const data = buildPayload(values, showAdminSection);
+    dispatch(updateProfile({ id: editData.id, data }));
   };
+
+  if (!drawerOpen || !initialValues) return null;
 
   return (
     <Drawer
-      title="Edit Profile"
-      open={open}
+      title="Edit Sub-Organization"
+      open={drawerOpen}
       close={handleClose}
-      width="max-w-[50%] w-[50%]"
+      width="max-w-[90%] w-[90%] lg:w-[50%]"
       footerButton={null}
     >
       <Formik
-        initialValues={buildInitialValues(editData)}
-        validationSchema={validationSchema}
+        initialValues={initialValues}
+        validationSchema={
+          showAdminSection ? fullValidationSchema : baseValidationSchema
+        }
         onSubmit={handleFormSubmit}
         enableReinitialize
       >
-        {({ values, errors, touched, isValid, dirty, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm }) => (
+        {({
+          values,
+          errors,
+          touched,
+          isValid,
+          dirty,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          setFieldValue,
+          setErrors,
+          resetForm,
+        }) => (
           <Form className="flex flex-col h-full">
-            <div className="flex-1 overflow-y-auto  flex gap-6">
+            <div className="flex-1 overflow-y-auto flex flex-col sm:flex-row gap-6">
               {/* Photo Upload */}
-              <div className="flex-shrink-0 w-[200px]">
+              <div className="shrink-0 w-full sm:w-50">
                 <UploadPhoto
-                  name="photo"
-                  label="Profile Photo"
+                  name="profile"
+                  label="Upload a Photo"
                   maxFileSize={5}
-                  onFileSelect={(file) => setFieldValue("photo", file)}
+                  onFileSelect={(file) => setFieldValue('profile', file)}
                 />
               </div>
 
               {/* Form Fields */}
               <div className="flex-1 flex flex-col gap-5">
-                {/* Demographics */}
-                <h4 className="text-sm font-semibold text-text-primary">Demographics</h4>
+                <h4 className="text-sm font-semibold text-text-primary">
+                  Demographics
+                </h4>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
-                    label="Sub-Organization Name"
+                    label="Sub-organization Name"
                     name={FORM_FIELDS_NAMES.SUB_ORG_NAME}
                     placeholder="Enter sub-organization name"
                     value={values[FORM_FIELDS_NAMES.SUB_ORG_NAME]}
@@ -99,13 +251,18 @@ export default function EditProfileDrawer({ open, editData }) {
                     label="Contact Number"
                     name={FORM_FIELDS_NAMES.CONTACT_NUMBER}
                     value={values[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
-                    onChange={(val) => setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || "")}
+                    onChange={(val) =>
+                      setFieldValue(
+                        FORM_FIELDS_NAMES.CONTACT_NUMBER,
+                        val || '',
+                      )
+                    }
                     onBlur={handleBlur}
                     defaultCountry="US"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
                     label="Email Address"
                     name={FORM_FIELDS_NAMES.EMAIL}
@@ -116,7 +273,6 @@ export default function EditProfileDrawer({ open, editData }) {
                     onBlur={handleBlur}
                     error={errors[FORM_FIELDS_NAMES.EMAIL]}
                     touched={touched[FORM_FIELDS_NAMES.EMAIL]}
-                    required
                   />
                   <Input
                     label="Website"
@@ -129,7 +285,9 @@ export default function EditProfileDrawer({ open, editData }) {
                 </div>
 
                 {/* Address Information */}
-                <h4 className="text-sm font-semibold text-text-primary">Address Information</h4>
+                <h4 className="text-sm font-semibold text-text-primary">
+                  Address Information
+                </h4>
 
                 <Input
                   label="Address Line 1"
@@ -152,32 +310,37 @@ export default function EditProfileDrawer({ open, editData }) {
                   onBlur={handleBlur}
                 />
 
-                <div className="grid grid-cols-2 gap-4">
-                  <SelectDropdown
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <AsyncSelectDropdown
                     label="State"
                     name={FORM_FIELDS_NAMES.STATE}
                     placeholder="Select State"
-                    options={STATE_OPTIONS}
+                    url="dropdown-apis/states"
                     value={values[FORM_FIELDS_NAMES.STATE]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.STATE, selected)}
-                    required
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.STATE, selected)
+                    }
                     error={errors[FORM_FIELDS_NAMES.STATE]}
                     touched={touched[FORM_FIELDS_NAMES.STATE]}
+                    required
+                    valueKey="name"
+                    labelKey="name"
                   />
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="Country"
                     name={FORM_FIELDS_NAMES.COUNTRY}
                     placeholder="Select Country"
-                    options={COUNTRY_OPTIONS}
+                    url="dropdown-apis/countries"
                     value={values[FORM_FIELDS_NAMES.COUNTRY]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.COUNTRY, selected)}
-                    required
-                    error={errors[FORM_FIELDS_NAMES.COUNTRY]}
-                    touched={touched[FORM_FIELDS_NAMES.COUNTRY]}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.COUNTRY, selected)
+                    }
+                    valueKey="name"
+                    labelKey="name"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
                     label="City"
                     name={FORM_FIELDS_NAMES.CITY}
@@ -194,12 +357,308 @@ export default function EditProfileDrawer({ open, editData }) {
                     name={FORM_FIELDS_NAMES.ZIP_CODE}
                     placeholder="Enter Zip Code"
                     value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 5)
+                        val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
+                      setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
+                    }}
                     onBlur={handleBlur}
                     error={errors[FORM_FIELDS_NAMES.ZIP_CODE]}
                     touched={touched[FORM_FIELDS_NAMES.ZIP_CODE]}
                     required
                   />
+                </div>
+
+                {/* Import + Admin Contact — wrapped in shared border */}
+                <div className="flex flex-col gap-4 border border-border rounded-lg p-4">
+                  {/* Import from Another Sub-Organization */}
+                  <h4 className="text-sm font-semibold text-text-primary">
+                    Import from Another Sub-Organization
+                  </h4>
+
+                  <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+                    <div className="flex-1">
+                      <AsyncSelectDropdown
+                        label="Sub-Organization"
+                        name={FORM_FIELDS_NAMES.IMPORT_SUB_ORG}
+                        placeholder="Select Sub-Organization"
+                        url="dropdown-apis/sub-organizations"
+                        value={values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]}
+                        onChange={(selected) => {
+                          setFieldValue(
+                            FORM_FIELDS_NAMES.IMPORT_SUB_ORG,
+                            selected,
+                          );
+                          setFieldValue(
+                            FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN,
+                            null,
+                          );
+                        }}
+                        valueKey="id"
+                        labelKey="name"
+                        required
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <AsyncSelectDropdown
+                        key={
+                          values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]?.id ??
+                          'no-suborg'
+                        }
+                        label="Sub-Organization Admin"
+                        name={FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN}
+                        placeholder="Search by Name/Email"
+                        url={`dropdown-apis/sub-org/admins?subOrgId=${values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]?.id}`}
+                        value={
+                          values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]
+                        }
+                        onChange={(selected) =>
+                          setFieldValue(
+                            FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN,
+                            selected,
+                          )
+                        }
+                        disabled={!values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]}
+                        isMulti
+                        valueKey="id"
+                        labelKey="firstName"
+                        labelKey2="lastName"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Selected Sub-Organization Admin */}
+                  {Array.isArray(
+                    values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN],
+                  ) &&
+                    values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN].length >
+                      0 && (
+                      <div className="flex flex-col gap-1.5">
+                        <p className="text-xs font-medium text-text-primary">
+                          Selected Sub-Organization Admin
+                          <span className="text-error-500 ml-0.5">*</span>
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN].map(
+                            (admin, i) => (
+                              <span
+                                key={admin.id ?? i}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-medium"
+                              >
+                                {admin.firstName} {admin.lastName}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = values[
+                                      FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN
+                                    ].filter((_, idx) => idx !== i);
+                                    setFieldValue(
+                                      FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN,
+                                      updated,
+                                    );
+                                  }}
+                                  className="text-primary-400 hover:text-primary-700 cursor-pointer"
+                                >
+                                  <Icon name="X" size={12} />
+                                </button>
+                              </span>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                  <p className="text-xs text-text-secondary">
+                    You can either import an existing Sub-Organization Admin or
+                    create a new one by providing the details below
+                  </p>
+
+                  {/* OR Divider */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-border" />
+                    <span className="text-xs font-medium text-text-secondary px-1">
+                      OR
+                    </span>
+                    <div className="flex-1 h-px bg-border" />
+                  </div>
+
+                  {!showAdminSection && (
+                    <button
+                      type="button"
+                      onClick={() => setShowAdminSection(true)}
+                      className="flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 cursor-pointer w-fit"
+                    >
+                      <Icon name="Plus" size={16} />
+                      Add Manually
+                    </button>
+                  )}
+
+                  {showAdminSection && (
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-semibold text-text-primary">
+                        Administrative Contact Details
+                      </h4>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowAdminSection(false);
+                          setFieldValue(
+                            FORM_FIELDS_NAMES.ADMIN_CONTACTS,
+                            [{ ...emptyContact }],
+                            false,
+                          );
+                          const clearedErrors = { ...errors };
+                          delete clearedErrors[
+                            FORM_FIELDS_NAMES.ADMIN_CONTACTS
+                          ];
+                          setErrors(clearedErrors);
+                        }}
+                        className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
+                      >
+                        <Icon name="X" size={14} />
+                      </button>
+                    </div>
+                  )}
+
+                  {showAdminSection && (
+                    <FieldArray name={FORM_FIELDS_NAMES.ADMIN_CONTACTS}>
+                      {({ push, remove }) => (
+                        <div className="flex flex-col gap-5">
+                          {values[FORM_FIELDS_NAMES.ADMIN_CONTACTS].map(
+                            (contact, index) => {
+                              const prefix = `${FORM_FIELDS_NAMES.ADMIN_CONTACTS}[${index}]`;
+                              const contactErrors =
+                                errors?.[FORM_FIELDS_NAMES.ADMIN_CONTACTS]?.[
+                                  index
+                                ] || {};
+                              const contactTouched =
+                                touched?.[FORM_FIELDS_NAMES.ADMIN_CONTACTS]?.[
+                                  index
+                                ] || {};
+
+                              return (
+                                <div
+                                  key={index}
+                                  className="flex flex-col gap-4 relative border border-border-light rounded-lg p-4"
+                                >
+                                  {values[FORM_FIELDS_NAMES.ADMIN_CONTACTS]
+                                    .length > 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => remove(index)}
+                                      className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
+                                    >
+                                      <Icon name="X" size={14} />
+                                    </button>
+                                  )}
+
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <Input
+                                      label="First Name"
+                                      name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_FIRST_NAME}`}
+                                      placeholder="Enter First Name"
+                                      value={
+                                        contact[
+                                          FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
+                                        ]
+                                      }
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      error={
+                                        contactErrors[
+                                          FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
+                                        ]
+                                      }
+                                      touched={
+                                        contactTouched[
+                                          FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
+                                        ]
+                                      }
+                                      required
+                                    />
+                                    <Input
+                                      label="Last Name"
+                                      name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_LAST_NAME}`}
+                                      placeholder="Enter Last Name"
+                                      value={
+                                        contact[
+                                          FORM_FIELDS_NAMES.ADMIN_LAST_NAME
+                                        ]
+                                      }
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      error={
+                                        contactErrors[
+                                          FORM_FIELDS_NAMES.ADMIN_LAST_NAME
+                                        ]
+                                      }
+                                      touched={
+                                        contactTouched[
+                                          FORM_FIELDS_NAMES.ADMIN_LAST_NAME
+                                        ]
+                                      }
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <PhoneInput
+                                      label="Contact Number"
+                                      name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_PHONE}`}
+                                      value={
+                                        contact[FORM_FIELDS_NAMES.ADMIN_PHONE]
+                                      }
+                                      onChange={(val) =>
+                                        setFieldValue(
+                                          `${prefix}.${FORM_FIELDS_NAMES.ADMIN_PHONE}`,
+                                          val || '',
+                                        )
+                                      }
+                                      onBlur={handleBlur}
+                                      defaultCountry="US"
+                                    />
+                                    <Input
+                                      label="Email Address"
+                                      name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_EMAIL}`}
+                                      placeholder="Enter Email Address"
+                                      type="email"
+                                      value={
+                                        contact[FORM_FIELDS_NAMES.ADMIN_EMAIL]
+                                      }
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      error={
+                                        contactErrors[
+                                          FORM_FIELDS_NAMES.ADMIN_EMAIL
+                                        ]
+                                      }
+                                      touched={
+                                        contactTouched[
+                                          FORM_FIELDS_NAMES.ADMIN_EMAIL
+                                        ]
+                                      }
+                                      required
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            },
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() => push({ ...emptyContact })}
+                            className="flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 cursor-pointer w-fit"
+                          >
+                            <Icon name="Plus" size={16} />
+                            Add
+                          </button>
+                        </div>
+                      )}
+                    </FieldArray>
+                  )}
                 </div>
               </div>
             </div>
@@ -222,9 +681,9 @@ export default function EditProfileDrawer({ open, editData }) {
                 size="sm"
                 type="button"
                 onClick={handleSubmit}
-                disabled={!(isValid && dirty)}
+                disabled={!(isValid && dirty) || isUpdating}
               >
-                Save
+                {isUpdating ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
           </Form>

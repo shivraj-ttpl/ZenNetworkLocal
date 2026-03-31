@@ -2,17 +2,21 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import { Table, buildColumns } from '@/components/commonComponents/table';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
-import ActionDropdown from '@/components/commonComponents/actionDropdown';
+import StatusBadge from '@/components/commonComponents/statusBadge/StatusBadge';
+import RoleGuard from '@/components/RoleGuard/RoleGuard';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useRoleAccess from '@/hooks/useRoleAccess';
 
 import AddPayerDrawer from './Components/AddPayerDrawer';
 import AddPayersDropdown from './Components/AddPayersDropdown';
@@ -40,6 +44,7 @@ const EMPTY_STATE = {};
 export default function Payers() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
+  const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
 
   const {
     payersList = [],
@@ -104,7 +109,9 @@ export default function Payers() {
             onChange={(val) => dispatch(setPayerType(val))}
           />
         </div>
-        <AddPayersDropdown />
+        <RoleGuard allowedRoles={MASTER_DATA_EDIT_ROLES}>
+          <AddPayersDropdown />
+        </RoleGuard>
       </>,
     );
     return () => setToolbar(null);
@@ -146,17 +153,20 @@ export default function Payers() {
           header: 'Status',
           accessorKey: 'status',
           width: 120,
-          render: (row) => (
-            <div onClick={(e) => e.stopPropagation()}>
-              <ToggleSwitch
-                name={`status-${row.id}`}
-                checked={row.status === 'ACTIVE'}
-                onChangeCb={() => dispatch(setOpenStatusModal(row))}
-                activeLabel="Active"
-                inactiveLabel="Inactive"
-              />
-            </div>
-          ),
+          render: (row) =>
+            canEdit ? (
+              <div onClick={(e) => e.stopPropagation()}>
+                <ToggleSwitch
+                  name={`status-${row.id}`}
+                  checked={row.status === 'ACTIVE'}
+                  onChangeCb={() => dispatch(setOpenStatusModal(row))}
+                  activeLabel="Active"
+                  inactiveLabel="Inactive"
+                />
+              </div>
+            ) : (
+              <StatusBadge status={row.status} />
+            ),
         },
         {
           id: 'favorites',
@@ -173,49 +183,53 @@ export default function Payers() {
             </span>
           ),
         },
-        {
-          id: 'actions',
-          header: 'Action',
-          width: 70,
-          align: 'center',
-          render: (row) => {
-            const isActive = row.status === 'ACTIVE';
-            const options = [
+        ...(canEdit
+          ? [
               {
-                label: 'Edit',
-                value: 'edit',
-                onClickCb: () => dispatch(setOpenEditDrawer(row)),
+                id: 'actions',
+                header: 'Action',
+                width: 70,
+                align: 'center',
+                render: (row) => {
+                  const isActive = row.status === 'ACTIVE';
+                  const options = [
+                    {
+                      label: 'Edit',
+                      value: 'edit',
+                      onClickCb: () => dispatch(setOpenEditDrawer(row)),
+                    },
+                  ];
+
+                  if (isActive) {
+                    options.push({
+                      label: row.isFavorite
+                        ? 'Remove from Favorites'
+                        : 'Add to Favorites',
+                      value: 'toggleFavorite',
+                      onClickCb: () =>
+                        dispatch(togglePayerFavorite({ id: row.id })),
+                    });
+                  } else {
+                    options.push({
+                      label: row.isArchived ? 'Unarchive' : 'Archive',
+                      value: 'archive',
+                      onClickCb: () =>
+                        dispatch(
+                          archivePayer({
+                            id: row.id,
+                            isArchived: row.isArchived,
+                          }),
+                        ),
+                    });
+                  }
+
+                  return <ActionDropdown options={options} />;
+                },
               },
-            ];
-
-            if (isActive) {
-              options.push({
-                label: row.isFavorite
-                  ? 'Remove from Favorites'
-                  : 'Add to Favorites',
-                value: 'toggleFavorite',
-                onClickCb: () =>
-                  dispatch(togglePayerFavorite({ id: row.id })),
-              });
-            } else {
-              options.push({
-                label: row.isArchived ? 'Unarchive' : 'Archive',
-                value: 'archive',
-                onClickCb: () =>
-                  dispatch(
-                    archivePayer({
-                      id: row.id,
-                      isArchived: row.isArchived,
-                    }),
-                  ),
-              });
-            }
-
-            return <ActionDropdown options={options} />;
-          },
-        },
+            ]
+          : []),
       ]),
-    [dispatch],
+    [dispatch, canEdit],
   );
 
   return (
