@@ -14,6 +14,8 @@ import {
 import EditSubOrganizationProfileDrawer from './Components/EditSubOrganizationProfileDrawer';
 import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
 import EditOrganizationUserProfileDrawer from './Components/EditOrganizationUserProfileDrawer';
+import { settingsProfileActions } from '../SettingsProfile/settingsProfileSaga';
+import { useEffect } from 'react';
 
 function LabelValue({ label, value, isLink }) {
   return (
@@ -186,7 +188,23 @@ function OrgAdminProfile({ profile }) {
   );
 }
 
-function SubOrgAdminProfile({ profile }) {
+const USER_TYPE_LABELS = {
+  SUB_ORG_ADMIN: 'Sub-Organization Admin',
+  ORG_ADMIN: 'Organization Admin',
+};
+
+function formatStatus(status) {
+  if (!status) return '—';
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+}
+
+export function SubOrgAdminProfile({ profile }) {
+  const fullName =
+    [profile?.firstName, profile?.lastName].filter(Boolean).join(' ') || '—';
+  const roleLabel =
+    USER_TYPE_LABELS[profile?.userType] ?? profile?.userType ?? '—';
+  const statusLabel = formatStatus(profile?.status);
+
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-5 gap-4">
@@ -194,27 +212,27 @@ function SubOrgAdminProfile({ profile }) {
           {
             icon: 'Building2',
             label: 'Sub-Organizations',
-            value: profile.stats.subOrganizations,
+            value: profile?.stats?.subOrganizations,
           },
           {
             icon: 'users-round',
             label: 'Provider Group',
-            value: profile.stats.providerGroup,
+            value: profile?.stats?.providerGroup,
           },
           {
             icon: 'Stethoscope',
             label: 'Total Providers',
-            value: profile.stats.totalProviders,
+            value: profile?.stats?.totalProviders,
           },
           {
             icon: 'user-round-check',
             label: 'Total Patient',
-            value: profile.stats.totalPatient,
+            value: profile?.stats?.totalPatient,
           },
           {
             icon: 'users-round',
             label: 'System Users',
-            value: profile.stats.systemUsers,
+            value: profile?.stats?.systemUsers,
           },
         ].map((stat) => (
           <div
@@ -227,7 +245,7 @@ function SubOrgAdminProfile({ profile }) {
             <div>
               <p className="text-xs text-neutral-500">{stat.label}</p>
               <p className="text-lg font-semibold text-text-primary">
-                {stat.value}
+                {stat.value ?? '—'}
               </p>
             </div>
           </div>
@@ -236,30 +254,31 @@ function SubOrgAdminProfile({ profile }) {
 
       <div className="grid grid-cols-2 gap-6">
         <div className="border border-border-light rounded-lg p-5">
-          <div className="flex items-start gap-4 mb-4">
-            <Avatar name={profile.name} size="xl" variant="square" />
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-base font-semibold text-text-primary">
-                  {profile.name}
-                </h2>
-                <span className="flex items-center gap-1.5 text-sm font-medium text-[#287F7C]">
-                  <span className="w-2 h-2 rounded-full bg-[#287F7C]" />
-                  {profile.status}
-                </span>
+          <div className="flex items-start gap-4">
+            <Avatar
+              src={profile?.profilePhotoUrl}
+              name={fullName}
+              size="xl"
+              variant="square"
+            />
+            <div className="flex-1 space-y-2">
+              <div className="flex items-start gap-2 text-sm">
+                <span className="text-neutral-500 min-w-36 shrink-0">Name</span>
+                <span className="text-neutral-500">:</span>
+                <div className="flex items-center w-full justify-between  gap-2">
+                  <span className="text-text-primary">{fullName}</span>
+                  <span className="flex items-center gap-1.5 text-xs font-medium text-[#287F7C] bg-[#EAF5F5] px-2 py-0.5 rounded-full">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#287F7C]" />
+                    {statusLabel}
+                  </span>
+                </div>
               </div>
-              <div className="space-y-2 mt-2">
-                <LabelValue
-                  label="Email Address"
-                  value={profile.email}
-                  isLink
-                />
-                <LabelValue
-                  label="Contact Number"
-                  value={profile.contactNumber}
-                />
-                <LabelValue label="Address" value={profile.address} />
-              </div>
+              <LabelValue label="Email Address" value={profile?.email} isLink />
+              <LabelValue
+                label="Contact Number"
+                value={profile?.contactNumber}
+              />
+              <LabelValue label="Address" value={profile?.address} />
             </div>
           </div>
         </div>
@@ -269,14 +288,14 @@ function SubOrgAdminProfile({ profile }) {
             Other
           </h3>
           <div className="space-y-3">
-            <LabelValue label="Role" value={profile.other.role} />
+            <LabelValue label="Role" value={roleLabel} />
             <div className="flex items-start gap-2 text-sm">
               <span className="text-neutral-500 min-w-36 shrink-0">
                 Sub-Organization
               </span>
               <span className="text-neutral-500">:</span>
               <div className="space-y-1">
-                {profile.other.subOrganizations.map((org, i) => (
+                {(profile?.assignedSubOrgs ?? []).map((org, i) => (
                   <p key={i} className="text-text-primary">
                     {org}
                   </p>
@@ -292,9 +311,13 @@ function SubOrgAdminProfile({ profile }) {
 
 export default function UserProfile() {
   const { drawerOpen } = useSelector((state) => state[componentKey] || {});
+  // const { profileData } = useSelector();
   const { isOrgAdmin } = useCurrentUserRole();
   const profile = isOrgAdmin ? orgAdminUserProfile : subOrgAdminUserProfile;
   const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(settingsProfileActions.fetchProfile());
+  }, [dispatch]);
   return (
     <div className="bg-surface h-full rounded-xl border border-border-light overflow-y-auto">
       <div className="flex items-center justify-between px-5 pt-4 pb-3">

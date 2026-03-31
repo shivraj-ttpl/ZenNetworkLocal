@@ -3,6 +3,7 @@ export const FORM_FIELDS_NAMES = {
   LAST_NAME: "lastName",
   CONTACT_NUMBER: "contactNumber",
   EMAIL: "email",
+  SUB_ORGANIZATION: "subOrganization",
   ADDRESS_LINE_1: "addressLine1",
   ADDRESS_LINE_2: "addressLine2",
   STATE: "state",
@@ -10,6 +11,11 @@ export const FORM_FIELDS_NAMES = {
   CITY: "city",
   ZIP_CODE: "zipCode",
 };
+
+export const STATUS_OPTIONS = [
+  { label: "Active", value: "ACTIVE" },
+  { label: "Inactive", value: "INACTIVE" },
+];
 
 export const ROLE_NAME_OPTIONS = [
   { label: "Sub-Org Admin", value: "Sub-Org Admin" },

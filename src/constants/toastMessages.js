@@ -60,4 +60,13 @@ export const toastMessages = {
 
   intakeSubmittedSuccess: 'Family Medicine Intake form submitted successfully',
   intakeSignatureUploadedSuccess: 'Signature uploaded successfully',
+
+  settingsProfileUpdatedSuccess: 'Profile updated successfully',
+
+  settingsUserStatusUpdatedSuccess: 'User status updated successfully',
+  settingsUserCreatedSuccess: 'User created successfully',
+  settingsUserUpdatedSuccess: 'User updated successfully',
+  settingsUserArchivedSuccess: 'User archived successfully',
+  settingsUserUnarchivedSuccess: 'User unarchived successfully',
+  settingsUserInvitationSentSuccess: 'Invitation sent successfully',
 };

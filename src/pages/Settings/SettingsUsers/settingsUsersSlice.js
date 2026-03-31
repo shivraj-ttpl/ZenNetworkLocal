@@ -39,7 +39,32 @@ const sliceConfig = {
       state.filters = action.payload;
     },
     clearFilters: (state) => {
-      state.filters = { roleName: null, subOrganization: null, providerGroup: null };
+      state.filters = { subOrganization: null, status: null };
+    },
+    setUsersData: (state, action) => {
+      state.usersData = action.payload.data ?? action.payload ?? [];
+      state.totalRecords = action.payload.totalRecords ?? action.payload?.length ?? 0;
+    },
+    setUserDetail: (state, action) => {
+      const { data, mode } = action.payload;
+      if (mode === 'edit') {
+        state.drawerOpen = true;
+        state.drawerMode = 'edit';
+        state.editData = data;
+      } else {
+        state.viewModalOpen = true;
+        state.viewData = data;
+      }
+    },
+    updateUserStatusInList: (state, action) => {
+      const { userId, status } = action.payload;
+      const user = (state.usersData ?? []).find((u) => u.id === userId);
+      if (user) user.status = status;
+    },
+    updateUserArchiveInList: (state, action) => {
+      const { userId, isArchived } = action.payload;
+      const user = (state.usersData ?? []).find((u) => u.id === userId);
+      if (user) user.isArchived = isArchived;
     },
   },
   initialReducerState: {
@@ -49,7 +74,9 @@ const sliceConfig = {
     viewModalOpen: false,
     viewData: null,
     filterDrawerOpen: false,
-    filters: { roleName: null, subOrganization: null, providerGroup: null },
+    filters: { subOrganization: null, status: null },
+    usersData: [],
+    totalRecords: 0,
   },
 };
 
@@ -69,4 +96,8 @@ export const {
   setCloseFilterDrawer,
   setFilters,
   clearFilters,
+  setUsersData,
+  setUserDetail,
+  updateUserStatusInList,
+  updateUserArchiveInList,
 } = slice.actions;

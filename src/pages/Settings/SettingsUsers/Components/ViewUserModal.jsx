@@ -3,26 +3,30 @@ import ModalComponent from "@/components/commonComponents/modal/ModalComponent";
 import Avatar from "@/components/commonComponents/avatar/Avatar";
 import { setCloseViewModal } from "../settingsUsersSlice";
 
-const getUserProfile = (user) => ({
-  fullName: user?.name || "—",
-  contact: user?.contact || user?.contactNumber || "—",
-  subOrganization: user?.subOrganizations || "—",
-  email: user?.email || "—",
-  address: user?.address || "—",
-});
-
 export default function ViewUserModal({ open, viewData }) {
   const dispatch = useDispatch();
-  const profile = getUserProfile(viewData);
 
   const handleClose = () => dispatch(setCloseViewModal());
 
+  const fullName = [viewData?.firstName, viewData?.lastName].filter(Boolean).join(' ') || '—';
+  const subOrgs = (viewData?.assignedSubOrgs ?? []).join(', ') || '—';
+  const addressParts = [
+    viewData?.address?.addressLine1,
+    viewData?.address?.addressLine2,
+    viewData?.address?.city,
+    viewData?.address?.state,
+    viewData?.address?.zipCode,
+    viewData?.address?.country,
+  ].filter(Boolean);
+  const address = addressParts.length ? addressParts.join(', ') : '—';
+
   const infoRows = [
-    { label: "Full Name", value: profile.fullName },
-    { label: "Contact", value: profile.contact },
-    { label: "Sub-Organization", value: profile.subOrganization },
-    { label: "Email Address", value: profile.email, isLink: true },
-    { label: "Address", value: profile.address },
+    { label: "Full Name", value: fullName },
+    { label: "Email Address", value: viewData?.email || '—', isLink: true },
+    { label: "Contact Number", value: viewData?.contactNumber || '—' },
+    { label: "Sub-Organization", value: subOrgs },
+    { label: "Status", value: viewData?.status || '—' },
+    { label: "Address", value: address },
   ];
 
   return (
@@ -36,7 +40,8 @@ export default function ViewUserModal({ open, viewData }) {
       <div className="flex flex-col md:flex-row gap-5">
         <div className="flex-shrink-0 flex justify-center md:block">
           <Avatar
-            name={viewData?.name || ""}
+            src={viewData?.profilePhotoUrl}
+            name={fullName}
             size="6xl"
             variant="square"
           />
