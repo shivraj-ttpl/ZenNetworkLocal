@@ -120,16 +120,16 @@ export default function CodesContainer() {
     setToolbar(
       <>
         <RoleGuard allowedRoles={MASTER_DATA_EDIT_ROLES}>
-          {!isStandaloneType && (
-            <Button
-              variant="outlineBlue"
-              size="sm"
-              onClick={() => dispatch(openImportModal(codeLabel))}
-            >
-              <Icon name="Plus" size={14} />
-              Import {codeLabel} Codes
-            </Button>
-          )}
+          <Button
+            variant="outlineBlue"
+            size="sm"
+            onClick={() => dispatch(openImportModal(codeLabel))}
+          >
+            <Icon name="Plus" size={14} />
+            {isStandaloneType
+              ? `Import ${codeLabel}`
+              : `Import ${codeLabel} Codes`}
+          </Button>
           <Button
             variant="primaryBlue"
             size="sm"

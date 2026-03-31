@@ -68,7 +68,12 @@ const sliceConfig = {
       state.importModalFor = action.payload;
     },
     closeImportModal: (state) => {
+      state.importSuccessLabel = state.importModalFor;
       state.importModalFor = '';
+    },
+    setImportSuccess: (state, action) => {
+      state.importSuccess = action.payload;
+      if (!action.payload) state.importSuccessLabel = '';
     },
   },
   initialReducerState: {
@@ -84,6 +89,8 @@ const sliceConfig = {
     drawerMode: '',
     editData: null,
     importModalFor: '',
+    importSuccess: false,
+    importSuccessLabel: '',
   },
 };
 
@@ -111,4 +118,5 @@ export const {
   closeDrawer,
   openImportModal,
   closeImportModal,
+  setImportSuccess,
 } = slice.actions;

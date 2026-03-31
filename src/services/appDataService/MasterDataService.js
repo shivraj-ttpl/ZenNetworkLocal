@@ -173,6 +173,12 @@ export default class MasterDataService {
     return AppDataService.patch(`${BASE_URL}/allergies/${id}/archive`, data);
   }
 
+  static async importAllergies(formData) {
+    return AppDataService.post(`${BASE_URL}/allergies/import`, formData, {
+      isFormData: true,
+    });
+  }
+
   // ─── Symptoms ──────────────────────────────────────
 
   static async getSymptoms(params = {}) {
@@ -195,6 +201,12 @@ export default class MasterDataService {
     return AppDataService.patch(`${BASE_URL}/symptoms/${id}/archive`, data);
   }
 
+  static async importSymptoms(formData) {
+    return AppDataService.post(`${BASE_URL}/symptoms/import`, formData, {
+      isFormData: true,
+    });
+  }
+
   // ─── Medications ───────────────────────────────────
 
   static async getMedications(params = {}) {
@@ -215,5 +227,11 @@ export default class MasterDataService {
 
   static async archiveMedication(id, data) {
     return AppDataService.patch(`${BASE_URL}/medications/${id}/archive`, data);
+  }
+
+  static async importMedications(formData) {
+    return AppDataService.post(`${BASE_URL}/medications/import`, formData, {
+      isFormData: true,
+    });
   }
 }

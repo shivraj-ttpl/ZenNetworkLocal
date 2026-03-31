@@ -46,7 +46,7 @@ function ModalComponent({
             )}
           </div>
 
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             {showEditIcon && (
               <button
                 type="button"
