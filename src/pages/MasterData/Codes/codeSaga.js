@@ -13,8 +13,10 @@ import { downloadBlobFile } from '@/utils/GeneralUtils';
 
 import {
   closeDrawer,
+  closeImportModal,
   componentKey,
   setCodesList,
+  setImportSuccess,
   setRefreshCodes,
   setTotalPages,
   setTotalRecords,
@@ -33,6 +35,7 @@ export const codesActions = createSagaActions(componentKey, [
   'updateStandalone',
   'toggleStandaloneFavorite',
   'archiveStandalone',
+  'importStandalone',
 ]);
 
 function* fetchCodesSaga(action) {
@@ -155,12 +158,8 @@ function* importCodesSaga(action) {
     loadingKey: LOADING_KEYS.CODES_POST_IMPORT,
     apiFunc: () => MasterDataService.importCodes(type, formData),
     onSuccess: function* () {
-      yield put(
-        addNotification({
-          message: toastMessages.codesImportedSuccess,
-          variant: TOASTER_VARIANT.SUCCESS,
-        }),
-      );
+      yield put(closeImportModal());
+      yield put(setImportSuccess(true));
       yield put(setRefreshCodes());
     },
   });
@@ -260,6 +259,18 @@ function getStandaloneArchiveToast(type, isArchived) {
     : toastMessages.medicationArchivedSuccess;
 }
 
+function getStandaloneImportKey(type) {
+  if (type === 'allergies') return LOADING_KEYS.ALLERGIES_POST_IMPORT;
+  if (type === 'symptoms') return LOADING_KEYS.SYMPTOMS_POST_IMPORT;
+  return LOADING_KEYS.MEDICATIONS_POST_IMPORT;
+}
+
+function getStandaloneImportFunc(type, formData) {
+  if (type === 'allergies') return MasterDataService.importAllergies(formData);
+  if (type === 'symptoms') return MasterDataService.importSymptoms(formData);
+  return MasterDataService.importMedications(formData);
+}
+
 // ─── Standalone sagas ───────────────────────────────────────────────────────
 
 function* fetchStandaloneSaga(action) {
@@ -357,6 +368,22 @@ function* archiveStandaloneSaga(action) {
   });
 }
 
+function* importStandaloneSaga(action) {
+  const { type, file } = action.payload;
+  const formData = new FormData();
+  formData.append('file', file);
+
+  yield* apiCall({
+    loadingKey: getStandaloneImportKey(type),
+    apiFunc: () => getStandaloneImportFunc(type, formData),
+    onSuccess: function* () {
+      yield put(closeImportModal());
+      yield put(setImportSuccess(true));
+      yield put(setRefreshCodes());
+    },
+  });
+}
+
 function* rootSaga() {
   yield all([
     takeLatest(codesActions.fetchCodes().type, fetchCodesSaga),
@@ -374,6 +401,7 @@ function* rootSaga() {
       toggleStandaloneFavoriteSaga,
     ),
     takeLatest(codesActions.archiveStandalone().type, archiveStandaloneSaga),
+    takeLatest(codesActions.importStandalone().type, importStandaloneSaga),
   ]);
 }
 
