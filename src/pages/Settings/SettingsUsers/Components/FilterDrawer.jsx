@@ -6,26 +6,23 @@ import Button from "@/components/commonComponents/button/Button";
 import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
 import Icon from "@/components/icons/Icon";
 
-import {
-  ROLE_NAME_OPTIONS,
-  SUB_ORGANIZATION_OPTIONS,
-  PROVIDER_GROUP_OPTIONS,
-} from "../constant";
+import { STATUS_OPTIONS, SUB_ORGANIZATION_OPTIONS } from "../constant";
 import { setCloseFilterDrawer, setFilters, clearFilters } from "../settingsUsersSlice";
+
+const EMPTY_FILTERS = { subOrganization: null, status: null };
 
 export default function FilterDrawer({ open, filters }) {
   const dispatch = useDispatch();
 
   const [localFilters, setLocalFilters] = useState({
-    roleName: filters?.roleName ?? null,
     subOrganization: filters?.subOrganization ?? null,
-    providerGroup: filters?.providerGroup ?? null,
+    status: filters?.status ?? null,
   });
 
   const handleClose = () => dispatch(setCloseFilterDrawer());
 
   const handleReset = () => {
-    setLocalFilters({ roleName: null, subOrganization: null, providerGroup: null });
+    setLocalFilters(EMPTY_FILTERS);
     dispatch(clearFilters());
   };
 
@@ -63,16 +60,6 @@ export default function FilterDrawer({ open, filters }) {
       <div className="flex flex-col h-full">
         <div className="flex-1 flex flex-col gap-5">
           <SelectDropdown
-            label="Role Name"
-            name="roleName"
-            placeholder="Select Role Name"
-            options={ROLE_NAME_OPTIONS}
-            value={localFilters.roleName}
-            onChange={(selected) =>
-              setLocalFilters((prev) => ({ ...prev, roleName: selected }))
-            }
-          />
-          <SelectDropdown
             label="Sub Organization"
             name="subOrganization"
             placeholder="Select Organization"
@@ -83,13 +70,13 @@ export default function FilterDrawer({ open, filters }) {
             }
           />
           <SelectDropdown
-            label="Provider Group"
-            name="providerGroup"
-            placeholder="Select Provider Group"
-            options={PROVIDER_GROUP_OPTIONS}
-            value={localFilters.providerGroup}
+            label="Status"
+            name="status"
+            placeholder="Select Status"
+            options={STATUS_OPTIONS}
+            value={localFilters.status}
             onChange={(selected) =>
-              setLocalFilters((prev) => ({ ...prev, providerGroup: selected }))
+              setLocalFilters((prev) => ({ ...prev, status: selected }))
             }
           />
         </div>

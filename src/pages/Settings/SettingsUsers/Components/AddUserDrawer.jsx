@@ -1,74 +1,130 @@
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { parsePhoneNumber } from 'react-phone-number-input';
 
-import Drawer from "@/components/commonComponents/drawer/Drawer";
-import Button from "@/components/commonComponents/button/Button";
-import Input from "@/components/commonComponents/input/Input";
-import PhoneInput from "@/components/commonComponents/phoneInput";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import UploadPhoto from "@/components/commonComponents/upload/UploadPhoto";
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import Button from '@/components/commonComponents/button/Button';
+import Input from '@/components/commonComponents/input/Input';
+import PhoneInput from '@/components/commonComponents/phoneInput';
+import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
+import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 
-import {
-  FORM_FIELDS_NAMES,
-  STATE_OPTIONS,
-  COUNTRY_OPTIONS,
-} from "../constant";
-import { setCloseDrawer } from "../settingsUsersSlice";
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
+
+import { FORM_FIELDS_NAMES } from '../constant';
+import { setCloseDrawer } from '../settingsUsersSlice';
+import { settingsUsersActions } from '../settingsUsersSaga';
 
 const validationSchema = Yup.object().shape({
-  [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required("First Name is required"),
-  [FORM_FIELDS_NAMES.LAST_NAME]: Yup.string().required("Last Name is required"),
-  [FORM_FIELDS_NAMES.EMAIL]: Yup.string().email("Invalid email").required("Email is required"),
+  [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required(
+    'First Name is required',
+  ),
+  [FORM_FIELDS_NAMES.LAST_NAME]: Yup.string().required('Last Name is required'),
+  [FORM_FIELDS_NAMES.EMAIL]: Yup.string()
+    .email('Invalid email')
+    .required('Email is required'),
+  [FORM_FIELDS_NAMES.SUB_ORGANIZATION]: Yup.object()
+    .nullable()
+    .required('Sub-Organization is required'),
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]: Yup.string().nullable(),
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required("Address Line 1 is required"),
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required(
+    'Address Line 1 is required',
+  ),
   [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: Yup.string().nullable(),
-  [FORM_FIELDS_NAMES.STATE]: Yup.object().nullable().required("State is required"),
-  [FORM_FIELDS_NAMES.COUNTRY]: Yup.object().nullable().required("Country is required"),
-  [FORM_FIELDS_NAMES.CITY]: Yup.string().required("City is required"),
-  [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string().required("ZIP Code is required"),
+  [FORM_FIELDS_NAMES.STATE]: Yup.object()
+    .nullable()
+    .required('State is required'),
+  [FORM_FIELDS_NAMES.COUNTRY]: Yup.object()
+    .nullable()
+    .required('Country is required'),
+  [FORM_FIELDS_NAMES.CITY]: Yup.string().required('City is required'),
+  [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string().required('ZIP Code is required'),
 });
 
-const getInitialValues = (editData) => {
-  const stateOption =
-    STATE_OPTIONS.find(
-      (opt) => opt.value === editData?.state || opt.label === editData?.state,
-    ) ?? null;
-
-  const countryOption =
-    COUNTRY_OPTIONS.find(
-      (opt) => opt.value === editData?.country || opt.label === editData?.country,
-    ) ?? null;
-
-  return {
-    photo: null,
-    [FORM_FIELDS_NAMES.FIRST_NAME]: editData?.firstName ?? "",
-    [FORM_FIELDS_NAMES.LAST_NAME]: editData?.lastName ?? "",
-    [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber ?? "",
-    [FORM_FIELDS_NAMES.EMAIL]: editData?.email ?? "",
-    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.addressLine1 ?? "",
-    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.addressLine2 ?? "",
-    [FORM_FIELDS_NAMES.STATE]: stateOption,
-    [FORM_FIELDS_NAMES.COUNTRY]: countryOption,
-    [FORM_FIELDS_NAMES.CITY]: editData?.city ?? "",
-    [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.zipCode ?? "",
-  };
-};
+const getInitialValues = (editData) => ({
+  photo: null,
+  [FORM_FIELDS_NAMES.FIRST_NAME]: editData?.firstName ?? '',
+  [FORM_FIELDS_NAMES.LAST_NAME]: editData?.lastName ?? '',
+  [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber ?? '',
+  [FORM_FIELDS_NAMES.EMAIL]: editData?.email ?? '',
+  [FORM_FIELDS_NAMES.SUB_ORGANIZATION]: editData?.assignedSubOrgs?.length
+    ? { id: editData.subOrgIds?.[0], name: editData.assignedSubOrgs[0] }
+    : null,
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.address?.addressLine1 ?? '',
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.address?.addressLine2 ?? '',
+  [FORM_FIELDS_NAMES.STATE]: editData?.address?.state
+    ? { name: editData.address.state }
+    : null,
+  [FORM_FIELDS_NAMES.COUNTRY]: editData?.address?.country
+    ? { name: editData.address.country }
+    : null,
+  [FORM_FIELDS_NAMES.CITY]: editData?.address?.city ?? '',
+  [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.address?.zipCode ?? '',
+});
 
 export default function AddUserDrawer({ open, drawerMode, editData }) {
   const dispatch = useDispatch();
-  const isEdit = drawerMode === "edit";
+  const { isOrgAdmin } = useCurrentUserRole();
+  const isEdit = drawerMode === 'edit';
 
   const handleClose = () => dispatch(setCloseDrawer());
 
-  const handleFormSubmit = (_, { resetForm }) => {
-    resetForm();
-    handleClose();
+  const handleFormSubmit = (values, { resetForm }) => {
+    const parsed = parsePhoneNumber(
+      values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || '',
+    );
+    const payload = {
+      firstName: values[FORM_FIELDS_NAMES.FIRST_NAME],
+      lastName: values[FORM_FIELDS_NAMES.LAST_NAME],
+      email: values[FORM_FIELDS_NAMES.EMAIL],
+      contactNumber: values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || undefined,
+      countryCode: parsed ? `+${parsed.countryCallingCode}` : undefined,
+      subOrgIds: values[FORM_FIELDS_NAMES.SUB_ORGANIZATION]?.id
+        ? [values[FORM_FIELDS_NAMES.SUB_ORGANIZATION].id]
+        : undefined,
+      ...(!isEdit && {
+        userType: isOrgAdmin ? 'ORG_ADMIN' : 'SUB_ORG_ADMIN',
+        isOrgAdmin: isOrgAdmin,
+        isSubOrgAdmin: !isOrgAdmin,
+      }),
+      address: {
+        addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || undefined,
+        addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
+        city: values[FORM_FIELDS_NAMES.CITY] || undefined,
+        state: values[FORM_FIELDS_NAMES.STATE]?.name || undefined,
+        zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || undefined,
+        country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || undefined,
+      },
+    };
+
+    if (isEdit) {
+      dispatch(
+        settingsUsersActions.updateUser({
+          userId: editData.id,
+          payload,
+          onSuccess: () => {
+            resetForm();
+            handleClose();
+          },
+        }),
+      );
+    } else {
+      dispatch(
+        settingsUsersActions.createUser({
+          payload,
+          onSuccess: () => {
+            resetForm();
+            handleClose();
+          },
+        }),
+      );
+    }
   };
 
   return (
     <Drawer
-      title={isEdit ? "Edit User" : "Add User"}
+      title={isEdit ? 'Edit User' : 'Add User'}
       open={open}
       close={handleClose}
       width="w-full lg:w-[700px]"
@@ -100,7 +156,7 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
                   name="photo"
                   label="Profile Photo"
                   maxFileSize={5}
-                  onFileSelect={(file) => setFieldValue("photo", file)}
+                  onFileSelect={(file) => setFieldValue('photo', file)}
                 />
               </div>
 
@@ -129,12 +185,31 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
                     touched={touched[FORM_FIELDS_NAMES.LAST_NAME]}
                     required
                   />
+                </div>
+
+                <AsyncSelectDropdown
+                  label="Sub-Organization"
+                  name={FORM_FIELDS_NAMES.SUB_ORGANIZATION}
+                  placeholder="Select Sub-Organization"
+                  url="dropdown-apis/sub-organizations"
+                  valueKey="id"
+                  labelKey="name"
+                  value={values[FORM_FIELDS_NAMES.SUB_ORGANIZATION]}
+                  onChange={(selected) =>
+                    setFieldValue(FORM_FIELDS_NAMES.SUB_ORGANIZATION, selected)
+                  }
+                  error={errors[FORM_FIELDS_NAMES.SUB_ORGANIZATION]}
+                  touched={touched[FORM_FIELDS_NAMES.SUB_ORGANIZATION]}
+                  required
+                />
+
+                <div className="grid grid-cols-2 gap-4">
                   <PhoneInput
                     label="Contact Number"
                     name={FORM_FIELDS_NAMES.CONTACT_NUMBER}
                     value={values[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
                     onChange={(val) =>
-                      setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || "")
+                      setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || '')
                     }
                     onBlur={handleBlur}
                     defaultCountry="US"
@@ -182,11 +257,13 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
                 />
 
                 <div className="grid grid-cols-2 gap-4">
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="State"
                     name={FORM_FIELDS_NAMES.STATE}
                     placeholder="Select State"
-                    options={STATE_OPTIONS}
+                    url="dropdown-apis/states"
+                    valueKey="name"
+                    labelKey="name"
                     value={values[FORM_FIELDS_NAMES.STATE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.STATE, selected)
@@ -195,11 +272,13 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
                     touched={touched[FORM_FIELDS_NAMES.STATE]}
                     required
                   />
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="Country"
                     name={FORM_FIELDS_NAMES.COUNTRY}
                     placeholder="Select Country"
-                    options={COUNTRY_OPTIONS}
+                    url="dropdown-apis/countries"
+                    valueKey="name"
+                    labelKey="name"
                     value={values[FORM_FIELDS_NAMES.COUNTRY]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.COUNTRY, selected)
@@ -255,9 +334,9 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
                 size="sm"
                 type="button"
                 onClick={handleSubmit}
-                disabled={isEdit ? !(isValid && dirty) : !isValid}
+                disabled={isEdit ? !isValid : !isValid}
               >
-                {isEdit ? "Save" : "Create User"}
+                {isEdit ? 'Save' : 'Create User'}
               </Button>
             </div>
           </Form>

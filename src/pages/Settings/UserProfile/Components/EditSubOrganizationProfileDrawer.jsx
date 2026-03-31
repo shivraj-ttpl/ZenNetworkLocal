@@ -1,6 +1,5 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
 
 import Drawer from "@/components/commonComponents/drawer/Drawer";
 import Input from "@/components/commonComponents/input/Input";
@@ -15,7 +14,6 @@ import {
   STATE_OPTIONS,
 } from "../constant";
 
-import { setCloseDrawer } from "../userProfileSlice";
 
 const getInitialValues = (editData) => {
   const stateOption =
@@ -66,11 +64,10 @@ export default function EditSubOrganizationProfileDrawer({
   open,
   drawerMode,
   editData,
+  handleClose
 }) {
-  const dispatch = useDispatch();
   const isEdit = drawerMode === "edit";
 
-  const handleClose = () => dispatch(setCloseDrawer());
 
   return (
     <Drawer

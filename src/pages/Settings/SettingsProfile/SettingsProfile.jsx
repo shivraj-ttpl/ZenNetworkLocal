@@ -5,11 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Button from '@/components/commonComponents/button/Button';
 import Icon from '@/components/icons/Icon';
-import { organizationProfile } from '@/data/settingsData';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
+import { SubOrgAdminProfile } from '@/pages/Settings/UserProfile/UserProfile';
+import EditSubOrganizationProfileDrawer from '@/pages/Settings/UserProfile/Components/EditSubOrganizationProfileDrawer';
 
-import "./settingsProfileSaga";
+import './settingsProfileSaga';
+import { settingsProfileActions } from './settingsProfileSaga';
 import EditOrganizationProfileDrawer from './Components/EditOrganizationProfileDrawer';
-import { componentKey, setOpenEditDrawer } from './settingsProfileSlice';
+import { componentKey, setOpenEditDrawer, setCloseDrawer } from './settingsProfileSlice';
 
 const STATS = [
   { icon: 'Building2', label: 'Sub-Organizations', key: 'subOrganizations' },
@@ -49,7 +52,7 @@ function LabelValue({ label, value, isLink }) {
           {value}
         </a>
       ) : (
-        <span className="text-text-primary">{value}</span>
+        <span className="text-text-primary">{value ?? '—'}</span>
       )}
     </div>
   );
@@ -58,45 +61,60 @@ function LabelValue({ label, value, isLink }) {
 export default function SettingsProfile() {
   const { setToolbar } = useOutletContext();
   const dispatch = useDispatch();
-  const { drawerOpen, drawerMode, editData } = useSelector(
+  const { isOrgAdmin } = useCurrentUserRole();
+  const { profileData, drawerOpen, drawerMode, editData } = useSelector(
     (state) => state[componentKey] ?? {},
   );
+  useEffect(() => {
+    dispatch(settingsProfileActions.fetchProfile());
+  }, [dispatch]);
 
   useEffect(() => {
     setToolbar(
       <Button
         variant="primaryBlue"
         size="sm"
-        onClick={() => dispatch(setOpenEditDrawer(organizationProfile))}
+        onClick={() => dispatch(setOpenEditDrawer(profileData))}
       >
         <Icon name="Pencil" size={14} />
-        Edit Organization Profile
+        {isOrgAdmin ? 'Edit Organization Profile' : 'Edit Profile'}
       </Button>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, dispatch]);
+  }, [setToolbar, dispatch, isOrgAdmin, profileData]);
+
+  if (!isOrgAdmin) {
+    return (
+      <>
+        <div className="px-5 pb-5">
+          <SubOrgAdminProfile profile={profileData} />
+        </div>
+        <EditSubOrganizationProfileDrawer
+          open={drawerOpen}
+          handleClose={() => dispatch(setCloseDrawer())}
+          editData={editData}
+        />
+      </>
+    );
+  }
+
 
   return (
     <>
-      <div className="px-5 pb-5 ">
+      <div className="px-5 pb-5">
         <div className="border border-border-light rounded-lg p-5">
           <div className="flex items-start gap-4 mb-6">
-            <Avatar name={organizationProfile.name} size="xl" variant="square" />
+            <Avatar name={profileData?.name} size="xl" variant="square" />
             <div className="flex-1 gap-3">
-              <span className="text-base font-medium text-text-primary ">
-                {organizationProfile.name}
+              <span className="text-base font-medium text-text-primary">
+                {profileData?.name}
               </span>
               <div className="space-y-1.5 text-sm mt-3">
-                <LabelValue
-                  label="Legal Name"
-                  value={organizationProfile.legalName}
-                />
-                <LabelValue
-                  label="License Number"
-                  value={organizationProfile.licenseNumber}
-                />
-                <LabelValue label="Tax ID" value={organizationProfile.taxId} />
+                <LabelValue label="Legal Name" value={profileData?.legalName} />
+                <LabelValue label="License Number" value={profileData?.licenseNumber} />
+                <LabelValue label="Tax ID" value={profileData?.taxId} />
               </div>
+            </div>
           </div>
         </div>
 
@@ -112,7 +130,7 @@ export default function SettingsProfile() {
               <div>
                 <p className="text-xs text-neutral-500">{stat.label}</p>
                 <p className="text-lg font-semibold text-text-primary">
-                  {organizationProfile.stats[stat.key]}
+                  {profileData?.stats?.[stat.key] ?? '—'}
                 </p>
               </div>
             </div>
@@ -130,7 +148,7 @@ export default function SettingsProfile() {
                   <LabelValue
                     key={item.key}
                     label={item.label}
-                    value={organizationProfile.contactInfo[item.key]}
+                    value={profileData?.contactInfo?.[item.key]}
                     isLink={item.isLink}
                   />
                 ))}
@@ -145,7 +163,7 @@ export default function SettingsProfile() {
                   <LabelValue
                     key={item.key}
                     label={item.label}
-                    value={organizationProfile.organizationDetails[item.key]}
+                    value={profileData?.organizationDetails?.[item.key]}
                   />
                 ))}
               </div>
@@ -157,7 +175,7 @@ export default function SettingsProfile() {
               Administrative Contact
             </h3>
             <div className="space-y-6">
-              {organizationProfile.adminContacts.map((contact, idx) => (
+              {(profileData?.adminContacts ?? []).map((contact, idx) => (
                 <div key={idx} className="space-y-3">
                   {ADMIN_FIELDS.map((item) => (
                     <LabelValue
@@ -170,7 +188,6 @@ export default function SettingsProfile() {
                 </div>
               ))}
             </div>
-          </div>
           </div>
         </div>
       </div>

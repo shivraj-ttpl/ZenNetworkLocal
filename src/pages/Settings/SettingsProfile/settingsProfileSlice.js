@@ -6,6 +6,9 @@ export const componentKey = COMPONENT_KEYS.SETTING_USER_PROFILE;
 const sliceConfig = {
   key: componentKey,
   addedReducers: {
+    setProfileData: (state, action) => {
+      state.profileData = action.payload;
+    },
     setOpenAddDrawer: (state) => {
       state.drawerOpen = true;
       state.drawerMode = "add";
@@ -23,6 +26,7 @@ const sliceConfig = {
     },
   },
   initialReducerState: {
+    profileData: null,
     drawerOpen: false,
     drawerMode: "",
     editData: null,
@@ -36,8 +40,8 @@ export function registerReducer() {
 }
 
 export const {
+  setProfileData,
   setOpenAddDrawer,
   setOpenEditDrawer,
   setCloseDrawer,
 } = slice.actions;
-
