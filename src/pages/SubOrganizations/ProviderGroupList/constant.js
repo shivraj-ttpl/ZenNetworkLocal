@@ -19,7 +19,19 @@ export const FORM_FIELDS_NAMES = {
   BILLING_COUNTRY: "billingCountry",
   BILLING_CITY: "billingCity",
   BILLING_ZIP_CODE: "billingZipCode",
+  IMPORT_PROVIDER_GROUP: "importProviderGroup",
+  IMPORT_PROVIDER_GROUP_ADMIN: "importProviderGroupAdmin",
+  ADMIN_CONTACTS: "adminContacts",
+  ADMIN_FIRST_NAME: "firstName",
+  ADMIN_LAST_NAME: "lastName",
+  ADMIN_EMAIL: "adminEmail",
+  ADMIN_PHONE: "adminPhone",
 };
+
+export const STATUS_OPTIONS = [
+  { label: "Active", value: "ACTIVE" },
+  { label: "Inactive", value: "INACTIVE" },
+];
 
 export const STATE_OPTIONS = [
   { label: "California", value: "CA" },

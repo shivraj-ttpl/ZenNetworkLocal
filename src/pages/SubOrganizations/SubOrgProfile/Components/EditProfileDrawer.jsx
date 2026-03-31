@@ -136,12 +136,21 @@ function buildPayload(values, showAdminSection) {
           c[FORM_FIELDS_NAMES.ADMIN_LAST_NAME] &&
           c[FORM_FIELDS_NAMES.ADMIN_EMAIL],
       )
-      .map((c) => ({
-        firstName: c[FORM_FIELDS_NAMES.ADMIN_FIRST_NAME],
-        lastName: c[FORM_FIELDS_NAMES.ADMIN_LAST_NAME],
-        email: c[FORM_FIELDS_NAMES.ADMIN_EMAIL],
-        contactNumber: c[FORM_FIELDS_NAMES.ADMIN_PHONE] || undefined,
-      }));
+      .map((c) => {
+        const admin = {
+          firstName: c[FORM_FIELDS_NAMES.ADMIN_FIRST_NAME],
+          lastName: c[FORM_FIELDS_NAMES.ADMIN_LAST_NAME],
+          email: c[FORM_FIELDS_NAMES.ADMIN_EMAIL],
+        };
+        if (c[FORM_FIELDS_NAMES.ADMIN_PHONE]) {
+          const parsed = parsePhoneNumber(c[FORM_FIELDS_NAMES.ADMIN_PHONE]);
+          if (parsed?.countryCallingCode)
+            admin.countryCode = `+${parsed.countryCallingCode}`;
+          admin.contactNumber =
+            parsed?.nationalNumber || c[FORM_FIELDS_NAMES.ADMIN_PHONE];
+        }
+        return admin;
+      });
     if (adminUsers.length) payload.adminUsers = adminUsers;
   }
 
