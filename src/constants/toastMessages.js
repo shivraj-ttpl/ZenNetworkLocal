@@ -62,6 +62,12 @@ export const toastMessages = {
   subOrgArchivedSuccess: 'Sub-Organization archived successfully',
   subOrgUnarchivedSuccess: 'Sub-Organization unarchived successfully',
 
+  providerGroupCreatedSuccess: 'Provider Group created successfully',
+  providerGroupActivatedSuccess: 'Provider Group activated successfully',
+  providerGroupDeactivatedSuccess: 'Provider Group deactivated successfully',
+  providerGroupArchivedSuccess: 'Provider Group archived successfully',
+  providerGroupUnarchivedSuccess: 'Provider Group unarchived successfully',
+
   intakeSubmittedSuccess: 'Family Medicine Intake form submitted successfully',
   intakeSignatureUploadedSuccess: 'Signature uploaded successfully',
 };

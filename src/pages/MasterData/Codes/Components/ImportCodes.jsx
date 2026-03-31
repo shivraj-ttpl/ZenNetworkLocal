@@ -13,7 +13,7 @@ import {
 } from '@/pages/MasterData/Codes/codesSlice';
 import { CODE_TYPE_MAP } from '@/pages/MasterData/Codes/constant';
 
-const { downloadTemplate, importCodes } = codesActions;
+const { importCodes } = codesActions;
 const EMPTY_STATE = {};
 
 export default function ImportCodes() {
@@ -39,8 +39,10 @@ export default function ImportCodes() {
   }, []);
 
   const handleDownloadTemplate = () => {
-    const type = CODE_TYPE_MAP[importModalFor];
-    dispatch(downloadTemplate({ type }));
+    const link = document.createElement('a');
+    link.href = '/templates/mastercodes.csv';
+    link.download = 'mastercodes-template.csv';
+    link.click();
   };
 
   const handleImport = () => {
