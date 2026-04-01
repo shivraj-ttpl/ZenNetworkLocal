@@ -432,7 +432,7 @@ export default function EditOrganizationProfileDrawer({
 
             <div className="mt-auto flex justify-between gap-2 border-t border-[#E9E9E9] pt-4">
               <Button
-                variant="outlineTeal"
+                variant="outlineBlue"
                 size="sm"
                 type="button"
                 onClick={() => {
@@ -443,7 +443,7 @@ export default function EditOrganizationProfileDrawer({
                 Cancel
               </Button>
               <Button
-                variant="primaryTeal"
+                variant="primaryBlue"
                 size="sm"
                 type="button"
                 onClick={handleSubmit}

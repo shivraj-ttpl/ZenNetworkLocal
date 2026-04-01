@@ -17,6 +17,9 @@ import {
   setOpenEditDrawer,
   setCloseDrawer,
 } from './settingsProfileSlice';
+import '@/pages/Settings/UserProfile/userProfileSaga';
+import { userProfileActions } from '@/pages/Settings/UserProfile/userProfileSaga';
+import { componentKey as userProfileComponentKey } from '@/pages/Settings/UserProfile/userProfileSlice';
 
 const STATS = [
   { icon: 'Building2', label: 'Sub-Organizations', key: 'subOrganizations' },
@@ -36,7 +39,14 @@ const CONTACT_FIELDS = [
     key: 'address',
     format: (v) =>
       v && typeof v === 'object'
-        ? [v.addressLine1, v.addressLine2, v.city, v.state, v.zipCode, v.country]
+        ? [
+            v.addressLine1,
+            v.addressLine2,
+            v.city,
+            v.state,
+            v.zipCode,
+            v.country,
+          ]
             .filter(Boolean)
             .join(', ')
         : v,
@@ -64,7 +74,8 @@ const ADMIN_FIELDS = [
   {
     label: 'Administrator Name',
     key: 'firstName',
-    format: (v, contact) => [contact?.firstName, contact?.lastName].filter(Boolean).join(' ') || null,
+    format: (v, contact) =>
+      [contact?.firstName, contact?.lastName].filter(Boolean).join(' ') || null,
   },
   { label: 'Email Address', key: 'email', isLink: true },
   { label: 'Contact Number', key: 'contactNumber' },
@@ -93,11 +104,17 @@ export default function SettingsProfile() {
   const { profileData, drawerOpen, drawerMode, editData } = useSelector(
     (state) => state[componentKey] ?? {},
   );
+  const { profileData: userProfileData } = useSelector(
+    (state) => state[userProfileComponentKey] ?? {},
+  );
   useEffect(() => {
     if (isOrgAdmin) {
       dispatch(settingsProfileActions.fetchOrgProfile());
     } else {
-      dispatch(settingsProfileActions.fetchProfile());
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user?.id) {
+        dispatch(userProfileActions.fetchUserProfile({ userId: user.id }));
+      }
     }
   }, [dispatch, isOrgAdmin]);
 
@@ -119,12 +136,12 @@ export default function SettingsProfile() {
     return (
       <>
         <div className="px-5 pb-5">
-          <SubOrgAdminProfile profile={profileData} />
+          <SubOrgAdminProfile profile={userProfileData} />
         </div>
         <EditSubOrganizationProfileDrawer
           open={drawerOpen}
           handleClose={() => dispatch(setCloseDrawer())}
-          editData={editData}
+          editData={userProfileData}
         />
       </>
     );
@@ -132,9 +149,9 @@ export default function SettingsProfile() {
 
   return (
     <>
-      <div className="px-5 pb-5">
-        <div className="border border-border-light rounded-lg p-5">
-          <div className="flex items-start gap-4 mb-6">
+      <div className="px-3 sm:px-5 pb-5">
+        <div className="border border-border-light rounded-lg p-4 sm:p-5">
+          <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
             <Avatar name={profileData?.name} size="xl" variant="square" />
             <div className="flex-1 gap-3">
               <span className="text-base font-medium text-text-primary">
@@ -152,18 +169,20 @@ export default function SettingsProfile() {
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-6 mt-3">
           {STATS.map((stat) => (
             <div
               key={stat.key}
-              className="border border-border-light rounded-lg p-4 flex items-center gap-3"
+              className="border border-border-light rounded-lg p-3 sm:p-4 flex items-center gap-3"
             >
-              <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
                 <Icon name={stat.icon} size={20} className="text-primary-600" />
               </div>
               <div className="min-w-0">
-                <p className="text-xs text-neutral-500 truncate">{stat.label}</p>
-                <p className="text-xl font-bold text-text-primary leading-tight">
+                <p className="text-xs text-neutral-500 truncate">
+                  {stat.label}
+                </p>
+                <p className="text-lg sm:text-xl font-bold text-text-primary leading-tight">
                   {profileData?.analytics?.[stat.key] ?? '—'}
                 </p>
               </div>
@@ -171,7 +190,7 @@ export default function SettingsProfile() {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
@@ -223,7 +242,11 @@ export default function SettingsProfile() {
                     <LabelValue
                       key={`${idx}-${item.key}`}
                       label={item.label}
-                      value={item.format ? item.format(contact[item.key], contact) : contact[item.key]}
+                      value={
+                        item.format
+                          ? item.format(contact[item.key], contact)
+                          : contact[item.key]
+                      }
                       isLink={item.isLink}
                     />
                   ))}

@@ -1,45 +1,33 @@
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
 
+import AsyncSelectDropdown from "@/components/commonComponents/selectDropdown/AsyncSelectDropdown";
 import Drawer from "@/components/commonComponents/drawer/Drawer";
 import Input from "@/components/commonComponents/input/Input";
 import PhoneInput from "@/components/commonComponents/phoneInput";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
 import UploadPhoto from "@/components/commonComponents/upload/UploadPhoto";
 import Button from "@/components/commonComponents/button/Button";
 
-import {
-  COUNTRY_OPTIONS,
-  FORM_FIELDS_NAMES,
-  STATE_OPTIONS,
-} from "../constant";
-
+import { FORM_FIELDS_NAMES } from "../constant";
+import { userProfileActions } from "../userProfileSaga";
 
 const getInitialValues = (editData) => {
-  const stateOption =
-    STATE_OPTIONS.find(
-      (opt) =>
-        opt.value === editData?.state || opt.label === editData?.state,
-    ) ?? null;
-
-  const countryOption =
-    COUNTRY_OPTIONS.find(
-      (opt) =>
-        opt.value === editData?.country || opt.label === editData?.country,
-    ) ?? null;
+  const addr = editData?.address;
+  const isAddrObj = addr && typeof addr === "object";
 
   return {
     [FORM_FIELDS_NAMES.PHOTO]: null,
     [FORM_FIELDS_NAMES.FIRST_NAME]: editData?.firstName ?? "",
     [FORM_FIELDS_NAMES.LAST_NAME]: editData?.lastName ?? "",
-    [FORM_FIELDS_NAMES.EMAIL_ADDRESS]: editData?.emailAddress ?? editData?.email ?? "",
-    [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber ?? editData?.phone ?? "",
-    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.addressLine1 ?? "",
-    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.addressLine2 ?? "",
-    [FORM_FIELDS_NAMES.STATE]: stateOption,
-    [FORM_FIELDS_NAMES.COUNTRY]: countryOption,
-    [FORM_FIELDS_NAMES.CITY]: editData?.city ?? "",
-    [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.zipCode ?? "",
+    [FORM_FIELDS_NAMES.EMAIL_ADDRESS]: editData?.email ?? "",
+    [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber ?? "",
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: isAddrObj ? (addr.addressLine1 ?? "") : "",
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: isAddrObj ? (addr.addressLine2 ?? "") : "",
+    [FORM_FIELDS_NAMES.STATE]: isAddrObj && addr.state ? { name: addr.state } : null,
+    [FORM_FIELDS_NAMES.COUNTRY]: isAddrObj && addr.country ? { name: addr.country } : null,
+    [FORM_FIELDS_NAMES.CITY]: isAddrObj ? (addr.city ?? "") : "",
+    [FORM_FIELDS_NAMES.ZIP_CODE]: isAddrObj ? (addr.zipCode ?? "") : "",
   };
 };
 
@@ -57,17 +45,17 @@ const validationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.CITY]: Yup.string().required("City is required"),
   [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string()
     .required("ZIP Code is required")
-    .matches(/^\d{5}(?:-\d{4})?$/, "Invalid ZIP Code"),
+    .matches(/^\d{5}(-\d{4})?$/, "Enter valid ZIP (12345 or 12345-6789)"),
 });
 
 export default function EditSubOrganizationProfileDrawer({
   open,
   drawerMode,
   editData,
-  handleClose
+  handleClose,
 }) {
+  const dispatch = useDispatch();
   const isEdit = drawerMode === "edit";
-
 
   return (
     <Drawer
@@ -80,9 +68,35 @@ export default function EditSubOrganizationProfileDrawer({
       <Formik
         initialValues={getInitialValues(editData)}
         validationSchema={validationSchema}
-        onSubmit={(_, { resetForm }) => {
-          resetForm();
-          handleClose();
+        onSubmit={(values, { resetForm }) => {
+          const payload = {
+            firstName: values[FORM_FIELDS_NAMES.FIRST_NAME],
+            lastName: values[FORM_FIELDS_NAMES.LAST_NAME],
+            email: values[FORM_FIELDS_NAMES.EMAIL_ADDRESS],
+            contactNumber: values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || undefined,
+            address: {
+              addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || undefined,
+              addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
+              city: values[FORM_FIELDS_NAMES.CITY] || undefined,
+              state: values[FORM_FIELDS_NAMES.STATE]?.name || undefined,
+              zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || undefined,
+              country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || undefined,
+            },
+          };
+          dispatch(
+            userProfileActions.updateUserProfile({
+              userId: editData?.id,
+              payload,
+              onSuccess: () => {
+                resetForm();
+                handleClose();
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (user?.id) {
+                  dispatch(userProfileActions.fetchUserProfile({ userId: user.id }));
+                }
+              },
+            }),
+          );
         }}
         enableReinitialize
       >
@@ -190,11 +204,13 @@ export default function EditSubOrganizationProfileDrawer({
                         touched={touched[FORM_FIELDS_NAMES.ADDRESS_LINE_2]}
                         className="col-span-2"
                       />
-                      <SelectDropdown
+                      <AsyncSelectDropdown
                         label="State"
                         name={FORM_FIELDS_NAMES.STATE}
                         placeholder="Select State"
-                        options={STATE_OPTIONS}
+                        url="dropdown-apis/states"
+                        valueKey="name"
+                        labelKey="name"
                         value={values[FORM_FIELDS_NAMES.STATE]}
                         onChange={(selected) =>
                           setFieldValue(FORM_FIELDS_NAMES.STATE, selected)
@@ -203,11 +219,13 @@ export default function EditSubOrganizationProfileDrawer({
                         touched={touched[FORM_FIELDS_NAMES.STATE]}
                         required
                       />
-                      <SelectDropdown
+                      <AsyncSelectDropdown
                         label="Country"
                         name={FORM_FIELDS_NAMES.COUNTRY}
                         placeholder="Select Country"
-                        options={COUNTRY_OPTIONS}
+                        url="dropdown-apis/countries"
+                        valueKey="name"
+                        labelKey="name"
                         value={values[FORM_FIELDS_NAMES.COUNTRY]}
                         onChange={(selected) =>
                           setFieldValue(FORM_FIELDS_NAMES.COUNTRY, selected)
@@ -232,7 +250,11 @@ export default function EditSubOrganizationProfileDrawer({
                         name={FORM_FIELDS_NAMES.ZIP_CODE}
                         placeholder="Enter ZIP Code"
                         value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          let val = e.target.value.replace(/\D/g, '');
+                          if (val.length > 5) val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
+                          setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
+                        }}
                         onBlur={handleBlur}
                         error={errors[FORM_FIELDS_NAMES.ZIP_CODE]}
                         touched={touched[FORM_FIELDS_NAMES.ZIP_CODE]}
@@ -263,7 +285,7 @@ export default function EditSubOrganizationProfileDrawer({
                 onClick={handleSubmit}
                 disabled={isEdit ? !(isValid && dirty) : !isValid}
               >
-                Create User
+                Save
               </Button>
             </div>
           </Form>
