@@ -112,7 +112,6 @@ export default function SubOrgList() {
           header: 'Sub-Org ID',
           accessorKey: 'uuid',
           width: 100,
-          sortable: true,
           render: (row) => <span>{row?.uuid && row?.uuid?.slice(-6)}</span>,
         },
         {
@@ -135,7 +134,6 @@ export default function SubOrgList() {
         {
           id: 'address',
           header: 'Address',
-          sortable: true,
           minWidth: 200,
           render: (row) => {
             const addr = row.address;

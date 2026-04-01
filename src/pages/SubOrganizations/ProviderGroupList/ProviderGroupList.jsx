@@ -7,13 +7,14 @@ import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import StatusBadge from '@/components/commonComponents/statusBadge/StatusBadge';
 import { Table, buildColumns } from '@/components/commonComponents/table';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import { STATUS_OPTIONS } from './constant';
@@ -42,6 +43,8 @@ export default function ProviderGroupList() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
+  const { currentUserRole } = useCurrentUserRole();
+  const isSubOrgAdmin = currentUserRole === ROLES.SUB_ORG_ADMIN;
 
   const {
     providerGroupList = [],
@@ -113,14 +116,16 @@ export default function ProviderGroupList() {
             onChange={(val) => dispatch(setStatusFilter(val))}
           />
         </div>
-        <Button
-          variant="primaryBlue"
-          size="sm"
-          onClick={() => dispatch(setDrawerOpen(true))}
-        >
-          <Icon name="Plus" size={14} />
-          Add Provider Group
-        </Button>
+        {isSubOrgAdmin && (
+          <Button
+            variant="primaryBlue"
+            size="sm"
+            onClick={() => dispatch(setDrawerOpen(true))}
+          >
+            <Icon name="Plus" size={14} />
+            Add Provider Group
+          </Button>
+        )}
       </>,
     );
     return () => setToolbar(null);
@@ -161,18 +166,21 @@ export default function ProviderGroupList() {
           header: 'Provider Group Name',
           accessorKey: 'name',
           sortable: true,
-          render: (row) => (
-            <span
-              className="text-primary-700 cursor-pointer hover:underline"
-              onClick={() =>
-                navigate(
-                  `/sub-organizations/${subOrgId}/provider-groups/${row.id}`,
-                )
-              }
-            >
-              {row.name}
-            </span>
-          ),
+          render: (row) =>
+            isSubOrgAdmin ? (
+              <span
+                className="text-primary-700 cursor-pointer hover:underline"
+                onClick={() =>
+                  navigate(
+                    `/sub-organizations/${subOrgId}/provider-groups/${row.id}`,
+                  )
+                }
+              >
+                {row.name}
+              </span>
+            ) : (
+              <span>{row.name}</span>
+            ),
         },
         {
           id: 'specialties',
@@ -210,58 +218,88 @@ export default function ProviderGroupList() {
           render: (row) => row.email || '-',
         },
         {
-          id: 'status',
-          header: 'Status',
-          accessorKey: 'status',
-          width: 120,
-          sortable: true,
-          render: (row) => (
-            <ToggleSwitch
-              name={`status-${row.id}`}
-              checked={row.status === 'ACTIVE'}
-              showLabel={false}
-              onChangeCb={() =>
-                dispatch(setStatusModal({ open: true, row }))
-              }
-            />
-          ),
-        },
-        {
-          id: 'actions',
-          header: 'Action',
-          width: 70,
-          align: 'center',
+          id: 'address',
+          header: 'Address',
+          minWidth: 200,
           render: (row) => {
-            const options = [
-              {
-                label: 'View',
-                value: 'view',
-                onClickCb: () =>
-                  navigate(
-                    `/sub-organizations/${subOrgId}/provider-groups/${row.id}`,
-                  ),
-              },
-            ];
-
-            if (row.status === 'INACTIVE') {
-              options.push({
-                label: row.isArchived ? 'Unarchive' : 'Archive',
-                value: 'archive',
-                onClickCb: () =>
-                  dispatch(
-                    archiveProviderGroup({
-                      id: row.id,
-                      isArchived: row.isArchived,
-                    }),
-                  ),
-              });
-            }
-
-            return <ActionDropdown options={options} />;
+            const addr = row.primaryAddress || row.address;
+            if (!addr) return '-';
+            return [addr.addressLine1, addr.city, addr.state, addr.zipCode]
+              .filter(Boolean)
+              .join(', ');
           },
         },
+        {
+          id: 'contact',
+          header: 'Contact',
+          width: 140,
+          render: (row) => {
+            if (!row.contactNumber) return '-';
+            const code = row.countryCode || '';
+            return `${code} ${row.contactNumber}`.trim();
+          },
+        },
+        ...(isSubOrgAdmin
+          ? [
+              {
+                id: 'status',
+                header: 'Status',
+                accessorKey: 'status',
+                width: 120,
+                sortable: true,
+                render: (row) => (
+                  <ToggleSwitch
+                    name={`status-${row.id}`}
+                    checked={row.status === 'ACTIVE'}
+                    showLabel={false}
+                    onChangeCb={() =>
+                      dispatch(setStatusModal({ open: true, row }))
+                    }
+                  />
+                ),
+              },
+            ]
+          : []),
+        ...(isSubOrgAdmin
+          ? [
+              {
+                id: 'actions',
+                header: 'Action',
+                width: 70,
+                align: 'center',
+                render: (row) => {
+                  const options = [
+                    {
+                      label: 'View',
+                      value: 'view',
+                      onClickCb: () =>
+                        navigate(
+                          `/sub-organizations/${subOrgId}/provider-groups/${row.id}`,
+                        ),
+                    },
+                  ];
+
+                  if (row.status === 'INACTIVE') {
+                    options.push({
+                      label: row.isArchived ? 'Unarchive' : 'Archive',
+                      value: 'archive',
+                      onClickCb: () =>
+                        dispatch(
+                          archiveProviderGroup({
+                            id: row.id,
+                            isArchived: row.isArchived,
+                          }),
+                        ),
+                    });
+                  }
+
+                  return <ActionDropdown options={options} />;
+                },
+              },
+            ]
+          : []),
       ]),
-    [navigate, subOrgId, dispatch],
+    [navigate, subOrgId, dispatch, isSubOrgAdmin],
   );
 
   return (
@@ -284,8 +322,12 @@ export default function ProviderGroupList() {
         onPageChange={handlePageChange}
         onLimitChange={handleLimitChange}
       />
-      <AddProviderGroupDrawer subOrgId={subOrgId} />
-      <StatusChangeModal />
+      {isSubOrgAdmin && (
+        <>
+          <AddProviderGroupDrawer subOrgId={subOrgId} />
+          <StatusChangeModal />
+        </>
+      )}
     </div>
   );
 }

@@ -1,0 +1,18 @@
+export const DEFAULT_LABEL_FIELDS = [
+  'Patients',
+  'Patient Details',
+  'Patient Name',
+  'Sex at Birth',
+  'Identified Gender',
+  'Race',
+  'Preferred Method of Contact',
+  'Referring Provider',
+  'Primary Care Provider',
+  'Primary Care Manager',
+  'Secondary Care Manager',
+  'Additional Care Team Member',
+  'Assign To',
+  'Conditions',
+  'ICD Code',
+  'Provider Type',
+];

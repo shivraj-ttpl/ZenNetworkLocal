@@ -85,4 +85,6 @@ export const toastMessages = {
   settingsRoleArchivedSuccess: 'Role archived successfully',
   settingsRoleUpdatedSuccess: 'Role permissions updated successfully',
   settingsRoleUnarchivedSuccess: 'Role unarchived successfully',
+
+  labelsUpdatedSuccess: 'Labels updated successfully',
 };
