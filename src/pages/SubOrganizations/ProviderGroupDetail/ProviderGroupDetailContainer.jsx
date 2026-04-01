@@ -1,6 +1,8 @@
 import { useState, useMemo } from "react";
-import { NavLink, Outlet, useParams, useNavigate, useOutletContext } from "react-router-dom";
+import { NavLink, Navigate, Outlet, useParams, useNavigate, useOutletContext } from "react-router-dom";
 import Icon from "@/components/icons/Icon";
+import { ROLES } from "@/constants/roles";
+import useCurrentUserRole from "@/hooks/getCurrentUserRole";
 import { subOrganizationsData, providerGroupsData } from "@/data/subOrganizationsData";
 
 export default function ProviderGroupDetailContainer() {
@@ -8,6 +10,11 @@ export default function ProviderGroupDetailContainer() {
   const navigate = useNavigate();
   const { subOrgName: subOrgNameFromOutlet } = useOutletContext() ?? {};
   const [toolbar, setToolbar] = useState(null);
+  const { currentUserRole } = useCurrentUserRole();
+
+  if (currentUserRole === ROLES.ORG_ADMIN) {
+    return <Navigate to={`/sub-organizations/${subOrgId}/provider-groups`} replace />;
+  }
 
   const orgName = useMemo(
     () =>
