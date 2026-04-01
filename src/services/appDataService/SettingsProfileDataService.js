@@ -3,10 +3,6 @@ import AppDataService from '@/services/appDataService/AppDataService';
 const SETTING_URL = 'settings';
 
 export default class SettingsProfileDataService {
-  static getProfile() {
-    return AppDataService.get(`${SETTING_URL}/profile`);
-  }
-
   static getOrgProfile() {
     return AppDataService.get('organizations/profile');
   }

@@ -5,30 +5,31 @@ import { toastMessages } from "@/constants/toastMessages";
 import { addNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice";
 import { apiCall, createSagaActions } from "@/core/store/sagaHelpers";
 import store from "@/core/store/store";
+import UsersDataService from "@/services/appDataService/UsersDataService";
 
-import SettingsProfileDataService from "../../../services/appDataService/SettingsProfileDataService";
-import { componentKey, setProfileData } from "./settingsProfileSlice";
+import { componentKey, setUserProfileData } from "./userProfileSlice";
 
-export const settingsProfileActions = createSagaActions(componentKey, [
-  "fetchOrgProfile",
-  "updateOrgProfile",
+export const userProfileActions = createSagaActions(componentKey, [
+  "fetchUserProfile",
+  "updateUserProfile",
 ]);
 
-function* fetchOrgProfileSaga() {
+function* fetchUserProfileSaga(action) {
+  const { userId } = action.payload;
   yield* apiCall({
-    loadingKey: LOADING_KEYS.SETTINGS_ORG_PROFILE_GET,
-    apiFunc: () => SettingsProfileDataService.getOrgProfile(),
+    loadingKey: LOADING_KEYS.USERS_GET_PROFILE,
+    apiFunc: () => UsersDataService.getUserById(userId),
     onSuccess: function* (response) {
-      yield put(setProfileData(response.data.data));
+      yield put(setUserProfileData(response.data.data));
     },
   });
 }
 
-function* updateOrgProfileSaga(action) {
-  const { payload, onSuccess } = action.payload;
+function* updateUserProfileSaga(action) {
+  const { userId, payload, onSuccess } = action.payload;
   yield* apiCall({
-    loadingKey: LOADING_KEYS.SETTINGS_ORG_PROFILE_PATCH,
-    apiFunc: () => SettingsProfileDataService.updateOrgProfile(payload),
+    loadingKey: LOADING_KEYS.USERS_PATCH_PROFILE,
+    apiFunc: () => UsersDataService.updateUser(userId, payload),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -43,8 +44,8 @@ function* updateOrgProfileSaga(action) {
 
 function* rootSaga() {
   yield all([
-    takeLatest(settingsProfileActions.fetchOrgProfile().type, fetchOrgProfileSaga),
-    takeLatest(settingsProfileActions.updateOrgProfile().type, updateOrgProfileSaga),
+    takeLatest(userProfileActions.fetchUserProfile().type, fetchUserProfileSaga),
+    takeLatest(userProfileActions.updateUserProfile().type, updateUserProfileSaga),
   ]);
 }
 
