@@ -178,7 +178,7 @@ export default function CodesContainer() {
             variant="blue"
             size="sm"
           />
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-65 max-[1149px]:min-w-0 max-[1149px]:flex-1">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-65 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
             <Icon name="Search" size={14} className="text-neutral-400" />
             <input
               type="text"
