@@ -1,94 +1,91 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useParams, useOutletContext } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Button from '@/components/commonComponents/button/Button';
-import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
-import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import { LABEL_OPTIONS, labelsFieldsData } from '@/data/settingsData';
+import Input from '@/components/commonComponents/input/Input';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import { DEFAULT_LABEL_FIELDS } from '@/pages/Settings/SettingsLabels/constant';
+
+import { componentKey, registerReducer } from './subOrgLabelsSlice';
+import { subOrgLabelsActions, registerSaga } from './subOrgLabelsSaga';
+
+const { fetchLabels } = subOrgLabelsActions;
+const EMPTY_STATE = {};
 
 export default function SubOrgLabels() {
   const { subOrgId } = useParams();
-  const { setToolbar } = useOutletContext();
-  const [setDefault, setSetDefault] = useState(false);
-  const [labels, setLabels] = useState(() =>
-    labelsFieldsData.reduce((acc, field) => {
-      acc[field.fieldName] = null;
-      return acc;
-    }, {}),
-  );
+  const dispatch = useDispatch();
 
-  const handleLabelChange = useCallback((fieldName, value) => {
-    setLabels((prev) => ({ ...prev, [fieldName]: value }));
+  const { labelsList = [] } = useSelector(
+    (state) => state[componentKey] ?? EMPTY_STATE,
+  );
+  useEffect(() => {
+    registerReducer();
+    registerSaga();
   }, []);
 
+  useFlexCleanup(componentKey);
+
   useEffect(() => {
-    setToolbar(
-      <Checkbox
-        label="Set Default"
-        checked={setDefault}
-        onChange={() => setSetDefault((prev) => !prev)}
-        variant="blue"
-        size="sm"
-      />,
-    );
-    return () => setToolbar(null);
-  }, [setToolbar, setDefault]);
+    if (subOrgId) {
+      dispatch(fetchLabels({ subOrgId }));
+    }
+  }, [dispatch, subOrgId]);
+
+  const labelsMap = useMemo(() => {
+    const map = {};
+    labelsList.forEach((label) => {
+      map[label.fieldName] = label;
+    });
+    return map;
+  }, [labelsList]);
 
   return (
-    <div className="px-5 pb-5">
-      <div className="mb-4">
-        <h2 className="text-base font-semibold text-text-primary">
-          Manage System Labels
-        </h2>
-        <p className="text-sm text-neutral-500 mt-1">
-          Customize the labels used across the system for this sub-organization.
-          Changes will apply to all users within this sub-organization.
-        </p>
+    <div className="pb-5">
+      <div className="flex items-center p-4 border-y border-border-light mb-4">
+        <div>
+          <h2 className="text-base font-semibold text-text-primary">
+            Manage System Labels
+          </h2>
+          <p className="text-sm text-neutral-500 mt-1">
+            Labels configured for this sub-organization. Contact your
+            organization admin to make changes.
+          </p>
+        </div>
       </div>
 
-      <div className="border border-border rounded-lg">
-        <div className="grid grid-cols-3 bg-neutral-50 rounded-t-lg">
+      <div className="border border-border rounded-lg h-[calc(100vh-340px)] mx-4 overflow-y-auto">
+        <div className="grid grid-cols-2 bg-neutral-50 rounded-t-lg">
           <div className="px-4 py-3 text-sm font-semibold text-text-primary">
             Field Name
           </div>
           <div className="px-4 py-3 text-sm font-semibold text-text-primary">
-            Existing Labels
-          </div>
-          <div className="px-4 py-3 text-sm font-semibold text-text-primary">
-            Labels
+            Label
           </div>
         </div>
 
-        {labelsFieldsData.map((field) => (
-          <div
-            key={field.fieldName}
-            className="grid grid-cols-3 border-t border-border"
-          >
-            <div className="px-4 py-3 text-sm font-medium text-text-primary flex items-center">
-              {field.fieldName}
-            </div>
-            <div className="px-4 py-3 flex items-center">
-              <div className="border border-border rounded-lg px-3 py-2 text-sm bg-surface w-full text-text-primary">
-                {field.existingLabel}
+        {DEFAULT_LABEL_FIELDS.map((fieldName) => {
+          const apiLabel = labelsMap[fieldName];
+          return (
+            <div
+              key={fieldName}
+              className="grid grid-cols-2 border-t border-border"
+            >
+              <div className="px-4 py-3 text-sm font-medium text-text-primary flex items-center">
+                {fieldName}
+              </div>
+              <div className="px-4 py-3 flex items-center">
+                <Input
+                  name={`label-${fieldName}`}
+                  value={
+                    apiLabel?.customLabel || apiLabel?.defaultLabel || fieldName
+                  }
+                  disabled
+                />
               </div>
             </div>
-            <div className="px-4 py-3 flex items-center">
-              <SelectDropdown
-                name={`label-${field.fieldName}`}
-                placeholder="Select Label"
-                options={LABEL_OPTIONS}
-                value={labels[field.fieldName]}
-                onChange={(val) => handleLabelChange(field.fieldName, val)}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="flex justify-end mt-4">
-        <Button variant="primaryBlue" size="sm">
-          Save
-        </Button>
+          );
+        })}
       </div>
     </div>
   );
