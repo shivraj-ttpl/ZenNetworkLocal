@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '@/components/commonComponents/button/Button';
 import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+import SuccessModal from '@/components/commonComponents/modal/SuccessModal';
 import FileUpload from '@/components/commonComponents/upload/FileUpload';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
@@ -10,15 +11,23 @@ import { codesActions } from '@/pages/MasterData/Codes/codeSaga';
 import {
   closeImportModal,
   componentKey,
+  setImportSuccess,
 } from '@/pages/MasterData/Codes/codesSlice';
-import { CODE_TYPE_MAP } from '@/pages/MasterData/Codes/constant';
+import {
+  CODE_TYPE_MAP,
+  STANDALONE_CODE_TYPES,
+} from '@/pages/MasterData/Codes/constant';
 
-const { importCodes } = codesActions;
+const { importCodes, importStandalone } = codesActions;
 const EMPTY_STATE = {};
 
 export default function ImportCodes() {
   const dispatch = useDispatch();
-  const { importModalFor = '' } = useSelector(
+  const {
+    importModalFor = '',
+    importSuccess = false,
+    importSuccessLabel = '',
+  } = useSelector(
     (state) => state[componentKey] ?? EMPTY_STATE,
   );
   const isOpen = Boolean(importModalFor);
@@ -48,50 +57,65 @@ export default function ImportCodes() {
   const handleImport = () => {
     if (!file || fileError) return;
     const type = CODE_TYPE_MAP[importModalFor];
-    dispatch(importCodes({ type, file }));
-    handleClose();
+    if (STANDALONE_CODE_TYPES.has(type)) {
+      dispatch(importStandalone({ type, file }));
+    } else {
+      dispatch(importCodes({ type, file }));
+    }
+  };
+
+  const handleCloseSuccess = () => {
+    dispatch(setImportSuccess(false));
   };
 
   return (
-    <ModalComponent
-      title={`Import ${importModalFor} Codes`}
-      open={isOpen}
-      close={handleClose}
-      customClasses="w-full max-w-[966px] mx-4"
-      footerButton={
-        <div className="flex justify-between w-full">
-          <Button
-            variant="outlineBlue"
-            size="sm"
-            type="button"
-            onClick={handleClose}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="primaryBlue"
-            size="sm"
-            type="button"
-            onClick={handleImport}
-            disabled={!file || Boolean(fileError) || isImporting}
-          >
-            {isImporting ? 'Importing...' : 'Import'}
-          </Button>
+    <>
+      <ModalComponent
+        title={`Import ${importModalFor}`}
+        open={isOpen}
+        close={handleClose}
+        customClasses="w-full max-w-[966px] mx-4"
+        footerButton={
+          <div className="flex justify-between w-full">
+            <Button
+              variant="outlineBlue"
+              size="sm"
+              type="button"
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primaryBlue"
+              size="sm"
+              type="button"
+              onClick={handleImport}
+              disabled={!file || Boolean(fileError) || isImporting}
+            >
+              {isImporting ? 'Importing...' : 'Import'}
+            </Button>
+          </div>
+        }
+      >
+        <div className="flex flex-col gap-4">
+          <p className="text-sm text-text-secondary text-center">
+            Upload a file to import {importModalFor} into the system.
+          </p>
+          <FileUpload
+            allowedFileTypes={['.csv']}
+            maxFileSize={5}
+            onFileSelect={handleFileSelect}
+            showDownloadTemplate
+            onDownloadTemplate={handleDownloadTemplate}
+          />
         </div>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <p className="text-sm text-text-secondary text-center">
-          Upload a file to import {importModalFor} codes into the system.
-        </p>
-        <FileUpload
-          allowedFileTypes={['.csv']}
-          maxFileSize={5}
-          onFileSelect={handleFileSelect}
-          showDownloadTemplate
-          onDownloadTemplate={handleDownloadTemplate}
-        />
-      </div>
-    </ModalComponent>
+      </ModalComponent>
+
+      <SuccessModal
+        open={importSuccess}
+        close={handleCloseSuccess}
+        message={`${STANDALONE_CODE_TYPES.has(CODE_TYPE_MAP[importSuccessLabel]) ? importSuccessLabel : 'Codes'} Imported Successfully!`}
+      />
+    </>
   );
 }
