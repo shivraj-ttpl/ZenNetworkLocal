@@ -48,6 +48,20 @@ export default function ImportCodes() {
   }, []);
 
   const handleDownloadTemplate = () => {
+    if(CODE_TYPE_MAP[importModalFor] === 'medications') {
+      const link = document.createElement('a');
+      link.href = '/templates/medications.csv';
+      link.download = 'medications_import_template.csv';
+      link.click();
+      return;
+    }
+    if(CODE_TYPE_MAP[importModalFor] === 'allergies' || CODE_TYPE_MAP[importModalFor] === 'symptoms') {
+      const link = document.createElement('a');
+      link.href = '/templates/allergiesSymptoms.csv';
+      link.download = 'allergies_symptoms_import_template.csv';
+      link.click();
+      return;
+    }
     const link = document.createElement('a');
     link.href = '/templates/mastercodes.csv';
     link.download = 'mastercodes-template.csv';

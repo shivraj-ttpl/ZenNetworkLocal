@@ -90,7 +90,7 @@ export default function Payers() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50 max-[1149px]:min-w-0 max-[1149px]:flex-1">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50 max-w-20 max-[1149px]:min-w-0 max-[1149px]:max-w-57.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -100,7 +100,7 @@ export default function Payers() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <div className="w-40 max-[1149px]:w-auto max-[1149px]:flex-1 max-[1149px]:min-w-30">
+        <div className="w-40 max-[1149px]:w-auto  max-[1149px]:max-w-57.5 max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             name="payerType"
             placeholder="Payer Type"
