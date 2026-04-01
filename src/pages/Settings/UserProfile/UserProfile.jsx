@@ -17,17 +17,25 @@ import EditOrganizationUserProfileDrawer from './Components/EditOrganizationUser
 import { settingsProfileActions } from '../SettingsProfile/settingsProfileSaga';
 import { useEffect } from 'react';
 
+function formatAddress(val) {
+  if (!val || typeof val !== 'object') return val;
+  return [val.addressLine1, val.addressLine2, val.city, val.state, val.zipCode, val.country]
+    .filter(Boolean)
+    .join(', ') || '—';
+}
+
 function LabelValue({ label, value, isLink }) {
+  const display = value && typeof value === 'object' ? formatAddress(value) : value;
   return (
     <div className="flex items-start gap-2 text-sm">
       <span className="text-neutral-500 min-w-36 shrink-0">{label}</span>
       <span className="text-neutral-500">:</span>
       {isLink ? (
         <a href="#" className="text-primary-700 hover:underline">
-          {value}
+          {display}
         </a>
       ) : (
-        <span className="text-text-primary">{value}</span>
+        <span className="text-text-primary">{display}</span>
       )}
     </div>
   );

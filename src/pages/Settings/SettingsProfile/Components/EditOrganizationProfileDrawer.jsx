@@ -6,24 +6,27 @@ import DatePicker from "@/components/commonComponents/datePicker/DatePicker";
 import Drawer from "@/components/commonComponents/drawer/Drawer";
 import Input from "@/components/commonComponents/input/Input";
 import PhoneInput from "@/components/commonComponents/phoneInput";
+import AsyncSelectDropdown from "@/components/commonComponents/selectDropdown/AsyncSelectDropdown";
 import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
 import TextArea from "@/components/commonComponents/textArea";
 import UploadPhoto from "@/components/commonComponents/upload/UploadPhoto";
 import Button from "@/components/commonComponents/button/Button";
 
 import {
-  COUNTRY_OPTIONS,
   FORM_FIELDS_NAMES,
   ORGANIZATION_TYPE_OPTIONS,
-  STATE_OPTIONS,
 } from "../constant";
 
 import { setCloseDrawer } from "../settingsProfileSlice";
+import { settingsProfileActions } from "../settingsProfileSaga";
 
 const parseToYmd = (value) => {
   if (!value) return "";
   // Already in YYYY-MM-DD
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+
+  // ISO date string (e.g. "2026-03-27T13:10:26.287Z")
+  if (value.includes("T")) return value.split("T")[0];
 
   // Expected: MM/DD/YYYY
   const match = String(value).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
@@ -31,41 +34,6 @@ const parseToYmd = (value) => {
 
   const [, mm, dd, yyyy] = match;
   return `${yyyy}-${mm}-${dd}`;
-};
-
-const extractZipCode = (address = "") => {
-  const match = address.match(/\b\d{5}(?:-\d{4})?\b/);
-  return match?.[0] ?? "";
-};
-
-const normalizeAddressParts = (address = "") =>
-  String(address)
-    .split(",")
-    .map((p) => p.trim())
-    .filter(Boolean);
-
-const findStateOption = (address = "") => {
-  const addr = String(address).toLowerCase();
-
-  // Try full state name, then abbreviation match.
-  return (
-    STATE_OPTIONS.find(
-      (opt) =>
-        addr.includes(opt.label.toLowerCase()) ||
-        new RegExp(`\\b${opt.value.toLowerCase()}\\b`).test(addr),
-    ) ?? null
-  );
-};
-
-const findCountryOption = (address = "") => {
-  const addr = String(address).toLowerCase();
-  return (
-    COUNTRY_OPTIONS.find(
-      (opt) =>
-        addr.includes(opt.label.toLowerCase()) ||
-        new RegExp(`\\b${opt.value.toLowerCase()}\\b`).test(addr),
-    ) ?? null
-  );
 };
 
 const findOrganizationTypeOption = (type = "") => {
@@ -79,122 +47,30 @@ const findOrganizationTypeOption = (type = "") => {
   );
 };
 
-const extractCity = (address = "", stateOption = null) => {
-  const parts = normalizeAddressParts(address);
-  if (!parts.length) return "";
-
-  // Case like: "Dallas Texas, United States, 75201"
-  const stateNeedleLabel = stateOption?.label ?? "";
-  const stateNeedleValue = stateOption?.value ?? "";
-
-  const cityPart = parts.find((p) => {
-    if (!stateNeedleLabel && !stateNeedleValue) return false;
-    const lower = p.toLowerCase();
-    return (
-      (stateNeedleLabel && lower.includes(stateNeedleLabel.toLowerCase())) ||
-      (stateNeedleValue && lower.includes(stateNeedleValue.toLowerCase()))
-    );
-  });
-
-  if (cityPart) {
-    let out = cityPart;
-    if (stateNeedleLabel) out = out.replace(new RegExp(stateNeedleLabel, "i"), "");
-    if (stateNeedleValue) out = out.replace(new RegExp(stateNeedleValue, "i"), "");
-    const cleaned = out.replace(/\b\d{5}(?:-\d{4})?\b/g, "").trim();
-    if (cleaned) return cleaned;
-
-    // Example: "Chicago, IL 60601" => city is the segment before the state/zip segment.
-    const idx = parts.indexOf(cityPart);
-    if (idx > 0) return parts[idx - 1] || "";
-
-    return "";
-  }
-
-  // Case like: "..., Chicago, IL 60601"
-  if (parts.length >= 2) return parts[1] || "";
-  return "";
-};
-
-const extractAddressLine1 = (address = "") => {
-  const parts = normalizeAddressParts(address);
-  return parts[0] ?? "";
-};
-
-const extractAddressLine2 = (address = "") => {
-  const parts = normalizeAddressParts(address);
-  const maybeLine2 = parts[1] ?? "";
-
-  // Heuristic: only treat second segment as line2 if it looks like suite/unit/etc.
-  if (/suite|ste\.?|unit|floor|apt|apartment/i.test(maybeLine2)) return maybeLine2;
-  return "";
-};
-
 const getInitialValues = (editData) => {
-  const address =
-    editData?.contactInfo?.address ??
-    editData?.organizationDetails?.address ??
-    editData?.address ??
-    "";
-
-  const stateOption = findStateOption(address);
-  const countryOption = findCountryOption(address);
-
-  const primaryPhone =
-    editData?.contactInfo?.contactNumber ??
-    editData?.primaryContactNumber ??
-    editData?.contactNumber ??
-    "";
-
-  const secondaryPhone =
-    editData?.adminContacts?.[1]?.contactNumber ??
-    editData?.secondaryContactNumber ??
-    "";
-
-  const createdOnRaw =
-    editData?.organizationDetails?.createdOn ??
-    editData?.organizationExtraDetails?.createdOn ??
-    "";
-
-  const organizationTypeRaw =
-    editData?.organizationDetails?.organizationType ??
-    editData?.organizationExtraDetails?.organizationType ??
-    "";
-
-  const descriptionRaw =
-    editData?.organizationDetails?.description ??
-    editData?.organizationExtraDetails?.description ??
-    "";
+  const addr = editData?.address;
+  const isAddrObj = addr && typeof addr === "object";
 
   return {
     photo: null,
-    [FORM_FIELDS_NAMES.ORGANIZATION_NAME]:
-      editData?.name ??
-      editData?.organizationDetails?.organizationName ??
-      "",
-    [FORM_FIELDS_NAMES.LEGAL_NAME]:
-      editData?.legalName ??
-      editData?.organizationDetails?.organizationLegalName ??
-      "",
-    [FORM_FIELDS_NAMES.LICENSE_NUMBER]:
-      editData?.licenseNumber ?? editData?.license ?? "",
-    [FORM_FIELDS_NAMES.TAX_ID]:
-      editData?.taxId ?? editData?.organizationDetails?.taxId ?? "",
-    [FORM_FIELDS_NAMES.ORGANIZATION_TYPE]:
-      findOrganizationTypeOption(organizationTypeRaw),
-    [FORM_FIELDS_NAMES.CREATED_ON]: parseToYmd(createdOnRaw),
-    [FORM_FIELDS_NAMES.EMAIL_ADDRESS]:
-      editData?.contactInfo?.emailAddress ?? editData?.email ?? "",
-    [FORM_FIELDS_NAMES.PRIMARY_CONTACT_NUMBER]: primaryPhone,
-    [FORM_FIELDS_NAMES.SECONDARY_CONTACT_NUMBER]: secondaryPhone,
-    [FORM_FIELDS_NAMES.FAX_NUMBER]: editData?.contactInfo?.fax ?? "",
-    [FORM_FIELDS_NAMES.WEBSITE_URL]: editData?.contactInfo?.website ?? "",
-    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: extractAddressLine1(address),
-    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: extractAddressLine2(address),
-    [FORM_FIELDS_NAMES.STATE]: stateOption,
-    [FORM_FIELDS_NAMES.COUNTRY]: countryOption,
-    [FORM_FIELDS_NAMES.CITY]: extractCity(address, stateOption),
-    [FORM_FIELDS_NAMES.ZIP_CODE]: extractZipCode(address),
-    [FORM_FIELDS_NAMES.DESCRIPTION]: descriptionRaw ?? "",
+    [FORM_FIELDS_NAMES.ORGANIZATION_NAME]: editData?.name ?? "",
+    [FORM_FIELDS_NAMES.LEGAL_NAME]: editData?.legalName ?? "",
+    [FORM_FIELDS_NAMES.LICENSE_NUMBER]: editData?.licenseNumber ?? "",
+    [FORM_FIELDS_NAMES.TAX_ID]: editData?.taxId ?? "",
+    [FORM_FIELDS_NAMES.ORGANIZATION_TYPE]: findOrganizationTypeOption(editData?.type ?? ""),
+    [FORM_FIELDS_NAMES.CREATED_ON]: parseToYmd(editData?.createdAt ?? ""),
+    [FORM_FIELDS_NAMES.EMAIL_ADDRESS]: editData?.email ?? "",
+    [FORM_FIELDS_NAMES.PRIMARY_CONTACT_NUMBER]: editData?.primaryContact ?? "",
+    [FORM_FIELDS_NAMES.SECONDARY_CONTACT_NUMBER]: editData?.secondaryContact ?? "",
+    [FORM_FIELDS_NAMES.FAX_NUMBER]: editData?.fax ?? "",
+    [FORM_FIELDS_NAMES.WEBSITE_URL]: editData?.website ?? "",
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: isAddrObj ? (addr.addressLine1 ?? "") : "",
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: isAddrObj ? (addr.addressLine2 ?? "") : "",
+    [FORM_FIELDS_NAMES.STATE]: isAddrObj && addr.state ? { name: addr.state } : null,
+    [FORM_FIELDS_NAMES.COUNTRY]: isAddrObj && addr.country ? { name: addr.country } : null,
+    [FORM_FIELDS_NAMES.CITY]: isAddrObj ? (addr.city ?? "") : "",
+    [FORM_FIELDS_NAMES.ZIP_CODE]: isAddrObj ? (addr.zipCode ?? "") : "",
+    [FORM_FIELDS_NAMES.DESCRIPTION]: editData?.description ?? "",
   };
 };
 
@@ -230,8 +106,8 @@ const validationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.COUNTRY]: Yup.object().nullable().required("Country is required"),
   [FORM_FIELDS_NAMES.CITY]: Yup.string().required("City is required"),
   [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string()
-    .required("ZIP CODE is required")
-    .matches(/^\d{5}(?:-\d{4})?$/, "Invalid ZIP CODE"),
+    .required('ZIP Code is required')
+    .matches(/^\d{5}(-\d{4})?$/, 'Enter valid ZIP (12345 or 12345-6789)'),
   [FORM_FIELDS_NAMES.DESCRIPTION]: Yup.string().nullable(),
 });
 
@@ -256,9 +132,38 @@ export default function EditOrganizationProfileDrawer({
       <Formik
         initialValues={getInitialValues(editData)}
         validationSchema={validationSchema}
-        onSubmit={(_, { resetForm }) => {
-          resetForm();
-          handleClose();
+        onSubmit={(values, { resetForm }) => {
+          const payload = {
+            name: values[FORM_FIELDS_NAMES.ORGANIZATION_NAME],
+            legalName: values[FORM_FIELDS_NAMES.LEGAL_NAME],
+            licenseNumber: values[FORM_FIELDS_NAMES.LICENSE_NUMBER],
+            taxId: values[FORM_FIELDS_NAMES.TAX_ID],
+            organizationType: values[FORM_FIELDS_NAMES.ORGANIZATION_TYPE]?.value || undefined,
+            email: values[FORM_FIELDS_NAMES.EMAIL_ADDRESS],
+            primaryContact: values[FORM_FIELDS_NAMES.PRIMARY_CONTACT_NUMBER] || undefined,
+            secondaryContact: values[FORM_FIELDS_NAMES.SECONDARY_CONTACT_NUMBER] || undefined,
+            fax: values[FORM_FIELDS_NAMES.FAX_NUMBER] || undefined,
+            website: values[FORM_FIELDS_NAMES.WEBSITE_URL] || undefined,
+            description: values[FORM_FIELDS_NAMES.DESCRIPTION] || undefined,
+            address: {
+              addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || undefined,
+              addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
+              city: values[FORM_FIELDS_NAMES.CITY] || undefined,
+              state: values[FORM_FIELDS_NAMES.STATE]?.name || undefined,
+              zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || undefined,
+              country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || undefined,
+            },
+          };
+          dispatch(
+            settingsProfileActions.updateOrgProfile({
+              payload,
+              onSuccess: () => {
+                resetForm();
+                handleClose();
+                dispatch(settingsProfileActions.fetchOrgProfile());
+              },
+            }),
+          );
         }}
         enableReinitialize
       >
@@ -454,11 +359,13 @@ export default function EditOrganizationProfileDrawer({
                         error={errors[FORM_FIELDS_NAMES.ADDRESS_LINE_2]}
                         touched={touched[FORM_FIELDS_NAMES.ADDRESS_LINE_2]}
                       />
-                      <SelectDropdown
+                      <AsyncSelectDropdown
                         label="State"
                         name={FORM_FIELDS_NAMES.STATE}
                         placeholder="Select State"
-                        options={STATE_OPTIONS}
+                        url="dropdown-apis/states"
+                        valueKey="name"
+                        labelKey="name"
                         value={values[FORM_FIELDS_NAMES.STATE]}
                         onChange={(selected) =>
                           setFieldValue(FORM_FIELDS_NAMES.STATE, selected)
@@ -467,11 +374,13 @@ export default function EditOrganizationProfileDrawer({
                         touched={touched[FORM_FIELDS_NAMES.STATE]}
                         required
                       />
-                      <SelectDropdown
+                      <AsyncSelectDropdown
                         label="Country"
                         name={FORM_FIELDS_NAMES.COUNTRY}
                         placeholder="Select Country"
-                        options={COUNTRY_OPTIONS}
+                        url="dropdown-apis/countries"
+                        valueKey="name"
+                        labelKey="name"
                         value={values[FORM_FIELDS_NAMES.COUNTRY]}
                         onChange={(selected) =>
                           setFieldValue(FORM_FIELDS_NAMES.COUNTRY, selected)
@@ -496,7 +405,11 @@ export default function EditOrganizationProfileDrawer({
                         name={FORM_FIELDS_NAMES.ZIP_CODE}
                         placeholder="Enter ZIP Code"
                         value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          let val = e.target.value.replace(/\D/g, '');
+                          if (val.length > 5) val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
+                          setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
+                        }}
                         onBlur={handleBlur}
                         error={errors[FORM_FIELDS_NAMES.ZIP_CODE]}
                         touched={touched[FORM_FIELDS_NAMES.ZIP_CODE]}

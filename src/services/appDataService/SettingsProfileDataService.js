@@ -7,6 +7,14 @@ export default class SettingsProfileDataService {
     return AppDataService.get(`${SETTING_URL}/profile`);
   }
 
+  static getOrgProfile() {
+    return AppDataService.get('organizations/profile');
+  }
+
+  static updateOrgProfile(data) {
+    return AppDataService.patch('organizations/profile', data);
+  }
+
   static getUsers(params) {
     return AppDataService.get(`${SETTING_URL}/users`, { params });
   }
