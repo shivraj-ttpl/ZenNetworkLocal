@@ -54,7 +54,7 @@ export default function SettingsUsers() {
         status: filters?.status?.value || undefined,
       }),
     );
-  }, [dispatch, page, limit, search, showArchive, sortKey, sortOrder, filters]);
+  }, [dispatch, page, limit, search, showArchive, sortKey, sortOrder, filters?.subOrganization?.value, filters?.status?.value]);
 
   useEffect(() => {
     setToolbar(
@@ -90,7 +90,7 @@ export default function SettingsUsers() {
       </>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search, dispatch, filters]);
+  }, [setToolbar, showArchive, search, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);

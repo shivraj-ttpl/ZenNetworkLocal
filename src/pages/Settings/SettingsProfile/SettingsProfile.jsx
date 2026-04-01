@@ -12,33 +12,61 @@ import EditSubOrganizationProfileDrawer from '@/pages/Settings/UserProfile/Compo
 import './settingsProfileSaga';
 import { settingsProfileActions } from './settingsProfileSaga';
 import EditOrganizationProfileDrawer from './Components/EditOrganizationProfileDrawer';
-import { componentKey, setOpenEditDrawer, setCloseDrawer } from './settingsProfileSlice';
+import {
+  componentKey,
+  setOpenEditDrawer,
+  setCloseDrawer,
+} from './settingsProfileSlice';
 
 const STATS = [
   { icon: 'Building2', label: 'Sub-Organizations', key: 'subOrganizations' },
-  { icon: 'users-round', label: 'Provider Group', key: 'providerGroup' },
-  { icon: 'Stethoscope', label: 'Total Providers', key: 'totalProviders' },
-  { icon: 'user-round-check', label: 'Total Patient', key: 'totalPatient' },
-  { icon: 'Monitor', label: 'System Users', key: 'systemUsers' },
+  { icon: 'users-round', label: 'Provider Group', key: 'providerGroups' },
+  { icon: 'Stethoscope', label: 'Total Providers', key: 'providers' },
+  { icon: 'user-round-check', label: 'Total Patient', key: 'patients' },
+  { icon: 'Monitor', label: 'System Users', key: 'users' },
 ];
 
 const CONTACT_FIELDS = [
-  { label: 'Email Address', key: 'emailAddress', isLink: true },
-  { label: 'Contact Number', key: 'contactNumber' },
+  { label: 'Email Address', key: 'email', isLink: true },
+  { label: 'Contact Number', key: 'primaryContact' },
   { label: 'Fax', key: 'fax' },
   { label: 'Website', key: 'website', isLink: true },
-  { label: 'Address', key: 'address' },
+  {
+    label: 'Address',
+    key: 'address',
+    format: (v) =>
+      v && typeof v === 'object'
+        ? [v.addressLine1, v.addressLine2, v.city, v.state, v.zipCode, v.country]
+            .filter(Boolean)
+            .join(', ')
+        : v,
+  },
 ];
 
 const ORG_DETAIL_FIELDS = [
-  { label: 'Created On', key: 'createdOn' },
-  { label: 'Organization Type', key: 'organizationType' },
+  {
+    label: 'Created On',
+    key: 'createdAt',
+    format: (v) =>
+      v
+        ? new Date(v).toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+          })
+        : null,
+  },
+  { label: 'Organization Type', key: 'type' },
   { label: 'Description', key: 'description' },
 ];
 
 const ADMIN_FIELDS = [
-  { label: 'Administrator Name', key: 'name' },
-  { label: 'Email Address', key: 'emailAddress', isLink: true },
+  {
+    label: 'Administrator Name',
+    key: 'firstName',
+    format: (v, contact) => [contact?.firstName, contact?.lastName].filter(Boolean).join(' ') || null,
+  },
+  { label: 'Email Address', key: 'email', isLink: true },
   { label: 'Contact Number', key: 'contactNumber' },
 ];
 
@@ -66,8 +94,12 @@ export default function SettingsProfile() {
     (state) => state[componentKey] ?? {},
   );
   useEffect(() => {
-    dispatch(settingsProfileActions.fetchProfile());
-  }, [dispatch]);
+    if (isOrgAdmin) {
+      dispatch(settingsProfileActions.fetchOrgProfile());
+    } else {
+      dispatch(settingsProfileActions.fetchProfile());
+    }
+  }, [dispatch, isOrgAdmin]);
 
   useEffect(() => {
     setToolbar(
@@ -98,7 +130,6 @@ export default function SettingsProfile() {
     );
   }
 
-
   return (
     <>
       <div className="px-5 pb-5">
@@ -111,7 +142,10 @@ export default function SettingsProfile() {
               </span>
               <div className="space-y-1.5 text-sm mt-3">
                 <LabelValue label="Legal Name" value={profileData?.legalName} />
-                <LabelValue label="License Number" value={profileData?.licenseNumber} />
+                <LabelValue
+                  label="License Number"
+                  value={profileData?.licenseNumber}
+                />
                 <LabelValue label="Tax ID" value={profileData?.taxId} />
               </div>
             </div>
@@ -124,13 +158,13 @@ export default function SettingsProfile() {
               key={stat.key}
               className="border border-border-light rounded-lg p-4 flex items-center gap-3"
             >
-              <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center">
-                <Icon name={stat.icon} size={18} className="text-primary-600" />
+              <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
+                <Icon name={stat.icon} size={20} className="text-primary-600" />
               </div>
-              <div>
-                <p className="text-xs text-neutral-500">{stat.label}</p>
-                <p className="text-lg font-semibold text-text-primary">
-                  {profileData?.stats?.[stat.key] ?? '—'}
+              <div className="min-w-0">
+                <p className="text-xs text-neutral-500 truncate">{stat.label}</p>
+                <p className="text-xl font-bold text-text-primary leading-tight">
+                  {profileData?.analytics?.[stat.key] ?? '—'}
                 </p>
               </div>
             </div>
@@ -148,7 +182,11 @@ export default function SettingsProfile() {
                   <LabelValue
                     key={item.key}
                     label={item.label}
-                    value={profileData?.contactInfo?.[item.key]}
+                    value={
+                      item.format
+                        ? item.format(profileData?.[item.key])
+                        : profileData?.[item.key]
+                    }
                     isLink={item.isLink}
                   />
                 ))}
@@ -163,7 +201,11 @@ export default function SettingsProfile() {
                   <LabelValue
                     key={item.key}
                     label={item.label}
-                    value={profileData?.organizationDetails?.[item.key]}
+                    value={
+                      item.format
+                        ? item.format(profileData?.[item.key])
+                        : profileData?.[item.key]
+                    }
                   />
                 ))}
               </div>
@@ -175,13 +217,13 @@ export default function SettingsProfile() {
               Administrative Contact
             </h3>
             <div className="space-y-6">
-              {(profileData?.adminContacts ?? []).map((contact, idx) => (
+              {(profileData?.orgUsers ?? []).map((contact, idx) => (
                 <div key={idx} className="space-y-3">
                   {ADMIN_FIELDS.map((item) => (
                     <LabelValue
                       key={`${idx}-${item.key}`}
                       label={item.label}
-                      value={contact[item.key]}
+                      value={item.format ? item.format(contact[item.key], contact) : contact[item.key]}
                       isLink={item.isLink}
                     />
                   ))}

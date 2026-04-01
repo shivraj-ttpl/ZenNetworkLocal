@@ -12,6 +12,8 @@ import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 
 import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 
+import { toPascalCase } from '@/utils/GeneralUtils';
+
 import { FORM_FIELDS_NAMES } from '../constant';
 import { setCloseDrawer } from '../settingsUsersSlice';
 import { settingsUsersActions } from '../settingsUsersSaga';
@@ -93,7 +95,7 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
         addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
         city: values[FORM_FIELDS_NAMES.CITY] || undefined,
         state: values[FORM_FIELDS_NAMES.STATE]?.name || undefined,
-        zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || undefined,
+        zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || undefined,
         country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || undefined,
       },
     };
@@ -306,7 +308,11 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
                     name={FORM_FIELDS_NAMES.ZIP_CODE}
                     placeholder="Enter ZIP Code"
                     value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 5) val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
+                      setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
+                    }}
                     onBlur={handleBlur}
                     error={errors[FORM_FIELDS_NAMES.ZIP_CODE]}
                     touched={touched[FORM_FIELDS_NAMES.ZIP_CODE]}
