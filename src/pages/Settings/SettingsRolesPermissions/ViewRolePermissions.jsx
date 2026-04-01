@@ -5,13 +5,13 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import Button from '@/components/commonComponents/button/Button';
 import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
-import { permissionsData, rolesData } from '@/data/settingsData';
 
 import {
   componentKey,
   setOpenCreateRoleModal,
 } from './settingsRolesPermissionsSlice';
 import './settingsRolesPermissionsSaga';
+import { settingsRolesActions } from './settingsRolesPermissionsSaga';
 
 import CreateRoleModal from './Components/CreateRoleModal';
 
@@ -22,9 +22,13 @@ export default function ViewRolePermissions() {
   const dispatch = useDispatch();
   const state = useSelector((s) => s[componentKey]);
 
-  const { createRoleModalOpen } = state || {};
+  const { createRoleModalOpen, roleDetail } = state || {};
 
-  const role = useMemo(() => rolesData.find((r) => r.id === roleId), [roleId]);
+  useEffect(() => {
+    if (roleId) {
+      dispatch(settingsRolesActions.fetchRoleById({ roleId }));
+    }
+  }, [dispatch, roleId]);
 
   useEffect(() => {
     setToolbar(
@@ -33,7 +37,8 @@ export default function ViewRolePermissions() {
         size="sm"
         onClick={() => dispatch(setOpenCreateRoleModal())}
       >
-        <Icon name="Plus" size={14} />Create Role
+        <Icon name="Plus" size={14} />
+        Create Role
       </Button>,
     );
     return () => setToolbar(null);
@@ -41,11 +46,12 @@ export default function ViewRolePermissions() {
 
   const tableData = useMemo(
     () =>
-      permissionsData.map((item, i) => ({
+      (roleDetail?.permissions ?? []).map((item, i) => ({
         ...item,
         srNo: String(i + 1).padStart(2, '0'),
+        noAccess: item?.noAccess,
       })),
-    [],
+    [roleDetail],
   );
 
   const columns = useMemo(
@@ -53,7 +59,6 @@ export default function ViewRolePermissions() {
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 60 },
         { id: 'module', header: 'Module', accessorKey: 'module' },
-        { id: 'subModule', header: 'Sub-Module', accessorKey: 'subModule' },
         {
           id: 'feature',
           header: 'Feature',
@@ -70,9 +75,9 @@ export default function ViewRolePermissions() {
           header: 'View',
           render: (row) =>
             row.view ? (
-              <span className="text-success-500 font-medium">&#10003;</span>
+              <Icon name="Check" size={16} className="text-primary-700" />
             ) : (
-              <span className="text-error-500 font-medium">&#10007;</span>
+              <Icon name="X" size={16} className="text-error-500" />
             ),
         },
         {
@@ -80,9 +85,9 @@ export default function ViewRolePermissions() {
           header: 'Create',
           render: (row) =>
             row.create ? (
-              <span className="text-success-500 font-medium">&#10003;</span>
+              <Icon name="Check" size={16} className="text-primary-700" />
             ) : (
-              <span className="text-error-500 font-medium">&#10007;</span>
+              <Icon name="X" size={16} className="text-error-500" />
             ),
         },
         {
@@ -90,9 +95,9 @@ export default function ViewRolePermissions() {
           header: 'No Access',
           render: (row) =>
             row.noAccess ? (
-              <span className="text-success-500 font-medium">&#10003;</span>
+              <Icon name="Check" size={16} className="text-primary-700" />
             ) : (
-              <span className="text-error-500 font-medium">&#10007;</span>
+              <Icon name="X" size={16} className="text-error-500" />
             ),
         },
       ]),
@@ -110,10 +115,22 @@ export default function ViewRolePermissions() {
           View Role & Permissions
         </button>
         <div className="flex items-center gap-3">
-          <span className="border border-border-light rounded-lg px-3 py-1.5 text-sm">
-            Role Name:{' '}
-            <strong>{role?.roleName || 'Primary Care Provider'}</strong>
-          </span>
+          <div className="inline-flex items-center bg-[#EBEBEB] border border-border-light rounded-lg px-4 py-2 text-sm gap-3">
+            <div className="flex items-center gap-1">
+              <span className="text-text-secondary">Role Name:</span>
+              <span className="text-text-primary font-medium">
+                {roleDetail?.name || '—'}
+              </span>
+            </div>
+            <div className="h-4 w-px bg-border-light" />
+
+            <div className="flex items-center gap-1">
+              <span className="text-text-secondary">Role Type:</span>
+              <span className="text-text-primary font-medium capitalize">
+                {roleDetail?.roleType || '—'}
+              </span>
+            </div>
+          </div>
           <Button
             variant="outlineBlue"
             size="sm"
