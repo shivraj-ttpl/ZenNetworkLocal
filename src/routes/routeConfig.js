@@ -59,6 +59,32 @@ const ProviderGroupFeeSchedule = lazy(
     import('@/pages/SubOrganizations/ProviderGroupFeeSchedule/ProviderGroupFeeSchedule'),
 );
 
+// Sub-Organizations — scoped settings pages (SUB_ORG_ADMIN)
+const SubOrgRolesPermissions = lazy(
+  () =>
+    import(
+      '@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgRolesPermissions'
+    ),
+);
+const SubOrgViewRolePermissions = lazy(
+  () =>
+    import(
+      '@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgViewRolePermissions'
+    ),
+);
+const SubOrgEditRolePermissions = lazy(
+  () =>
+    import(
+      '@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgEditRolePermissions'
+    ),
+);
+const SubOrgReports = lazy(
+  () => import('@/pages/SubOrganizations/SubOrgReports/SubOrgReports'),
+);
+const SubOrgLabels = lazy(
+  () => import('@/pages/SubOrganizations/SubOrgLabels/SubOrgLabels'),
+);
+
 // Master Data — Codes sub-container + pages
 const CodesContainer = lazy(
   () => import('@/pages/MasterData/Codes/CodesContainer'),
@@ -185,6 +211,31 @@ export const routeConfig = [
             path: 'provider-groups',
             element: ProviderGroupList,
             label: 'Provider Group',
+          },
+          {
+            path: 'roles-permissions',
+            element: SubOrgRolesPermissions,
+            label: 'Roles & Permissions',
+          },
+          {
+            path: 'roles-permissions/:roleId/view',
+            element: SubOrgViewRolePermissions,
+            label: 'View Permissions',
+          },
+          {
+            path: 'roles-permissions/:roleId/edit',
+            element: SubOrgEditRolePermissions,
+            label: 'Edit Permissions',
+          },
+          {
+            path: 'reports',
+            element: SubOrgReports,
+            label: 'Reports',
+          },
+          {
+            path: 'labels',
+            element: SubOrgLabels,
+            label: 'Labels',
           },
           {
             path: 'provider-groups/:providerGroupId',

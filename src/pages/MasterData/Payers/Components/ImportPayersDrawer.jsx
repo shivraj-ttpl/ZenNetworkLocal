@@ -10,7 +10,7 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { payersActions } from '../payersSaga';
 import { componentKey, setCloseImportModal } from '../payersSlice';
 
-const { importPayers, downloadTemplate } = payersActions;
+const { importPayers } = payersActions;
 const EMPTY_STATE = {};
 
 export default function ImportPayersDrawer() {
@@ -36,7 +36,10 @@ export default function ImportPayersDrawer() {
   }, []);
 
   const handleDownloadTemplate = () => {
-    dispatch(downloadTemplate());
+    const link = document.createElement('a');
+    link.href = '/templates/payersTemplate.csv';
+    link.download = 'payers-template.csv';
+    link.click();
   };
 
   const handleImport = () => {

@@ -9,6 +9,19 @@ import {
 } from 'react-router-dom';
 
 import Icon from '@/components/icons/Icon';
+import { ROLES } from '@/constants/roles';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
+
+const BASE_TABS = [
+  { key: 'profile', label: 'Profile', end: true, buildPath: (id, name) => `/sub-organizations/${id}?name=${encodeURIComponent(name)}` },
+  { key: 'provider-groups', label: 'Provider Group', end: false, buildPath: (id, name) => `/sub-organizations/${id}/provider-groups?name=${encodeURIComponent(name)}` },
+];
+
+const SUB_ORG_ADMIN_TABS = [
+  { key: 'roles-permissions', label: 'Roles & Permissions', end: false, buildPath: (id, name) => `/sub-organizations/${id}/roles-permissions?name=${encodeURIComponent(name)}` },
+  { key: 'reports', label: 'Reports', end: false, buildPath: (id, name) => `/sub-organizations/${id}/reports?name=${encodeURIComponent(name)}` },
+  { key: 'labels', label: 'Labels', end: false, buildPath: (id, name) => `/sub-organizations/${id}/labels?name=${encodeURIComponent(name)}` },
+];
 
 export default function SubOrgDetailContainer() {
   const { subOrgId } = useParams();
@@ -16,21 +29,30 @@ export default function SubOrgDetailContainer() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const [toolbar, setToolbar] = useState(null);
+  const { currentUserRole } = useCurrentUserRole();
 
   const subOrgName = searchParams.get('name') || 'Sub-Organization';
 
   const isProviderGroupDetail = /\/provider-groups\/[^/]+/.test(pathname);
+  const isRolePermissionDetail = /\/roles-permissions\/[^/]+/.test(pathname);
 
-  const TABS = useMemo(
-    () => [
-      { path: `/sub-organizations/${subOrgId}?name=${encodeURIComponent(subOrgName)}`, label: 'Profile', end: true },
-      { path: `/sub-organizations/${subOrgId}/provider-groups?name=${encodeURIComponent(subOrgName)}`, label: 'Provider Group', end: false },
-    ],
-    [subOrgId, subOrgName],
-  );
+  const TABS = useMemo(() => {
+    const tabs = BASE_TABS.map((t) => ({
+      ...t,
+      path: t.buildPath(subOrgId, subOrgName),
+    }));
 
-  if (isProviderGroupDetail) {
-    return <Outlet context={{ subOrgName }} />;
+    if (currentUserRole === ROLES.SUB_ORG_ADMIN) {
+      SUB_ORG_ADMIN_TABS.forEach((t) => {
+        tabs.push({ ...t, path: t.buildPath(subOrgId, subOrgName) });
+      });
+    }
+
+    return tabs;
+  }, [subOrgId, subOrgName, currentUserRole]);
+
+  if (isProviderGroupDetail || isRolePermissionDetail) {
+    return <Outlet context={{ setToolbar, subOrgName }} />;
   }
 
   return (
@@ -47,16 +69,16 @@ export default function SubOrgDetailContainer() {
           <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200">
             {TABS.map((tab) => (
               <NavLink
-                key={tab.path}
+                key={tab.key}
                 to={tab.path}
                 end={tab.end}
                 className={({ isActive }) =>
                   [
-                    "px-3 py-1.5 text-sm font-normal transition-colors cursor-pointer whitespace-nowrap",
+                    'px-3 py-1.5 text-sm font-normal transition-colors cursor-pointer whitespace-nowrap',
                     isActive
-                      ? "bg-neutral-250 text-primary-700"
-                      : "text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50",
-                  ].join(" ")
+                      ? 'bg-neutral-250 text-primary-700'
+                      : 'text-neutral-500 hover:text-neutral-700 hover:bg-neutral-50',
+                  ].join(' ')
                 }
               >
                 {tab.label}
@@ -64,7 +86,11 @@ export default function SubOrgDetailContainer() {
             ))}
           </div>
         </div>
-        {toolbar && <div className="flex items-center gap-3 flex-wrap min-w-0">{toolbar}</div>}
+        {toolbar && (
+          <div className="flex items-center gap-3 flex-wrap min-w-0">
+            {toolbar}
+          </div>
+        )}
       </div>
       <Outlet context={{ setToolbar, subOrgName }} />
     </div>
