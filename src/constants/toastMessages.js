@@ -79,4 +79,6 @@ export const toastMessages = {
   settingsUserArchivedSuccess: 'User archived successfully',
   settingsUserUnarchivedSuccess: 'User unarchived successfully',
   settingsUserInvitationSentSuccess: 'Invitation sent successfully',
+
+  labelsUpdatedSuccess: 'Labels updated successfully',
 };
