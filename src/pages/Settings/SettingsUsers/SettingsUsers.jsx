@@ -44,6 +44,7 @@ export default function SettingsUsers() {
     filters,
     usersData,
     totalRecords,
+    totalPages = 0,
     refreshFlag = 0,
   } = state || {};
   const isLoading = useLoadingKey(LOADING_KEYS.SETTINGS_USERS_GET_LIST);
@@ -116,7 +117,6 @@ export default function SettingsUsers() {
     setSortOrder(order);
   }, []);
 
-  const totalPages = Math.ceil((totalRecords ?? 0) / limit) || 1;
 
   const tableData = useMemo(
     () =>

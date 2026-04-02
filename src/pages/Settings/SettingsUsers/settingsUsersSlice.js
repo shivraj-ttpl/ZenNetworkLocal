@@ -43,7 +43,8 @@ const sliceConfig = {
     },
     setUsersData: (state, action) => {
       state.usersData = action.payload.data ?? action.payload ?? [];
-      state.totalRecords = action.payload.totalRecords ?? action.payload?.length ?? 0;
+      state.totalRecords = action.payload.meta?.total ?? action.payload.totalRecords ?? 0;
+      state.totalPages = action.payload.meta?.totalPages ?? 0;
     },
     setUserDetail: (state, action) => {
       const { data, mode } = action.payload;
@@ -70,6 +71,7 @@ const sliceConfig = {
     filters: { subOrganization: null, status: null },
     usersData: [],
     totalRecords: 0,
+    totalPages: 0,
     refreshFlag: 0,
   },
 };
