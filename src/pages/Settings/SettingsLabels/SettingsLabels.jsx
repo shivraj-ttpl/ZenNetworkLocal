@@ -57,11 +57,7 @@ export default function SettingsLabels() {
   }, [labelsList]);
 
   useEffect(() => {
-    const map = {};
-    labelsList.forEach((label) => {
-      map[label.fieldName] = label.customLabel || '';
-    });
-    setCustomLabels(map);
+    setCustomLabels({});
   }, [labelsList]);
 
   useEffect(() => {
@@ -82,10 +78,14 @@ export default function SettingsLabels() {
     if (!selectedSubOrg?.id) return;
     const labels = DEFAULT_LABEL_FIELDS.filter(
       (fieldName) => customLabels[fieldName],
-    ).map((fieldName) => ({
-      fieldName,
-      customLabel: customLabels[fieldName],
-    }));
+    ).map((fieldName) => {
+      const existing = labelsMap[fieldName];
+      return {
+        ...(existing?.id ? { id: existing.id } : {}),
+        fieldName,
+        customLabel: customLabels[fieldName],
+      };
+    });
     dispatch(updateLabels({ subOrgId: selectedSubOrg.id, labels }));
   };
 
@@ -165,7 +165,7 @@ export default function SettingsLabels() {
                     name={`existing-${fieldName}`}
                     value={
                       selectedSubOrg
-                        ? (apiLabel?.defaultLabel || fieldName)
+                        ? (apiLabel?.customLabel || apiLabel?.defaultLabel || fieldName)
                         : fieldName
                     }
                     disabled

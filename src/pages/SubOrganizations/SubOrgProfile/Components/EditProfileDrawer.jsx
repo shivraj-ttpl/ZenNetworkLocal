@@ -13,7 +13,7 @@ import Icon from '@/components/icons/Icon';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-import { toPascalCase } from '@/utils/GeneralUtils';
+import { buildPhoneValue, formatZipCode, toPascalCase } from '@/utils/GeneralUtils';
 
 import { FORM_FIELDS_NAMES } from '../constant';
 import { componentKey, setCloseDrawer } from '../subOrgProfileSlice';
@@ -63,18 +63,16 @@ const fullValidationSchema = baseValidationSchema.shape({
 
 function buildEditInitialValues(data) {
   const addr = data.address || {};
-  const phone =
-    data.countryCode && data.contactNumber
-      ? `${data.countryCode}${data.contactNumber}`
-      : data.contactNumber || '';
+  const phone = buildPhoneValue(data.countryCode, data.contactNumber);
 
   const adminContacts =
     Array.isArray(data.admins) && data.admins.length
       ? data.admins.map((a) => ({
+          id: a.id || null,
           [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: a.firstName || '',
           [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: a.lastName || '',
           [FORM_FIELDS_NAMES.ADMIN_EMAIL]: a.email || '',
-          [FORM_FIELDS_NAMES.ADMIN_PHONE]: a.contactNumber || '',
+          [FORM_FIELDS_NAMES.ADMIN_PHONE]: buildPhoneValue(a.countryCode, a.contactNumber),
         }))
       : [{ ...emptyContact }];
 
@@ -88,7 +86,7 @@ function buildEditInitialValues(data) {
     [FORM_FIELDS_NAMES.STATE]: addr.state ? { name: addr.state } : null,
     [FORM_FIELDS_NAMES.COUNTRY]: addr.country ? { name: addr.country } : null,
     [FORM_FIELDS_NAMES.CITY]: addr.city || '',
-    [FORM_FIELDS_NAMES.ZIP_CODE]: addr.zipCode || '',
+    [FORM_FIELDS_NAMES.ZIP_CODE]: formatZipCode(addr.zipCode),
     [FORM_FIELDS_NAMES.COUNTY]: addr.county || '',
     [FORM_FIELDS_NAMES.IMPORT_SUB_ORG]: null,
     [FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]: null,
@@ -142,6 +140,7 @@ function buildPayload(values, showAdminSection) {
           lastName: c[FORM_FIELDS_NAMES.ADMIN_LAST_NAME],
           email: c[FORM_FIELDS_NAMES.ADMIN_EMAIL],
         };
+        if (c.id) admin.id = c.id;
         if (c[FORM_FIELDS_NAMES.ADMIN_PHONE]) {
           const parsed = parsePhoneNumber(c[FORM_FIELDS_NAMES.ADMIN_PHONE]);
           if (parsed?.countryCallingCode)
