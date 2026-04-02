@@ -103,6 +103,7 @@ export default function CreateRoleModal({ open }) {
                 onBlur={handleBlur}
                 error={errors[FORM_FIELDS_NAMES.ROLE_NAME]}
                 touched={touched[FORM_FIELDS_NAMES.ROLE_NAME]}
+                required
               />
               <SelectDropdown
                 label="Role Type"
@@ -115,6 +116,7 @@ export default function CreateRoleModal({ open }) {
                 }
                 error={errors[FORM_FIELDS_NAMES.ROLE_TYPE]}
                 touched={touched[FORM_FIELDS_NAMES.ROLE_TYPE]}
+                required
               />
 
               <div className="flex justify-end pt-2 border-t border-[#E9E9E9]">
