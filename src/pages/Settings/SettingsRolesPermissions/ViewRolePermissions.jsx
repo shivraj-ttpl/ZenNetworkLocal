@@ -4,6 +4,7 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
 import { buildColumns, Table } from '@/components/commonComponents/table';
+import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
@@ -69,13 +70,38 @@ export default function ViewRolePermissions() {
           render: (row) => (
             <span className="inline-flex items-center gap-1.5">
               {row.feature}
-              <Icon name="CircleHelp" size={14} className="text-neutral-400" />
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-84">
+                    {`Enable users to view ${row?.feature} read/unreadstatus and preferences, and dismiss or archive ${row?.feature}`}
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
             </span>
           ),
         },
         {
           id: 'view',
-          header: 'View',
+          headerRender: (
+            <span className="inline-flex items-center gap-1.5">
+              View
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Allows users to view and access this module or feature
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
+            </span>
+          ),
           render: (row) =>
             row.view ? (
               <Icon name="Check" size={16} className="text-primary-700" />
@@ -85,7 +111,22 @@ export default function ViewRolePermissions() {
         },
         {
           id: 'create',
-          header: 'Create',
+          headerRender: (
+            <span className="inline-flex items-center gap-1.5">
+              Create
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Allows users to add new entries and make changes within this module or feature.
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
+            </span>
+          ),
           render: (row) =>
             row.create ? (
               <Icon name="Check" size={16} className="text-primary-700" />
@@ -95,7 +136,22 @@ export default function ViewRolePermissions() {
         },
         {
           id: 'noAccess',
-          header: 'No Access',
+          headerRender: (
+            <span className="inline-flex items-center gap-1.5">
+              No Access
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Restricts users from viewing or interacting with this module or feature.
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
+            </span>
+          ),
           render: (row) =>
             row.noAccess ? (
               <Icon name="Check" size={16} className="text-primary-700" />

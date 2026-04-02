@@ -47,7 +47,17 @@ function ChangesTooltip({ changes, roleName }) {
           render: (row) => (
             <span className="inline-flex items-center gap-1.5">
               {row.feature}
-              <Icon name="CircleHelp" size={14} className="text-neutral-400" />
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-84">
+                    {`Enable users to view ${row?.feature} read/unread status and preferences, and dismiss or archive ${row?.feature}`}
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
             </span>
           ),
         },
@@ -200,17 +210,59 @@ export default function EditRolePermissions() {
 
   const handleToggle = useCallback((index, field) => {
     setPermissions((prev) =>
-      prev.map((row, i) =>
-        i === index ? { ...row, [field]: !row[field] } : row,
-      ),
+      prev.map((row, i) => {
+        if (i !== index) return row;
+        const updated = { ...row, [field]: !row[field] };
+
+        if (field === 'create' && updated.create) {
+          updated.view = true;
+          updated.noAccess = false;
+        } else if (field === 'view' && updated.view) {
+          updated.noAccess = false;
+        } else if (field === 'view' && !updated.view) {
+          updated.create = false;
+          updated.noAccess = true;
+        } else if (field === 'noAccess' && updated.noAccess) {
+          updated.view = false;
+          updated.create = false;
+        } else if (field === 'noAccess' && !updated.noAccess) {
+          if (!updated.view && !updated.create) {
+            updated.view = true;
+          }
+        }
+
+        return updated;
+      }),
     );
   }, []);
 
   const handleToggleAll = useCallback(
     (field) => {
       const allChecked = permissions.every((row) => row[field]);
+      const newValue = !allChecked;
       setPermissions((prev) =>
-        prev.map((row) => ({ ...row, [field]: !allChecked })),
+        prev.map((row) => {
+          const updated = { ...row, [field]: newValue };
+
+          if (field === 'create' && newValue) {
+            updated.view = true;
+            updated.noAccess = false;
+          } else if (field === 'view' && newValue) {
+            updated.noAccess = false;
+          } else if (field === 'view' && !newValue) {
+            updated.create = false;
+            updated.noAccess = true;
+          } else if (field === 'noAccess' && newValue) {
+            updated.view = false;
+            updated.create = false;
+          } else if (field === 'noAccess' && !newValue) {
+            if (!updated.view && !updated.create) {
+              updated.view = true;
+            }
+          }
+
+          return updated;
+        }),
       );
     },
     [permissions],
@@ -250,7 +302,17 @@ export default function EditRolePermissions() {
           render: (row) => (
             <span className="inline-flex items-center gap-1.5">
               {row.feature}
-              <Icon name="CircleHelp" size={14} className="text-neutral-400" />
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-84">
+                    {`Enable users to view ${row?.feature} read/unread status and preferences, and dismiss or archive ${row?.feature}`}
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
             </span>
           ),
         },
@@ -266,6 +328,17 @@ export default function EditRolePermissions() {
                 size="sm"
               />
               View
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Allows users to view and access this module or feature
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
             </span>
           ),
           render: (row) => (
@@ -288,6 +361,17 @@ export default function EditRolePermissions() {
                 size="sm"
               />
               Create
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Allows users to add new entries and make changes within this module or feature.
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
             </span>
           ),
           render: (row) => (
@@ -310,6 +394,17 @@ export default function EditRolePermissions() {
                 size="sm"
               />
               No Access
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Restricts users from viewing or interacting with this module or feature.
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
             </span>
           ),
           render: (row) => (

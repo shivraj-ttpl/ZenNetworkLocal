@@ -19,6 +19,7 @@ import {
 
 import { setCloseDrawer } from "../settingsProfileSlice";
 import { settingsProfileActions } from "../settingsProfileSaga";
+import { formatZipCode, toPascalCase } from "../../../../utils/GeneralUtils";
 
 const parseToYmd = (value) => {
   if (!value) return "";
@@ -69,7 +70,7 @@ const getInitialValues = (editData) => {
     [FORM_FIELDS_NAMES.STATE]: isAddrObj && addr.state ? { name: addr.state } : null,
     [FORM_FIELDS_NAMES.COUNTRY]: isAddrObj && addr.country ? { name: addr.country } : null,
     [FORM_FIELDS_NAMES.CITY]: isAddrObj ? (addr.city ?? "") : "",
-    [FORM_FIELDS_NAMES.ZIP_CODE]: isAddrObj ? (addr.zipCode ?? "") : "",
+    [FORM_FIELDS_NAMES.ZIP_CODE]: isAddrObj ? (formatZipCode(addr.zipCode) ?? "") : "",
     [FORM_FIELDS_NAMES.DESCRIPTION]: editData?.description ?? "",
   };
 };
@@ -150,7 +151,7 @@ export default function EditOrganizationProfileDrawer({
               addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
               city: values[FORM_FIELDS_NAMES.CITY] || undefined,
               state: values[FORM_FIELDS_NAMES.STATE]?.name || undefined,
-              zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || undefined,
+              zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || undefined,
               country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || undefined,
             },
           };

@@ -17,6 +17,7 @@ import { toPascalCase } from '@/utils/GeneralUtils';
 import { FORM_FIELDS_NAMES } from '../constant';
 import { setCloseDrawer } from '../settingsUsersSlice';
 import { settingsUsersActions } from '../settingsUsersSaga';
+import { formatZipCode } from '../../../../utils/GeneralUtils';
 
 const validationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required(
@@ -59,7 +60,7 @@ const getInitialValues = (editData) => ({
     ? { name: editData.address.country }
     : null,
   [FORM_FIELDS_NAMES.CITY]: editData?.address?.city ?? '',
-  [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.address?.zipCode ?? '',
+  [FORM_FIELDS_NAMES.ZIP_CODE]: formatZipCode(editData?.address?.zipCode) ?? '',
 });
 
 export default function AddUserDrawer({ open, drawerMode, editData }) {

@@ -9,6 +9,7 @@ import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
+import VerificationIcon from '@/components/commonComponents/verificationIcon/VerificationIcon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
@@ -162,15 +163,7 @@ export default function SettingsUsers() {
           render: (row) => (
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-text-primary">{row.email}</span>
-              <span
-                className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${
-                  row.emailVerified === 'VERIFIED'
-                    ? 'bg-success-500'
-                    : 'bg-warning-500'
-                }`}
-              >
-                <Icon name="Check" size={10} className="text-white" />
-              </span>
+              <VerificationIcon verified={row.emailVerified === 'VERIFIED'} size={18} />
             </div>
           ),
         },
