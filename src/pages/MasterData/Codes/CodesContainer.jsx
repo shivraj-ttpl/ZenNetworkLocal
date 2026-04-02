@@ -68,6 +68,8 @@ export default function CodesContainer() {
     showArchived = false,
     page = 1,
     limit = 20,
+    sortKey = null,
+    sortOrder = null,
     refreshFlag = 0,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
@@ -113,6 +115,8 @@ export default function CodesContainer() {
     limit,
     debouncedSearch,
     showArchived,
+    sortKey,
+    sortOrder,
     refreshFlag,
   ]);
 

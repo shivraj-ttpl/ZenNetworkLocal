@@ -45,16 +45,13 @@ export default function StandardDepressionScreeningDrawer({ open, onClose, onPre
       open={open}
       close={onClose}
       width="max-w-[940px] w-[940px]"
-      // footerButton={
-      //   <div className="flex justify-between w-full px-2 pb-2">
-      //     <Button variant="outlineBlue" size="sm" type="button" onClick={onPrevious}>
-      //       Previous
-      //     </Button>
-      //     <Button variant="primaryBlue" size="sm" type="button" onClick={onClose}>
-      //       Close
-      //     </Button>
-      //   </div>
-      // }
+      footerButton={
+        <div className="flex justify-end w-full px-2 pb-2">
+          <Button variant="primaryBlue" size="sm" type="button" onClick={onClose}>
+            Close
+          </Button>
+        </div>
+      }
     >
       <Formik initialValues={INITIAL_VALUES} onSubmit={() => {}}>
         {({ values, setFieldValue }) => (

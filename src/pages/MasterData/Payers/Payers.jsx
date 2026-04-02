@@ -34,6 +34,8 @@ import {
   setSearch,
   setShowArchived,
   setPayerType,
+  setSortKey,
+  setSortOrder,
   setOpenEditDrawer,
   setOpenStatusModal,
 } from './payersSlice';
@@ -55,6 +57,8 @@ export default function Payers() {
     search = '',
     showArchived = false,
     payerType = null,
+    sortKey = null,
+    sortOrder = null,
     refreshFlag = 0,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
@@ -77,6 +81,8 @@ export default function Payers() {
     debouncedSearch,
     showArchived,
     payerType,
+    sortKey,
+    sortOrder,
     refreshFlag,
   ]);
 
@@ -126,6 +132,14 @@ export default function Payers() {
     [payersList, page, limit],
   );
 
+  const handleSortChange = useCallback(
+    (key, order) => {
+      dispatch(setSortKey(key));
+      dispatch(setSortOrder(order));
+    },
+    [dispatch],
+  );
+
   const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
 
   const handleLimitChange = useCallback(
@@ -137,11 +151,12 @@ export default function Payers() {
     () =>
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-        { id: 'name', header: 'Name', accessorKey: 'name' },
+        { id: 'name', header: 'Name', accessorKey: 'name', sortable: true },
         {
           id: 'type',
           header: 'Type',
           accessorKey: 'payerType',
+          sortable: true,
           render: (row) => (
             <span>{toPascalCaseWithSpaces(row?.payerType)}</span>
           ),
@@ -238,8 +253,11 @@ export default function Payers() {
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 300px)"
+        maxHeight="calc(100vh - 260px)"
         loading={isLoading}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        onSortChange={handleSortChange}
       />
       <Pagination
         totalRecords={totalRecords}

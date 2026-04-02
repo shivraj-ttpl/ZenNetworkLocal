@@ -13,7 +13,10 @@ export default function SymptomsCodes() {
     page,
     limit,
     handlePageChange,
+    handleSortChange,
     handleLimitChange,
+    sortKey,
+    sortOrder,
   } = useNameCodesTable();
 
   return (
@@ -24,6 +27,9 @@ export default function SymptomsCodes() {
         size="sm"
         maxHeight="calc(100vh - 300px)"
         loading={isLoading}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        onSortChange={handleSortChange}
       />
       <Pagination
         totalRecords={totalRecords}

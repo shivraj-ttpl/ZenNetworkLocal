@@ -16,6 +16,8 @@ import {
   setLimit,
   setOpenEditDrawer,
   setPage,
+  setSortKey,
+  setSortOrder,
 } from '../codesSlice';
 
 const { toggleStandaloneFavorite, archiveStandalone } = codesActions;
@@ -65,18 +67,21 @@ function getColumnDefs(codeLabel, dispatch, codeType, canEdit) {
       id: 'medicationName',
       header: 'Medication Name',
       accessorKey: 'medicationName',
+      sortable: true,
     },
     {
       id: 'genericName',
       header: 'Generic Name',
       accessorKey: 'genericName',
       width: 140,
+      sortable: true,
     },
     {
       id: 'brandName',
       header: 'Brand Name',
       accessorKey: 'brandName',
       width: 130,
+      sortable: true,
     },
     { id: 'strength', header: 'Strength', accessorKey: 'strength', width: 100 },
     {
@@ -138,7 +143,9 @@ export default function useMedicationsTable() {
     totalRecords = 0,
     totalPages = 0,
     page = 1,
-    limit = 10,
+    limit = 20,
+    sortKey = null,
+    sortOrder = null,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
   const isLoading = useLoadingKey(LOADING_KEYS.MEDICATIONS_GET_LIST);
@@ -162,11 +169,21 @@ export default function useMedicationsTable() {
     (l) => dispatch(setLimit(l)),
     [dispatch],
   );
+  const handleSortChange = useCallback(
+    (key, order) => {
+      dispatch(setSortKey(key));
+      dispatch(setSortOrder(order));
+    },
+    [dispatch],
+  );
 
   return {
     tableData,
     columns,
     isLoading,
+    sortKey,
+    sortOrder,
+    handleSortChange,
     totalRecords,
     totalPages,
     page,

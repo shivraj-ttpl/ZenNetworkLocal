@@ -29,6 +29,7 @@ export default function SettingsLabels() {
   const { labelsList = [], defaultLabels = null, refreshFlag = 0 } =
     useSelector((state) => state[componentKey] ?? EMPTY_STATE,
   );
+  const isLoadingLabels = useLoadingKey(LOADING_KEYS.SETTINGS_LABELS_GET);
   const isUpdating = useLoadingKey(LOADING_KEYS.SETTINGS_LABELS_PATCH_UPDATE);
 
   useEffect(() => {
@@ -150,41 +151,58 @@ export default function SettingsLabels() {
             </div>
           </div>
 
-          {DEFAULT_LABEL_FIELDS.map((fieldName) => {
-            const apiLabel = labelsMap[fieldName];
-            return (
-              <div
-                key={fieldName}
-                className="grid grid-cols-3 border-t border-border"
-              >
-                <div className="px-4 py-3 text-sm font-medium text-text-primary flex items-center">
-                  {fieldName}
+          {isLoadingLabels && selectedSubOrg
+            ? Array.from({ length: DEFAULT_LABEL_FIELDS.length }).map((_, i) => (
+                <div
+                  key={i}
+                  className="grid grid-cols-3 border-t border-border animate-pulse"
+                >
+                  <div className="px-4 py-3 flex items-center">
+                    <div className="h-4 bg-neutral-200 rounded w-3/5" />
+                  </div>
+                  <div className="px-4 py-3 flex items-center">
+                    <div className="h-10 bg-neutral-200 rounded-lg w-full" />
+                  </div>
+                  <div className="px-4 py-3 flex items-center">
+                    <div className="h-10 bg-neutral-200 rounded-lg w-full" />
+                  </div>
                 </div>
-                <div className="px-4 py-3 flex items-center">
-                  <Input
-                    name={`existing-${fieldName}`}
-                    value={
-                      selectedSubOrg
-                        ? (apiLabel?.customLabel || apiLabel?.defaultLabel || fieldName)
-                        : fieldName
-                    }
-                    disabled
-                  />
-                </div>
-                <div className="px-4 py-3 flex items-center">
-                  <Input
-                    name={`label-${fieldName}`}
-                    placeholder={fieldName}
-                    value={customLabels[fieldName] || ''}
-                    onChange={(e) =>
-                      handleLabelChange(fieldName, e.target.value)
-                    }
-                    disabled={!selectedSubOrg}
-                  />
-                </div>
-              </div>
-            );
-          })}
+              ))
+            : DEFAULT_LABEL_FIELDS.map((fieldName) => {
+                const apiLabel = labelsMap[fieldName];
+                return (
+                  <div
+                    key={fieldName}
+                    className="grid grid-cols-3 border-t border-border"
+                  >
+                    <div className="px-4 py-3 text-sm font-medium text-text-primary flex items-center">
+                      {fieldName}
+                    </div>
+                    <div className="px-4 py-3 flex items-center">
+                      <Input
+                        name={`existing-${fieldName}`}
+                        value={
+                          selectedSubOrg
+                            ? (apiLabel?.customLabel || apiLabel?.defaultLabel || fieldName)
+                            : fieldName
+                        }
+                        disabled
+                      />
+                    </div>
+                    <div className="px-4 py-3 flex items-center">
+                      <Input
+                        name={`label-${fieldName}`}
+                        placeholder={fieldName}
+                        value={customLabels[fieldName] || ''}
+                        onChange={(e) =>
+                          handleLabelChange(fieldName, e.target.value)
+                        }
+                        disabled={!selectedSubOrg}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
         </div>
       </div>
 
