@@ -42,4 +42,8 @@ export default class SettingsProfileDataService {
   static sendInvitation(userId) {
     return AppDataService.post(`${SETTING_URL}/users/${userId}/send-invitation`);
   }
+
+  static getAuditLogs(params) {
+    return AppDataService.get(`${SETTING_URL}/audit-logs`, { params });
+  }
 }

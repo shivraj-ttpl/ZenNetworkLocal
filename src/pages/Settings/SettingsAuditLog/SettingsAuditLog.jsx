@@ -1,85 +1,117 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { buildColumns, Table } from '@/components/commonComponents/table';
-import Icon from '@/components/icons/Icon';
-import { auditLogData } from '@/data/settingsData';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import { formatDateTime } from '@/utils/GeneralUtils';
+
+import FilterDropdown from './Components/FilterDropdown';
+import { settingsAuditLogActions, registerSaga } from './settingsAuditLogSaga';
+import { componentKey, registerReducer } from './settingsAuditLogSlice';
 
 export default function SettingsAuditLog() {
   const { setToolbar } = useOutletContext();
+  const dispatch = useDispatch();
+  const state = useSelector((s) => s[componentKey]);
+  const isLoading = useLoadingKey(LOADING_KEYS.SETTINGS_AUDIT_LOGS_GET_LIST);
+
+  useEffect(() => {
+    registerReducer();
+    registerSaga();
+  }, []);
+
+  useFlexCleanup(componentKey);
+
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
-  const [search, setSearch] = useState('');
+  const [limit, setLimit] = useState(50);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
+  const { auditLogs, total, totalPages: totalPagesFromState, filters } = state || {};
+
   useEffect(() => {
-    setToolbar(
-      <>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56">
-          <Icon name="Search" size={14} className="text-neutral-400" />
-          <input
-            type="text"
-            placeholder="Search by User Name"
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
-          />
-        </div>
-        <button className="border border-border rounded-lg p-1.5 cursor-pointer hover:bg-neutral-50">
-          <Icon
-            name="SlidersHorizontal"
-            size={16}
-            className="text-neutral-500"
-          />
-        </button>
-      </>,
+    dispatch(
+      settingsAuditLogActions.fetchAuditLogs({
+        page,
+        limit,
+        sortBy: sortKey || undefined,
+        sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
+        action: filters?.action?.value || undefined,
+        startDate: filters?.startDate || undefined,
+        endDate: filters?.endDate || undefined,
+      }),
     );
+  }, [dispatch, page, limit, sortKey, sortOrder, filters?.action?.value, filters?.startDate, filters?.endDate]);
+
+  useEffect(() => {
+    setToolbar(<FilterDropdown filters={filters} />);
     return () => setToolbar(null);
-  }, [setToolbar, search]);
+  }, [setToolbar, filters]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
     setSortOrder(order);
   }, []);
 
-  const filteredData = useMemo(() => {
-    if (!search) return auditLogData;
-    const term = search.toLowerCase();
-    return auditLogData.filter((item) =>
-      item.user.toLowerCase().includes(term),
-    );
-  }, [search]);
+  const totalPages = totalPagesFromState ?? (Math.ceil((total ?? 0) / limit) || 1);
 
-  const totalPages = Math.ceil(filteredData.length / limit);
-
-  const paginatedData = useMemo(
+  const tableData = useMemo(
     () =>
-      filteredData.slice((page - 1) * limit, page * limit).map((item, i) => ({
+      (auditLogs ?? []).map((item, i) => ({
         ...item,
         srNo: String((page - 1) * limit + i + 1).padStart(2, '0'),
       })),
-    [filteredData, page, limit],
+    [auditLogs, page, limit],
   );
 
   const columns = useMemo(
     () =>
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-        { id: 'user', header: 'User', accessorKey: 'user' },
-        { id: 'module', header: 'Module', accessorKey: 'module' },
-        { id: 'action', header: 'Action', accessorKey: 'action' },
         {
-          id: 'description',
-          header: 'Description',
-          accessorKey: 'description',
+          id: 'user',
+          header: 'User',
+          accessorKey: 'user',
+          render: (row) =>
+            row?.user
+              ? [row.user.firstName, row.user.lastName].filter(Boolean).join(' ')
+              : '—',
         },
-        { id: 'dateTime', header: 'Date & Time', accessorKey: 'dateTime' },
-        { id: 'ipAddress', header: 'IP Address', accessorKey: 'ipAddress' },
+        {
+          id: 'entity',
+          header: 'Module',
+          accessorKey: 'entity',
+          render: (row) => row?.entity ?? '—',
+        },
+         {
+          id: 'action',
+          header: 'Action',
+          accessorKey: 'action',
+          render: (row) => row?.action ?? '—',
+        },
+       
+        {
+          id: 'resource',
+          header: 'Description',
+          accessorKey: 'resource',
+          render: (row) => row?.resource ?? '—',
+        },
+        {
+          id: 'createdAt',
+          header: 'Date & Time',
+          accessorKey: 'createdAt',
+          render: (row) => formatDateTime(row?.createdAt) || '—',
+        },
+        {
+          id: 'ipAddress',
+          header: 'IP Address',
+          accessorKey: 'ipAddress',
+          render: (row) => row?.ipAddress ?? '—',
+        },
       ]),
     [],
   );
@@ -88,15 +120,16 @@ export default function SettingsAuditLog() {
     <div className="px-5 pb-4">
       <Table
         columns={columns}
-        data={paginatedData}
+        data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 240px)"
+        maxHeight="calc(100vh - 260px)"
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
+        loading={isLoading}
       />
       <Pagination
-        totalRecords={filteredData.length}
+        totalRecords={total ?? 0}
         totalPages={totalPages}
         currentPage={page}
         currentLimit={limit}

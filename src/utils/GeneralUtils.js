@@ -24,6 +24,13 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
 }
 
 /**
+ * Format a date string with time — e.g. 10/27/2024 5:00:02 PM
+ */
+export function formatDateTime(date , format = 'MM/DD/YYYY h:mm:ss A') {
+  return date ? dayjs(date).format(format) : '';
+}
+
+/**
  * Deep clone a plain object (no functions / special types).
  */
 export function deepClone(obj) {
@@ -91,6 +98,19 @@ export function toPascalCaseWithSpaces (text = "") {
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   };
+
+export function buildPhoneValue(countryCode, contactNumber) {
+  if (!contactNumber) return '';
+  if (countryCode) return `${countryCode}${contactNumber}`;
+  return contactNumber;
+}
+
+export function formatZipCode(zip) {
+  if (!zip) return '';
+  const digits = zip.replace(/\D/g, '');
+  if (digits.length > 5) return `${digits.slice(0, 5)}-${digits.slice(5, 9)}`;
+  return digits;
+}
 
   export function toPascalCase (text = "") {
     if (!text) return "";
