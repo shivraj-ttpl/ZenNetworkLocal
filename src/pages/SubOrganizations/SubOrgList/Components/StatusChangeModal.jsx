@@ -85,7 +85,7 @@ export default function StatusChangeModal() {
       footerButton={
         <div className="flex justify-between w-full gap-3">
           <Button
-            variant="outline"
+            variant="outlineBlue"
             size="sm"
             type="button"
             onClick={handleClose}
