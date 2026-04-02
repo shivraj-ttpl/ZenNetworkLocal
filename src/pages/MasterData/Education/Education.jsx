@@ -50,7 +50,7 @@ export default function Education() {
     totalRecords = 0,
     totalPages = 0,
     page = 1,
-    limit = 10,
+    limit = 20,
     search = '',
     showArchived = false,
     filterSpecialty = null,

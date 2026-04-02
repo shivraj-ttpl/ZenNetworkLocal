@@ -16,6 +16,8 @@ import {
   setLimit,
   setOpenEditDrawer,
   setPage,
+  setSortKey,
+  setSortOrder,
 } from '../codesSlice';
 
 const { toggleStandaloneFavorite, archiveStandalone } = codesActions;
@@ -66,8 +68,8 @@ function renderFavorite(row) {
 function getColumnDefs(codeLabel, dispatch, codeType, canEdit) {
   const cols = [
     { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-    { id: 'name', header: `${codeLabel} Name`, accessorKey: 'name' },
-    { id: 'description', header: 'Description', accessorKey: 'description' },
+    { id: 'name', header: `${codeLabel} Name`, accessorKey: 'name', sortable: true },
+    { id: 'description', header: 'Description', accessorKey: 'description', sortable: true },
     {
       id: 'favorites',
       header: 'Favorites',
@@ -104,6 +106,8 @@ export default function useNameCodesTable() {
     totalPages = 0,
     page = 1,
     limit = 20,
+    sortKey = null,
+    sortOrder = null,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
   const isLoading = useLoadingKey(getLoadingKey(codeType));
@@ -127,11 +131,21 @@ export default function useNameCodesTable() {
     (l) => dispatch(setLimit(l)),
     [dispatch],
   );
+  const handleSortChange = useCallback(
+    (key, order) => {
+      dispatch(setSortKey(key));
+      dispatch(setSortOrder(order));
+    },
+    [dispatch],
+  );
 
   return {
     tableData,
     columns,
     isLoading,
+    sortKey,
+    sortOrder,
+    handleSortChange,
     totalRecords,
     totalPages,
     page,

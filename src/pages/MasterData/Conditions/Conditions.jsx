@@ -26,6 +26,8 @@ import {
   setLimit,
   setSearch,
   setShowArchived,
+  setSortKey,
+  setSortOrder,
   setOpenAddDrawer,
   setOpenEditDrawer,
 } from './conditionsSlice';
@@ -44,9 +46,11 @@ export default function Conditions() {
     totalRecords = 0,
     totalPages = 0,
     page = 1,
-    limit = 10,
+    limit = 20,
     search = '',
     showArchived = false,
+    sortKey = null,
+    sortOrder = null,
     refreshFlag = 0,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
@@ -62,7 +66,7 @@ export default function Conditions() {
 
   useEffect(() => {
     dispatch(fetchConditions());
-  }, [dispatch, page, limit, debouncedSearch, showArchived, refreshFlag]);
+  }, [dispatch, page, limit, debouncedSearch, showArchived, sortKey, sortOrder, refreshFlag]);
 
   useEffect(() => {
     setToolbar(
@@ -108,6 +112,14 @@ export default function Conditions() {
     [conditionsList, page, limit],
   );
 
+  const handleSortChange = useCallback(
+    (key, order) => {
+      dispatch(setSortKey(key));
+      dispatch(setSortOrder(order));
+    },
+    [dispatch],
+  );
+
   const handlePageChange = useCallback(
     (p) => dispatch(setPage(p)),
     [dispatch],
@@ -122,7 +134,7 @@ export default function Conditions() {
     () =>
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-        { id: 'name', header: 'Condition Name', accessorKey: 'name' },
+        { id: 'name', header: 'Condition Name', accessorKey: 'name', sortable: true },
         {
           id: 'icdCode',
           header: 'ICD Code',
@@ -141,12 +153,14 @@ export default function Conditions() {
           id: 'description',
           header: 'Description',
           accessorKey: 'description',
+          sortable: true,
         },
         {
           id: 'createdAt',
           header: 'Created Date',
           accessorKey: 'createdAt',
           width: 130,
+          sortable: true,
           render: (row) => formatDate(row.createdAt),
         },
         {
@@ -215,8 +229,11 @@ export default function Conditions() {
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 300px)"
+        maxHeight="calc(100vh - 260px)"
         loading={isLoading}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        onSortChange={handleSortChange}
       />
       <Pagination
         totalRecords={totalRecords}

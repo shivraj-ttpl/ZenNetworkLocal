@@ -44,6 +44,10 @@ const sliceConfig = {
       state.totalRecords = 0;
       state.totalPages = 0;
       state.page = 1;
+      state.search = '';
+      state.showArchived = false;
+      state.sortKey = null;
+      state.sortOrder = null;
     },
     setDrawerOpenFrom: (state, action) => {
       state.drawerOpenFrom = action.payload;

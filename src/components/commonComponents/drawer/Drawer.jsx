@@ -111,7 +111,7 @@ function Drawer({
         </div>
 
         <div
-          className={`${!hideHeaderBorder && "p-[16px]"} flex-1 overflow-${
+          className={`${!hideHeaderBorder && "p-4"} flex-1 overflow-${
             hideOverflow ? "visible" : "auto"
           }  ${customBodyClasses}`}
         >
@@ -120,7 +120,7 @@ function Drawer({
 
         {footerButton && (
           <div
-            className={`flex justify-end gap-2 p-1 border-t-1 border-[#E9E9E9] ${cutomFooterBtnClass}`}
+            className={`flex justify-end gap-2 p-1 border-t border-[#E9E9E9] ${cutomFooterBtnClass}`}
           >
             {footerButton}
           </div>
