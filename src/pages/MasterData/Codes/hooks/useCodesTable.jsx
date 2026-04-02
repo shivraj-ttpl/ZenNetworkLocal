@@ -16,6 +16,8 @@ import {
   setLimit,
   setOpenEditDrawer,
   setPage,
+  setSortKey,
+  setSortOrder,
 } from '../codesSlice';
 
 const { toggleFavorite, archiveCode } = codesActions;
@@ -68,8 +70,8 @@ function renderFavorite(row) {
 function getColumnDefs(codeLabel, dispatch, codeType, showArchived, canEdit) {
   const cols = [
     { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-    { id: 'code', header: `${codeLabel} Code`, accessorKey: 'code' },
-    { id: 'description', header: 'Description', accessorKey: 'description' },
+    { id: 'code', header: `${codeLabel} Code`, accessorKey: 'code', sortable: true },
+    { id: 'description', header: 'Description', accessorKey: 'description', sortable: true },
     {
       id: 'favorites',
       header: 'Favorites',
@@ -113,6 +115,8 @@ export default function useCodesTable() {
     page = 1,
     limit = 10,
     showArchived = false,
+    sortKey = null,
+    sortOrder = null,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
   const isLoading = useLoadingKey(LOADING_KEYS.CODES_GET_LIST);
 
@@ -135,6 +139,13 @@ export default function useCodesTable() {
     (l) => dispatch(setLimit(l)),
     [dispatch],
   );
+  const handleSortChange = useCallback(
+    (key, order) => {
+      dispatch(setSortKey(key));
+      dispatch(setSortOrder(order));
+    },
+    [dispatch],
+  );
 
   return {
     tableData,
@@ -144,7 +155,10 @@ export default function useCodesTable() {
     totalPages,
     page,
     limit,
+    sortKey,
+    sortOrder,
     handlePageChange,
     handleLimitChange,
+    handleSortChange,
   };
 }

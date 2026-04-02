@@ -41,11 +41,13 @@ export const codesActions = createSagaActions(componentKey, [
 function* fetchCodesSaga(action) {
   const { type } = action.payload;
   const state = yield select((s) => s[componentKey]);
-  const { page, limit, search, showArchived } = state;
+  const { page, limit, search, showArchived, sortKey, sortOrder } = state;
 
   const params = { page, limit };
   if (search) params.search = search;
   if (showArchived) params.showArchived = showArchived;
+  if (sortKey) params.sortBy = sortKey;
+  if (sortOrder) params.sortOrder = sortOrder;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.CODES_GET_LIST,

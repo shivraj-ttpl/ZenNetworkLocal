@@ -30,6 +30,12 @@ const sliceConfig = {
       state.showArchived = action.payload;
       state.page = 1;
     },
+    setSortKey: (state, action) => {
+      state.sortKey = action.payload;
+    },
+    setSortOrder: (state, action) => {
+      state.sortOrder = action.payload;
+    },
     setRefreshCodes: (state) => {
       state.refreshFlag = Date.now();
     },
@@ -84,6 +90,8 @@ const sliceConfig = {
     limit: 20,
     search: '',
     showArchived: false,
+    sortKey: null,
+    sortOrder: null,
     refreshFlag: 0,
     drawerOpenFrom: '',
     drawerMode: '',
@@ -108,6 +116,8 @@ export const {
   setLimit,
   setSearch,
   setShowArchived,
+  setSortKey,
+  setSortOrder,
   setRefreshCodes,
   resetCodesListState,
   setDrawerOpenFrom,
