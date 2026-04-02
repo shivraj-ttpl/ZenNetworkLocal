@@ -16,6 +16,7 @@ import {
 import './settingsRolesPermissionsSaga';
 import { settingsRolesActions } from './settingsRolesPermissionsSaga';
 
+import ConfirmUpdatePermissionsModal from './Components/ConfirmUpdatePermissionsModal';
 import CreateRoleModal from './Components/CreateRoleModal';
 
 const renderChangeCell = (value) => {
@@ -136,6 +137,28 @@ export default function EditRolePermissions() {
     }
   }, [roleDetail]);
 
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const handleSavePermissions = () => {
+    setConfirmModalOpen(false);
+    dispatch(
+      settingsRolesActions.updateRolePermissions({
+        roleId,
+        payload: {
+          name: roleDetail?.name,
+          roleType: roleDetail?.roleType,
+          permissions: permissions.map((p) => ({
+            permissionId: p.permissionId,
+            view: p.view,
+            create: p.create,
+            noAccess: p.noAccess,
+          })),
+        },
+        onSuccess: () => navigate(`/settings/roles-permissions/${roleId}/view`),
+      }),
+    );
+  };
+
   useEffect(() => {
     setToolbar(
       <Button
@@ -220,7 +243,6 @@ export default function EditRolePermissions() {
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 60 },
         { id: 'module', header: 'Module', accessorKey: 'module' },
-        { id: 'subModule', header: 'Sub-Module', accessorKey: 'subModule' },
         {
           id: 'feature',
           header: 'Feature',
@@ -342,24 +364,7 @@ export default function EditRolePermissions() {
           <Button
             variant="primaryBlue"
             size="sm"
-            onClick={() =>
-              dispatch(
-                settingsRolesActions.updateRolePermissions({
-                  roleId,
-                  payload: {
-                    name: roleDetail?.name,
-                    roleType: roleDetail?.roleType,
-                    permissions: permissions.map((p) => ({
-                      permissionId: p.permissionId,
-                      view: p.view,
-                      create: p.create,
-                      noAccess: p.noAccess,
-                    })),
-                  },
-                  onSuccess: () => navigate(`/settings/roles-permissions/${roleId}/view`),
-                }),
-              )
-            }
+            onClick={() => setConfirmModalOpen(true)}
           >
             Save Changes
           </Button>
@@ -374,6 +379,11 @@ export default function EditRolePermissions() {
       />
 
       <CreateRoleModal open={createRoleModalOpen} />
+      <ConfirmUpdatePermissionsModal
+        open={confirmModalOpen}
+        onCancel={() => setConfirmModalOpen(false)}
+        onConfirm={handleSavePermissions}
+      />
     </div>
   );
 }

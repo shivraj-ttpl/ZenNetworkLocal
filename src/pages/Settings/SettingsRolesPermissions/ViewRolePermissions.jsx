@@ -5,6 +5,8 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import Button from '@/components/commonComponents/button/Button';
 import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import {
   componentKey,
@@ -23,6 +25,7 @@ export default function ViewRolePermissions() {
   const state = useSelector((s) => s[componentKey]);
 
   const { createRoleModalOpen, roleDetail } = state || {};
+  const isLoading = useLoadingKey(LOADING_KEYS.SETTINGS_ROLES_GET_BY_ID);
 
   useEffect(() => {
     if (roleId) {
@@ -149,6 +152,7 @@ export default function ViewRolePermissions() {
         data={tableData}
         size="sm"
         maxHeight="calc(100vh - 280px)"
+        loading={isLoading}
       />
 
       <CreateRoleModal open={createRoleModalOpen} />

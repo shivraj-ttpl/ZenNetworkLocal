@@ -56,15 +56,8 @@ const sliceConfig = {
         state.viewData = data;
       }
     },
-    updateUserStatusInList: (state, action) => {
-      const { userId, status } = action.payload;
-      const user = (state.usersData ?? []).find((u) => u.id === userId);
-      if (user) user.status = status;
-    },
-    updateUserArchiveInList: (state, action) => {
-      const { userId, isArchived } = action.payload;
-      const user = (state.usersData ?? []).find((u) => u.id === userId);
-      if (user) user.isArchived = isArchived;
+    setRefreshUsers: (state) => {
+      state.refreshFlag = Date.now();
     },
   },
   initialReducerState: {
@@ -77,6 +70,7 @@ const sliceConfig = {
     filters: { subOrganization: null, status: null },
     usersData: [],
     totalRecords: 0,
+    refreshFlag: 0,
   },
 };
 
@@ -98,6 +92,5 @@ export const {
   clearFilters,
   setUsersData,
   setUserDetail,
-  updateUserStatusInList,
-  updateUserArchiveInList,
+  setRefreshUsers,
 } = slice.actions;

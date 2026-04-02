@@ -9,6 +9,9 @@ import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import {
   componentKey,
@@ -33,19 +36,21 @@ export default function SettingsRolesPermissions() {
   const [sortOrder, setSortOrder] = useState(null);
 
   const { createRoleModalOpen, rolesData, totalRecords, refreshFlag = 0 } = state || {};
+  const isLoading = useLoadingKey(LOADING_KEYS.SETTINGS_ROLES_GET_LIST);
+  const debouncedSearch = useDebounce(search);
 
   useEffect(() => {
     dispatch(
       settingsRolesActions.fetchRoles({
         page,
         limit,
-        search: search.trim() || undefined,
+        search: debouncedSearch.trim() || undefined,
         showArchived: showArchive || undefined,
         sortBy: sortKey || undefined,
         sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
       }),
     );
-  }, [dispatch, page, limit, search, showArchive, sortKey, sortOrder, refreshFlag]);
+  }, [dispatch, page, limit, debouncedSearch, showArchive, sortKey, sortOrder, refreshFlag]);
 
   useEffect(() => {
     setToolbar(
@@ -234,6 +239,7 @@ export default function SettingsRolesPermissions() {
         data={tableData}
         size="sm"
         maxHeight="calc(100vh - 240px)"
+        loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
