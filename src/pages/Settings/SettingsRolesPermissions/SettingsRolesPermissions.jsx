@@ -9,14 +9,13 @@ import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
-import { rolesData } from '@/data/settingsData';
-import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 
 import {
   componentKey,
   setOpenCreateRoleModal,
 } from './settingsRolesPermissionsSlice';
 import './settingsRolesPermissionsSaga';
+import { settingsRolesActions } from './settingsRolesPermissionsSaga';
 
 import CreateRoleModal from './Components/CreateRoleModal';
 
@@ -33,7 +32,20 @@ export default function SettingsRolesPermissions() {
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
-  const { createRoleModalOpen } = state || {};
+  const { createRoleModalOpen, rolesData, totalRecords, refreshFlag = 0 } = state || {};
+
+  useEffect(() => {
+    dispatch(
+      settingsRolesActions.fetchRoles({
+        page,
+        limit,
+        search: search.trim() || undefined,
+        showArchived: showArchive || undefined,
+        sortBy: sortKey || undefined,
+        sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
+      }),
+    );
+  }, [dispatch, page, limit, search, showArchive, sortKey, sortOrder, refreshFlag]);
 
   useEffect(() => {
     setToolbar(
@@ -41,7 +53,10 @@ export default function SettingsRolesPermissions() {
         <Checkbox
           label="Show Archive"
           checked={showArchive}
-          onChange={() => setShowArchive((p) => !p)}
+          onChange={() => {
+            setShowArchive((p) => !p);
+            setPage(1);
+          }}
           variant="blue"
           size="sm"
         />
@@ -76,35 +91,31 @@ export default function SettingsRolesPermissions() {
   }, []);
 
   const handleRowClick = useCallback(
-    (role) => {
-      console.log("role",role)
-      navigate(`/settings/roles-permissions/${role}/view`);
+    (roleId) => {
+      navigate(`/settings/roles-permissions/${roleId}/view`);
     },
     [navigate],
   );
 
-  const filteredData = useMemo(() => {
-    let data = rolesData;
-    if (!showArchive) {
-      data = data.filter((row) => row.status);
-    }
-    if (search.trim()) {
-      const term = search.toLowerCase();
-      data = data.filter((item) => item.roleName.toLowerCase().includes(term));
-    }
-    return data;
-  }, [search, showArchive]);
+  const totalPages = Math.ceil((totalRecords ?? 0) / limit) || 1;
 
-  const totalPages = Math.ceil(filteredData.length / limit) || 1;
-
-  const paginatedData = useMemo(
+  const tableData = useMemo(
     () =>
-      filteredData.slice((page - 1) * limit, page * limit).map((item, i) => ({
+      (rolesData ?? []).map((item, i) => ({
         ...item,
         srNo: String((page - 1) * limit + i + 1).padStart(2, '0'),
       })),
-    [filteredData, page, limit],
+    [rolesData, page, limit],
   );
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    });
+  };
 
   const columns = useMemo(
     () =>
@@ -116,32 +127,37 @@ export default function SettingsRolesPermissions() {
           width: 70,
         },
         {
-          id: 'roleName',
+          id: 'name',
           header: 'Role Name',
-          accessorKey: 'roleName',
+          accessorKey: 'name',
           render: (row) => (
             <span
-              className=' cursor-pointer hover:underline'
+              className="cursor-pointer hover:underline"
               onClick={(e) => {
                 e.stopPropagation();
                 handleRowClick(row?.id);
               }}
             >
-              {row?.roleName}
+              {row?.name}
             </span>
           ),
         },
-        { id: 'createdBy', header: 'Created By', accessorKey: 'createdBy' },
         {
-          id: 'createdDate',
-          header: 'Created Date',
-          accessorKey: 'createdDate',
+          id: 'roleType',
+          header: 'Role Type',
+          accessorKey: 'roleType',
         },
-        { id: 'updateBy', header: 'Update By', accessorKey: 'updateBy' },
         {
-          id: 'updateDate',
-          header: 'Update Date',
-          accessorKey: 'updateDate',
+          id: 'createdAt',
+          header: 'Created Date',
+          accessorKey: 'createdAt',
+          render: (row) => formatDate(row?.createdAt),
+        },
+        {
+          id: 'updatedAt',
+          header: 'Updated Date',
+          accessorKey: 'updatedAt',
+          render: (row) => formatDate(row?.updatedAt),
         },
         {
           id: 'status',
@@ -150,8 +166,16 @@ export default function SettingsRolesPermissions() {
           render: (row) => (
             <ToggleSwitch
               name={`status-${row.id}`}
-              checked={row.status}
+              checked={row.status === 'ACTIVE'}
               showLabel={false}
+              onChangeCb={() =>
+                dispatch(
+                  settingsRolesActions.updateRoleStatus({
+                    roleId: row.id,
+                    status: row.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+                  }),
+                )
+              }
             />
           ),
         },
@@ -160,48 +184,62 @@ export default function SettingsRolesPermissions() {
           header: 'Action',
           width: 70,
           align: 'center',
-          render: (row) => (
-            <ActionDropdown
-              options={[
-                {
-                  label: 'View',
-                  value: 'view',
-                  onClickCb: () =>
-                    navigate(`/settings/roles-permissions/${row.id}/view`),
-                },
-                {
-                  label: 'Edit',
-                  value: 'edit',
-                  onClickCb: () =>
-                    navigate(`/settings/roles-permissions/${row.id}/edit`),
-                },
-                {
-                  label: 'Archive',
-                  value: 'archive',
-                  onClickCb: () => {},
-                },
-              ]}
-            />
-          ),
+          render: (row) => {
+            const options = [
+              {
+                label: 'View',
+                value: 'view',
+                onClickCb: () =>
+                  navigate(`/settings/roles-permissions/${row.id}/view`),
+              },
+              {
+                label: 'Edit',
+                value: 'edit',
+                onClickCb: () =>
+                  navigate(`/settings/roles-permissions/${row.id}/edit`),
+              },
+            ];
+
+            if (showArchive) {
+              options.push({
+                label: 'Unarchive',
+                value: 'unarchive',
+                onClickCb: () =>
+                  dispatch(
+                    settingsRolesActions.archiveRole({ roleId: row.id, isArchived: true }),
+                  ),
+              });
+            } else {
+              options.push({
+                label: 'Archive',
+                value: 'archive',
+                onClickCb: () =>
+                  dispatch(
+                    settingsRolesActions.archiveRole({ roleId: row.id, isArchived: false }),
+                  ),
+              });
+            }
+
+            return <ActionDropdown options={options} />;
+          },
         },
       ]),
-    [navigate],
+    [navigate, handleRowClick, dispatch, showArchive],
   );
 
   return (
     <div className="px-5 pb-4">
       <Table
         columns={columns}
-        data={paginatedData}
+        data={tableData}
         size="sm"
         maxHeight="calc(100vh - 240px)"
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
-        // onRowClick={handleRowClick}
       />
       <Pagination
-        totalRecords={filteredData.length}
+        totalRecords={totalRecords ?? 0}
         totalPages={totalPages}
         currentPage={page}
         currentLimit={limit}

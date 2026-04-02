@@ -4,9 +4,6 @@ export const FORM_FIELDS_NAMES = {
 };
 
 export const ROLE_TYPE_OPTIONS = [
-  { label: "Sub-Org Admin", value: "Sub-Org Admin" },
-  { label: "Org Admin", value: "Org Admin" },
-  { label: "Provider", value: "Provider" },
-  { label: "Staff", value: "Staff" },
-  { label: "Care Manager", value: "Care Manager" },
+  { label: "Clinical", value: "clinical" },
+  { label: "Non Clinical", value: "non-clinical" },
 ];
