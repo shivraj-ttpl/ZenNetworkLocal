@@ -16,7 +16,6 @@ function* fetchAuditLogsSaga(action) {
     loadingKey: LOADING_KEYS.SETTINGS_AUDIT_LOGS_GET_LIST,
     apiFunc: () => SettingsProfileDataService.getAuditLogs(action.payload),
     onSuccess: function* (response) {
-      console.log(response?.data?.data)
       yield put(setAuditLogs(response?.data?.data));
     },
   });
