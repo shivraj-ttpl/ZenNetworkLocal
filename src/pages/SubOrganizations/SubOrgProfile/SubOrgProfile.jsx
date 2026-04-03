@@ -85,7 +85,7 @@ export default function SubOrgProfile() {
               <div className="h-4 bg-neutral-200 rounded w-64" />
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
@@ -93,7 +93,7 @@ export default function SubOrgProfile() {
               />
             ))}
           </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-3">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div key={i} className="h-4 bg-neutral-200 rounded w-full" />
@@ -125,7 +125,7 @@ export default function SubOrgProfile() {
             variant="square"
           />
           <div className="flex-1">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <h2 className="text-base font-semibold text-text-primary">
                   {profile.name}
@@ -149,7 +149,7 @@ export default function SubOrgProfile() {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {[
             {
               icon: 'users-round',
@@ -193,7 +193,7 @@ export default function SubOrgProfile() {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
               Contact Information

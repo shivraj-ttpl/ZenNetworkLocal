@@ -12,7 +12,7 @@ export const PATH_TO_LABEL = {
 export const CODE_TYPE_MAP = {
   ICD: 'icd',
   CPT: 'cpt',
-  LONIC: 'loinc',
+  LONIC: 'lonic',
   'SNOMED CT': 'snomed',
   HCPCS: 'hcpcs',
   Allergy: 'allergies',

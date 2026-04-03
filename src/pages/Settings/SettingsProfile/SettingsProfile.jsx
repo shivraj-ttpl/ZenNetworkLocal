@@ -6,6 +6,8 @@ import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Button from '@/components/commonComponents/button/Button';
 import Icon from '@/components/icons/Icon';
 import useCurrentUserRole from '@/hooks/getCurrentUserRole';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { SubOrgAdminProfile } from '@/pages/Settings/UserProfile/UserProfile';
 import EditSubOrganizationProfileDrawer from '@/pages/Settings/UserProfile/Components/EditSubOrganizationProfileDrawer';
 
@@ -104,6 +106,7 @@ export default function SettingsProfile() {
   const { profileData, drawerOpen, drawerMode, editData } = useSelector(
     (state) => state[componentKey] ?? {},
   );
+  const isLoading = useLoadingKey(LOADING_KEYS.SETTINGS_ORG_PROFILE_GET);
   const { profileData: userProfileData } = useSelector(
     (state) => state[userProfileComponentKey] ?? {},
   );
@@ -132,6 +135,43 @@ export default function SettingsProfile() {
     return () => setToolbar(null);
   }, [setToolbar, dispatch, isOrgAdmin, profileData]);
 
+  if (isLoading && !profileData) {
+    return (
+      <div className="px-3 sm:px-5 pb-5">
+        <div className="border border-border-light rounded-lg p-4 sm:p-5 animate-pulse">
+          <div className="flex items-start gap-4 mb-6">
+            <div className="w-16 h-16 bg-neutral-200 rounded-lg" />
+            <div className="flex-1 space-y-2">
+              <div className="h-5 bg-neutral-200 rounded w-48" />
+              <div className="h-4 bg-neutral-200 rounded w-32" />
+              <div className="h-4 bg-neutral-200 rounded w-64" />
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 my-3">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="border border-border-light rounded-lg p-4 h-16 bg-neutral-100 animate-pulse"
+            />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 animate-pulse">
+          <div className="space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-4 bg-neutral-200 rounded w-full" />
+            ))}
+          </div>
+          <div className="space-y-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-4 bg-neutral-200 rounded w-full" />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!isOrgAdmin) {
     return (
       <>
@@ -150,7 +190,7 @@ export default function SettingsProfile() {
   return (
     <>
       <div className="px-3 sm:px-5 pb-5">
-        <div className="border border-border-light rounded-lg p-4 sm:p-5">
+        <div className="border bg-surface border-border-light rounded-lg p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
             <Avatar name={profileData?.name} size="xl" variant="square" />
             <div className="flex-1 gap-3">
@@ -173,7 +213,7 @@ export default function SettingsProfile() {
           {STATS.map((stat) => (
             <div
               key={stat.key}
-              className="border border-border-light rounded-lg p-3 sm:p-4 flex items-center gap-3"
+              className="border  bg-surface border-border-light rounded-lg p-3 sm:p-4 flex items-center gap-3"
             >
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
                 <Icon name={stat.icon} size={20} className="text-primary-600" />
@@ -190,13 +230,13 @@ export default function SettingsProfile() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 ">
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
                 Contact Information
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-3  bg-surface p-3 rounded-md border border-border-light">
                 {CONTACT_FIELDS.map((item) => (
                   <LabelValue
                     key={item.key}
@@ -212,10 +252,10 @@ export default function SettingsProfile() {
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
+              <h3 className="text-sm font-semibold text-text-primary mb-4 border-b   border-border-light pb-2">
                 Organization Details
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-3  bg-surface p-3 rounded-md border border-border-light">
                 {ORG_DETAIL_FIELDS.map((item) => (
                   <LabelValue
                     key={item.key}
@@ -235,23 +275,32 @@ export default function SettingsProfile() {
             <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
               Administrative Contact
             </h3>
-            <div className="space-y-6">
-              {(profileData?.orgUsers ?? []).map((contact, idx) => (
-                <div key={idx} className="space-y-3">
-                  {ADMIN_FIELDS.map((item) => (
-                    <LabelValue
-                      key={`${idx}-${item.key}`}
-                      label={item.label}
-                      value={
-                        item.format
-                          ? item.format(contact[item.key], contact)
-                          : contact[item.key]
-                      }
-                      isLink={item.isLink}
-                    />
-                  ))}
-                </div>
-              ))}
+            <div className="max-h-[calc(100vh-460px)] overflow-y-auto pr-2">
+              <div className="space-y-6  bg-surface p-3 rounded-md border border-border-light">
+                {(profileData?.orgUsers ?? []).map((contact, idx) => (
+                  <>
+                  <div key={idx} className="space-y-3">
+                    {ADMIN_FIELDS.map((item) => {
+                      return (
+                      <>
+                      <LabelValue
+                        key={`${idx}-${item.key}`}
+                        label={item.label}
+                        value={
+                          item.format
+                            ? item.format(contact[item.key], contact)
+                            : contact[item.key]
+                        }
+                        isLink={item.isLink}
+                      />
+                      </>
+                      )
+                    })}
+                  </div>
+                  <hr className="border-border-light" />
+                  </>
+                ))}
+              </div>
             </div>
           </div>
         </div>

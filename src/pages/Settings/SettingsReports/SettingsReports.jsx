@@ -152,7 +152,7 @@ export default function SettingsReports() {
         columns={columns}
         data={paginatedData}
         size="sm"
-        maxHeight="calc(100vh - 340px)"
+        maxHeight="calc(100vh - 390px)"
         selectable
         selectedRows={selectedRows}
         onSelectionChange={setSelectedRows}

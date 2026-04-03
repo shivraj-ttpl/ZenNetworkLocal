@@ -17,6 +17,7 @@ import { toPascalCase } from '@/utils/GeneralUtils';
 import { FORM_FIELDS_NAMES } from '../constant';
 import { setCloseDrawer } from '../settingsUsersSlice';
 import { settingsUsersActions } from '../settingsUsersSaga';
+import { formatZipCode } from '../../../../utils/GeneralUtils';
 
 const validationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required(
@@ -26,9 +27,6 @@ const validationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.EMAIL]: Yup.string()
     .email('Invalid email')
     .required('Email is required'),
-  [FORM_FIELDS_NAMES.SUB_ORGANIZATION]: Yup.object()
-    .nullable()
-    .required('Sub-Organization is required'),
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]: Yup.string().nullable(),
   [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required(
     'Address Line 1 is required',
@@ -48,11 +46,11 @@ const getInitialValues = (editData) => ({
   photo: null,
   [FORM_FIELDS_NAMES.FIRST_NAME]: editData?.firstName ?? '',
   [FORM_FIELDS_NAMES.LAST_NAME]: editData?.lastName ?? '',
-  [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber ?? '',
+  [FORM_FIELDS_NAMES.CONTACT_NUMBER]:
+    editData?.countryCode && editData?.contactNumber
+      ? `${editData.countryCode}${editData.contactNumber}`
+      : editData?.contactNumber ?? '',
   [FORM_FIELDS_NAMES.EMAIL]: editData?.email ?? '',
-  [FORM_FIELDS_NAMES.SUB_ORGANIZATION]: editData?.assignedSubOrgs?.length
-    ? { id: editData.subOrgIds?.[0], name: editData.assignedSubOrgs[0] }
-    : null,
   [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.address?.addressLine1 ?? '',
   [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.address?.addressLine2 ?? '',
   [FORM_FIELDS_NAMES.STATE]: editData?.address?.state
@@ -62,7 +60,7 @@ const getInitialValues = (editData) => ({
     ? { name: editData.address.country }
     : null,
   [FORM_FIELDS_NAMES.CITY]: editData?.address?.city ?? '',
-  [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.address?.zipCode ?? '',
+  [FORM_FIELDS_NAMES.ZIP_CODE]: formatZipCode(editData?.address?.zipCode) ?? '',
 });
 
 export default function AddUserDrawer({ open, drawerMode, editData }) {
@@ -80,11 +78,8 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
       firstName: values[FORM_FIELDS_NAMES.FIRST_NAME],
       lastName: values[FORM_FIELDS_NAMES.LAST_NAME],
       email: values[FORM_FIELDS_NAMES.EMAIL],
-      contactNumber: values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || undefined,
+      contactNumber: parsed ? parsed.nationalNumber : (values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || undefined),
       countryCode: parsed ? `+${parsed.countryCallingCode}` : undefined,
-      subOrgIds: values[FORM_FIELDS_NAMES.SUB_ORGANIZATION]?.id
-        ? [values[FORM_FIELDS_NAMES.SUB_ORGANIZATION].id]
-        : undefined,
       ...(!isEdit && {
         userType: isOrgAdmin ? 'ORG_ADMIN' : 'SUB_ORG_ADMIN',
         isOrgAdmin: isOrgAdmin,
@@ -188,22 +183,6 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
                     required
                   />
                 </div>
-
-                <AsyncSelectDropdown
-                  label="Sub-Organization"
-                  name={FORM_FIELDS_NAMES.SUB_ORGANIZATION}
-                  placeholder="Select Sub-Organization"
-                  url="dropdown-apis/sub-organizations"
-                  valueKey="id"
-                  labelKey="name"
-                  value={values[FORM_FIELDS_NAMES.SUB_ORGANIZATION]}
-                  onChange={(selected) =>
-                    setFieldValue(FORM_FIELDS_NAMES.SUB_ORGANIZATION, selected)
-                  }
-                  error={errors[FORM_FIELDS_NAMES.SUB_ORGANIZATION]}
-                  touched={touched[FORM_FIELDS_NAMES.SUB_ORGANIZATION]}
-                  required
-                />
 
                 <div className="grid grid-cols-2 gap-4">
                   <PhoneInput

@@ -43,7 +43,8 @@ const sliceConfig = {
     },
     setUsersData: (state, action) => {
       state.usersData = action.payload.data ?? action.payload ?? [];
-      state.totalRecords = action.payload.totalRecords ?? action.payload?.length ?? 0;
+      state.totalRecords = action.payload.meta?.total ?? action.payload.totalRecords ?? 0;
+      state.totalPages = action.payload.meta?.totalPages ?? 0;
     },
     setUserDetail: (state, action) => {
       const { data, mode } = action.payload;
@@ -56,15 +57,8 @@ const sliceConfig = {
         state.viewData = data;
       }
     },
-    updateUserStatusInList: (state, action) => {
-      const { userId, status } = action.payload;
-      const user = (state.usersData ?? []).find((u) => u.id === userId);
-      if (user) user.status = status;
-    },
-    updateUserArchiveInList: (state, action) => {
-      const { userId, isArchived } = action.payload;
-      const user = (state.usersData ?? []).find((u) => u.id === userId);
-      if (user) user.isArchived = isArchived;
+    setRefreshUsers: (state) => {
+      state.refreshFlag = Date.now();
     },
   },
   initialReducerState: {
@@ -77,6 +71,8 @@ const sliceConfig = {
     filters: { subOrganization: null, status: null },
     usersData: [],
     totalRecords: 0,
+    totalPages: 0,
+    refreshFlag: 0,
   },
 };
 
@@ -98,6 +94,5 @@ export const {
   clearFilters,
   setUsersData,
   setUserDetail,
-  updateUserStatusInList,
-  updateUserArchiveInList,
+  setRefreshUsers,
 } = slice.actions;

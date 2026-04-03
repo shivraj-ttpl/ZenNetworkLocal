@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
@@ -9,6 +10,8 @@ import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectD
 
 import { FORM_FIELDS_NAMES, ROLE_TYPE_OPTIONS } from "../constant";
 import { setCloseCreateRoleModal } from "../settingsRolesPermissionsSlice";
+import { settingsRolesActions } from "../settingsRolesPermissionsSaga";
+import ConfirmCreateRoleModal from "./ConfirmCreateRoleModal";
 
 const validationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.ROLE_NAME]: Yup.string().required("Role Name is required"),
@@ -24,73 +27,120 @@ const initialValues = {
 
 export default function CreateRoleModal({ open }) {
   const dispatch = useDispatch();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [pendingValues, setPendingValues] = useState(null);
+  const formikRef = useRef(null);
 
-  const handleClose = () => dispatch(setCloseCreateRoleModal());
+  const handleClose = () => {
+    setShowConfirm(false);
+    setPendingValues(null);
+    dispatch(setCloseCreateRoleModal());
+  };
 
-  const handleFormSubmit = (_, { resetForm }) => {
-    resetForm();
-    handleClose();
+  const handleFormSubmit = (values) => {
+    setPendingValues(values);
+    setShowConfirm(true);
+  };
+
+  const handleConfirm = () => {
+    if (!pendingValues) return;
+
+    const payload = {
+      name: pendingValues[FORM_FIELDS_NAMES.ROLE_NAME],
+      roleType: pendingValues[FORM_FIELDS_NAMES.ROLE_TYPE]?.value,
+    };
+
+    dispatch(
+      settingsRolesActions.createRole({
+        payload,
+        onSuccess: () => {
+          formikRef.current?.resetForm();
+          setShowConfirm(false);
+          setPendingValues(null);
+          handleClose();
+          dispatch(settingsRolesActions.fetchRoles({ page: 1, limit: 20 }));
+        },
+      }),
+    );
+  };
+
+  const handleCancelConfirm = () => {
+    setShowConfirm(false);
+    setPendingValues(null);
   };
 
   return (
-    <ModalComponent
-      title="Add New Role"
-      open={open}
-      close={handleClose}
-      customClasses="w-[95%] sm:w-[450px]"
-      footerButton={null}
-    >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleFormSubmit}
+    <>
+      <ModalComponent
+        title="Add New Role"
+        open={open}
+        close={handleClose}
+        customClasses="w-[95%] sm:w-[450px]"
+        footerButton={null}
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          setFieldValue,
-        }) => (
-          <Form className="flex flex-col gap-5">
-            <Input
-              label="Role Name"
-              name={FORM_FIELDS_NAMES.ROLE_NAME}
-              placeholder="Enter Role Name"
-              value={values[FORM_FIELDS_NAMES.ROLE_NAME]}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={errors[FORM_FIELDS_NAMES.ROLE_NAME]}
-              touched={touched[FORM_FIELDS_NAMES.ROLE_NAME]}
-            />
-            <SelectDropdown
-              label="Role Type"
-              name={FORM_FIELDS_NAMES.ROLE_TYPE}
-              placeholder="Select Role Type"
-              options={ROLE_TYPE_OPTIONS}
-              value={values[FORM_FIELDS_NAMES.ROLE_TYPE]}
-              onChange={(selected) =>
-                setFieldValue(FORM_FIELDS_NAMES.ROLE_TYPE, selected)
-              }
-              error={errors[FORM_FIELDS_NAMES.ROLE_TYPE]}
-              touched={touched[FORM_FIELDS_NAMES.ROLE_TYPE]}
-            />
+        <Formik
+          innerRef={formikRef}
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleFormSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            setFieldValue,
+          }) => (
+            <Form className="flex flex-col gap-5">
+              <Input
+                label="Role Name"
+                name={FORM_FIELDS_NAMES.ROLE_NAME}
+                placeholder="Enter Role Name"
+                value={values[FORM_FIELDS_NAMES.ROLE_NAME]}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={errors[FORM_FIELDS_NAMES.ROLE_NAME]}
+                touched={touched[FORM_FIELDS_NAMES.ROLE_NAME]}
+                required
+              />
+              <SelectDropdown
+                label="Role Type"
+                name={FORM_FIELDS_NAMES.ROLE_TYPE}
+                placeholder="Select Role Type"
+                options={ROLE_TYPE_OPTIONS}
+                value={values[FORM_FIELDS_NAMES.ROLE_TYPE]}
+                onChange={(selected) =>
+                  setFieldValue(FORM_FIELDS_NAMES.ROLE_TYPE, selected)
+                }
+                error={errors[FORM_FIELDS_NAMES.ROLE_TYPE]}
+                touched={touched[FORM_FIELDS_NAMES.ROLE_TYPE]}
+                required
+              />
 
-            <div className="flex justify-end pt-2 border-t border-[#E9E9E9]">
-              <Button
-                variant="primaryBlue"
-                size="sm"
-                type="button"
-                onClick={handleSubmit}
-              >
-                Create
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </ModalComponent>
+              <div className="flex justify-end pt-2 border-t border-[#E9E9E9]">
+                <Button
+                  variant="primaryBlue"
+                  size="sm"
+                  type="button"
+                  onClick={handleSubmit}
+                >
+                  Create
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </ModalComponent>
+
+      <ConfirmCreateRoleModal
+        open={showConfirm}
+        onCancel={handleCancelConfirm}
+        onConfirm={handleConfirm}
+        roleName={pendingValues?.[FORM_FIELDS_NAMES.ROLE_NAME] || ""}
+        roleType={pendingValues?.[FORM_FIELDS_NAMES.ROLE_TYPE]?.label || ""}
+      />
+    </>
   );
 }

@@ -281,8 +281,8 @@ export default function Table({
                       key={header.id}
                       className={`
                         ${sizeClasses.header}
-                        font-semibold text-neutral-600  tracking-wider whitespace-nowrap
-                        select-none
+                        font-semibold text-neutral-600 tracking-wider whitespace-nowrap
+                        select-none bg-neutral-100
                         ${isSortable ? 'cursor-pointer hover:bg-neutral-200 transition-colors' : ''}
                         ${getCellClasses(header.column, stickyOffsets, true)}
                       `}

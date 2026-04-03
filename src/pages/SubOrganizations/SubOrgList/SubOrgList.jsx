@@ -188,24 +188,38 @@ export default function SubOrgList() {
             ];
 
             if (row.status === 'INACTIVE') {
-              options.push({
-                label: row.isArchived ? 'Unarchive' : 'Archive',
-                value: 'archive',
-                onClickCb: () =>
-                  dispatch(
-                    archiveSubOrganization({
-                      id: row.id,
-                      isArchived: row.isArchived,
-                    }),
-                  ),
-              });
+              if (showArchived) {
+                options.push({
+                  label: 'Unarchive',
+                  value: 'unarchive',
+                  onClickCb: () =>
+                    dispatch(
+                      archiveSubOrganization({
+                        id: row.id,
+                        isArchived: true,
+                      }),
+                    ),
+                });
+              } else {
+                options.push({
+                  label: 'Archive',
+                  value: 'archive',
+                  onClickCb: () =>
+                    dispatch(
+                      archiveSubOrganization({
+                        id: row.id,
+                        isArchived: false,
+                      }),
+                    ),
+                });
+              }
             }
 
             return <ActionDropdown options={options} />;
           },
         },
       ]),
-    [navigate, dispatch],
+    [navigate, dispatch, showArchived],
   );
 
   return (

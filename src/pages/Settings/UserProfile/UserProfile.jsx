@@ -4,7 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Button from '@/components/commonComponents/button/Button';
 import Icon from '@/components/icons/Icon';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
 import useCurrentUserRole from '@/hooks/getCurrentUserRole';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import {
   componentKey,
@@ -276,6 +278,7 @@ export default function UserProfile() {
   );
   const { isOrgAdmin } = useCurrentUserRole();
   const dispatch = useDispatch();
+  const isLoading = useLoadingKey(LOADING_KEYS.USERS_GET_PROFILE);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -298,11 +301,35 @@ export default function UserProfile() {
         </Button>
       </div>
       <div className="px-5 pb-5">
-        {/* {isOrgAdmin ? (
-          <OrgAdminProfile profile={profileData} />
-        ) : ( */}
-        <SubOrgAdminProfile profile={profileData} isOrgAdmin={isOrgAdmin} />
-        {/* )} */}
+        {isLoading && !profileData ? (
+          <div className="space-y-5 animate-pulse">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="border border-border-light rounded-lg p-4 h-16 bg-neutral-100" />
+              ))}
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              <div className="border border-border-light rounded-lg p-5">
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 bg-neutral-200 rounded-lg" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-5 bg-neutral-200 rounded w-48" />
+                    <div className="h-4 bg-neutral-200 rounded w-64" />
+                    <div className="h-4 bg-neutral-200 rounded w-40" />
+                    <div className="h-4 bg-neutral-200 rounded w-56" />
+                  </div>
+                </div>
+              </div>
+              <div className="border border-border-light rounded-lg p-5 space-y-3">
+                <div className="h-5 bg-neutral-200 rounded w-24" />
+                <div className="h-4 bg-neutral-200 rounded w-48" />
+                <div className="h-4 bg-neutral-200 rounded w-40" />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <SubOrgAdminProfile profile={profileData} isOrgAdmin={isOrgAdmin} />
+        )}
       </div>
       {/* {isOrgAdmin ? (
         <EditOrganizationUserProfileDrawer

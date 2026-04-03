@@ -430,7 +430,7 @@ export default function ViewAssessmentDrawer() {
       width={isFamilyMedicine ? 'w-[90%] max-w-[90%]' : 'max-w-[70%] w-[70%]'}
       hideOverflow
       footerButton={
-        <div className="flex justify-between w-full px-2 pb-2">
+        <div className="flex justify-between w-full px-2 ">
           {!isFirstStep ? (
             <Button
               variant="outlineBlue"
@@ -442,7 +442,7 @@ export default function ViewAssessmentDrawer() {
             </Button>
           ) : (
             <Button
-              variant="outline"
+              variant="outlineBlue"
               size="sm"
               type="button"
               onClick={handleClose}
@@ -473,8 +473,8 @@ export default function ViewAssessmentDrawer() {
         enableReinitialize
       >
         {({ values, handleChange, handleBlur, setFieldValue }) => (
-          <Form className="flex min-h-0 h-[86vh] overflow-hidden">
-            <div>
+          <Form className="flex min-h-0 h-[calc(100vh-130px)] overflow-hidden">
+            <div className='h-[calc(100vh-140px)]  border-border  border-r overflow-hidden overflow-y-auto'>
               {' '}
               <AssessmentStepSidebar
                 steps={steps}
@@ -484,7 +484,7 @@ export default function ViewAssessmentDrawer() {
               />
             </div>
 
-            <div className="flex-1 h-full overflow-y-auto pl-6 pr-4 py-4">
+            <div className="flex-1 h-full overflow-y-auto pl-6 pr-4 ">
               {renderStepContent({
                 values,
                 handleChange,

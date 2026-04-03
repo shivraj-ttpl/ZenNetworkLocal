@@ -34,7 +34,7 @@ export default function TableSkeleton({
           className={`${cellClassName} whitespace-nowrap`}
         >
           <div
-            className="h-4 rounded-md bg-neutral-400 animate-pulse"
+            className="h-4 rounded-md bg-neutral-200 animate-pulse"
             style={{ width: getShimmerWidth(rowIdx, colIdx) }}
           />
         </td>

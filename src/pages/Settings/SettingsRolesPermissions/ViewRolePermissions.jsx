@@ -4,14 +4,17 @@ import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
 import { buildColumns, Table } from '@/components/commonComponents/table';
+import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
-import { permissionsData, rolesData } from '@/data/settingsData';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import {
   componentKey,
   setOpenCreateRoleModal,
 } from './settingsRolesPermissionsSlice';
 import './settingsRolesPermissionsSaga';
+import { settingsRolesActions } from './settingsRolesPermissionsSaga';
 
 import CreateRoleModal from './Components/CreateRoleModal';
 
@@ -22,9 +25,14 @@ export default function ViewRolePermissions() {
   const dispatch = useDispatch();
   const state = useSelector((s) => s[componentKey]);
 
-  const { createRoleModalOpen } = state || {};
+  const { createRoleModalOpen, roleDetail } = state || {};
+  const isLoading = useLoadingKey(LOADING_KEYS.SETTINGS_ROLES_GET_BY_ID);
 
-  const role = useMemo(() => rolesData.find((r) => r.id === roleId), [roleId]);
+  useEffect(() => {
+    if (roleId) {
+      dispatch(settingsRolesActions.fetchRoleById({ roleId }));
+    }
+  }, [dispatch, roleId]);
 
   useEffect(() => {
     setToolbar(
@@ -33,7 +41,8 @@ export default function ViewRolePermissions() {
         size="sm"
         onClick={() => dispatch(setOpenCreateRoleModal())}
       >
-        <Icon name="Plus" size={14} />Create Role
+        <Icon name="Plus" size={14} />
+        Create Role
       </Button>,
     );
     return () => setToolbar(null);
@@ -41,11 +50,12 @@ export default function ViewRolePermissions() {
 
   const tableData = useMemo(
     () =>
-      permissionsData.map((item, i) => ({
+      (roleDetail?.permissions ?? []).map((item, i) => ({
         ...item,
         srNo: String(i + 1).padStart(2, '0'),
+        noAccess: item?.noAccess,
       })),
-    [],
+    [roleDetail],
   );
 
   const columns = useMemo(
@@ -53,7 +63,6 @@ export default function ViewRolePermissions() {
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 60 },
         { id: 'module', header: 'Module', accessorKey: 'module' },
-        { id: 'subModule', header: 'Sub-Module', accessorKey: 'subModule' },
         {
           id: 'feature',
           header: 'Feature',
@@ -61,38 +70,93 @@ export default function ViewRolePermissions() {
           render: (row) => (
             <span className="inline-flex items-center gap-1.5">
               {row.feature}
-              <Icon name="CircleHelp" size={14} className="text-neutral-400" />
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-84">
+                    {`Enable users to view ${row?.feature} read/unreadstatus and preferences, and dismiss or archive ${row?.feature}`}
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
             </span>
           ),
         },
         {
           id: 'view',
-          header: 'View',
+          headerRender: (
+            <span className="inline-flex items-center gap-1.5">
+              View
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Allows users to view and access this module or feature
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
+            </span>
+          ),
           render: (row) =>
             row.view ? (
-              <span className="text-success-500 font-medium">&#10003;</span>
+              <Icon name="Check" size={16} className="text-primary-700" />
             ) : (
-              <span className="text-error-500 font-medium">&#10007;</span>
+              <Icon name="X" size={16} className="text-error-500" />
             ),
         },
         {
           id: 'create',
-          header: 'Create',
+          headerRender: (
+            <span className="inline-flex items-center gap-1.5">
+              Create
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Allows users to add new entries and make changes within this module or feature.
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
+            </span>
+          ),
           render: (row) =>
             row.create ? (
-              <span className="text-success-500 font-medium">&#10003;</span>
+              <Icon name="Check" size={16} className="text-primary-700" />
             ) : (
-              <span className="text-error-500 font-medium">&#10007;</span>
+              <Icon name="X" size={16} className="text-error-500" />
             ),
         },
         {
           id: 'noAccess',
-          header: 'No Access',
+          headerRender: (
+            <span className="inline-flex items-center gap-1.5">
+              No Access
+              <ToolTip
+                position="bottom"
+                usePortal
+                content={
+                  <p className="text-sm text-text-secondary p-3 w-72">
+                    Restricts users from viewing or interacting with this module or feature.
+                  </p>
+                }
+              >
+                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+              </ToolTip>
+            </span>
+          ),
           render: (row) =>
             row.noAccess ? (
-              <span className="text-success-500 font-medium">&#10003;</span>
+              <Icon name="Check" size={16} className="text-primary-700" />
             ) : (
-              <span className="text-error-500 font-medium">&#10007;</span>
+              <Icon name="X" size={16} className="text-error-500" />
             ),
         },
       ]),
@@ -110,10 +174,22 @@ export default function ViewRolePermissions() {
           View Role & Permissions
         </button>
         <div className="flex items-center gap-3">
-          <span className="border border-border-light rounded-lg px-3 py-1.5 text-sm">
-            Role Name:{' '}
-            <strong>{role?.roleName || 'Primary Care Provider'}</strong>
-          </span>
+          <div className="inline-flex items-center bg-[#EBEBEB] border border-border-light rounded-lg px-4 py-2 text-sm gap-3">
+            <div className="flex items-center gap-1">
+              <span className="text-text-secondary">Role Name:</span>
+              <span className="text-text-primary font-medium">
+                {roleDetail?.name || '—'}
+              </span>
+            </div>
+            <div className="h-4 w-px bg-border-light" />
+
+            <div className="flex items-center gap-1">
+              <span className="text-text-secondary">Role Type:</span>
+              <span className="text-text-primary font-medium capitalize">
+                {roleDetail?.roleType || '—'}
+              </span>
+            </div>
+          </div>
           <Button
             variant="outlineBlue"
             size="sm"
@@ -132,6 +208,7 @@ export default function ViewRolePermissions() {
         data={tableData}
         size="sm"
         maxHeight="calc(100vh - 280px)"
+        loading={isLoading}
       />
 
       <CreateRoleModal open={createRoleModalOpen} />

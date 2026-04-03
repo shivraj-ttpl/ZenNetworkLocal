@@ -7,7 +7,7 @@ import { apiCall, createSagaActions } from "@/core/store/sagaHelpers";
 import store from "@/core/store/store";
 import SettingsProfileDataService from "@/services/appDataService/SettingsProfileDataService";
 
-import { componentKey, setUsersData, setUserDetail, updateUserStatusInList, updateUserArchiveInList } from "./settingsUsersSlice";
+import { componentKey, setUsersData, setUserDetail, setRefreshUsers } from "./settingsUsersSlice";
 
 export const settingsUsersActions = createSagaActions(componentKey, [
   "fetchUsers",
@@ -47,13 +47,13 @@ function* updateUserStatusSaga(action) {
     loadingKey: LOADING_KEYS.SETTINGS_USERS_PATCH_STATUS,
     apiFunc: () => SettingsProfileDataService.updateUserStatus(userId, status),
     onSuccess: function* () {
-      yield put(updateUserStatusInList({ userId, status }));
       yield put(
         addNotification({
           message: toastMessages.settingsUserStatusUpdatedSuccess,
           variant: TOASTER_VARIANT.SUCCESS,
         }),
       );
+      yield put(setRefreshUsers());
     },
   });
 }
@@ -70,6 +70,7 @@ function* createUserSaga(action) {
           variant: TOASTER_VARIANT.SUCCESS,
         }),
       );
+      yield put(setRefreshUsers());
       if (onSuccess) onSuccess();
     },
   });
@@ -87,6 +88,7 @@ function* updateUserSaga(action) {
           variant: TOASTER_VARIANT.SUCCESS,
         }),
       );
+      yield put(setRefreshUsers());
       if (onSuccess) onSuccess();
     },
   });
@@ -98,13 +100,13 @@ function* archiveUserSaga(action) {
     loadingKey: LOADING_KEYS.SETTINGS_USERS_PATCH_ARCHIVE,
     apiFunc: () => SettingsProfileDataService.archiveUser(userId),
     onSuccess: function* () {
-      yield put(updateUserArchiveInList({ userId, isArchived: true }));
       yield put(
         addNotification({
           message: toastMessages.settingsUserArchivedSuccess,
           variant: TOASTER_VARIANT.SUCCESS,
         }),
       );
+      yield put(setRefreshUsers());
     },
   });
 }
@@ -115,13 +117,13 @@ function* unarchiveUserSaga(action) {
     loadingKey: LOADING_KEYS.SETTINGS_USERS_PATCH_ARCHIVE,
     apiFunc: () => SettingsProfileDataService.unarchiveUser(userId),
     onSuccess: function* () {
-      yield put(updateUserArchiveInList({ userId, isArchived: false }));
       yield put(
         addNotification({
           message: toastMessages.settingsUserUnarchivedSuccess,
           variant: TOASTER_VARIANT.SUCCESS,
         }),
       );
+      yield put(setRefreshUsers());
     },
   });
 }

@@ -13,7 +13,10 @@ export default function ICDCodes() {
     page,
     limit,
     handlePageChange,
+    handleSortChange,
     handleLimitChange,
+    sortKey,
+    sortOrder,
   } = useCodesTable();
 
   return (
@@ -24,6 +27,9 @@ export default function ICDCodes() {
         size="sm"
         maxHeight="calc(100vh - 300px)"
         loading={isLoading}
+        sortKey={sortKey}
+        sortOrder={sortOrder}
+        onSortChange={handleSortChange}
       />
       <Pagination
         totalRecords={totalRecords}

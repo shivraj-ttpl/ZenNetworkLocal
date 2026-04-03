@@ -30,6 +30,12 @@ const sliceConfig = {
       state.showArchived = action.payload;
       state.page = 1;
     },
+    setSortKey: (state, action) => {
+      state.sortKey = action.payload;
+    },
+    setSortOrder: (state, action) => {
+      state.sortOrder = action.payload;
+    },
     setRefreshCodes: (state) => {
       state.refreshFlag = Date.now();
     },
@@ -38,6 +44,10 @@ const sliceConfig = {
       state.totalRecords = 0;
       state.totalPages = 0;
       state.page = 1;
+      state.search = '';
+      state.showArchived = false;
+      state.sortKey = null;
+      state.sortOrder = null;
     },
     setDrawerOpenFrom: (state, action) => {
       state.drawerOpenFrom = action.payload;
@@ -84,6 +94,8 @@ const sliceConfig = {
     limit: 20,
     search: '',
     showArchived: false,
+    sortKey: null,
+    sortOrder: null,
     refreshFlag: 0,
     drawerOpenFrom: '',
     drawerMode: '',
@@ -108,6 +120,8 @@ export const {
   setLimit,
   setSearch,
   setShowArchived,
+  setSortKey,
+  setSortOrder,
   setRefreshCodes,
   resetCodesListState,
   setDrawerOpenFrom,

@@ -9,6 +9,10 @@ import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
+import VerificationIcon from '@/components/commonComponents/verificationIcon/VerificationIcon';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import { componentKey, setOpenAddDrawer } from './settingsUsersSlice';
 
@@ -17,12 +21,14 @@ import { settingsUsersActions } from './settingsUsersSaga';
 
 import AddUserDrawer from './Components/AddUserDrawer';
 import ViewUserModal from './Components/ViewUserModal';
+import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
+import { formatDateTime } from '../../../utils/GeneralUtils';
 
 export default function SettingsUsers() {
   const { setToolbar } = useOutletContext();
   const dispatch = useDispatch();
   const state = useSelector((s) => s[componentKey]);
-
+  const { isOrgAdmin } = useCurrentUserRole();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
@@ -39,14 +45,18 @@ export default function SettingsUsers() {
     filters,
     usersData,
     totalRecords,
+    totalPages = 0,
+    refreshFlag = 0,
   } = state || {};
+  const isLoading = useLoadingKey(LOADING_KEYS.SETTINGS_USERS_GET_LIST);
+  const debouncedSearch = useDebounce(search);
 
   useEffect(() => {
     dispatch(
       settingsUsersActions.fetchUsers({
         page,
         limit,
-        search: search.trim() || undefined,
+        search: debouncedSearch.trim() || undefined,
         showArchived: showArchive || undefined,
         sortBy: sortKey || undefined,
         sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
@@ -54,7 +64,18 @@ export default function SettingsUsers() {
         status: filters?.status?.value || undefined,
       }),
     );
-  }, [dispatch, page, limit, search, showArchive, sortKey, sortOrder, filters?.subOrganization?.value, filters?.status?.value]);
+  }, [
+    dispatch,
+    page,
+    limit,
+    debouncedSearch,
+    showArchive,
+    sortKey,
+    sortOrder,
+    filters?.subOrganization?.value,
+    filters?.status?.value,
+    refreshFlag,
+  ]);
 
   useEffect(() => {
     setToolbar(
@@ -97,8 +118,6 @@ export default function SettingsUsers() {
     setSortOrder(order);
   }, []);
 
-  const totalPages = Math.ceil((totalRecords ?? 0) / limit) || 1;
-
   const tableData = useMemo(
     () =>
       (usersData ?? []).map((item, i) => ({
@@ -122,16 +141,21 @@ export default function SettingsUsers() {
             </span>
           ),
         },
-        {
-          id: 'subOrganizations',
-          header: 'Sub-Organization',
-          accessorKey: 'assignedSubOrgs',
-          render: (row) => (
-            <span className="text-text-primary">
-              {(row?.assignedSubOrgs ?? []).join(', ') || '—'}
-            </span>
-          ),
-        },
+        ...(!isOrgAdmin
+          ? [
+              {
+                id: 'subOrganizations',
+                header: 'Sub-Organization',
+                accessorKey: 'assignedSubOrgs',
+                render: (row) => (
+                  <span className="text-text-primary">
+                    {(row?.assignedSubOrgs ?? []).join(', ') || '—'}
+                  </span>
+                ),
+              },
+            ]
+          : []),
+
         {
           id: 'email',
           header: 'Email Address',
@@ -139,15 +163,10 @@ export default function SettingsUsers() {
           render: (row) => (
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-text-primary">{row.email}</span>
-              <span
-                className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${
-                  row.emailVerified === 'VERIFIED'
-                    ? 'bg-success-500'
-                    : 'bg-warning-500'
-                }`}
-              >
-                <Icon name="Check" size={10} className="text-white" />
-              </span>
+              <VerificationIcon
+                verified={row.emailVerified === 'VERIFIED'}
+                size={18}
+              />
             </div>
           ),
         },
@@ -162,16 +181,7 @@ export default function SettingsUsers() {
           header: 'Last Login',
           accessorKey: 'lastLoginAt',
           render: (row) =>
-            row?.lastLoginAt
-              ? new Date(row.lastLoginAt).toLocaleString('en-US', {
-                  month: '2-digit',
-                  day: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: true,
-                })
-              : '—',
+            row?.lastLoginAt ? formatDateTime(row?.lastLoginAt) : '—',
         },
         {
           id: 'status',
@@ -226,20 +236,28 @@ export default function SettingsUsers() {
                   label: 'Send Invitation',
                   value: 'sendInvitation',
                   onClickCb: () =>
-                    dispatch(settingsUsersActions.sendInvitation({ userId: row.id })),
+                    dispatch(
+                      settingsUsersActions.sendInvitation({ userId: row.id }),
+                    ),
                 },
                 row.isArchived
                   ? {
                       label: 'Unarchive',
                       value: 'unarchive',
                       onClickCb: () =>
-                        dispatch(settingsUsersActions.unarchiveUser({ userId: row.id })),
+                        dispatch(
+                          settingsUsersActions.unarchiveUser({
+                            userId: row.id,
+                          }),
+                        ),
                     }
                   : {
                       label: 'Archive',
                       value: 'archive',
                       onClickCb: () =>
-                        dispatch(settingsUsersActions.archiveUser({ userId: row.id })),
+                        dispatch(
+                          settingsUsersActions.archiveUser({ userId: row.id }),
+                        ),
                     },
               ]}
             />
@@ -256,6 +274,7 @@ export default function SettingsUsers() {
         data={tableData}
         size="sm"
         maxHeight="calc(100vh - 240px)"
+        loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
