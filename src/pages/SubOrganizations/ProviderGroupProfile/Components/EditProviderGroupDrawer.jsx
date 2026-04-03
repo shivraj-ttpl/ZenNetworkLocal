@@ -128,7 +128,7 @@ function buildPayload(values, showAdminSection) {
     name: values[FORM_FIELDS_NAMES.PROVIDER_GROUP_NAME],
     address: {
       addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1],
-      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
+      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
       city: values[FORM_FIELDS_NAMES.CITY],
       state: values[FORM_FIELDS_NAMES.STATE]?.name || values[FORM_FIELDS_NAMES.STATE]?.value || '',
       zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE],
@@ -162,13 +162,13 @@ function buildPayload(values, showAdminSection) {
   if (!values[FORM_FIELDS_NAMES.SAME_AS_PRIMARY]) {
     payload.billingAddress = {
       addressLine1:
-        values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1] || undefined,
+        values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1] || "",
       addressLine2:
-        values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2] || undefined,
-      city: values[FORM_FIELDS_NAMES.BILLING_CITY] || undefined,
-      state: values[FORM_FIELDS_NAMES.BILLING_STATE]?.name || values[FORM_FIELDS_NAMES.BILLING_STATE]?.value || undefined,
-      zipCode: values[FORM_FIELDS_NAMES.BILLING_ZIP_CODE] || undefined,
-      country: values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.name || values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.value || undefined,
+        values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2] || "",
+      city: values[FORM_FIELDS_NAMES.BILLING_CITY] || "",
+      state: values[FORM_FIELDS_NAMES.BILLING_STATE]?.name || values[FORM_FIELDS_NAMES.BILLING_STATE]?.value || "",
+      zipCode: values[FORM_FIELDS_NAMES.BILLING_ZIP_CODE] || "",
+      country: values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.name || values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.value || "",
     };
   }
 

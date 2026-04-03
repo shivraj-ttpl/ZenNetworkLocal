@@ -42,7 +42,7 @@ export default function AddPayerDrawer() {
   const handleFormSubmit = (values) => {
     const data = {
       name: values[FORM_FIELDS_NAMES.PAYER_NAME],
-      payerType: values[FORM_FIELDS_NAMES.PAYER_TYPE]?.value || undefined,
+      payerType: values[FORM_FIELDS_NAMES.PAYER_TYPE]?.value || "",
     };
 
     if (isEdit) {

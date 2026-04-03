@@ -99,11 +99,11 @@ function buildPayload(values, showAdminSection) {
     name: values[FORM_FIELDS_NAMES.SUB_ORG_NAME],
     address: {
       addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1],
-      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
+      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
       city: values[FORM_FIELDS_NAMES.CITY],
       state: values[FORM_FIELDS_NAMES.STATE]?.name || '',
       zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]),
-      county: values[FORM_FIELDS_NAMES.COUNTY] || undefined,
+      county: values[FORM_FIELDS_NAMES.COUNTY] || "",
       country: values[FORM_FIELDS_NAMES.COUNTRY]?.name,
     },
   };

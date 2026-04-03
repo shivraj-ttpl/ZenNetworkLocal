@@ -78,7 +78,7 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
       firstName: values[FORM_FIELDS_NAMES.FIRST_NAME],
       lastName: values[FORM_FIELDS_NAMES.LAST_NAME],
       email: values[FORM_FIELDS_NAMES.EMAIL],
-      contactNumber: parsed ? parsed.nationalNumber : (values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || undefined),
+      contactNumber: parsed ? parsed.nationalNumber : (values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || ""),
       countryCode: parsed ? `+${parsed.countryCallingCode}` : undefined,
       ...(!isEdit && {
         userType: isOrgAdmin ? 'ORG_ADMIN' : 'SUB_ORG_ADMIN',
@@ -86,12 +86,12 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
         isSubOrgAdmin: !isOrgAdmin,
       }),
       address: {
-        addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || undefined,
-        addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
-        city: values[FORM_FIELDS_NAMES.CITY] || undefined,
-        state: values[FORM_FIELDS_NAMES.STATE]?.name || undefined,
-        zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || undefined,
-        country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || undefined,
+        addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || "",
+        addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
+        city: values[FORM_FIELDS_NAMES.CITY] || "",
+        state: values[FORM_FIELDS_NAMES.STATE]?.name || "",
+        zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || "",
+        country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || "",
       },
     };
 
