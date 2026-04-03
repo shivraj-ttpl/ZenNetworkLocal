@@ -69,17 +69,21 @@ const getInitialValues = (editData) => ({
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]:
     editData?.countryCode && editData?.contactNumber
       ? `${editData.countryCode}${editData.contactNumber}`
-      : editData?.contactNumber ?? '',
+      : (editData?.contactNumber ?? ''),
   [FORM_FIELDS_NAMES.SPECIALTIES]: editData?.specialties
-    ? editData.specialties.map((s) => (typeof s === 'string' ? { id: s.id, name: s.name } : s))
+    ? editData.specialties.map((s) =>
+        typeof s === 'string' ? { id: s.id, name: s.name } : s,
+      )
     : null,
   [FORM_FIELDS_NAMES.WEBSITE]: editData?.website ?? '',
   [FORM_FIELDS_NAMES.TIMEZONE]: editData?.timezone
     ? { value: editData.timezone, label: editData.timezone }
     : null,
   [FORM_FIELDS_NAMES.NOTES]: editData?.notes ?? '',
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.primaryAddress?.addressLine1 ?? '',
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.primaryAddress?.addressLine2 ?? '',
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]:
+    editData?.primaryAddress?.addressLine1 ?? '',
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_2]:
+    editData?.primaryAddress?.addressLine2 ?? '',
   [FORM_FIELDS_NAMES.STATE]: editData?.primaryAddress?.state
     ? { name: editData.primaryAddress.state }
     : null,
@@ -87,10 +91,14 @@ const getInitialValues = (editData) => ({
     ? { name: editData.primaryAddress.country }
     : null,
   [FORM_FIELDS_NAMES.CITY]: editData?.primaryAddress?.city ?? '',
-  [FORM_FIELDS_NAMES.ZIP_CODE]: formatZipCode(editData?.primaryAddress?.zipCode) ?? '',
-  [FORM_FIELDS_NAMES.SAME_AS_PRIMARY]: editData?.billingAddressSameAsPrimary ?? false,
-  [FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1]: editData?.billingAddress?.addressLine1 ?? '',
-  [FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2]: editData?.billingAddress?.addressLine2 ?? '',
+  [FORM_FIELDS_NAMES.ZIP_CODE]:
+    formatZipCode(editData?.primaryAddress?.zipCode) ?? '',
+  [FORM_FIELDS_NAMES.SAME_AS_PRIMARY]:
+    editData?.billingAddressSameAsPrimary ?? false,
+  [FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1]:
+    editData?.billingAddress?.addressLine1 ?? '',
+  [FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2]:
+    editData?.billingAddress?.addressLine2 ?? '',
   [FORM_FIELDS_NAMES.BILLING_STATE]: editData?.billingAddress?.state
     ? { name: editData.billingAddress.state }
     : null,
@@ -98,21 +106,19 @@ const getInitialValues = (editData) => ({
     ? { name: editData.billingAddress.country }
     : null,
   [FORM_FIELDS_NAMES.BILLING_CITY]: editData?.billingAddress?.city ?? '',
-  [FORM_FIELDS_NAMES.BILLING_ZIP_CODE]: formatZipCode(editData?.billingAddress?.zipCode) ?? '',
+  [FORM_FIELDS_NAMES.BILLING_ZIP_CODE]:
+    formatZipCode(editData?.billingAddress?.zipCode) ?? '',
   [FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP]: null,
   [FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP_ADMIN]: null,
-  [FORM_FIELDS_NAMES.ADMIN_CONTACTS]:
-    editData?.userProviderGroups?.length
-      ? editData.userProviderGroups.map((u) => ({
-          [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: u.firstName ?? '',
-          [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: u.lastName ?? '',
-          [FORM_FIELDS_NAMES.ADMIN_EMAIL]: u.email ?? '',
-          [FORM_FIELDS_NAMES.ADMIN_PHONE]:
-            u.countryCode && u.contactNumber
-              ? `${u.countryCode}${u.contactNumber}`
-              : u.contactNumber ?? '',
-        }))
-      : [{ ...emptyContact }],
+  [FORM_FIELDS_NAMES.ADMIN_CONTACTS]: editData?.userProviderGroups?.length
+    ? editData.userProviderGroups.map((u) => ({
+        _id: u.id,
+        [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: u.firstName ?? '',
+        [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: u.lastName ?? '',
+        [FORM_FIELDS_NAMES.ADMIN_EMAIL]: u.email ?? '',
+        [FORM_FIELDS_NAMES.ADMIN_PHONE]: u.contactNumber ?? '',
+      }))
+    : [{ ...emptyContact }],
   photo: null,
 });
 
@@ -121,11 +127,16 @@ function buildPayload(values, showAdminSection) {
     name: values[FORM_FIELDS_NAMES.PROVIDER_GROUP_NAME],
     address: {
       addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1],
-      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
+      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || '',
       city: values[FORM_FIELDS_NAMES.CITY],
-      state: values[FORM_FIELDS_NAMES.STATE]?.name || values[FORM_FIELDS_NAMES.STATE]?.value || '',
+      state:
+        values[FORM_FIELDS_NAMES.STATE]?.name ||
+        values[FORM_FIELDS_NAMES.STATE]?.value ||
+        '',
       zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE],
-      country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || values[FORM_FIELDS_NAMES.COUNTRY]?.value,
+      country:
+        values[FORM_FIELDS_NAMES.COUNTRY]?.name ||
+        values[FORM_FIELDS_NAMES.COUNTRY]?.value,
     },
     billingAddressSameAsPrimary: values[FORM_FIELDS_NAMES.SAME_AS_PRIMARY],
   };
@@ -153,12 +164,18 @@ function buildPayload(values, showAdminSection) {
 
   if (!values[FORM_FIELDS_NAMES.SAME_AS_PRIMARY]) {
     payload.billingAddress = {
-      addressLine1: values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1] || undefined,
-      addressLine2: values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2] || undefined,
-      city: values[FORM_FIELDS_NAMES.BILLING_CITY] || undefined,
-      state: values[FORM_FIELDS_NAMES.BILLING_STATE]?.name || values[FORM_FIELDS_NAMES.BILLING_STATE]?.value || undefined,
-      zipCode: values[FORM_FIELDS_NAMES.BILLING_ZIP_CODE] || undefined,
-      country: values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.name || values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.value || undefined,
+      addressLine1: values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1] || '',
+      addressLine2: values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2] || '',
+      city: values[FORM_FIELDS_NAMES.BILLING_CITY] || '',
+      state:
+        values[FORM_FIELDS_NAMES.BILLING_STATE]?.name ||
+        values[FORM_FIELDS_NAMES.BILLING_STATE]?.value ||
+        '',
+      zipCode: values[FORM_FIELDS_NAMES.BILLING_ZIP_CODE] || '',
+      country:
+        values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.name ||
+        values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.value ||
+        '',
     };
   }
 
@@ -181,6 +198,7 @@ function buildPayload(values, showAdminSection) {
           lastName: c[FORM_FIELDS_NAMES.ADMIN_LAST_NAME],
           email: c[FORM_FIELDS_NAMES.ADMIN_EMAIL],
         };
+        if (c._id) admin.id = c._id;
         if (c[FORM_FIELDS_NAMES.ADMIN_PHONE]) {
           const parsed = parsePhoneNumber(c[FORM_FIELDS_NAMES.ADMIN_PHONE]);
           if (parsed?.countryCallingCode)
@@ -196,13 +214,19 @@ function buildPayload(values, showAdminSection) {
   return payload;
 }
 
-export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData }) {
+export default function AddProviderGroupDrawer({
+  subOrgId,
+  drawerMode,
+  editData,
+}) {
   const dispatch = useDispatch();
   const [showAdminSection, setShowAdminSection] = useState(false);
   const drawerOpen = useSelector(
     (state) => state[componentKey]?.drawerOpen ?? false,
   );
-  const isCreating = useLoadingKey(LOADING_KEYS.PROVIDER_GROUP_LIST_POST_CREATE);
+  const isCreating = useLoadingKey(
+    LOADING_KEYS.PROVIDER_GROUP_LIST_POST_CREATE,
+  );
   const isEdit = drawerMode === 'edit';
 
   useEffect(() => {
@@ -219,7 +243,13 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
   const handleFormSubmit = (values) => {
     const data = buildPayload(values, showAdminSection);
     if (isEdit) {
-      dispatch(providerGroupListActions.updateProviderGroup({ id: editData?.id, subOrgId, data }));
+      dispatch(
+        providerGroupListActions.updateProviderGroup({
+          id: editData?.id,
+          subOrgId,
+          data,
+        }),
+      );
     } else {
       dispatch(createProviderGroup({ subOrgId, data }));
     }
@@ -228,12 +258,30 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
   const handleSameAsPrimary = (checked, values, setFieldValue) => {
     setFieldValue(FORM_FIELDS_NAMES.SAME_AS_PRIMARY, checked);
     if (checked) {
-      setFieldValue(FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1, values[FORM_FIELDS_NAMES.ADDRESS_LINE_1]);
-      setFieldValue(FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2, values[FORM_FIELDS_NAMES.ADDRESS_LINE_2]);
-      setFieldValue(FORM_FIELDS_NAMES.BILLING_STATE, values[FORM_FIELDS_NAMES.STATE]);
-      setFieldValue(FORM_FIELDS_NAMES.BILLING_COUNTRY, values[FORM_FIELDS_NAMES.COUNTRY]);
-      setFieldValue(FORM_FIELDS_NAMES.BILLING_CITY, values[FORM_FIELDS_NAMES.CITY]);
-      setFieldValue(FORM_FIELDS_NAMES.BILLING_ZIP_CODE, values[FORM_FIELDS_NAMES.ZIP_CODE]);
+      setFieldValue(
+        FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1,
+        values[FORM_FIELDS_NAMES.ADDRESS_LINE_1],
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2,
+        values[FORM_FIELDS_NAMES.ADDRESS_LINE_2],
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.BILLING_STATE,
+        values[FORM_FIELDS_NAMES.STATE],
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.BILLING_COUNTRY,
+        values[FORM_FIELDS_NAMES.COUNTRY],
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.BILLING_CITY,
+        values[FORM_FIELDS_NAMES.CITY],
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.BILLING_ZIP_CODE,
+        values[FORM_FIELDS_NAMES.ZIP_CODE],
+      );
     }
   };
 
@@ -311,10 +359,7 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                     name={FORM_FIELDS_NAMES.CONTACT_NUMBER}
                     value={values[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
                     onChange={(val) =>
-                      setFieldValue(
-                        FORM_FIELDS_NAMES.CONTACT_NUMBER,
-                        val || '',
-                      )
+                      setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || '')
                     }
                     onBlur={handleBlur}
                     defaultCountry="US"
@@ -440,7 +485,10 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                     placeholder="Enter Zip Code"
                     value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
                     onChange={(e) =>
-                      setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, formatZipCode(e.target.value))
+                      setFieldValue(
+                        FORM_FIELDS_NAMES.ZIP_CODE,
+                        formatZipCode(e.target.value),
+                      )
                     }
                     onBlur={handleBlur}
                     error={errors[FORM_FIELDS_NAMES.ZIP_CODE]}
@@ -512,10 +560,7 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                     labelKey="name"
                     value={values[FORM_FIELDS_NAMES.BILLING_COUNTRY]}
                     onChange={(selected) =>
-                      setFieldValue(
-                        FORM_FIELDS_NAMES.BILLING_COUNTRY,
-                        selected,
-                      )
+                      setFieldValue(FORM_FIELDS_NAMES.BILLING_COUNTRY, selected)
                     }
                     isDisabled={values[FORM_FIELDS_NAMES.SAME_AS_PRIMARY]}
                   />
@@ -537,7 +582,10 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                     placeholder="Enter Zip Code"
                     value={values[FORM_FIELDS_NAMES.BILLING_ZIP_CODE]}
                     onChange={(e) =>
-                      setFieldValue(FORM_FIELDS_NAMES.BILLING_ZIP_CODE, formatZipCode(e.target.value))
+                      setFieldValue(
+                        FORM_FIELDS_NAMES.BILLING_ZIP_CODE,
+                        formatZipCode(e.target.value),
+                      )
                     }
                     onBlur={handleBlur}
                     disabled={values[FORM_FIELDS_NAMES.SAME_AS_PRIMARY]}
@@ -557,9 +605,7 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                         name={FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP}
                         placeholder="Select Provider Group"
                         url={`dropdown-apis/provider-groups?subOrgId=${subOrgId}`}
-                        value={
-                          values[FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP]
-                        }
+                        value={values[FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP]}
                         onChange={(selected) => {
                           setFieldValue(
                             FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP,
@@ -583,7 +629,7 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                         label="Provider Group Admin"
                         name={FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP_ADMIN}
                         placeholder="Search by Name/Email"
-                        url={`dropdown-apis/provider-groups/admins?subOrgId=${subOrgId}`}
+                        url={`dropdown-apis/provider-groups/admins?providerGroupId=${values[FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP]?.id}`}
                         value={
                           values[FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP_ADMIN]
                         }
@@ -628,7 +674,8 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                                 type="button"
                                 onClick={() => {
                                   const updated = values[
-                                    FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP_ADMIN
+                                    FORM_FIELDS_NAMES
+                                      .IMPORT_PROVIDER_GROUP_ADMIN
                                   ].filter((_, idx) => idx !== i);
                                   setFieldValue(
                                     FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP_ADMIN,
@@ -674,25 +721,27 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                       <h4 className="text-sm font-semibold text-text-primary">
                         Provider Group Details
                       </h4>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowAdminSection(false);
-                          setFieldValue(
-                            FORM_FIELDS_NAMES.ADMIN_CONTACTS,
-                            [{ ...emptyContact }],
-                            false,
-                          );
-                          const clearedErrors = { ...errors };
-                          delete clearedErrors[
-                            FORM_FIELDS_NAMES.ADMIN_CONTACTS
-                          ];
-                          setErrors(clearedErrors);
-                        }}
-                        className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
-                      >
-                        <Icon name="X" size={14} />
-                      </button>
+                      {!isEdit && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowAdminSection(false);
+                            setFieldValue(
+                              FORM_FIELDS_NAMES.ADMIN_CONTACTS,
+                              [{ ...emptyContact }],
+                              false,
+                            );
+                            const clearedErrors = { ...errors };
+                            delete clearedErrors[
+                              FORM_FIELDS_NAMES.ADMIN_CONTACTS
+                            ];
+                            setErrors(clearedErrors);
+                          }}
+                          className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
+                        >
+                          <Icon name="X" size={14} />
+                        </button>
+                      )}
                     </div>
                   )}
 
@@ -717,16 +766,17 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                                   key={index}
                                   className="flex flex-col gap-4 relative border border-border-light rounded-lg p-4"
                                 >
-                                  {values[FORM_FIELDS_NAMES.ADMIN_CONTACTS]
-                                    .length > 1 && (
-                                    <button
-                                      type="button"
-                                      onClick={() => remove(index)}
-                                      className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
-                                    >
-                                      <Icon name="X" size={14} />
-                                    </button>
-                                  )}
+                                  {!isEdit &&
+                                    values[FORM_FIELDS_NAMES.ADMIN_CONTACTS]
+                                      .length > 1 && (
+                                      <button
+                                        type="button"
+                                        onClick={() => remove(index)}
+                                        className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
+                                      >
+                                        <Icon name="X" size={14} />
+                                      </button>
+                                    )}
 
                                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <Input
@@ -856,7 +906,13 @@ export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData 
                 onClick={handleSubmit}
                 disabled={!(isValid && dirty) || isCreating}
               >
-                {isCreating ? (isEdit ? 'Saving...' : 'Creating...') : (isEdit ? 'Save Changes' : 'Create Provider Group')}
+                {isCreating
+                  ? isEdit
+                    ? 'Saving...'
+                    : 'Creating...'
+                  : isEdit
+                    ? 'Save Changes'
+                    : 'Create Provider Group'}
               </Button>
             </div>
           </Form>

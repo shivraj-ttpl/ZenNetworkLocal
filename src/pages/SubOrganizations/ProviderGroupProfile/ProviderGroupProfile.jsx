@@ -24,10 +24,26 @@ import {
 const { fetchProfile } = providerGroupProfileActions;
 const EMPTY_STATE = {};
 
-function buildPhone(profile) {
-  if (!profile.contactNumber) return '-';
-  const code = profile.countryCode || '';
-  return `${code} ${profile.contactNumber}`.trim();
+function formatAddress(addr) {
+  if (!addr) return '-';
+  return (
+    [
+      addr.addressLine1,
+      addr.addressLine2,
+      addr.city,
+      addr.state,
+      addr.zipCode,
+      addr.country,
+    ]
+      .filter(Boolean)
+      .join(', ') || '-'
+  );
+}
+
+function buildPhone(obj) {
+  if (!obj?.contactNumber) return '-';
+  const code = obj.countryCode || '';
+  return `${code} ${obj.contactNumber}`.trim();
 }
 
 export default function ProviderGroupProfile() {
@@ -123,7 +139,12 @@ export default function ProviderGroupProfile() {
                 },
                 {
                   label: 'Specialties',
-                  value: (profile.specialties || []).join(', ') || '-',
+                  value:
+                    (profile?.specialties &&
+                      (profile?.specialties?.map((s) => s.name) || []).join(
+                        ', ',
+                      )) ||
+                    '-',
                 },
                 {
                   label: 'Website',
@@ -163,11 +184,11 @@ export default function ProviderGroupProfile() {
                 {[
                   {
                     label: 'Address',
-                    value: profile.address?.addressLine1 || '-',
+                    value: formatAddress(profile.primaryAddress),
                   },
                   {
                     label: 'Billing Address',
-                    value: profile.addressInfo?.billingAddress || '-',
+                    value: formatAddress(profile.billingAddress),
                   },
                 ].map((item) => (
                   <div
@@ -188,39 +209,60 @@ export default function ProviderGroupProfile() {
               <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
                 Administrative Contact
               </h3>
-              <div className="space-y-3">
-                {[
-                  {
-                    label: 'Administrator Name',
-                    value: profile.adminContact?.administratorName || '-',
-                  },
-                  {
-                    label: 'Email Address',
-                    value: profile.adminContact?.emailAddress || '-',
-                    isLink: !!profile.adminContact?.emailAddress,
-                  },
-                  {
-                    label: 'Contact Number',
-                    value: profile.adminContact?.contactNumber || '-',
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.label}
-                    className="flex items-start gap-2 text-sm"
-                  >
-                    <span className="text-neutral-500 min-w-36">
-                      {item.label}
-                    </span>
-                    <span className="text-neutral-500">:</span>
-                    {item.isLink ? (
-                      <a href="#" className="text-primary-700 hover:underline">
-                        {item.value}
-                      </a>
-                    ) : (
-                      <span className="text-text-primary">{item.value}</span>
-                    )}
-                  </div>
-                ))}
+              <div className="max-h-[calc(100vh-460px)] overflow-y-auto pr-2">
+                <div className="space-y-6  bg-surface p-3 rounded-md border border-border-light">
+                  {(profile.userProviderGroups ?? []).length > 0 ? (
+                    profile.userProviderGroups.map((admin, idx) => (
+                      <div
+                        key={admin.id}
+                        className={`space-y-3 ${idx > 0 ? 'pt-4 border-t border-border-light' : ''}`}
+                      >
+                        {[
+                          {
+                            label: 'Administrator Name',
+                            value:
+                              [admin.firstName, admin.lastName]
+                                .filter(Boolean)
+                                .join(' ') || '-',
+                          },
+                          {
+                            label: 'Contact Number',
+                            value: buildPhone(admin),
+                          },
+                          {
+                            label: 'Email Address',
+                            value: admin.email || '-',
+                            isLink: !!admin.email,
+                          },
+                        ].map((item) => (
+                          <div
+                            key={item.label}
+                            className="flex items-start gap-2 text-sm"
+                          >
+                            <span className="text-neutral-500 min-w-36">
+                              {item.label}
+                            </span>
+                            <span className="text-neutral-500">:</span>
+                            {item.isLink ? (
+                              <a
+                                href="#"
+                                className="text-primary-700 hover:underline"
+                              >
+                                {item.value}
+                              </a>
+                            ) : (
+                              <span className="text-text-primary">
+                                {item.value}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-neutral-500">-</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
