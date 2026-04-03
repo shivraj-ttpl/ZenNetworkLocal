@@ -33,6 +33,7 @@ import {
   setDrawerOpen,
   setStatusModal,
 } from './subOrgListSlice';
+import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
 
 const { fetchSubOrganizations, fetchSubOrgById, archiveSubOrganization } =
   subOrgListActions;
@@ -87,6 +88,7 @@ export default function SubOrgList() {
     },
     [dispatch],
   );
+  const { isOrgAdmin } = useCurrentUserRole();
 
   const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
   const handleLimitChange = useCallback(
@@ -124,7 +126,9 @@ export default function SubOrgList() {
               className="text-primary-700 cursor-pointer hover:underline"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/sub-organizations/${row.id}?name=${encodeURIComponent(row.name)}`);
+                navigate(
+                  `/sub-organizations/${row.id}?name=${encodeURIComponent(row.name)}`,
+                );
               }}
             >
               {row.name}
@@ -178,7 +182,10 @@ export default function SubOrgList() {
               {
                 label: 'View',
                 value: 'view',
-                onClickCb: () => navigate(`/sub-organizations/${row.id}?name=${encodeURIComponent(row.name)}`),
+                onClickCb: () =>
+                  navigate(
+                    `/sub-organizations/${row.id}?name=${encodeURIComponent(row.name)}`,
+                  ),
               },
               {
                 label: 'Edit',
@@ -253,14 +260,16 @@ export default function SubOrgList() {
             />
           </div>
         </div>
-        <Button
-          variant="primaryBlue"
-          size="sm"
-          onClick={() => dispatch(setDrawerOpen(true))}
-        >
-          <Icon name="Plus" size={14} />
-          Add New
-        </Button>
+        {isOrgAdmin && (
+          <Button
+            variant="primaryBlue"
+            size="sm"
+            onClick={() => dispatch(setDrawerOpen(true))}
+          >
+            <Icon name="Plus" size={14} />
+            Add New
+          </Button>
+        )}
       </div>
       <div className="px-5 pb-4">
         <Table

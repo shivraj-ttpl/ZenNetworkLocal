@@ -63,6 +63,7 @@ export const toastMessages = {
   subOrgUnarchivedSuccess: 'Sub-Organization unarchived successfully',
 
   providerGroupCreatedSuccess: 'Provider Group created successfully',
+  providerGroupUpdatedSuccess: 'Provider Group updated successfully',
   providerGroupActivatedSuccess: 'Provider Group activated successfully',
   providerGroupDeactivatedSuccess: 'Provider Group deactivated successfully',
   providerGroupArchivedSuccess: 'Provider Group archived successfully',

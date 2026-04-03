@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Formik, Form, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,6 @@ import Button from '@/components/commonComponents/button/Button';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
-import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import TextArea from '@/components/commonComponents/textArea';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Icon from '@/components/icons/Icon';
@@ -17,12 +16,9 @@ import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
-import {
-  FORM_FIELDS_NAMES,
-  STATE_OPTIONS,
-  COUNTRY_OPTIONS,
-  TIMEZONE_OPTIONS,
-} from '../constant';
+import { formatZipCode } from '@/utils/GeneralUtils';
+
+import { FORM_FIELDS_NAMES } from '../constant';
 import { componentKey, setCloseDrawer } from '../providerGroupListSlice';
 import { providerGroupListActions } from '../providerGroupListSaga';
 
@@ -67,32 +63,58 @@ const fullValidationSchema = baseValidationSchema.shape({
   ),
 });
 
-const initialValues = {
-  [FORM_FIELDS_NAMES.PROVIDER_GROUP_NAME]: '',
-  [FORM_FIELDS_NAMES.EMAIL]: '',
-  [FORM_FIELDS_NAMES.CONTACT_NUMBER]: '',
-  [FORM_FIELDS_NAMES.SPECIALTIES]: null,
-  [FORM_FIELDS_NAMES.WEBSITE]: '',
-  [FORM_FIELDS_NAMES.TIMEZONE]: null,
-  [FORM_FIELDS_NAMES.NOTES]: '',
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: '',
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: '',
-  [FORM_FIELDS_NAMES.STATE]: null,
-  [FORM_FIELDS_NAMES.COUNTRY]: null,
-  [FORM_FIELDS_NAMES.CITY]: '',
-  [FORM_FIELDS_NAMES.ZIP_CODE]: '',
-  [FORM_FIELDS_NAMES.SAME_AS_PRIMARY]: false,
-  [FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1]: '',
-  [FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2]: '',
-  [FORM_FIELDS_NAMES.BILLING_STATE]: null,
-  [FORM_FIELDS_NAMES.BILLING_COUNTRY]: null,
-  [FORM_FIELDS_NAMES.BILLING_CITY]: '',
-  [FORM_FIELDS_NAMES.BILLING_ZIP_CODE]: '',
+const getInitialValues = (editData) => ({
+  [FORM_FIELDS_NAMES.PROVIDER_GROUP_NAME]: editData?.name ?? '',
+  [FORM_FIELDS_NAMES.EMAIL]: editData?.email ?? '',
+  [FORM_FIELDS_NAMES.CONTACT_NUMBER]:
+    editData?.countryCode && editData?.contactNumber
+      ? `${editData.countryCode}${editData.contactNumber}`
+      : editData?.contactNumber ?? '',
+  [FORM_FIELDS_NAMES.SPECIALTIES]: editData?.specialties
+    ? editData.specialties.map((s) => (typeof s === 'string' ? { id: s.id, name: s.name } : s))
+    : null,
+  [FORM_FIELDS_NAMES.WEBSITE]: editData?.website ?? '',
+  [FORM_FIELDS_NAMES.TIMEZONE]: editData?.timezone
+    ? { value: editData.timezone, label: editData.timezone }
+    : null,
+  [FORM_FIELDS_NAMES.NOTES]: editData?.notes ?? '',
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.primaryAddress?.addressLine1 ?? '',
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.primaryAddress?.addressLine2 ?? '',
+  [FORM_FIELDS_NAMES.STATE]: editData?.primaryAddress?.state
+    ? { name: editData.primaryAddress.state }
+    : null,
+  [FORM_FIELDS_NAMES.COUNTRY]: editData?.primaryAddress?.country
+    ? { name: editData.primaryAddress.country }
+    : null,
+  [FORM_FIELDS_NAMES.CITY]: editData?.primaryAddress?.city ?? '',
+  [FORM_FIELDS_NAMES.ZIP_CODE]: formatZipCode(editData?.primaryAddress?.zipCode) ?? '',
+  [FORM_FIELDS_NAMES.SAME_AS_PRIMARY]: editData?.billingAddressSameAsPrimary ?? false,
+  [FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1]: editData?.billingAddress?.addressLine1 ?? '',
+  [FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2]: editData?.billingAddress?.addressLine2 ?? '',
+  [FORM_FIELDS_NAMES.BILLING_STATE]: editData?.billingAddress?.state
+    ? { name: editData.billingAddress.state }
+    : null,
+  [FORM_FIELDS_NAMES.BILLING_COUNTRY]: editData?.billingAddress?.country
+    ? { name: editData.billingAddress.country }
+    : null,
+  [FORM_FIELDS_NAMES.BILLING_CITY]: editData?.billingAddress?.city ?? '',
+  [FORM_FIELDS_NAMES.BILLING_ZIP_CODE]: formatZipCode(editData?.billingAddress?.zipCode) ?? '',
   [FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP]: null,
   [FORM_FIELDS_NAMES.IMPORT_PROVIDER_GROUP_ADMIN]: null,
-  [FORM_FIELDS_NAMES.ADMIN_CONTACTS]: [{ ...emptyContact }],
+  [FORM_FIELDS_NAMES.ADMIN_CONTACTS]:
+    editData?.userProviderGroups?.length
+      ? editData.userProviderGroups.map((u) => ({
+          [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: u.firstName ?? '',
+          [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: u.lastName ?? '',
+          [FORM_FIELDS_NAMES.ADMIN_EMAIL]: u.email ?? '',
+          [FORM_FIELDS_NAMES.ADMIN_PHONE]:
+            u.countryCode && u.contactNumber
+              ? `${u.countryCode}${u.contactNumber}`
+              : u.contactNumber ?? '',
+        }))
+      : [{ ...emptyContact }],
   photo: null,
-};
+});
 
 function buildPayload(values, showAdminSection) {
   const payload = {
@@ -101,9 +123,9 @@ function buildPayload(values, showAdminSection) {
       addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1],
       addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
       city: values[FORM_FIELDS_NAMES.CITY],
-      state: values[FORM_FIELDS_NAMES.STATE]?.value || '',
+      state: values[FORM_FIELDS_NAMES.STATE]?.name || values[FORM_FIELDS_NAMES.STATE]?.value || '',
       zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE],
-      country: values[FORM_FIELDS_NAMES.COUNTRY]?.value,
+      country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || values[FORM_FIELDS_NAMES.COUNTRY]?.value,
     },
     billingAddressSameAsPrimary: values[FORM_FIELDS_NAMES.SAME_AS_PRIMARY],
   };
@@ -134,9 +156,9 @@ function buildPayload(values, showAdminSection) {
       addressLine1: values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_1] || undefined,
       addressLine2: values[FORM_FIELDS_NAMES.BILLING_ADDRESS_LINE_2] || undefined,
       city: values[FORM_FIELDS_NAMES.BILLING_CITY] || undefined,
-      state: values[FORM_FIELDS_NAMES.BILLING_STATE]?.value || undefined,
+      state: values[FORM_FIELDS_NAMES.BILLING_STATE]?.name || values[FORM_FIELDS_NAMES.BILLING_STATE]?.value || undefined,
       zipCode: values[FORM_FIELDS_NAMES.BILLING_ZIP_CODE] || undefined,
-      country: values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.value || undefined,
+      country: values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.name || values[FORM_FIELDS_NAMES.BILLING_COUNTRY]?.value || undefined,
     };
   }
 
@@ -174,13 +196,20 @@ function buildPayload(values, showAdminSection) {
   return payload;
 }
 
-export default function AddProviderGroupDrawer({ subOrgId }) {
+export default function AddProviderGroupDrawer({ subOrgId, drawerMode, editData }) {
   const dispatch = useDispatch();
   const [showAdminSection, setShowAdminSection] = useState(false);
   const drawerOpen = useSelector(
     (state) => state[componentKey]?.drawerOpen ?? false,
   );
   const isCreating = useLoadingKey(LOADING_KEYS.PROVIDER_GROUP_LIST_POST_CREATE);
+  const isEdit = drawerMode === 'edit';
+
+  useEffect(() => {
+    if (isEdit && editData?.userProviderGroups?.length) {
+      setShowAdminSection(true);
+    }
+  }, [isEdit, editData]);
 
   const handleClose = () => {
     setShowAdminSection(false);
@@ -189,7 +218,11 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
 
   const handleFormSubmit = (values) => {
     const data = buildPayload(values, showAdminSection);
-    dispatch(createProviderGroup({ subOrgId, data }));
+    if (isEdit) {
+      dispatch(providerGroupListActions.updateProviderGroup({ id: editData?.id, subOrgId, data }));
+    } else {
+      dispatch(createProviderGroup({ subOrgId, data }));
+    }
   };
 
   const handleSameAsPrimary = (checked, values, setFieldValue) => {
@@ -206,14 +239,14 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
 
   return (
     <Drawer
-      title="Add Provider Group"
+      title={isEdit ? 'Edit Provider Group' : 'Add Provider Group'}
       open={drawerOpen}
       close={handleClose}
       width="max-w-[90%] w-[90%] lg:w-[50%]"
       footerButton={null}
     >
       <Formik
-        initialValues={initialValues}
+        initialValues={getInitialValues(editData)}
         validationSchema={
           showAdminSection ? fullValidationSchema : baseValidationSchema
         }
@@ -310,11 +343,13 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="Timezone"
                     name={FORM_FIELDS_NAMES.TIMEZONE}
                     placeholder="Select Timezone"
-                    options={TIMEZONE_OPTIONS}
+                    url="dropdown-apis/timezones"
+                    valueKey="value"
+                    labelKey="label"
                     value={values[FORM_FIELDS_NAMES.TIMEZONE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.TIMEZONE, selected)
@@ -358,11 +393,13 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="State"
                     name={FORM_FIELDS_NAMES.STATE}
                     placeholder="Select State"
-                    options={STATE_OPTIONS}
+                    url="dropdown-apis/states"
+                    valueKey="name"
+                    labelKey="name"
                     value={values[FORM_FIELDS_NAMES.STATE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.STATE, selected)
@@ -371,11 +408,13 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
                     error={errors[FORM_FIELDS_NAMES.STATE]}
                     touched={touched[FORM_FIELDS_NAMES.STATE]}
                   />
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="Country"
                     name={FORM_FIELDS_NAMES.COUNTRY}
                     placeholder="Select Country"
-                    options={COUNTRY_OPTIONS}
+                    url="dropdown-apis/countries"
+                    valueKey="name"
+                    labelKey="name"
                     value={values[FORM_FIELDS_NAMES.COUNTRY]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.COUNTRY, selected)
@@ -400,12 +439,9 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
                     name={FORM_FIELDS_NAMES.ZIP_CODE}
                     placeholder="Enter Zip Code"
                     value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
-                    onChange={(e) => {
-                      let val = e.target.value.replace(/\D/g, '');
-                      if (val.length > 5)
-                        val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
-                      setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
-                    }}
+                    onChange={(e) =>
+                      setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, formatZipCode(e.target.value))
+                    }
                     onBlur={handleBlur}
                     error={errors[FORM_FIELDS_NAMES.ZIP_CODE]}
                     touched={touched[FORM_FIELDS_NAMES.ZIP_CODE]}
@@ -454,22 +490,26 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="State"
                     name={FORM_FIELDS_NAMES.BILLING_STATE}
                     placeholder="Select State"
-                    options={STATE_OPTIONS}
+                    url="dropdown-apis/states"
+                    valueKey="name"
+                    labelKey="name"
                     value={values[FORM_FIELDS_NAMES.BILLING_STATE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.BILLING_STATE, selected)
                     }
                     isDisabled={values[FORM_FIELDS_NAMES.SAME_AS_PRIMARY]}
                   />
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="Country"
                     name={FORM_FIELDS_NAMES.BILLING_COUNTRY}
                     placeholder="Select Country"
-                    options={COUNTRY_OPTIONS}
+                    url="dropdown-apis/countries"
+                    valueKey="name"
+                    labelKey="name"
                     value={values[FORM_FIELDS_NAMES.BILLING_COUNTRY]}
                     onChange={(selected) =>
                       setFieldValue(
@@ -496,7 +536,9 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
                     name={FORM_FIELDS_NAMES.BILLING_ZIP_CODE}
                     placeholder="Enter Zip Code"
                     value={values[FORM_FIELDS_NAMES.BILLING_ZIP_CODE]}
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      setFieldValue(FORM_FIELDS_NAMES.BILLING_ZIP_CODE, formatZipCode(e.target.value))
+                    }
                     onBlur={handleBlur}
                     disabled={values[FORM_FIELDS_NAMES.SAME_AS_PRIMARY]}
                   />
@@ -814,7 +856,7 @@ export default function AddProviderGroupDrawer({ subOrgId }) {
                 onClick={handleSubmit}
                 disabled={!(isValid && dirty) || isCreating}
               >
-                {isCreating ? 'Creating...' : 'Create Provider Group'}
+                {isCreating ? (isEdit ? 'Saving...' : 'Creating...') : (isEdit ? 'Save Changes' : 'Create Provider Group')}
               </Button>
             </div>
           </Form>
