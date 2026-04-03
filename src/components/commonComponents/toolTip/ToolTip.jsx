@@ -148,7 +148,7 @@ function ToolTip({
       {visible && usePortal &&
         createPortal(
           <div
-            className="fixed z-[9999]"
+            className="fixed z-9999"
             style={portalStyle}
             onMouseEnter={trigger === 'hover' ? show : undefined}
             onMouseLeave={trigger === 'hover' ? hide : undefined}

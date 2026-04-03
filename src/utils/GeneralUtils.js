@@ -112,6 +112,15 @@ export function formatZipCode(zip) {
   return digits;
 }
 
+/**
+ * Truncate a string to a given character length.
+ * Returns the original string if it's within the limit.
+ */
+export function truncateText(text, maxLength = 50) {
+  if (!text || text.length <= maxLength) return text || '';
+  return text.slice(0, maxLength);
+}
+
   export function toPascalCase (text = "") {
     if (!text) return "";
     return text

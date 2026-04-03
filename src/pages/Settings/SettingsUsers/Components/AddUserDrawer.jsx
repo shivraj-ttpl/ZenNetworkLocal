@@ -148,7 +148,7 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
           <Form className="flex flex-col h-full">
             <div className="flex-1 overflow-y-auto  flex gap-5">
               {/* Photo Upload */}
-              <div className="flex-shrink-0 w-[200px]">
+              <div className="shrink-0 w-50">
                 <UploadPhoto
                   name="photo"
                   label="Profile Photo"

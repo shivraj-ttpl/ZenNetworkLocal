@@ -6,6 +6,7 @@ import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { Table, buildColumns } from '@/components/commonComponents/table';
+import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
@@ -26,7 +27,7 @@ import {
   setCloseDrawer,
 } from './carePlansSlice';
 import ViewCarePlanDrawer from './components/ViewCarePlanDrawer';
-import { formatDate } from '../../../utils/GeneralUtils';
+import { formatDate, truncateText } from '@/utils/GeneralUtils';
 
 const { fetchCarePlans, toggleFavorite, archiveCarePlan } = carePlansActions;
 const EMPTY_STATE = {};
@@ -115,6 +116,20 @@ export default function CarePlans() {
           id: 'description',
           header: 'Care Plan Description',
           accessorKey: 'description',
+          render: (row) => {
+            const truncated = truncateText(row.description, 80);
+            if (!row.description) return '-';
+            if (truncated === row.description) return row.description;
+            return (
+              <ToolTip
+                content={<p className="p-2 text-sm max-w-80 wrap-break-word">{row.description}</p>}
+                position="bottom"
+                usePortal
+              >
+                <span className="cursor-default">{truncated}...</span>
+              </ToolTip>
+            );
+          },
         },
         {
           id: 'updatedAt',
