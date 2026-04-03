@@ -11,10 +11,7 @@ export default class ProviderGroupDataService {
   }
 
   static async createProviderGroup(subOrgId, data) {
-    return AppDataService.post(
-      `${SUB_ORG_URL}/${subOrgId}/${PG_URL}`,
-      data,
-    );
+    return AppDataService.post(`${SUB_ORG_URL}/${subOrgId}/${PG_URL}`, data);
   }
 
   static async changeStatus(id, status) {
@@ -27,5 +24,13 @@ export default class ProviderGroupDataService {
 
   static async unarchiveProviderGroup(id) {
     return AppDataService.patch(`${PG_URL}/${id}/unarchive`);
+  }
+
+  static async getProviderGroupById(id) {
+    return AppDataService.get(`${PG_URL}/${id}`);
+  }
+
+  static async updateProviderGroup(id, data) {
+    return AppDataService.patch(`${PG_URL}/${id}`, data);
   }
 }
