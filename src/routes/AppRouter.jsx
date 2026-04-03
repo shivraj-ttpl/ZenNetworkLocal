@@ -1,8 +1,10 @@
 import { Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { routeConfig, publicRouteConfig, sharedRouteConfig } from "./routeConfig";
+
+import AppErrorBoundary from "@/components/AppErrorBoundary";
 import MainAppLayout from "@/app/MainAppLayout";
 import { setNavigateRef } from "@/utils/navigationService";
+import { routeConfig, publicRouteConfig, sharedRouteConfig } from "./routeConfig";
 
 function NavigationSetter() {
   const navigate = useNavigate();
@@ -61,6 +63,7 @@ export default function AppRouter() {
   return (
     <BrowserRouter>
       <NavigationSetter />
+      <AppErrorBoundary>
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* Public-only routes (login, signup — redirect if already logged in) */}
@@ -112,6 +115,7 @@ export default function AppRouter() {
           <Route path="*" element={<Navigate to="/master-data" replace />} />
         </Routes>
       </Suspense>
+      </AppErrorBoundary>
     </BrowserRouter>
   );
 }

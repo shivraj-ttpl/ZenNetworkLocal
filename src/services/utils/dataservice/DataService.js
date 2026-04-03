@@ -4,7 +4,12 @@ import { setGlobalLoading } from "@/core/store/loadingSlice";
 import { deepTrimStrings, isMultipartOrBinary } from "@/utils/sanitizeUtils";
 import { handle401Error } from "@/services/utils/tokenRefreshHandler";
 
-const BASE_URL = import.meta.env.VITE_API_URL 
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+// --- Security defaults ---
+axios.defaults.withCredentials = true;
+axios.defaults.xsrfCookieName = 'XSRF-TOKEN';
+axios.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
 
 // Endpoints that should NOT trigger the global loader
 const NO_LOADER_ENDPOINTS = [];
