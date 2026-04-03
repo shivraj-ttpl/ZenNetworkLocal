@@ -43,7 +43,7 @@ export default function SettingsContainer() {
   }
 
   return (
-    <div className="bg-surface h-[calc(100vh-120px)] rounded-xl border border-border-light overflow-y-auto">
+    <div className="bg-neutral-50 h-[calc(100vh-120px)] rounded-xl border border-border-light overflow-y-auto">
       <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 flex-wrap">
         <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200 w-fit shrink-0">
           {TABS.map((tab) => (
