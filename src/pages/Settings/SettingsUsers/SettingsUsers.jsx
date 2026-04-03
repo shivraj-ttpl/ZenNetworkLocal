@@ -22,6 +22,7 @@ import { settingsUsersActions } from './settingsUsersSaga';
 import AddUserDrawer from './Components/AddUserDrawer';
 import ViewUserModal from './Components/ViewUserModal';
 import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
+import { formatDateTime } from '../../../utils/GeneralUtils';
 
 export default function SettingsUsers() {
   const { setToolbar } = useOutletContext();
@@ -117,7 +118,6 @@ export default function SettingsUsers() {
     setSortOrder(order);
   }, []);
 
-
   const tableData = useMemo(
     () =>
       (usersData ?? []).map((item, i) => ({
@@ -163,7 +163,10 @@ export default function SettingsUsers() {
           render: (row) => (
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-text-primary">{row.email}</span>
-              <VerificationIcon verified={row.emailVerified === 'VERIFIED'} size={18} />
+              <VerificationIcon
+                verified={row.emailVerified === 'VERIFIED'}
+                size={18}
+              />
             </div>
           ),
         },
@@ -178,16 +181,7 @@ export default function SettingsUsers() {
           header: 'Last Login',
           accessorKey: 'lastLoginAt',
           render: (row) =>
-            row?.lastLoginAt
-              ? new Date(row.lastLoginAt).toLocaleString('en-US', {
-                  month: '2-digit',
-                  day: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: true,
-                })
-              : '—',
+            row?.lastLoginAt ? formatDateTime(row?.lastLoginAt) : '—',
         },
         {
           id: 'status',
