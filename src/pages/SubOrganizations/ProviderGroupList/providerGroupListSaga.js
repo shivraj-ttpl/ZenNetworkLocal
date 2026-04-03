@@ -16,13 +16,16 @@ import {
   setTotalRecords,
   setTotalPages,
   setCloseDrawer,
+  setEditDrawer,
   setRefreshList,
   setStatusModal,
 } from './providerGroupListSlice';
 
 export const providerGroupListActions = createSagaActions(componentKey, [
   'fetchProviderGroups',
+  'fetchProviderGroupById',
   'createProviderGroup',
+  'updateProviderGroup',
   'changeStatus',
   'archiveProviderGroup',
 ]);
@@ -52,6 +55,17 @@ function* fetchProviderGroupsSaga(action) {
   });
 }
 
+function* fetchProviderGroupByIdSaga(action) {
+  const { id } = action.payload;
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_GET_BY_ID,
+    apiFunc: () => ProviderGroupDataService.getProviderGroupById(id),
+    onSuccess: function* (response) {
+      yield put(setEditDrawer(response?.data?.data));
+    },
+  });
+}
+
 function* createProviderGroupSaga(action) {
   const { subOrgId, data } = action.payload;
 
@@ -63,6 +77,24 @@ function* createProviderGroupSaga(action) {
       yield put(
         addNotification({
           message: toastMessages.providerGroupCreatedSuccess,
+          variant: TOASTER_VARIANT.SUCCESS,
+        }),
+      );
+      yield put(setCloseDrawer());
+      yield put(setRefreshList());
+    },
+  });
+}
+
+function* updateProviderGroupSaga(action) {
+  const { id, data } = action.payload;
+  yield* apiCall({
+    loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_POST_CREATE,
+    apiFunc: () => ProviderGroupDataService.updateProviderGroup(id, data),
+    onSuccess: function* () {
+      yield put(
+        addNotification({
+          message: toastMessages.providerGroupUpdatedSuccess,
           variant: TOASTER_VARIANT.SUCCESS,
         }),
       );
@@ -125,8 +157,16 @@ function* rootSaga() {
       fetchProviderGroupsSaga,
     ),
     takeLatest(
+      providerGroupListActions.fetchProviderGroupById().type,
+      fetchProviderGroupByIdSaga,
+    ),
+    takeLatest(
       providerGroupListActions.createProviderGroup().type,
       createProviderGroupSaga,
+    ),
+    takeLatest(
+      providerGroupListActions.updateProviderGroup().type,
+      updateProviderGroupSaga,
     ),
     takeLatest(
       providerGroupListActions.changeStatus().type,

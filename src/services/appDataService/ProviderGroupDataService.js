@@ -10,8 +10,16 @@ export default class ProviderGroupDataService {
     });
   }
 
+  static async getProviderGroupById(id) {
+    return AppDataService.get(`${PG_URL}/${id}`);
+  }
+
   static async createProviderGroup(subOrgId, data) {
     return AppDataService.post(`${SUB_ORG_URL}/${subOrgId}/${PG_URL}`, data);
+  }
+
+  static async updateProviderGroup(id, data) {
+    return AppDataService.patch(`${PG_URL}/${id}`, data);
   }
 
   static async changeStatus(id, status) {

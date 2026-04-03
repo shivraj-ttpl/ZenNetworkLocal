@@ -20,7 +20,10 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { STATUS_OPTIONS } from './constant';
 import AddProviderGroupDrawer from './Components/AddProviderGroupDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
-import { providerGroupListActions, registerSaga } from './providerGroupListSaga';
+import {
+  providerGroupListActions,
+  registerSaga,
+} from './providerGroupListSaga';
 import {
   componentKey,
   registerReducer,
@@ -35,7 +38,7 @@ import {
   setStatusModal,
 } from './providerGroupListSlice';
 
-const { fetchProviderGroups, archiveProviderGroup } = providerGroupListActions;
+const { fetchProviderGroups, fetchProviderGroupById, archiveProviderGroup } = providerGroupListActions;
 const EMPTY_STATE = {};
 
 export default function ProviderGroupList() {
@@ -58,6 +61,8 @@ export default function ProviderGroupList() {
     sortKey = null,
     sortOrder = null,
     refreshFlag = 0,
+    drawerMode = '',
+    editData = null,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
   const isLoading = useLoadingKey(LOADING_KEYS.PROVIDER_GROUP_LIST_GET_LIST);
@@ -139,10 +144,7 @@ export default function ProviderGroupList() {
     [dispatch],
   );
 
-  const handlePageChange = useCallback(
-    (p) => dispatch(setPage(p)),
-    [dispatch],
-  );
+  const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
   const handleLimitChange = useCallback(
     (l) => dispatch(setLimit(l)),
     [dispatch],
@@ -277,6 +279,12 @@ export default function ProviderGroupList() {
                           `/sub-organizations/${subOrgId}/provider-groups/${row.id}`,
                         ),
                     },
+                    {
+                      label: 'Edit',
+                      value: 'edit',
+                      onClickCb: () =>
+                        dispatch(fetchProviderGroupById({ id: row.id })),
+                    },
                   ];
 
                   if (row.status === 'INACTIVE') {
@@ -324,7 +332,7 @@ export default function ProviderGroupList() {
       />
       {isSubOrgAdmin && (
         <>
-          <AddProviderGroupDrawer subOrgId={subOrgId} />
+          <AddProviderGroupDrawer subOrgId={subOrgId} drawerMode={drawerMode} editData={editData} />
           <StatusChangeModal />
         </>
       )}
