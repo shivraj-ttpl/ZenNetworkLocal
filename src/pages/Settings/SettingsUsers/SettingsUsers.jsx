@@ -62,6 +62,7 @@ export default function SettingsUsers() {
         sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
         subOrgId: filters?.subOrganization?.value || undefined,
         status: filters?.status?.value || undefined,
+        userType: isOrgAdmin ? "ORG_PORTAL" : 'SUB_ORG_PORTAL',
       }),
     );
   }, [
