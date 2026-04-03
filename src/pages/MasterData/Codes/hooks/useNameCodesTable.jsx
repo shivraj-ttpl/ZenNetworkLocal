@@ -4,11 +4,13 @@ import { useOutletContext } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import { buildColumns } from '@/components/commonComponents/table';
+import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
+import { truncateText } from '@/utils/GeneralUtils';
 
 import { codesActions } from '../codeSaga';
 import {
@@ -69,7 +71,26 @@ function getColumnDefs(codeLabel, dispatch, codeType, canEdit) {
   const cols = [
     { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
     { id: 'name', header: `${codeLabel} Name`, accessorKey: 'name', sortable: true },
-    { id: 'description', header: 'Description', accessorKey: 'description', sortable: true },
+    {
+      id: 'description',
+      header: 'Description',
+      accessorKey: 'description',
+      sortable: true,
+      render: (row) => {
+        const truncated = truncateText(row.description, 80);
+        if (!row.description) return '-';
+        if (truncated === row.description) return row.description;
+        return (
+          <ToolTip
+            content={<p className="p-2 text-sm max-w-80 wrap-break-word">{row.description}</p>}
+            position="bottom"
+            usePortal
+          >
+            <span className="cursor-default">{truncated}...</span>
+          </ToolTip>
+        );
+      },
+    },
     {
       id: 'favorites',
       header: 'Favorites',

@@ -71,13 +71,13 @@ export default function AddMedicationModal() {
       [MEDICATION_FORM_FIELDS.STRENGTH]:
         values[MEDICATION_FORM_FIELDS.STRENGTH],
       [MEDICATION_FORM_FIELDS.FORM]:
-        values[MEDICATION_FORM_FIELDS.FORM]?.value || undefined,
+        values[MEDICATION_FORM_FIELDS.FORM]?.value || "",
       [MEDICATION_FORM_FIELDS.DRUG_CLASS]:
-        values[MEDICATION_FORM_FIELDS.DRUG_CLASS]?.value || undefined,
+        values[MEDICATION_FORM_FIELDS.DRUG_CLASS]?.value || "",
       [MEDICATION_FORM_FIELDS.RXNORM_CODE]:
-        values[MEDICATION_FORM_FIELDS.RXNORM_CODE] || undefined,
+        values[MEDICATION_FORM_FIELDS.RXNORM_CODE] || "",
       [MEDICATION_FORM_FIELDS.ATC_CODE]:
-        values[MEDICATION_FORM_FIELDS.ATC_CODE] || undefined,
+        values[MEDICATION_FORM_FIELDS.ATC_CODE] || "",
     };
 
     if (isEdit) {

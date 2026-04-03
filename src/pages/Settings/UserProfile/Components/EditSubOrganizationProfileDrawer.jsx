@@ -73,14 +73,14 @@ export default function EditSubOrganizationProfileDrawer({
             firstName: values[FORM_FIELDS_NAMES.FIRST_NAME],
             lastName: values[FORM_FIELDS_NAMES.LAST_NAME],
             email: values[FORM_FIELDS_NAMES.EMAIL_ADDRESS],
-            contactNumber: values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || undefined,
+            contactNumber: values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || "",
             address: {
-              addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || undefined,
-              addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
-              city: values[FORM_FIELDS_NAMES.CITY] || undefined,
-              state: values[FORM_FIELDS_NAMES.STATE]?.name || undefined,
-              zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || undefined,
-              country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || undefined,
+              addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || "",
+              addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
+              city: values[FORM_FIELDS_NAMES.CITY] || "",
+              state: values[FORM_FIELDS_NAMES.STATE]?.name || "",
+              zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || "",
+              country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || "",
             },
           };
           dispatch(
@@ -115,7 +115,7 @@ export default function EditSubOrganizationProfileDrawer({
           <Form className="flex h-full flex-col">
             <div className=" flex-1 overflow-y-auto p-1">
               <div className="flex gap-6 ">
-                <div className="w-[200px] flex-shrink-0">
+                <div className="w-50 shrink-0">
                   <UploadPhoto
                     name={FORM_FIELDS_NAMES.PHOTO}
                     label="Profile Photo"

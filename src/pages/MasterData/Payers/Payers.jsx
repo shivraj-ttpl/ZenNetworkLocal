@@ -151,7 +151,7 @@ export default function Payers() {
     () =>
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-        { id: 'name', header: 'Name', accessorKey: 'name', sortable: true },
+        { id: 'name', header: 'Name', accessorKey: 'name', sortable: true,  width: 200, },
         {
           id: 'type',
           header: 'Type',
@@ -186,13 +186,12 @@ export default function Payers() {
         {
           id: 'favorites',
           header: 'Favorites',
-          width: 100,
+          width: 50,
           align: 'center',
           render: (row) => (
             <span
-              className={
-                row.isFavorite ? 'text-primary-700' : 'text-neutral-400'
-              }
+              className={`${ row.isFavorite ? 'text-primary-700 ' : 'text-neutral-400'} flex items-center justify-center`
+               }
             >
               {row.isFavorite ? <Icon name="check" size={18} /> : '-'}
             </span>
