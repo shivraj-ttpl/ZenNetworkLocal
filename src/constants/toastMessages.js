@@ -67,6 +67,8 @@ export const toastMessages = {
   providerGroupDeactivatedSuccess: 'Provider Group deactivated successfully',
   providerGroupArchivedSuccess: 'Provider Group archived successfully',
   providerGroupUnarchivedSuccess: 'Provider Group unarchived successfully',
+  providerGroupProfileUpdatedSuccess:
+    'Provider Group profile updated successfully',
 
   intakeSubmittedSuccess: 'Family Medicine Intake form submitted successfully',
   intakeSignatureUploadedSuccess: 'Signature uploaded successfully',

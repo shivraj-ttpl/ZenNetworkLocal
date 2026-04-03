@@ -1,70 +1,117 @@
-# CLAUDE.md — ZenNetwork (OneTeam)
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 - **App**: OneTeam — Healthcare / Care Coordination (Zane Network)
 - **Stack**: React 19 + Vite 8 + Redux Toolkit + Redux-Saga + Tailwind CSS v4
 - **Language**: JavaScript (JSX) — no TypeScript
 - **Package Manager**: npm
-- **Dev Server**: `npm run dev` → port 5173
-- **Build**: `npm run build` → `dist/`
-- **Base API URL**: `VITE_API_URL` (default `http://localhost:8080/api`)
 
-## Key Architecture Rules
+## Commands
+- **Dev server**: `npm run dev` (port 5173, LAN-accessible)
+- **Build**: `npm run build` → `dist/`
+- **Lint**: `npm run lint` (ESLint 9 flat config — must pass with zero warnings/errors)
+- **Storybook**: `npm run storybook` (port 6006)
+- **Preview prod build**: `npm run preview`
+- **Base API URL**: `VITE_API_URL` env var (default `http://localhost:8080/api`)
+
+## Architecture
+
+### Hierarchy
+```
+containers → pages → components
+```
+- **Containers** render `<Outlet />` for route groups
+- **Pages** own their slice, saga, and constants
+- **Components** are dumb — receive props, no direct store access
+
+### Dynamic Store (Reducer + Saga Injection)
+Reducers and sagas are injected at runtime and cleaned up on unmount. Static reducers (always present): `loading`, `notification`.
+
+**Adding a new page:**
+1. Add `COMPONENT_KEYS.MY_PAGE` in `src/constants/componentKeys.js`
+2. Create `myPageSlice.js` → call `store.reducerManager.add({ key, addedReducers, initialReducerState })`
+3. Create `myPageSaga.js` → call `store.sagaManager.addSaga(key, rootSaga)`
+4. In page component → call `useFlexCleanup(COMPONENT_KEYS.MY_PAGE)` for auto-cleanup
+5. Define loading keys in `src/constants/loadingKeys.js` with `LOADING_KEY_OWNER` mapping
+
+### API Call Pattern
+Every API call goes through the `apiCall` generator in `src/core/store/sagaHelpers.js`:
+```js
+yield* apiCall({
+  loadingKey: LOADING_KEYS.MY_PAGE_FETCH_LIST,
+  apiFunc: () => MyPageDataService.getList(payload),
+  onSuccess: function* (response) { yield put(setList(response.data)); },
+  // optional: onError, showErrorToast (default true)
+});
+```
+Saga actions use `createSagaActions`:
+```js
+export const myPageActions = createSagaActions('MY_PAGE', ['fetchList', 'createItem']);
+```
+
+### Service Layer
+- One service file per base URL, extends `DataService` (`src/services/utils/dataservice/DataService.js`)
+- Static methods per endpoint — no direct `axios.get/post` anywhere except `DataService`
+- Axios interceptors handle: auto-trim strings, global loader, token injection (`Bearer`), 401 → redirect to `/login`
+
+### Loading State System
+- **Global loading** (`loading.global`): toggled by Axios interceptors, full-screen overlay
+- **Per-key loading** (`loading.keys[key]`): set by `apiCall`, for granular UI
+- Hooks: `useLoadingKey(LOADING_KEYS.XX)` → boolean, `useAnyLoading("PREFIX")` → boolean
+- Loading key naming: `COMPONENT_ACTION` (e.g., `DASHBOARD_GET_STATS`)
+
+### GET API Data Refresh Pattern
+For GET APIs that need refresh after mutations:
+- Add `refreshFlag: 0` in slice initial state
+- Update with `Date.now()` when refresh is needed
+- Use in `useEffect` dependency to trigger saga dispatch
+
+### Filters & Sorting
+Store all filters and sorting parameters in the Redux slice — never in component-level state. Always use slice state when calling APIs.
+
+## Key Rules
 
 ### Component Rules
 - Functional components only, single responsibility
 - **NEVER modify common/shared components** (`src/components/commonComponents/`) unless explicitly asked with component name + specific requirement
-- Always reuse existing common components (Button, Input, TextArea, Checkbox, SelectDropdown, Table, Pagination, Drawer, ActionDropdown, ToggleSwitch, Avatar, etc.)
 - No API calls inside components — all side effects go through sagas
 - No business logic in components — keep in slices/sagas/utils
-
-### State Management
-- Dynamic store: reducers and sagas are injected at runtime and cleaned up on unmount
-- Every new page needs: `COMPONENT_KEYS` entry → slice → saga → `useFlexCleanup()`
-- Every API call must use `apiCall` wrapper with a unique `loadingKey`
-- Loading keys defined in `src/constants/loadingKeys.js`
-- Prefer `useState` when global state is unnecessary
+- Every component/page that fetches data **must have a skeleton loader** using `useLoadingKey`
 
 ### Forms (Strict)
 - **All forms must use Formik**
 - Field names in page `constant.js` as `FORM_FIELDS_NAMES`
-- Validation via `getValidationSchema()` from `formUtils` (declarative config)
+- Validation via `getValidationSchema()` from `src/utils/formUtils/index.js` (declarative config supporting: required, email, password, regex, min/max length, dropdown, multi-select, conditional `when`, custom validation)
 - Dropdown/select options must be in page constants — no hardcoding in components
 
 ### Styling
 - Tailwind utility-first only, no inline styles unless unavoidable
-- Use design tokens from `index.css` `@theme`
+- Use design tokens from `index.css` `@theme` (primary blue, secondary purple, neutral, semantic colors)
 - Match designs 100% pixel-perfect when provided
 
-### Folder Structure
-```
-containers → pages → components (hierarchy)
-```
-- Containers render `<Outlet />`
-- Pages own their slice, saga, constants
-- Components are dumb — receive props
+### Toast Messages
+- Never hardcode toast messages — always use constants from `src/constants/toastMessages`
+- Redux-driven: `dispatch(addNotification({ message, variant }))` or `showToast()` utility
 
 ### Import Rules
-- Use `@/` alias for absolute imports (e.g., `@/components/commonComponents/button/Button`)
+- Use `@/` alias for absolute imports (mapped to `./src` in vite.config.js)
 - No deep relative paths (`../../../`) — use relative only for nearby files within same feature
-- Order: external libs → internal modules → styles
-
-### Code Quality (Zero Tolerance)
-- No `console.log`, `debugger`, or debug leftovers
-- No dead code, commented-out code, unused imports
-- No circular dependencies
-- ESLint must pass with zero warnings/errors
-- DRY enforced — extract to `/hooks`, `/utils`, `/services`
-
-### Service Layer
-- One service file per base URL, extends `DataService`
-- Static methods per endpoint
-- No direct `axios.get/post` anywhere except `DataService` base class
+- Order enforced by `simple-import-sort`: external libs → internal modules → styles
 
 ### Routing
-- New pages must be added to `routeConfig.js`
+- New pages must be added to `src/routes/routeConfig.js`
 - All page components are lazy-loaded (`React.lazy`)
-- Three categories: protected, public-only, shared
+- Three categories: protected (`routeConfig`), public-only (`publicRouteConfig`), shared (`sharedRouteConfig`)
+- `nav: true` + `icon` for Navbar visibility
+
+### Code Quality
+- No `console.log`, `debugger`, or debug leftovers (`no-console` and `no-debugger` are ESLint errors)
+- No dead code, commented-out code, unused imports (`unused-imports` plugin enforced)
+- No circular dependencies (`import-x/no-cycle` enforced)
+- ESLint limits: max cyclomatic complexity 10, max nesting depth 4, max 80 lines per function
+- `react-hooks/exhaustive-deps` is an error (not a warning)
 
 ### Naming Conventions
 | Type | Convention | Example |
