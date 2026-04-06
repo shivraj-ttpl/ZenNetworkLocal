@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import utc from "dayjs/plugin/utc";
+import { parsePhoneNumber } from 'react-phone-number-input';
 
 dayjs.extend(utc);
 
@@ -103,6 +104,26 @@ export function buildPhoneValue(countryCode, contactNumber) {
   if (!contactNumber) return '';
   if (countryCode) return `${countryCode}${contactNumber}`;
   return contactNumber;
+}
+
+/**
+ * Parse a phone string (from react-phone-number-input) into countryCode and nationalNumber.
+ * Returns { countryCode, nationalNumber } or { countryCode: '', nationalNumber: raw }.
+ */
+export function parsePhoneValue(phoneRaw) {
+  if (!phoneRaw) return { countryCode: '', nationalNumber: '' };
+  try {
+    const parsed = parsePhoneNumber(phoneRaw);
+    if (parsed) {
+      return {
+        countryCode: `+${parsed.countryCallingCode}`,
+        nationalNumber: parsed.nationalNumber,
+      };
+    }
+  } catch {
+    // fallback
+  }
+  return { countryCode: '', nationalNumber: phoneRaw };
 }
 
 export function formatZipCode(zip) {

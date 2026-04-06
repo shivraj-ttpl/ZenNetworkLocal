@@ -1,54 +1,60 @@
-import { useDispatch } from "react-redux";
-import ModalComponent from "@/components/commonComponents/modal/ModalComponent";
-import Avatar from "@/components/commonComponents/avatar/Avatar";
-import { setCloseViewModal } from "../providerGroupUsersSlice";
+import { useDispatch, useSelector } from 'react-redux';
 
-const USER_DETAILS = {
-  1: {
-    fullName: "Alexa Stuart",
-    role: "Care Manager",
-    contact: "+1 800-555-0199",
-    email: "alexastuart@gmail.com",
-    address: "1428 Meadowbrook Lane, Suite 205, Dallas Texas, United States, 75201",
-  },
-};
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+import Avatar from '@/components/commonComponents/avatar/Avatar';
 
-const getUserProfile = (user) => {
-  const details = USER_DETAILS[user?.id] || {};
-  return {
-    fullName: details.fullName || user?.name || "—",
-    role: details.role || user?.role || "—",
-    contact: details.contact || user?.contact || "—",
-    email: details.email || user?.email || "—",
-    address: details.address || "—",
-    status: user?.status || "Active",
-  };
-};
+import { componentKey, setCloseViewModal } from '../providerGroupUsersSlice';
 
-export default function ViewUserModal({ open, viewData }) {
+const EMPTY_STATE = {};
+
+export default function ViewUserModal() {
   const dispatch = useDispatch();
-  const profile = getUserProfile(viewData);
+  const { viewModalOpen = false, viewData = null } = useSelector(
+    (state) => state[componentKey] ?? EMPTY_STATE,
+  );
 
   const handleClose = () => {
     dispatch(setCloseViewModal());
   };
 
+  const fullName =
+    `${viewData?.firstName || ''} ${viewData?.lastName || ''}`.trim() || '—';
+  const role =
+    viewData?.providerGroups?.[0]?.roleTitle || viewData?.userType || '—';
+  const contact = viewData?.contactNumber
+    ? `${viewData.countryCode || ''} ${viewData.contactNumber}`
+    : '—';
+  const email = viewData?.email || '—';
+  const address = viewData?.address
+    ? [
+        viewData.address.addressLine1,
+        viewData.address.addressLine2,
+        viewData.address.city,
+        viewData.address.state,
+        viewData.address.country,
+        viewData.address.zipCode,
+      ]
+        .filter(Boolean)
+        .join(', ')
+    : '—';
+  const status = viewData?.status === 'ACTIVE' ? 'Active' : 'Inactive';
+
   const infoRows = [
-    { label: "Full Name", value: profile.fullName },
-    { label: "Role", value: profile.role },
-    { label: "Contact", value: profile.contact },
-    { label: "Email Address", value: profile.email, isLink: true },
-    { label: "Address", value: profile.address },
+    { label: 'Full Name', value: fullName },
+    { label: 'Role', value: role },
+    { label: 'Contact', value: contact },
+    { label: 'Email Address', value: email, isLink: true },
+    { label: 'Address', value: address },
   ];
 
   const title = (
     <div className="flex flex-wrap items-center gap-2">
       <span className="text-sm sm:text-base font-medium">
-        {viewData?.name || "Users Profile"}
+        {fullName || 'Users Profile'}
       </span>
       <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium text-[#287F7C] bg-neutral-100">
         <span className="w-1.5 h-1.5 rounded-full bg-[#287F7C]" />
-        {profile.status}
+        {status}
       </span>
     </div>
   );
@@ -56,25 +62,23 @@ export default function ViewUserModal({ open, viewData }) {
   return (
     <ModalComponent
       title={title}
-      open={open}
+      open={viewModalOpen}
       close={handleClose}
       customClasses="w-[95%] sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[30%] max-w-[600px]"
       maxChildrenHeight="max-h-[70vh] md:max-h-[80vh]"
     >
       <div className="flex flex-col md:flex-row gap-5">
-        {/* Avatar */}
-        <div className="flex-shrink-0 flex justify-center md:block">
-          <Avatar
-            name={viewData?.name || ""}
-            size="6xl"
-            variant="square"
-          />
+        <div className="shrink-0 flex justify-center md:block">
+          <Avatar name={fullName} size="6xl" variant="square" />
         </div>
 
         <div className="flex-1 flex flex-col gap-2.5">
           {infoRows.map((item) => (
-            <div key={item.label} className="flex items-start gap-2 text-sm py-0.5">
-              <span className="text-neutral-500 min-w-[120px] sm:min-w-[130px] shrink-0">
+            <div
+              key={item.label}
+              className="flex items-start gap-2 text-sm py-0.5"
+            >
+              <span className="text-neutral-500 min-w-30 sm:min-w-32.5 shrink-0">
                 {item.label}
               </span>
               <span className="text-neutral-400">:</span>
@@ -86,7 +90,7 @@ export default function ViewUserModal({ open, viewData }) {
                   {item.value}
                 </a>
               ) : (
-                <span className="text-text-primary break-words">
+                <span className="text-text-primary wrap-break-word">
                   {item.value}
                 </span>
               )}

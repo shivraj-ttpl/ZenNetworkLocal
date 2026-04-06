@@ -90,4 +90,20 @@ export const toastMessages = {
   settingsRoleUnarchivedSuccess: 'Role unarchived successfully',
 
   labelsUpdatedSuccess: 'Labels updated successfully',
+
+  providerGroupUserCreatedSuccess: 'User added successfully',
+  providerGroupUserUpdatedSuccess: 'User updated successfully',
+  providerGroupUserStatusUpdatedSuccess: 'User status updated successfully',
+  providerGroupUserArchivedSuccess: 'User archived successfully',
+  providerGroupUserUnarchivedSuccess: 'User unarchived successfully',
+
+  feeScheduleCreatedSuccess: 'Fee schedule created successfully',
+  feeScheduleUpdatedSuccess: 'Fee schedule updated successfully',
+  feeScheduleDeletedSuccess: 'Fee schedule deleted successfully',
+
+  subOrgRoleCreatedSuccess: 'Role created successfully',
+  subOrgRoleStatusUpdatedSuccess: 'Role status updated successfully',
+  subOrgRoleArchivedSuccess: 'Role archived successfully',
+  subOrgRoleUpdatedSuccess: 'Role permissions updated successfully',
+  subOrgRoleUnarchivedSuccess: 'Role unarchived successfully',
 };

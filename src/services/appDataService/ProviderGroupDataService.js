@@ -41,4 +41,58 @@ export default class ProviderGroupDataService {
   static async updateProviderGroup(id, data) {
     return AppDataService.patch(`${PG_URL}/${id}`, data);
   }
+
+  // ─── Provider Group Users ────────────────────────
+
+  static async getProviderGroupUsers(providerGroupId, params = {}) {
+    return AppDataService.get('provider-groups/users', {
+      params,
+      headers: { 'x-provider-group': providerGroupId },
+    });
+  }
+
+  static async createProviderGroupUser(providerGroupId, data) {
+    return AppDataService.post('provider-groups/users', data, {
+      headers: { 'x-provider-group': providerGroupId },
+    });
+  }
+
+  static async updateProviderGroupUser(id, data) {
+    return AppDataService.patch(`users/${id}`, data);
+  }
+
+  static async changeProviderGroupUserStatus(id, status) {
+    return AppDataService.patch(`users/${id}/status`, { status });
+  }
+
+  static async archiveProviderGroupUser(id) {
+    return AppDataService.patch(`users/${id}/archive`);
+  }
+
+  static async unarchiveProviderGroupUser(id) {
+    return AppDataService.patch(`users/${id}/unarchive`);
+  }
+
+  // ─── Fee Schedule ────────────────────────────────
+
+  static async getFeeSchedules(providerGroupId, params = {}) {
+    return AppDataService.get('provider-groups/fee-schedules', {
+      params,
+      headers: { 'x-provider-group': providerGroupId },
+    });
+  }
+
+  static async createFeeSchedule(providerGroupId, data) {
+    return AppDataService.post('provider-groups/fee-schedules', data, {
+      headers: { 'x-provider-group': providerGroupId },
+    });
+  }
+
+  static async updateFeeSchedule(id, data) {
+    return AppDataService.patch(`fee-schedules/${id}`, data);
+  }
+
+  static async deleteFeeSchedule(id) {
+    return AppDataService.delete(`fee-schedules/${id}`);
+  }
 }

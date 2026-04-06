@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from 'react';
+import { useEffect, useMemo, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import AddPayerDrawer from './Components/AddPayerDrawer';
 import AddPayersDropdown from './Components/AddPayersDropdown';
@@ -64,6 +65,8 @@ export default function Payers() {
 
   const isLoading = useLoadingKey(LOADING_KEYS.PAYERS_GET_LIST);
   const debouncedSearch = useDebounce(search);
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
 
   useEffect(() => {
     registerReducer();
@@ -247,12 +250,12 @@ export default function Payers() {
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 260px)"
+        maxHeight={tableMaxHeight}
         loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}
