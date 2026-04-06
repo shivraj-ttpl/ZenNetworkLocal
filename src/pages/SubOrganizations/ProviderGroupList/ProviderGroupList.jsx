@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import {
+  useNavigate,
+  useOutletContext,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
@@ -17,6 +22,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
+import ToolTip from '../../../components/commonComponents/toolTip/ToolTip';
 import AddProviderGroupDrawer from './Components/AddProviderGroupDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
 import { STATUS_OPTIONS } from './constant';
@@ -46,6 +52,8 @@ export default function ProviderGroupList() {
   const { subOrgId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const subOrgName = searchParams.get('name') || '';
   const { setToolbar } = useOutletContext();
   const { currentUserRole } = useCurrentUserRole();
   const isSubOrgAdmin = currentUserRole === ROLES.SUB_ORG_ADMIN;
@@ -174,11 +182,14 @@ export default function ProviderGroupList() {
             isSubOrgAdmin ? (
               <span
                 className="text-primary-700 cursor-pointer hover:underline"
-                onClick={() =>
+                onClick={() => {
+                  const params = new URLSearchParams();
+                  if (subOrgName) params.set('name', subOrgName);
+                  if (row.name) params.set('pgName', row.name);
                   navigate(
-                    `/sub-organizations/${subOrgId}/provider-groups/${row.id}`,
-                  )
-                }
+                    `/sub-organizations/${subOrgId}/provider-groups/${row.id}?${params.toString()}`,
+                  );
+                }}
               >
                 {row.name}
               </span>
@@ -192,13 +203,13 @@ export default function ProviderGroupList() {
           accessorKey: 'specialties',
           render: (row) => {
             const specs = row.specialties || [];
-            if (!specs.length) return '-';
+            if (!specs?.length) return '-';
             const MAX_VISIBLE = 2;
-            const visible = specs.slice(0, MAX_VISIBLE);
-            const remaining = specs.length - MAX_VISIBLE;
+            const visible = specs?.slice(0, MAX_VISIBLE);
+            const remaining = specs?.length - MAX_VISIBLE;
             return (
               <div className="flex items-center gap-1 flex-wrap">
-                {visible.map((s) => (
+                {visible?.map((s) => (
                   <span
                     key={s}
                     className="px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700 whitespace-nowrap"
@@ -207,9 +218,25 @@ export default function ProviderGroupList() {
                   </span>
                 ))}
                 {remaining > 0 && (
-                  <span className="text-xs text-primary-700 font-medium">
-                    +{remaining}
-                  </span>
+                  <ToolTip
+                    content={
+                      <div className="p-2 w-80 flex flex-wrap gap-2">
+                        {specs?.slice(MAX_VISIBLE).map((s) => (
+                          <span
+                            key={s}
+                            className="px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700 whitespace-nowrap"
+                          >
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+                    }
+                    position="bottom"
+                  >
+                    <span className="text-xs text-primary-700 font-medium cursor-pointer">
+                      +{remaining}
+                    </span>
+                  </ToolTip>
                 )}
               </div>
             );
@@ -276,10 +303,14 @@ export default function ProviderGroupList() {
                     {
                       label: 'View',
                       value: 'view',
-                      onClickCb: () =>
+                      onClickCb: () => {
+                        const params = new URLSearchParams();
+                        if (subOrgName) params.set('name', subOrgName);
+                        if (row.name) params.set('pgName', row.name);
                         navigate(
-                          `/sub-organizations/${subOrgId}/provider-groups/${row.id}`,
-                        ),
+                          `/sub-organizations/${subOrgId}/provider-groups/${row.id}?${params.toString()}`,
+                        );
+                      },
                     },
                     {
                       label: 'Edit',
@@ -309,7 +340,7 @@ export default function ProviderGroupList() {
             ]
           : []),
       ]),
-    [navigate, subOrgId, dispatch, isSubOrgAdmin],
+    [navigate, subOrgId, dispatch, isSubOrgAdmin, subOrgName],
   );
 
   return (
