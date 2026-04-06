@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Outlet } from 'react-router-dom';
 
 import Navbar from '@/components/commonComponents/navbar/Navbar';
 import SessionWarningModal from '@/components/SessionWarningModal';

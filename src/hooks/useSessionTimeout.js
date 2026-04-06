@@ -55,6 +55,7 @@ export default function useSessionTimeout(onTimeout) {
     ACTIVITY_EVENTS.forEach((event) =>
       document.addEventListener(event, resetTimer, { passive: true }),
     );
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     resetTimer();
 
     return () => {

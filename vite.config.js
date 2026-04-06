@@ -1,16 +1,16 @@
-import { defineConfig, loadEnv } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import path from "path";
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+import { defineConfig, loadEnv } from 'vite';
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
-  const proxyTarget = env.VITE_PROXY_TARGET || "";
+  const env = loadEnv(mode, process.cwd(), '');
+  const proxyTarget = env.VITE_PROXY_TARGET || '';
 
   let proxy;
   if (proxyTarget) {
     proxy = {
-      "/api": {
+      '/api': {
         target: proxyTarget,
         changeOrigin: true,
         secure: false,
@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        "@": path.resolve(__dirname, "./src"),
+        '@': path.resolve(__dirname, './src'),
       },
     },
     server: {

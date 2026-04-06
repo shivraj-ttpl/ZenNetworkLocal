@@ -44,38 +44,36 @@ class AppErrorBoundary extends Component {
       return (
         <div
           role="alert"
-          className='h-screen w-screen flex items-center justify-center'
-          >
-          <div
-          className="flex flex-col items-center justify-center gap-4 p-8 min-h-75"
+          className="h-screen w-screen flex items-center justify-center"
         >
-          <div className="w-16 h-16 rounded-full bg-error-50 flex items-center justify-center">
-            <Icon name="AlertTriangle" size={32} className="text-error-500" />
+          <div className="flex flex-col items-center justify-center gap-4 p-8 min-h-75">
+            <div className="w-16 h-16 rounded-full bg-error-50 flex items-center justify-center">
+              <Icon name="AlertTriangle" size={32} className="text-error-500" />
+            </div>
+            <h2 className="text-lg font-semibold text-text-primary">
+              Something went wrong
+            </h2>
+            <p className="text-sm text-neutral-500 text-center max-w-md">
+              An unexpected error occurred. Please try again or contact support
+              if the problem persists.
+            </p>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="primaryBlue"
+                size="sm"
+                onClick={this.handleRetry}
+              >
+                Try Again
+              </Button>
+              <Button
+                variant="outlineBlue"
+                size="sm"
+                onClick={() => (window.location.href = '/master-data')}
+              >
+                Go to Home
+              </Button>
+            </div>
           </div>
-          <h2 className="text-lg font-semibold text-text-primary">
-            Something went wrong
-          </h2>
-          <p className="text-sm text-neutral-500 text-center max-w-md">
-            An unexpected error occurred. Please try again or contact support if
-            the problem persists.
-          </p>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="primaryBlue"
-              size="sm"
-              onClick={this.handleRetry}
-            >
-              Try Again
-            </Button>
-            <Button
-              variant="outlineBlue"
-              size="sm"
-              onClick={() => (window.location.href = '/master-data')}
-            >
-              Go to Home
-            </Button>
-          </div>
-        </div>
         </div>
       );
     }
