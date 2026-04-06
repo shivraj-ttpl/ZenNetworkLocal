@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   useNavigate,
   useOutletContext,
@@ -13,15 +14,31 @@ import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import Icon from '@/components/icons/Icon';
-import { rolesData } from '@/data/settingsData';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import { formatDate } from '@/utils/GeneralUtils';
+
+import CreateRoleModal from './Components/CreateRoleModal';
+import { subOrgRolesActions, registerSaga } from './subOrgRolesPermissionsSaga';
+import {
+  componentKey,
+  registerReducer,
+  setOpenCreateRoleModal,
+} from './subOrgRolesPermissionsSlice';
 
 export default function SubOrgRolesPermissions() {
   const { subOrgId } = useParams();
   const { setToolbar } = useOutletContext();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const nameParam = searchParams.get('name') || '';
   const qs = nameParam ? `?name=${encodeURIComponent(nameParam)}` : '';
+
+  const state = useSelector((s) => s[componentKey]);
+  const { createRoleModalOpen, rolesData, totalRecords, refreshFlag = 0 } = state || {};
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -30,13 +47,40 @@ export default function SubOrgRolesPermissions() {
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
+  const isLoading = useLoadingKey(LOADING_KEYS.SUB_ORG_ROLES_GET_LIST);
+  const debouncedSearch = useDebounce(search);
+
+  useEffect(() => {
+    registerReducer();
+    registerSaga();
+  }, []);
+
+  useFlexCleanup(componentKey);
+
+  useEffect(() => {
+    dispatch(
+      subOrgRolesActions.fetchRoles({
+        page,
+        limit,
+        search: debouncedSearch.trim() || undefined,
+        showArchived: showArchive || undefined,
+        sortBy: sortKey || undefined,
+        sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
+        subOrgId,
+      }),
+    );
+  }, [dispatch, page, limit, debouncedSearch, showArchive, sortKey, sortOrder, refreshFlag, subOrgId]);
+
   useEffect(() => {
     setToolbar(
       <>
         <Checkbox
           label="Show Archive"
           checked={showArchive}
-          onChange={() => setShowArchive((p) => !p)}
+          onChange={() => {
+            setShowArchive((p) => !p);
+            setPage(1);
+          }}
           variant="blue"
           size="sm"
         />
@@ -53,43 +97,33 @@ export default function SubOrgRolesPermissions() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <Button variant="primaryBlue" size="sm">
+        <Button
+          variant="primaryBlue"
+          size="sm"
+          onClick={() => dispatch(setOpenCreateRoleModal())}
+        >
           <Icon name="Plus" size={14} />
           Create Roles
         </Button>
       </>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search]);
+  }, [setToolbar, showArchive, search, dispatch]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
     setSortOrder(order);
   }, []);
 
-  const filteredData = useMemo(() => {
-    let data = rolesData;
-    if (!showArchive) {
-      data = data.filter((row) => row.status);
-    }
-    if (search.trim()) {
-      const term = search.toLowerCase();
-      data = data.filter((item) =>
-        item.roleName.toLowerCase().includes(term),
-      );
-    }
-    return data;
-  }, [search, showArchive]);
+  const totalPages = Math.ceil((totalRecords ?? 0) / limit) || 1;
 
-  const totalPages = Math.ceil(filteredData.length / limit) || 1;
-
-  const paginatedData = useMemo(
+  const tableData = useMemo(
     () =>
-      filteredData.slice((page - 1) * limit, page * limit).map((item, i) => ({
+      (rolesData ?? []).map((item, i) => ({
         ...item,
         srNo: String((page - 1) * limit + i + 1).padStart(2, '0'),
       })),
-    [filteredData, page, limit],
+    [rolesData, page, limit],
   );
 
   const columns = useMemo(
@@ -102,9 +136,9 @@ export default function SubOrgRolesPermissions() {
           width: 70,
         },
         {
-          id: 'roleName',
+          id: 'name',
           header: 'Role Name',
-          accessorKey: 'roleName',
+          accessorKey: 'name',
           render: (row) => (
             <span
               className="cursor-pointer hover:underline"
@@ -115,29 +149,26 @@ export default function SubOrgRolesPermissions() {
                 );
               }}
             >
-              {row?.roleName}
+              {row?.name}
             </span>
           ),
         },
         {
-          id: 'createdBy',
-          header: 'Created By',
-          accessorKey: 'createdBy',
+          id: 'roleType',
+          header: 'Role Type',
+          accessorKey: 'roleType',
         },
         {
-          id: 'createdDate',
+          id: 'createdAt',
           header: 'Created Date',
-          accessorKey: 'createdDate',
+          accessorKey: 'createdAt',
+          render: (row) => formatDate(row?.createdAt),
         },
         {
-          id: 'updateBy',
-          header: 'Update By',
-          accessorKey: 'updateBy',
-        },
-        {
-          id: 'updateDate',
-          header: 'Update Date',
-          accessorKey: 'updateDate',
+          id: 'updatedAt',
+          header: 'Updated Date',
+          accessorKey: 'updatedAt',
+          render: (row) => formatDate(row?.updatedAt),
         },
         {
           id: 'status',
@@ -146,8 +177,16 @@ export default function SubOrgRolesPermissions() {
           render: (row) => (
             <ToggleSwitch
               name={`status-${row.id}`}
-              checked={row.status}
+              checked={row.status === 'ACTIVE'}
               showLabel={false}
+              onChangeCb={() =>
+                dispatch(
+                  subOrgRolesActions.updateRoleStatus({
+                    roleId: row.id,
+                    status: row.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+                  }),
+                )
+              }
             />
           ),
         },
@@ -156,50 +195,67 @@ export default function SubOrgRolesPermissions() {
           header: 'Action',
           width: 70,
           align: 'center',
-          render: (row) => (
-            <ActionDropdown
-              options={[
-                {
-                  label: 'View',
-                  value: 'view',
-                  onClickCb: () =>
-                    navigate(
-                      `/sub-organizations/${subOrgId}/roles-permissions/${row.id}/view${qs}`,
-                    ),
-                },
-                {
-                  label: 'Edit',
-                  value: 'edit',
-                  onClickCb: () =>
-                    navigate(
-                      `/sub-organizations/${subOrgId}/roles-permissions/${row.id}/edit${qs}`,
-                    ),
-                },
-                {
-                  label: 'Archive',
-                  value: 'archive',
-                },
-              ]}
-            />
-          ),
+          render: (row) => {
+            const options = [
+              {
+                label: 'View',
+                value: 'view',
+                onClickCb: () =>
+                  navigate(
+                    `/sub-organizations/${subOrgId}/roles-permissions/${row.id}/view${qs}`,
+                  ),
+              },
+              {
+                label: 'Edit',
+                value: 'edit',
+                onClickCb: () =>
+                  navigate(
+                    `/sub-organizations/${subOrgId}/roles-permissions/${row.id}/edit${qs}`,
+                  ),
+              },
+            ];
+
+            if (showArchive) {
+              options.push({
+                label: 'Unarchive',
+                value: 'unarchive',
+                onClickCb: () =>
+                  dispatch(
+                    subOrgRolesActions.archiveRole({ roleId: row.id, isArchived: true }),
+                  ),
+              });
+            } else {
+              options.push({
+                label: 'Archive',
+                value: 'archive',
+                onClickCb: () =>
+                  dispatch(
+                    subOrgRolesActions.archiveRole({ roleId: row.id, isArchived: false }),
+                  ),
+              });
+            }
+
+            return <ActionDropdown options={options} />;
+          },
         },
       ]),
-    [],
+    [navigate, dispatch, showArchive, subOrgId, qs],
   );
 
   return (
     <div className="px-5 pb-4">
       <Table
         columns={columns}
-        data={paginatedData}
+        data={tableData}
         size="sm"
         maxHeight="calc(100vh - 240px)"
+        loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
       />
       <Pagination
-        totalRecords={filteredData.length}
+        totalRecords={totalRecords ?? 0}
         totalPages={totalPages}
         currentPage={page}
         currentLimit={limit}
@@ -209,6 +265,8 @@ export default function SubOrgRolesPermissions() {
           setPage(1);
         }}
       />
+
+      <CreateRoleModal open={createRoleModalOpen} subOrgId={subOrgId} />
     </div>
   );
 }

@@ -12,9 +12,9 @@ export default function ProviderGroupDetailContainer() {
   const [toolbar, setToolbar] = useState(null);
   const { currentUserRole } = useCurrentUserRole();
 
-  if (currentUserRole === ROLES.ORG_ADMIN) {
-    return <Navigate to={`/sub-organizations/${subOrgId}/provider-groups`} replace />;
-  }
+  // if (currentUserRole === ROLES.ORG_ADMIN) {
+  //   return <Navigate to={`/sub-organizations/${subOrgId}/provider-groups`} replace />;
+  // }
 
   const orgName = useMemo(
     () =>

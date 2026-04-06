@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Input from '@/components/commonComponents/input/Input';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { DEFAULT_LABEL_FIELDS } from '@/pages/Settings/SettingsLabels/constant';
 
 import { componentKey, registerReducer } from './subOrgLabelsSlice';
@@ -19,6 +21,7 @@ export default function SubOrgLabels() {
   const { labelsList = [] } = useSelector(
     (state) => state[componentKey] ?? EMPTY_STATE,
   );
+  const isLoading = useLoadingKey(LOADING_KEYS.SUB_ORG_LABELS_GET);
   useEffect(() => {
     registerReducer();
     registerSaga();
@@ -64,28 +67,44 @@ export default function SubOrgLabels() {
           </div>
         </div>
 
-        {DEFAULT_LABEL_FIELDS.map((fieldName) => {
-          const apiLabel = labelsMap[fieldName];
-          return (
-            <div
-              key={fieldName}
-              className="grid grid-cols-2 border-t border-border"
-            >
-              <div className="px-4 py-3 text-sm font-medium text-text-primary flex items-center">
-                {fieldName}
+        {isLoading
+          ? Array.from({ length: DEFAULT_LABEL_FIELDS.length }).map((_, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-2 border-t border-border animate-pulse"
+              >
+                <div className="px-4 py-3 flex items-center">
+                  <div className="h-4 bg-neutral-200 rounded w-3/5" />
+                </div>
+                <div className="px-4 py-3 flex items-center">
+                  <div className="h-10 bg-neutral-200 rounded-lg w-full" />
+                </div>
               </div>
-              <div className="px-4 py-3 flex items-center">
-                <Input
-                  name={`label-${fieldName}`}
-                  value={
-                    apiLabel?.customLabel || apiLabel?.defaultLabel || fieldName
-                  }
-                  disabled
-                />
-              </div>
-            </div>
-          );
-        })}
+            ))
+          : DEFAULT_LABEL_FIELDS.map((fieldName) => {
+              const apiLabel = labelsMap[fieldName];
+              return (
+                <div
+                  key={fieldName}
+                  className="grid grid-cols-2 border-t border-border"
+                >
+                  <div className="px-4 py-3 text-sm font-medium text-text-primary flex items-center">
+                    {fieldName}
+                  </div>
+                  <div className="px-4 py-3 flex items-center">
+                    <Input
+                      name={`label-${fieldName}`}
+                      value={
+                        apiLabel?.customLabel ||
+                        apiLabel?.defaultLabel ||
+                        fieldName
+                      }
+                      disabled
+                    />
+                  </div>
+                </div>
+              );
+            })}
       </div>
     </div>
   );

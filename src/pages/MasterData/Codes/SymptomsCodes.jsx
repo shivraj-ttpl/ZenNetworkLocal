@@ -1,9 +1,14 @@
+import { useRef } from 'react';
+
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { Table } from '@/components/commonComponents/table';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import useNameCodesTable from './hooks/useNameCodesTable';
 
 export default function SymptomsCodes() {
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
   const {
     tableData,
     columns,
@@ -20,12 +25,12 @@ export default function SymptomsCodes() {
   } = useNameCodesTable();
 
   return (
-    <div>
+    <div ref={tableRef}>
       <Table
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 300px)"
+        maxHeight={tableMaxHeight}
         loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}
