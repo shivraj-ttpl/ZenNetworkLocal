@@ -1,35 +1,35 @@
+import { Form, Formik } from 'formik';
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Formik, Form } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
 import FileUpload from '@/components/commonComponents/upload/FileUpload';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
-import { componentKey, setCloseDrawer } from '../educationSlice';
-import { educationActions } from '../educationSaga';
 import { FORM_FIELDS_NAMES } from '../constant';
+import { educationActions } from '../educationSaga';
+import { componentKey, setCloseDrawer } from '../educationSlice';
 
 const { createEducation, updateEducation } = educationActions;
 const EMPTY_STATE = {};
 
 const validationSchema = Yup.object().shape({
-  [FORM_FIELDS_NAMES.FILE_NAME]: Yup.string().required(
-    'File Name is required',
-  ),
+  [FORM_FIELDS_NAMES.FILE_NAME]: Yup.string().required('File Name is required'),
   [FORM_FIELDS_NAMES.FILE]: Yup.mixed().required('File is required'),
 });
 
 export default function AddMaterialDrawer() {
   const dispatch = useDispatch();
-  const { drawerOpen = false, drawerMode = '', editData = null } = useSelector(
-    (state) => state[componentKey] ?? EMPTY_STATE,
-  );
+  const {
+    drawerOpen = false,
+    drawerMode = '',
+    editData = null,
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
   const isEdit = drawerMode === 'edit';
   const isCreating = useLoadingKey(LOADING_KEYS.EDUCATION_POST_CREATE);
   const isUpdating = useLoadingKey(LOADING_KEYS.EDUCATION_PATCH_UPDATE);
@@ -46,7 +46,7 @@ export default function AddMaterialDrawer() {
     const file = values[FORM_FIELDS_NAMES.FILE];
     const data = {
       fileName: values[FORM_FIELDS_NAMES.FILE_NAME],
-      specialty: values[FORM_FIELDS_NAMES.SPECIALTY]?.value || "",
+      specialty: values[FORM_FIELDS_NAMES.SPECIALTY]?.value || '',
       fileType: file?.type?.includes('pdf')
         ? 'PDF'
         : file?.type?.includes('video')
@@ -54,8 +54,8 @@ export default function AddMaterialDrawer() {
           : file?.type?.includes('image')
             ? 'IMAGE'
             : 'DOCUMENT',
-      fileSize: file?.size || "",
-      contentType: file?.type || "",
+      fileSize: file?.size || '',
+      contentType: file?.type || '',
     };
 
     if (isEdit) {
@@ -66,11 +66,7 @@ export default function AddMaterialDrawer() {
   };
 
   const title = isEdit ? 'Edit Material' : 'Add Material';
-  const submitLabel = isSaving
-    ? 'Saving...'
-    : isEdit
-      ? 'Update'
-      : 'Upload';
+  const submitLabel = isSaving ? 'Saving...' : isEdit ? 'Update' : 'Upload';
 
   return (
     <Drawer
@@ -83,10 +79,9 @@ export default function AddMaterialDrawer() {
       <Formik
         initialValues={{
           [FORM_FIELDS_NAMES.FILE_NAME]: editData?.fileName ?? '',
-          [FORM_FIELDS_NAMES.SPECIALTY]:
-            editData?.specialty
-              ? { value: editData.specialty, label: editData.specialty }
-              : null,
+          [FORM_FIELDS_NAMES.SPECIALTY]: editData?.specialty
+            ? { value: editData.specialty, label: editData.specialty }
+            : null,
           [FORM_FIELDS_NAMES.FILE]: null,
         }}
         validationSchema={validationSchema}

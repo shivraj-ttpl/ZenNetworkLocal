@@ -1,17 +1,20 @@
-import { all, put, takeLatest } from "redux-saga/effects";
+import { all, put, takeLatest } from 'redux-saga/effects';
 
-import { LOADING_KEYS } from "@/constants/loadingKeys";
-import { toastMessages } from "@/constants/toastMessages";
-import { addNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice";
-import { apiCall, createSagaActions } from "@/core/store/sagaHelpers";
-import store from "@/core/store/store";
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { toastMessages } from '@/constants/toastMessages';
+import {
+  addNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
+import { apiCall, createSagaActions } from '@/core/store/sagaHelpers';
+import store from '@/core/store/store';
 
-import SettingsProfileDataService from "../../../services/appDataService/SettingsProfileDataService";
-import { componentKey, setProfileData } from "./settingsProfileSlice";
+import SettingsProfileDataService from '../../../services/appDataService/SettingsProfileDataService';
+import { componentKey, setProfileData } from './settingsProfileSlice';
 
 export const settingsProfileActions = createSagaActions(componentKey, [
-  "fetchOrgProfile",
-  "updateOrgProfile",
+  'fetchOrgProfile',
+  'updateOrgProfile',
 ]);
 
 function* fetchOrgProfileSaga() {
@@ -43,8 +46,14 @@ function* updateOrgProfileSaga(action) {
 
 function* rootSaga() {
   yield all([
-    takeLatest(settingsProfileActions.fetchOrgProfile().type, fetchOrgProfileSaga),
-    takeLatest(settingsProfileActions.updateOrgProfile().type, updateOrgProfileSaga),
+    takeLatest(
+      settingsProfileActions.fetchOrgProfile().type,
+      fetchOrgProfileSaga,
+    ),
+    takeLatest(
+      settingsProfileActions.updateOrgProfile().type,
+      updateOrgProfileSaga,
+    ),
   ]);
 }
 

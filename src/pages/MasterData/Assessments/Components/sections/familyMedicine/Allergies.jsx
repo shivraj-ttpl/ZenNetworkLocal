@@ -1,7 +1,8 @@
 import { useState } from 'react';
+
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Input from '@/components/commonComponents/input/Input';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import {
   ALLERGY_NAME_OPTIONS,
   ALLERGY_SEVERITY_OPTIONS,
@@ -26,7 +27,8 @@ export default function Allergies({ values, setFieldValue }) {
     });
   };
 
-  const addAllergy = () => setAllergies((prev) => [...prev, { ...EMPTY_ALLERGY }]);
+  const addAllergy = () =>
+    setAllergies((prev) => [...prev, { ...EMPTY_ALLERGY }]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -40,8 +42,14 @@ export default function Allergies({ values, setFieldValue }) {
               name={`allergy_${idx}_name`}
               placeholder="Select"
               options={ALLERGY_NAME_OPTIONS}
-              value={ALLERGY_NAME_OPTIONS.find((o) => o.value === allergy.allergyName) || null}
-              onChange={(opt) => updateAllergy(idx, 'allergyName', opt?.value || '')}
+              value={
+                ALLERGY_NAME_OPTIONS.find(
+                  (o) => o.value === allergy.allergyName,
+                ) || null
+              }
+              onChange={(opt) =>
+                updateAllergy(idx, 'allergyName', opt?.value || '')
+              }
             />
             <Input
               label="Reaction"
@@ -55,8 +63,14 @@ export default function Allergies({ values, setFieldValue }) {
               name={`allergy_${idx}_severity`}
               placeholder="Select"
               options={ALLERGY_SEVERITY_OPTIONS}
-              value={ALLERGY_SEVERITY_OPTIONS.find((o) => o.value === allergy.severity) || null}
-              onChange={(opt) => updateAllergy(idx, 'severity', opt?.value || '')}
+              value={
+                ALLERGY_SEVERITY_OPTIONS.find(
+                  (o) => o.value === allergy.severity,
+                ) || null
+              }
+              onChange={(opt) =>
+                updateAllergy(idx, 'severity', opt?.value || '')
+              }
             />
             <Input
               label="Onset Date"
@@ -81,7 +95,9 @@ export default function Allergies({ values, setFieldValue }) {
         label="Information in above section has been confirmed"
         name="allergies.informationConfirmed"
         checked={!!a.informationConfirmed}
-        onChange={(e) => setFieldValue('allergies.informationConfirmed', e.target.checked)}
+        onChange={(e) =>
+          setFieldValue('allergies.informationConfirmed', e.target.checked)
+        }
         variant="blue"
       />
     </div>

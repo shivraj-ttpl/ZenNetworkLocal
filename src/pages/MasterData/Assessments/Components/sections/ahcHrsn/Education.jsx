@@ -1,4 +1,4 @@
-const YES_NO = ["Yes", "No"];
+const YES_NO = ['Yes', 'No'];
 
 export default function Education({ values, handleChange }) {
   const edu = values?.education || {};
@@ -28,8 +28,9 @@ export default function Education({ values, handleChange }) {
 
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-text-primary">
-          2. Do you want help with school or training? For example, starting or completing job
-          training or getting a high school diploma, GED or equivalent.
+          2. Do you want help with school or training? For example, starting or
+          completing job training or getting a high school diploma, GED or
+          equivalent.
         </p>
         {YES_NO.map((opt) => (
           <label key={opt} className="flex items-center gap-2 cursor-pointer">

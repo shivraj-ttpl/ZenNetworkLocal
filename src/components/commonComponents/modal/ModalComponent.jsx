@@ -1,24 +1,24 @@
-import { Icon } from "@/components/icons";
+import { Icon } from '@/components/icons';
 
 function ModalComponent({
   title,
   showIcon = true,
   children,
-  customClasses = "",
+  customClasses = '',
   close,
   open,
-  customBodyClasses = "",
+  customBodyClasses = '',
   subtitle,
   footerButton,
-  cutomFooterBtnClass = "",
+  cutomFooterBtnClass = '',
   showEditIcon = false,
   edit,
   hideOverflow = false,
   showDeleteIcon = false,
   deleteClick,
   hideHeaderBorder = false,
-  backdropColor = "bg-black/50",
-  maxChildrenHeight = "max-h-[70vh]",
+  backdropColor = 'bg-black/50',
+  maxChildrenHeight = 'max-h-[70vh]',
 }) {
   if (!open) return null;
 
@@ -34,7 +34,7 @@ function ModalComponent({
         {/* Header */}
         <div
           className={`flex items-center justify-between gap-4 ${
-            !hideHeaderBorder ? "px-5 py-4 border-b border-border" : ""
+            !hideHeaderBorder ? 'px-5 py-4 border-b border-border' : ''
           }`}
         >
           <div className="flex flex-col min-w-0">
@@ -81,10 +81,8 @@ function ModalComponent({
 
         {/* Body */}
         <div
-          className={`${
-            !hideHeaderBorder ? "p-5" : ""
-          } ${maxChildrenHeight} ${
-            hideOverflow ? "overflow-visible" : "overflow-auto"
+          className={`${!hideHeaderBorder ? 'p-5' : ''} ${maxChildrenHeight} ${
+            hideOverflow ? 'overflow-visible' : 'overflow-auto'
           } ${customBodyClasses}`}
         >
           {children}

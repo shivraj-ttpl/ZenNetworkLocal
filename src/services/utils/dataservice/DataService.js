@@ -1,8 +1,9 @@
-import axios from "axios";
-import store from "@/core/store/store";
-import { setGlobalLoading } from "@/core/store/loadingSlice";
-import { deepTrimStrings, isMultipartOrBinary } from "@/utils/sanitizeUtils";
-import { handle401Error } from "@/services/utils/tokenRefreshHandler";
+import axios from 'axios';
+
+import { setGlobalLoading } from '@/core/store/loadingSlice';
+import store from '@/core/store/store';
+import { handle401Error } from '@/services/utils/tokenRefreshHandler';
+import { deepTrimStrings, isMultipartOrBinary } from '@/utils/sanitizeUtils';
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -34,11 +35,11 @@ axios.interceptors.request.use(
       config.data = deepTrimStrings(config.data);
     }
     //  uncomment when using ngrok BE server
-    config.headers["ngrok-skip-browser-warning"] = "true";
+    config.headers['ngrok-skip-browser-warning'] = 'true';
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 axios.interceptors.response.use(
@@ -56,7 +57,7 @@ axios.interceptors.response.use(
     }
 
     return handle401Error(error);
-  }
+  },
 );
 
 /**
@@ -70,15 +71,15 @@ class DataService {
   }
 
   static getToken() {
-    return localStorage.getItem("token");
+    return localStorage.getItem('token');
   }
 
   _getConfig(config = {}) {
     const token = DataService.getToken();
     const headers = {
-      "Content-Type": config.isFormData
-        ? "multipart/form-data"
-        : "application/json",
+      'Content-Type': config.isFormData
+        ? 'multipart/form-data'
+        : 'application/json',
       ...this._headers,
       ...config.headers,
     };
@@ -88,7 +89,8 @@ class DataService {
     }
 
     // Remove our custom flags before passing to axios
-    const { isFormData, _skipGlobalLoader, ...rest } = config;
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    const { isFormData: _isFormData, _skipGlobalLoader, ...rest } = config;
 
     return {
       ...rest,

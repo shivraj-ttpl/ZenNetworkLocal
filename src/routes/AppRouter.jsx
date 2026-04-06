@@ -14,25 +14,23 @@ function NavigationSetter() {
   return null;
 }
 
-
-
 // Auth guard — redirects to login if not authenticated
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (!token) return <Navigate to="/login" replace />;
   return children;
 }
 
 // Redirect away from login/signup if already authenticated
 function PublicOnlyRoute({ children }) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (token) return <Navigate to="/master-data" replace />;
   return children;
 }
 
 // Conditionally wraps in MainAppLayout if user is logged in and route opts in
 function SharedRoute({ children, useLayout = false }) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (token && useLayout) {
     return <MainAppLayout>{children}</MainAppLayout>;
   }
@@ -47,7 +45,7 @@ function renderChildren(children) {
       <Route key={child.path} path={child.path} element={<child.element />}>
         {renderChildren(child.children)}
       </Route>
-    )
+    ),
   );
 }
 

@@ -13,11 +13,11 @@ import { downloadBlobFile } from '@/utils/GeneralUtils';
 
 import {
   componentKey,
-  setEducationList,
-  setTotalRecords,
-  setTotalPages,
   setCloseDrawer,
+  setEducationList,
   setRefreshEducation,
+  setTotalPages,
+  setTotalRecords,
 } from './educationSlice';
 
 export const educationActions = createSagaActions(componentKey, [
@@ -149,7 +149,10 @@ function* rootSaga() {
     takeLatest(educationActions.updateEducation().type, updateEducationSaga),
     takeLatest(educationActions.toggleFavorite().type, toggleFavoriteSaga),
     takeLatest(educationActions.archiveEducation().type, archiveEducationSaga),
-    takeLatest(educationActions.downloadEducation().type, downloadEducationSaga),
+    takeLatest(
+      educationActions.downloadEducation().type,
+      downloadEducationSaga,
+    ),
   ]);
 }
 

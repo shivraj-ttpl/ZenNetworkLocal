@@ -20,7 +20,10 @@ export default class MasterDataService {
   }
 
   static async archiveCode(type, id, data) {
-    return AppDataService.patch(`${BASE_URL}/codes/${type}/${id}/archive`, data);
+    return AppDataService.patch(
+      `${BASE_URL}/codes/${type}/${id}/archive`,
+      data,
+    );
   }
 
   static async downloadTemplate(type) {

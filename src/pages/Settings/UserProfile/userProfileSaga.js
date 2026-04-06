@@ -1,17 +1,20 @@
-import { all, put, takeLatest } from "redux-saga/effects";
+import { all, put, takeLatest } from 'redux-saga/effects';
 
-import { LOADING_KEYS } from "@/constants/loadingKeys";
-import { toastMessages } from "@/constants/toastMessages";
-import { addNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice";
-import { apiCall, createSagaActions } from "@/core/store/sagaHelpers";
-import store from "@/core/store/store";
-import UsersDataService from "@/services/appDataService/UsersDataService";
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { toastMessages } from '@/constants/toastMessages';
+import {
+  addNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
+import { apiCall, createSagaActions } from '@/core/store/sagaHelpers';
+import store from '@/core/store/store';
+import UsersDataService from '@/services/appDataService/UsersDataService';
 
-import { componentKey, setUserProfileData } from "./userProfileSlice";
+import { componentKey, setUserProfileData } from './userProfileSlice';
 
 export const userProfileActions = createSagaActions(componentKey, [
-  "fetchUserProfile",
-  "updateUserProfile",
+  'fetchUserProfile',
+  'updateUserProfile',
 ]);
 
 function* fetchUserProfileSaga(action) {
@@ -44,8 +47,14 @@ function* updateUserProfileSaga(action) {
 
 function* rootSaga() {
   yield all([
-    takeLatest(userProfileActions.fetchUserProfile().type, fetchUserProfileSaga),
-    takeLatest(userProfileActions.updateUserProfile().type, updateUserProfileSaga),
+    takeLatest(
+      userProfileActions.fetchUserProfile().type,
+      fetchUserProfileSaga,
+    ),
+    takeLatest(
+      userProfileActions.updateUserProfile().type,
+      updateUserProfileSaga,
+    ),
   ]);
 }
 

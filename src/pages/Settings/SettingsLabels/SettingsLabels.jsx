@@ -10,12 +10,12 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import { DEFAULT_LABEL_FIELDS } from './constant';
+import { registerSaga, settingsLabelsActions } from './settingsLabelsSaga';
 import {
   componentKey,
   registerReducer,
   setLabelsList,
 } from './settingsLabelsSlice';
-import { settingsLabelsActions, registerSaga } from './settingsLabelsSaga';
 
 const { fetchLabels, fetchDefaultLabels, updateLabels } = settingsLabelsActions;
 const EMPTY_STATE = {};
@@ -26,9 +26,11 @@ export default function SettingsLabels() {
   const [isSetDefault, setIsSetDefault] = useState(false);
   const [customLabels, setCustomLabels] = useState({});
 
-  const { labelsList = [], defaultLabels = null, refreshFlag = 0 } =
-    useSelector((state) => state[componentKey] ?? EMPTY_STATE,
-  );
+  const {
+    labelsList = [],
+    defaultLabels = null,
+    refreshFlag = 0,
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
   const isLoadingLabels = useLoadingKey(LOADING_KEYS.SETTINGS_LABELS_GET);
   const isUpdating = useLoadingKey(LOADING_KEYS.SETTINGS_LABELS_PATCH_UPDATE);
 
@@ -44,8 +46,10 @@ export default function SettingsLabels() {
       dispatch(fetchLabels({ subOrgId: selectedSubOrg.id }));
     } else {
       dispatch(setLabelsList([]));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCustomLabels({});
     }
+
     setIsSetDefault(false);
   }, [dispatch, selectedSubOrg, refreshFlag]);
 
@@ -58,6 +62,7 @@ export default function SettingsLabels() {
   }, [labelsList]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCustomLabels({});
   }, [labelsList]);
 
@@ -67,6 +72,7 @@ export default function SettingsLabels() {
       defaultLabels.forEach((item) => {
         map[item.fieldName] = item.defaultLabel || '';
       });
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCustomLabels(map);
     }
   }, [defaultLabels, isSetDefault]);
@@ -152,22 +158,24 @@ export default function SettingsLabels() {
           </div>
 
           {isLoadingLabels && selectedSubOrg
-            ? Array.from({ length: DEFAULT_LABEL_FIELDS.length }).map((_, i) => (
-                <div
-                  key={i}
-                  className="grid grid-cols-3 border-t border-border animate-pulse"
-                >
-                  <div className="px-4 py-3 flex items-center">
-                    <div className="h-4 bg-neutral-200 rounded w-3/5" />
+            ? Array.from({ length: DEFAULT_LABEL_FIELDS.length }).map(
+                (_, i) => (
+                  <div
+                    key={i}
+                    className="grid grid-cols-3 border-t border-border animate-pulse"
+                  >
+                    <div className="px-4 py-3 flex items-center">
+                      <div className="h-4 bg-neutral-200 rounded w-3/5" />
+                    </div>
+                    <div className="px-4 py-3 flex items-center">
+                      <div className="h-10 bg-neutral-200 rounded-lg w-full" />
+                    </div>
+                    <div className="px-4 py-3 flex items-center">
+                      <div className="h-10 bg-neutral-200 rounded-lg w-full" />
+                    </div>
                   </div>
-                  <div className="px-4 py-3 flex items-center">
-                    <div className="h-10 bg-neutral-200 rounded-lg w-full" />
-                  </div>
-                  <div className="px-4 py-3 flex items-center">
-                    <div className="h-10 bg-neutral-200 rounded-lg w-full" />
-                  </div>
-                </div>
-              ))
+                ),
+              )
             : DEFAULT_LABEL_FIELDS.map((fieldName) => {
                 const apiLabel = labelsMap[fieldName];
                 return (
@@ -183,7 +191,9 @@ export default function SettingsLabels() {
                         name={`existing-${fieldName}`}
                         value={
                           selectedSubOrg
-                            ? (apiLabel?.customLabel || apiLabel?.defaultLabel || fieldName)
+                            ? apiLabel?.customLabel ||
+                              apiLabel?.defaultLabel ||
+                              fieldName
                             : fieldName
                         }
                         disabled

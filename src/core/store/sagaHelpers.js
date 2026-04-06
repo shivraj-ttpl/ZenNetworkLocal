@@ -1,7 +1,9 @@
-import { put, call } from "redux-saga/effects";
-import { setLoadingKey, clearLoadingKey } from "./loadingSlice";
-import { addNotification, TOASTER_VARIANT } from "./notificationSlice";
-import { formatErrorMessage } from "@/utils/GeneralUtils";
+import { call, put } from 'redux-saga/effects';
+
+import { formatErrorMessage } from '@/utils/GeneralUtils';
+
+import { setLoadingKey } from './loadingSlice';
+import { addNotification, TOASTER_VARIANT } from './notificationSlice';
 
 /**
  * Universal saga wrapper — handles loadingKey + error handling automatically.
@@ -47,7 +49,7 @@ export function* apiCall({
         addNotification({
           message: formatErrorMessage(error),
           variant: TOASTER_VARIANT.ERROR,
-        })
+        }),
       );
     }
 
@@ -77,7 +79,7 @@ export function* apiCall({
 export function createSagaActions(prefix, actionNames) {
   const actions = {};
   for (const name of actionNames) {
-    const type = `${prefix}/${name.replace(/([A-Z])/g, "_$1").toUpperCase()}`;
+    const type = `${prefix}/${name.replace(/([A-Z])/g, '_$1').toUpperCase()}`;
     actions[name] = (payload) => ({ type, payload });
   }
   return actions;

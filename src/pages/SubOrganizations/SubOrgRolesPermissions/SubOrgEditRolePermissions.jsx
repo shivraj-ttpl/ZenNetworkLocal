@@ -22,8 +22,10 @@ import {
 } from './subOrgRolesPermissionsSlice';
 
 const renderChangeCell = (value) => {
-  if (value === 'No Change') return <span className="text-neutral-400">No Change</span>;
-  if (value) return <Icon name="Check" size={16} className="text-primary-700" />;
+  if (value === 'No Change')
+    return <span className="text-neutral-400">No Change</span>;
+  if (value)
+    return <Icon name="Check" size={16} className="text-primary-700" />;
   return <Icon name="X" size={16} className="text-error-500" />;
 };
 
@@ -58,7 +60,11 @@ function ChangesTooltip({ changes, roleName }) {
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -190,6 +196,7 @@ export default function SubOrgEditRolePermissions() {
     return () => setToolbar(null);
   }, [setToolbar, dispatch]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const originalPermissions = roleDetail?.permissions ?? [];
 
   const changes = useMemo(() => {
@@ -319,7 +326,11 @@ export default function SubOrgEditRolePermissions() {
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -345,7 +356,11 @@ export default function SubOrgEditRolePermissions() {
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -374,11 +389,16 @@ export default function SubOrgEditRolePermissions() {
                 usePortal
                 content={
                   <p className="text-sm text-text-secondary p-3 w-72">
-                    Allows users to add new entries and make changes within this module or feature.
+                    Allows users to add new entries and make changes within this
+                    module or feature.
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -407,11 +427,16 @@ export default function SubOrgEditRolePermissions() {
                 usePortal
                 content={
                   <p className="text-sm text-text-secondary p-3 w-72">
-                    Restricts users from viewing or interacting with this module or feature.
+                    Restricts users from viewing or interacting with this module
+                    or feature.
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -455,7 +480,10 @@ export default function SubOrgEditRolePermissions() {
               </span>
             </div>
           </div>
-          <ChangesTooltip changes={changes} roleName={roleDetail?.name || '—'} />
+          <ChangesTooltip
+            changes={changes}
+            roleName={roleDetail?.name || '—'}
+          />
           <Button
             variant="outlineBlue"
             size="sm"

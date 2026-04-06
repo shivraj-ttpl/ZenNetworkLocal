@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
-import { Table, buildColumns } from '@/components/commonComponents/table';
+import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
@@ -15,20 +15,20 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
 import { useTableHeight } from '@/hooks/useTableHeight';
+import { formatDate, truncateText } from '@/utils/GeneralUtils';
 
 import { carePlansActions, registerSaga } from './carePlansSaga';
 import {
   componentKey,
   registerReducer,
-  setPage,
+  setCloseDrawer,
   setLimit,
+  setOpenAddDrawer,
+  setPage,
   setSearch,
   setShowArchived,
-  setOpenAddDrawer,
-  setCloseDrawer,
 } from './carePlansSlice';
 import ViewCarePlanDrawer from './components/ViewCarePlanDrawer';
-import { formatDate, truncateText } from '@/utils/GeneralUtils';
 
 const { fetchCarePlans, toggleFavorite, archiveCarePlan } = carePlansActions;
 const EMPTY_STATE = {};
@@ -100,10 +100,7 @@ export default function CarePlans() {
     [carePlansList, page, limit],
   );
 
-  const handlePageChange = useCallback(
-    (p) => dispatch(setPage(p)),
-    [dispatch],
-  );
+  const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
 
   const handleLimitChange = useCallback(
     (l) => dispatch(setLimit(l)),
@@ -125,7 +122,11 @@ export default function CarePlans() {
             if (truncated === row.description) return row.description;
             return (
               <ToolTip
-                content={<p className="p-2 text-sm max-w-80 wrap-break-word">{row.description}</p>}
+                content={
+                  <p className="p-2 text-sm max-w-80 wrap-break-word">
+                    {row.description}
+                  </p>
+                }
                 position="bottom"
                 usePortal
               >
@@ -175,8 +176,7 @@ export default function CarePlans() {
                       ? 'Remove from Favorites'
                       : 'Add to Favorites',
                     value: 'toggleFavorite',
-                    onClickCb: () =>
-                      dispatch(toggleFavorite({ id: row.id })),
+                    onClickCb: () => dispatch(toggleFavorite({ id: row.id })),
                   },
                   {
                     label: row.isArchived ? 'Unarchive' : 'Archive',

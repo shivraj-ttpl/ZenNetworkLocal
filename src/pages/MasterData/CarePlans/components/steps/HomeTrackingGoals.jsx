@@ -1,17 +1,15 @@
-import Input from '@/components/commonComponents/input/Input';
 import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
-
-const INPUT_QUESTIONS = [
-  { key: 'heightFeet', label: '1. Height:', prefix: 'Feet' },
-  { key: 'heightInches', label: null, prefix: 'Inches' },
-  { key: 'weight', label: '2. Weight', prefix: 'Pounds' },
-  { key: 'bmiValue', label: '3. Your BMI is:' },
-  { key: 'idealWeight', label: '4. What is your ideal weight?' },
-];
+import Input from '@/components/commonComponents/input/Input';
 
 const RADIO_QUESTIONS = [
-  { key: 'fingerStickGlucometer', label: '5. Do you have a finger stick glucometer?' },
-  { key: 'continuousGlucose', label: '6. Do you have continuous glucose monitoring?' },
+  {
+    key: 'fingerStickGlucometer',
+    label: '5. Do you have a finger stick glucometer?',
+  },
+  {
+    key: 'continuousGlucose',
+    label: '6. Do you have continuous glucose monitoring?',
+  },
   { key: 'bloodPressureCuff', label: '7. Do you have a blood pressure cuff?' },
 ];
 
@@ -26,7 +24,11 @@ const SINGLE_INPUT_QUESTIONS = [
 const MEASURES = [
   { key: 'bmi', label: 'BMI', ideal: '19 – 25 pounds' },
   { key: 'systolicBP', label: 'Systolic BP (top number)', ideal: '100-130' },
-  { key: 'diastolicBP', label: 'Diastolic Blood Pressure (bottom number)', ideal: '60-80' },
+  {
+    key: 'diastolicBP',
+    label: 'Diastolic Blood Pressure (bottom number)',
+    ideal: '60-80',
+  },
   { key: 'pulse', label: 'Pulse', ideal: '60-99' },
   { key: 'lowGlucose', label: 'Low Glucose last week', ideal: '>90' },
   { key: 'highGlucose', label: 'High Glucose last week', ideal: '<150' },
@@ -46,11 +48,11 @@ export default function HomeTrackingGoals({
       <div className="flex flex-col gap-4">
         {/* 1. Height - Feet & Inches */}
         <div className="flex items-center gap-3">
-          <span className="text-sm text-text-primary font-medium w-[240px] shrink-0">
+          <span className="text-sm text-text-primary font-medium w-60 shrink-0">
             1. Height:
           </span>
           <span className="text-sm text-text-secondary">Feet</span>
-          <div className="w-[120px]">
+          <div className="w-30">
             <Input
               name="homeTrackingGoals.heightFeet"
               placeholder="Enter"
@@ -60,7 +62,7 @@ export default function HomeTrackingGoals({
             />
           </div>
           <span className="text-sm text-text-secondary">Inches</span>
-          <div className="w-[120px]">
+          <div className="w-30">
             <Input
               name="homeTrackingGoals.heightInches"
               placeholder="Enter"
@@ -73,11 +75,11 @@ export default function HomeTrackingGoals({
 
         {/* 2. Weight */}
         <div className="flex items-center gap-3">
-          <span className="text-sm text-text-primary font-medium w-[240px] shrink-0">
+          <span className="text-sm text-text-primary font-medium w-60 shrink-0">
             2. Weight
           </span>
           <span className="text-sm text-text-secondary">Pounds</span>
-          <div className="w-[120px]">
+          <div className="w-30">
             <Input
               name="homeTrackingGoals.weight"
               placeholder="Enter"
@@ -90,10 +92,10 @@ export default function HomeTrackingGoals({
 
         {/* 3. BMI */}
         <div className="flex items-center gap-3">
-          <span className="text-sm text-text-primary font-medium w-[240px] shrink-0">
+          <span className="text-sm text-text-primary font-medium w-60 shrink-0">
             3. Your BMI is:
           </span>
-          <div className="w-[120px]">
+          <div className="w-30">
             <Input
               name="homeTrackingGoals.bmiValue"
               placeholder="Enter"
@@ -106,10 +108,10 @@ export default function HomeTrackingGoals({
 
         {/* 4. Ideal weight */}
         <div className="flex items-center gap-3">
-          <span className="text-sm text-text-primary font-medium w-[240px] shrink-0">
+          <span className="text-sm text-text-primary font-medium w-60 shrink-0">
             4. What is your ideal weight?
           </span>
-          <div className="w-[120px]">
+          <div className="w-30">
             <Input
               name="homeTrackingGoals.idealWeight"
               placeholder="Enter"
@@ -123,7 +125,7 @@ export default function HomeTrackingGoals({
         {/* 5-7. Radio questions */}
         {RADIO_QUESTIONS.map((q) => (
           <div key={q.key} className="flex items-center gap-3">
-            <span className="text-sm text-text-primary font-medium w-[240px] shrink-0">
+            <span className="text-sm text-text-primary font-medium w-60 shrink-0">
               {q.label}
             </span>
             <div className="flex items-center gap-4">
@@ -150,10 +152,10 @@ export default function HomeTrackingGoals({
         {/* 8-12. Single input questions */}
         {SINGLE_INPUT_QUESTIONS.map((q) => (
           <div key={q.key} className="flex items-center gap-3">
-            <span className="text-sm text-text-primary font-medium w-[240px] shrink-0">
+            <span className="text-sm text-text-primary font-medium w-60 shrink-0">
               {q.label}
             </span>
-            <div className="w-[120px]">
+            <div className="w-30">
               <Input
                 name={`homeTrackingGoals.${q.key}`}
                 placeholder="Enter"
@@ -213,9 +215,7 @@ export default function HomeTrackingGoals({
                 <DatePicker
                   name={`${prefix}.lastDate`}
                   value={data.lastDate || null}
-                  onChangeCb={(val) =>
-                    setFieldValue(`${prefix}.lastDate`, val)
-                  }
+                  onChangeCb={(val) => setFieldValue(`${prefix}.lastDate`, val)}
                   placeholder="Select Date"
                 />
               </div>

@@ -7,12 +7,19 @@ const YES_NO = [
   { label: 'No', value: 'no' },
 ];
 
-export default function HealthCareAccess({ values, handleChange, handleBlur, setFieldValue }) {
+export default function HealthCareAccess({
+  values,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+}) {
   const h = values?.healthCareAccess || {};
 
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="text-base font-semibold text-text-primary">Health Care Access</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        Health Care Access
+      </h3>
 
       <div className="flex flex-col gap-2">
         <p className="text-sm text-text-primary">
@@ -20,13 +27,21 @@ export default function HealthCareAccess({ values, handleChange, handleBlur, set
         </p>
         <div className="flex items-center gap-6">
           {YES_NO.map((opt) => (
-            <label key={opt.value} className="flex items-center gap-2 cursor-pointer select-none">
+            <label
+              key={opt.value}
+              className="flex items-center gap-2 cursor-pointer select-none"
+            >
               <input
                 type="radio"
                 name="healthCareAccess.hasRegularProvider"
                 value={opt.value}
                 checked={h.hasRegularProvider === opt.value}
-                onChange={() => setFieldValue('healthCareAccess.hasRegularProvider', opt.value)}
+                onChange={() =>
+                  setFieldValue(
+                    'healthCareAccess.hasRegularProvider',
+                    opt.value,
+                  )
+                }
                 className="accent-primary w-4 h-4"
               />
               <span className="text-sm text-text-primary">{opt.label}</span>
@@ -36,7 +51,9 @@ export default function HealthCareAccess({ values, handleChange, handleBlur, set
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">How long ago was your last Annual Wellness Visit</p>
+        <p className="text-sm text-text-primary">
+          How long ago was your last Annual Wellness Visit
+        </p>
         <div className="flex items-center gap-3">
           <Input
             name="healthCareAccess.lastWellnessVisitAmount"
@@ -51,9 +68,16 @@ export default function HealthCareAccess({ values, handleChange, handleBlur, set
               name="healthCareAccess.lastWellnessVisitUnit"
               placeholder="Select Month/Year"
               options={DURATION_UNIT_OPTIONS}
-              value={DURATION_UNIT_OPTIONS.find((o) => o.value === h.lastWellnessVisitUnit) || null}
+              value={
+                DURATION_UNIT_OPTIONS.find(
+                  (o) => o.value === h.lastWellnessVisitUnit,
+                ) || null
+              }
               onChange={(opt) =>
-                setFieldValue('healthCareAccess.lastWellnessVisitUnit', opt?.value || '')
+                setFieldValue(
+                  'healthCareAccess.lastWellnessVisitUnit',
+                  opt?.value || '',
+                )
               }
             />
           </div>
@@ -76,7 +100,8 @@ export default function HealthCareAccess({ values, handleChange, handleBlur, set
 
       <div className="flex flex-col gap-2">
         <p className="text-sm text-text-primary">
-          How many times have you stayed overnight in the hospital in the past year
+          How many times have you stayed overnight in the hospital in the past
+          year
         </p>
         <Input
           name="healthCareAccess.overnightHospital"

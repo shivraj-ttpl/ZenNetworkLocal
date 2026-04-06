@@ -4,8 +4,8 @@ function RadioButton({
   disabled = false,
   onChangeCb = () => {},
   value,
-  customLabelClass = "",
-  name = "flexRadioDefault",
+  customLabelClass = '',
+  name = 'flexRadioDefault',
   id,
 }) {
   const inputId = id || value;
@@ -14,7 +14,7 @@ function RadioButton({
     <label
       htmlFor={inputId}
       className={`flex items-center gap-2 ${
-        disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+        disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
       }`}
     >
       <input
@@ -29,12 +29,12 @@ function RadioButton({
       />
       <div
         className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-150 ${
-          checked ? "border-primary bg-primary-100" : "border-neutral-400"
+          checked ? 'border-primary bg-primary-100' : 'border-neutral-400'
         }`}
       >
         <div
           className={`w-2 h-2 rounded-full transition-colors duration-150 ${
-            checked ? "bg-primary" : "bg-transparent"
+            checked ? 'bg-primary' : 'bg-transparent'
           }`}
         />
       </div>

@@ -1,15 +1,17 @@
-import { useState } from "react";
-import Pagination from "./Pagination";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useState } from 'react';
+
+import Pagination from './Pagination';
 
 export default {
-  title: "Components/Pagination",
+  title: 'Components/Pagination',
   component: Pagination,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
-    totalRecords: { control: "number" },
-    totalPages: { control: "number" },
-    currentPage: { control: "number" },
-    currentLimit: { control: "number" },
+    totalRecords: { control: 'number' },
+    totalPages: { control: 'number' },
+    currentPage: { control: 'number' },
+    currentLimit: { control: 'number' },
   },
 };
 

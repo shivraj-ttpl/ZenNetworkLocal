@@ -13,9 +13,9 @@ import MasterDataService from '@/services/appDataService/MasterDataService';
 import {
   componentKey,
   setCarePlansList,
-  setTotalRecords,
-  setTotalPages,
   setRefreshCarePlans,
+  setTotalPages,
+  setTotalRecords,
 } from './carePlansSlice';
 
 export const carePlansActions = createSagaActions(componentKey, [

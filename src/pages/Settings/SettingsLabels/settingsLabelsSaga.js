@@ -12,9 +12,9 @@ import SettingsLabelsDataService from '@/services/appDataService/SettingsLabelsD
 
 import {
   componentKey,
+  setDefaultLabels,
   setLabelsList,
   setRefreshLabels,
-  setDefaultLabels,
 } from './settingsLabelsSlice';
 
 export const settingsLabelsActions = createSagaActions(componentKey, [
@@ -50,8 +50,7 @@ function* updateLabelsSaga(action) {
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.SETTINGS_LABELS_PATCH_UPDATE,
-    apiFunc: () =>
-      SettingsLabelsDataService.updateLabels({ subOrgId, labels }),
+    apiFunc: () => SettingsLabelsDataService.updateLabels({ subOrgId, labels }),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -67,7 +66,10 @@ function* updateLabelsSaga(action) {
 function* rootSaga() {
   yield all([
     takeLatest(settingsLabelsActions.fetchLabels().type, fetchLabelsSaga),
-    takeLatest(settingsLabelsActions.fetchDefaultLabels().type, fetchDefaultLabelsSaga),
+    takeLatest(
+      settingsLabelsActions.fetchDefaultLabels().type,
+      fetchDefaultLabelsSaga,
+    ),
     takeLatest(settingsLabelsActions.updateLabels().type, updateLabelsSaga),
   ]);
 }

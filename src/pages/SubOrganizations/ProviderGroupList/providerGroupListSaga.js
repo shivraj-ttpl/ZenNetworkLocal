@@ -12,13 +12,13 @@ import ProviderGroupDataService from '@/services/appDataService/ProviderGroupDat
 
 import {
   componentKey,
-  setProviderGroupList,
-  setTotalRecords,
-  setTotalPages,
   setCloseDrawer,
   setEditDrawer,
+  setProviderGroupList,
   setRefreshList,
   setStatusModal,
+  setTotalPages,
+  setTotalRecords,
 } from './providerGroupListSlice';
 
 export const providerGroupListActions = createSagaActions(componentKey, [
@@ -33,8 +33,15 @@ export const providerGroupListActions = createSagaActions(componentKey, [
 function* fetchProviderGroupsSaga(action) {
   const { subOrgId } = action.payload;
   const state = yield select((s) => s[componentKey]);
-  const { page, limit, search, showArchived, statusFilter, sortKey, sortOrder } =
-    state;
+  const {
+    page,
+    limit,
+    search,
+    showArchived,
+    statusFilter,
+    sortKey,
+    sortOrder,
+  } = state;
 
   const params = { page, limit };
   if (search) params.search = search;
@@ -71,8 +78,7 @@ function* createProviderGroupSaga(action) {
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_POST_CREATE,
-    apiFunc: () =>
-      ProviderGroupDataService.createProviderGroup(subOrgId, data),
+    apiFunc: () => ProviderGroupDataService.createProviderGroup(subOrgId, data),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -168,10 +174,7 @@ function* rootSaga() {
       providerGroupListActions.updateProviderGroup().type,
       updateProviderGroupSaga,
     ),
-    takeLatest(
-      providerGroupListActions.changeStatus().type,
-      changeStatusSaga,
-    ),
+    takeLatest(providerGroupListActions.changeStatus().type, changeStatusSaga),
     takeLatest(
       providerGroupListActions.archiveProviderGroup().type,
       archiveProviderGroupSaga,

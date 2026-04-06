@@ -1,9 +1,9 @@
 export const FORM_FIELDS_NAMES = {
-  EMAIL: "email",
-  PASSWORD: "password",
-  REMEMBER_ME: "rememberMe",
-  NEW_PASSWORD: "newPassword",
-  CONFIRM_PASSWORD: "confirmPassword",
+  EMAIL: 'email',
+  PASSWORD: 'password',
+  REMEMBER_ME: 'rememberMe',
+  NEW_PASSWORD: 'newPassword',
+  CONFIRM_PASSWORD: 'confirmPassword',
 };
 
 export const VALIDATION_REGEX = {

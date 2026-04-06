@@ -1,51 +1,65 @@
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { Form, Formik } from 'formik';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
 
-import AsyncSelectDropdown from "@/components/commonComponents/selectDropdown/AsyncSelectDropdown";
-import Drawer from "@/components/commonComponents/drawer/Drawer";
-import Input from "@/components/commonComponents/input/Input";
-import PhoneInput from "@/components/commonComponents/phoneInput";
-import UploadPhoto from "@/components/commonComponents/upload/UploadPhoto";
-import Button from "@/components/commonComponents/button/Button";
+import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import Input from '@/components/commonComponents/input/Input';
+import PhoneInput from '@/components/commonComponents/phoneInput';
+import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
+import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 
-import { FORM_FIELDS_NAMES } from "../constant";
-import { userProfileActions } from "../userProfileSaga";
+import { FORM_FIELDS_NAMES } from '../constant';
+import { userProfileActions } from '../userProfileSaga';
 
 const getInitialValues = (editData) => {
   const addr = editData?.address;
-  const isAddrObj = addr && typeof addr === "object";
+  const isAddrObj = addr && typeof addr === 'object';
 
   return {
     [FORM_FIELDS_NAMES.PHOTO]: null,
-    [FORM_FIELDS_NAMES.FIRST_NAME]: editData?.firstName ?? "",
-    [FORM_FIELDS_NAMES.LAST_NAME]: editData?.lastName ?? "",
-    [FORM_FIELDS_NAMES.EMAIL_ADDRESS]: editData?.email ?? "",
-    [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber ?? "",
-    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: isAddrObj ? (addr.addressLine1 ?? "") : "",
-    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: isAddrObj ? (addr.addressLine2 ?? "") : "",
-    [FORM_FIELDS_NAMES.STATE]: isAddrObj && addr.state ? { name: addr.state } : null,
-    [FORM_FIELDS_NAMES.COUNTRY]: isAddrObj && addr.country ? { name: addr.country } : null,
-    [FORM_FIELDS_NAMES.CITY]: isAddrObj ? (addr.city ?? "") : "",
-    [FORM_FIELDS_NAMES.ZIP_CODE]: isAddrObj ? (addr.zipCode ?? "") : "",
+    [FORM_FIELDS_NAMES.FIRST_NAME]: editData?.firstName ?? '',
+    [FORM_FIELDS_NAMES.LAST_NAME]: editData?.lastName ?? '',
+    [FORM_FIELDS_NAMES.EMAIL_ADDRESS]: editData?.email ?? '',
+    [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber ?? '',
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: isAddrObj
+      ? (addr.addressLine1 ?? '')
+      : '',
+    [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: isAddrObj
+      ? (addr.addressLine2 ?? '')
+      : '',
+    [FORM_FIELDS_NAMES.STATE]:
+      isAddrObj && addr.state ? { name: addr.state } : null,
+    [FORM_FIELDS_NAMES.COUNTRY]:
+      isAddrObj && addr.country ? { name: addr.country } : null,
+    [FORM_FIELDS_NAMES.CITY]: isAddrObj ? (addr.city ?? '') : '',
+    [FORM_FIELDS_NAMES.ZIP_CODE]: isAddrObj ? (addr.zipCode ?? '') : '',
   };
 };
 
 const validationSchema = Yup.object().shape({
-  [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required("First Name is required"),
-  [FORM_FIELDS_NAMES.LAST_NAME]: Yup.string().required("Last Name is required"),
+  [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required(
+    'First Name is required',
+  ),
+  [FORM_FIELDS_NAMES.LAST_NAME]: Yup.string().required('Last Name is required'),
   [FORM_FIELDS_NAMES.EMAIL_ADDRESS]: Yup.string()
-    .email("Invalid email")
-    .required("Email Address is required"),
+    .email('Invalid email')
+    .required('Email Address is required'),
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]: Yup.string().nullable(),
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required("Address Line 1 is required"),
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required(
+    'Address Line 1 is required',
+  ),
   [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: Yup.string().nullable(),
-  [FORM_FIELDS_NAMES.STATE]: Yup.object().nullable().required("State is required"),
-  [FORM_FIELDS_NAMES.COUNTRY]: Yup.object().nullable().required("Country is required"),
-  [FORM_FIELDS_NAMES.CITY]: Yup.string().required("City is required"),
+  [FORM_FIELDS_NAMES.STATE]: Yup.object()
+    .nullable()
+    .required('State is required'),
+  [FORM_FIELDS_NAMES.COUNTRY]: Yup.object()
+    .nullable()
+    .required('Country is required'),
+  [FORM_FIELDS_NAMES.CITY]: Yup.string().required('City is required'),
   [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string()
-    .required("ZIP Code is required")
-    .matches(/^\d{5}(-\d{4})?$/, "Enter valid ZIP (12345 or 12345-6789)"),
+    .required('ZIP Code is required')
+    .matches(/^\d{5}(-\d{4})?$/, 'Enter valid ZIP (12345 or 12345-6789)'),
 });
 
 export default function EditSubOrganizationProfileDrawer({
@@ -55,7 +69,7 @@ export default function EditSubOrganizationProfileDrawer({
   handleClose,
 }) {
   const dispatch = useDispatch();
-  const isEdit = drawerMode === "edit";
+  const isEdit = drawerMode === 'edit';
 
   return (
     <Drawer
@@ -73,14 +87,14 @@ export default function EditSubOrganizationProfileDrawer({
             firstName: values[FORM_FIELDS_NAMES.FIRST_NAME],
             lastName: values[FORM_FIELDS_NAMES.LAST_NAME],
             email: values[FORM_FIELDS_NAMES.EMAIL_ADDRESS],
-            contactNumber: values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || "",
+            contactNumber: values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || '',
             address: {
-              addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || "",
-              addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
-              city: values[FORM_FIELDS_NAMES.CITY] || "",
-              state: values[FORM_FIELDS_NAMES.STATE]?.name || "",
-              zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || "",
-              country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || "",
+              addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || '',
+              addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || '',
+              city: values[FORM_FIELDS_NAMES.CITY] || '',
+              state: values[FORM_FIELDS_NAMES.STATE]?.name || '',
+              zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || '',
+              country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || '',
             },
           };
           dispatch(
@@ -92,7 +106,9 @@ export default function EditSubOrganizationProfileDrawer({
                 handleClose();
                 const user = JSON.parse(localStorage.getItem('user'));
                 if (user?.id) {
-                  dispatch(userProfileActions.fetchUserProfile({ userId: user.id }));
+                  dispatch(
+                    userProfileActions.fetchUserProfile({ userId: user.id }),
+                  );
                 }
               },
             }),
@@ -166,7 +182,10 @@ export default function EditSubOrganizationProfileDrawer({
                       name={FORM_FIELDS_NAMES.CONTACT_NUMBER}
                       value={values[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
                       onChange={(val) =>
-                        setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || "")
+                        setFieldValue(
+                          FORM_FIELDS_NAMES.CONTACT_NUMBER,
+                          val || '',
+                        )
                       }
                       onBlur={handleBlur}
                       defaultCountry="US"
@@ -252,7 +271,8 @@ export default function EditSubOrganizationProfileDrawer({
                         value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
                         onChange={(e) => {
                           let val = e.target.value.replace(/\D/g, '');
-                          if (val.length > 5) val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
+                          if (val.length > 5)
+                            val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
                           setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
                         }}
                         onBlur={handleBlur}

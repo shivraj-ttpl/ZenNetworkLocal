@@ -17,7 +17,6 @@ export default function MainAppLayout() {
   const isGlobalLoading = useSelector(selectGlobalLoading);
 
   const handleTimeout = useCallback(() => {
-    console.log('Session expired. Logging out.');
     window.__handleLogout?.();
   }, []);
 

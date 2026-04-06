@@ -62,21 +62,15 @@ const ProviderGroupFeeSchedule = lazy(
 // Sub-Organizations — scoped settings pages (SUB_ORG_ADMIN)
 const SubOrgRolesPermissions = lazy(
   () =>
-    import(
-      '@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgRolesPermissions'
-    ),
+    import('@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgRolesPermissions'),
 );
 const SubOrgViewRolePermissions = lazy(
   () =>
-    import(
-      '@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgViewRolePermissions'
-    ),
+    import('@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgViewRolePermissions'),
 );
 const SubOrgEditRolePermissions = lazy(
   () =>
-    import(
-      '@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgEditRolePermissions'
-    ),
+    import('@/pages/SubOrganizations/SubOrgRolesPermissions/SubOrgEditRolePermissions'),
 );
 const SubOrgReports = lazy(
   () => import('@/pages/SubOrganizations/SubOrgReports/SubOrgReports'),

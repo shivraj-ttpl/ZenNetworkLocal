@@ -18,6 +18,7 @@ export default function FilterDropdown({ filters }) {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalFilters({
       action: filters?.action ?? null,
       startDate: filters?.startDate ?? null,
@@ -61,7 +62,9 @@ export default function FilterDropdown({ filters }) {
       {open && (
         <div className="absolute right-0 top-full mt-1 z-50 bg-surface rounded-lg border border-border shadow-lg w-80">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <span className="text-sm font-semibold text-text-primary">Filter</span>
+            <span className="text-sm font-semibold text-text-primary">
+              Filter
+            </span>
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -97,7 +100,11 @@ export default function FilterDropdown({ filters }) {
                 label="Start Date"
                 placeholder="MM/DD/YYYY"
                 value={localFilters.startDate}
-                maxDate={localFilters.endDate ? new Date(localFilters.endDate) : new Date()}
+                maxDate={
+                  localFilters.endDate
+                    ? new Date(localFilters.endDate)
+                    : new Date()
+                }
                 onChangeCb={(val) =>
                   setLocalFilters((prev) => ({ ...prev, startDate: val }))
                 }
@@ -107,7 +114,11 @@ export default function FilterDropdown({ filters }) {
                 label="End Date"
                 placeholder="MM/DD/YYYY"
                 value={localFilters.endDate}
-                minDate={localFilters.startDate ? new Date(localFilters.startDate) : undefined}
+                minDate={
+                  localFilters.startDate
+                    ? new Date(localFilters.startDate)
+                    : undefined
+                }
                 maxDate={new Date()}
                 onChangeCb={(val) =>
                   setLocalFilters((prev) => ({ ...prev, endDate: val }))
@@ -118,7 +129,12 @@ export default function FilterDropdown({ filters }) {
           </div>
 
           <div className="flex justify-end px-4 pb-4">
-            <Button variant="primaryBlue" size="sm" type="button" onClick={handleApply}>
+            <Button
+              variant="primaryBlue"
+              size="sm"
+              type="button"
+              onClick={handleApply}
+            >
               Apply
             </Button>
           </div>

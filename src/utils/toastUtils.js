@@ -1,5 +1,8 @@
-import store from "@/core/store/store";
-import { addNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice";
+import {
+  addNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
+import store from '@/core/store/store';
 
 /**
  * Fire a toast from anywhere — components, event handlers, utils, outside React.
@@ -12,7 +15,7 @@ import { addNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice
 export const showToast = (
   message,
   variant = TOASTER_VARIANT.ERROR,
-  description
+  description,
 ) => {
   store.dispatch(addNotification({ message, variant, description }));
 };

@@ -1,11 +1,11 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext, useParams } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
-import { Table, buildColumns } from '@/components/commonComponents/table';
+import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -14,7 +14,10 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatDate } from '@/utils/GeneralUtils';
 
 import AddFeeScheduleDrawer from './Components/AddFeeScheduleDrawer';
-import { feeScheduleActions, registerSaga } from './providerGroupFeeScheduleSaga';
+import {
+  feeScheduleActions,
+  registerSaga,
+} from './providerGroupFeeScheduleSaga';
 import {
   componentKey,
   registerReducer,
@@ -65,7 +68,16 @@ export default function ProviderGroupFeeSchedule() {
         }),
       );
     }
-  }, [dispatch, providerGroupId, page, limit, debouncedSearch, sortKey, sortOrder, refreshFlag]);
+  }, [
+    dispatch,
+    providerGroupId,
+    page,
+    limit,
+    debouncedSearch,
+    sortKey,
+    sortOrder,
+    refreshFlag,
+  ]);
 
   useEffect(() => {
     setToolbar(
@@ -155,8 +167,7 @@ export default function ProviderGroupFeeSchedule() {
                 {
                   label: 'Delete',
                   value: 'delete',
-                  onClickCb: () =>
-                    dispatch(deleteFeeSchedule({ id: row.id })),
+                  onClickCb: () => dispatch(deleteFeeSchedule({ id: row.id })),
                 },
               ]}
             />

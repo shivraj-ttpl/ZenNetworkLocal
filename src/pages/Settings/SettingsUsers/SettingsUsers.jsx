@@ -2,27 +2,24 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { buildColumns, Table } from '@/components/commonComponents/table';
-import Icon from '@/components/icons/Icon';
-import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import VerificationIcon from '@/components/commonComponents/verificationIcon/VerificationIcon';
+import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
-import { componentKey, setOpenAddDrawer } from './settingsUsersSlice';
-
-import './settingsUsersSaga';
-import { settingsUsersActions } from './settingsUsersSaga';
-
-import AddUserDrawer from './Components/AddUserDrawer';
-import ViewUserModal from './Components/ViewUserModal';
 import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
 import { formatDateTime } from '../../../utils/GeneralUtils';
+import AddUserDrawer from './Components/AddUserDrawer';
+import ViewUserModal from './Components/ViewUserModal';
+import { settingsUsersActions } from './settingsUsersSaga';
+import { componentKey, setOpenAddDrawer } from './settingsUsersSlice';
 
 export default function SettingsUsers() {
   const { setToolbar } = useOutletContext();
@@ -62,9 +59,10 @@ export default function SettingsUsers() {
         sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
         subOrgId: filters?.subOrganization?.value || undefined,
         status: filters?.status?.value || undefined,
-        userType: isOrgAdmin ? "ORG_PORTAL" : 'SUB_ORG_PORTAL',
+        userType: isOrgAdmin ? 'ORG_PORTAL' : 'SUB_ORG_PORTAL',
       }),
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
     page,
@@ -265,6 +263,7 @@ export default function SettingsUsers() {
           ),
         },
       ]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [dispatch],
   );
 

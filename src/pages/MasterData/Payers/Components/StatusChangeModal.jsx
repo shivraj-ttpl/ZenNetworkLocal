@@ -1,7 +1,7 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Button from '@/components/commonComponents/button/Button';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
@@ -67,8 +67,8 @@ export default function StatusChangeModal() {
     >
       <div className="flex flex-col items-center gap-2 py-4">
         <p className="text-base font-semibold text-text-primary text-center">
-          Are you sure you want to {isActive ? 'deactivate' : 'activate'}{' '}
-          &quot;{payerName}&quot;?
+          Are you sure you want to {isActive ? 'deactivate' : 'activate'} &quot;
+          {payerName}&quot;?
         </p>
         <p className="text-sm text-text-secondary text-center">
           {isActive

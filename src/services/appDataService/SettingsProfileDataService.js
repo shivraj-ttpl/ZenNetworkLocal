@@ -16,7 +16,9 @@ export default class SettingsProfileDataService {
   }
 
   static updateUserStatus(userId, status) {
-    return AppDataService.patch(`${SETTING_URL}/users/${userId}/status`, { status });
+    return AppDataService.patch(`${SETTING_URL}/users/${userId}/status`, {
+      status,
+    });
   }
 
   static getUserById(userId) {
@@ -40,7 +42,9 @@ export default class SettingsProfileDataService {
   }
 
   static sendInvitation(userId) {
-    return AppDataService.post(`${SETTING_URL}/users/${userId}/send-invitation`);
+    return AppDataService.post(
+      `${SETTING_URL}/users/${userId}/send-invitation`,
+    );
   }
 
   static getAuditLogs(params) {

@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 let notificationCounter = 0;
 
 const notificationSlice = createSlice({
-  name: "notification",
+  name: 'notification',
   initialState: {
     list: [], // [{ id, message, variant }]
   },
@@ -30,8 +30,8 @@ export const { addNotification, removeNotification, clearNotifications } =
 export default notificationSlice.reducer;
 
 export const TOASTER_VARIANT = {
-  SUCCESS: "success",
-  ERROR: "error",
-  WARNING: "warning",
-  INFO: "info",
+  SUCCESS: 'success',
+  ERROR: 'error',
+  WARNING: 'warning',
+  INFO: 'info',
 };

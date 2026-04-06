@@ -1,14 +1,17 @@
-import { useDispatch } from "react-redux";
-import ModalComponent from "@/components/commonComponents/modal/ModalComponent";
-import Avatar from "@/components/commonComponents/avatar/Avatar";
-import { setCloseViewModal } from "../settingsUsersSlice";
+import { useDispatch } from 'react-redux';
+
+import Avatar from '@/components/commonComponents/avatar/Avatar';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+
+import { setCloseViewModal } from '../settingsUsersSlice';
 
 export default function ViewUserModal({ open, viewData }) {
   const dispatch = useDispatch();
 
   const handleClose = () => dispatch(setCloseViewModal());
 
-  const fullName = [viewData?.firstName, viewData?.lastName].filter(Boolean).join(' ') || '—';
+  const fullName =
+    [viewData?.firstName, viewData?.lastName].filter(Boolean).join(' ') || '—';
   const subOrgs = (viewData?.assignedSubOrgs ?? []).join(', ') || '—';
   const addressParts = [
     viewData?.address?.addressLine1,
@@ -21,12 +24,12 @@ export default function ViewUserModal({ open, viewData }) {
   const address = addressParts.length ? addressParts.join(', ') : '—';
 
   const infoRows = [
-    { label: "Full Name", value: fullName },
-    { label: "Email Address", value: viewData?.email || '—', isLink: true },
-    { label: "Contact Number", value: viewData?.contactNumber || '—' },
-    { label: "Sub-Organization", value: subOrgs },
-    { label: "Status", value: viewData?.status || '—' },
-    { label: "Address", value: address },
+    { label: 'Full Name', value: fullName },
+    { label: 'Email Address', value: viewData?.email || '—', isLink: true },
+    { label: 'Contact Number', value: viewData?.contactNumber || '—' },
+    { label: 'Sub-Organization', value: subOrgs },
+    { label: 'Status', value: viewData?.status || '—' },
+    { label: 'Address', value: address },
   ];
 
   return (

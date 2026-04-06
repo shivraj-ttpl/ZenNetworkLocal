@@ -1,6 +1,8 @@
-import { all } from "redux-saga/effects";
-import store from "@/core/store/store";
-import { componentKey } from "./providerGroupProvidersSlice";
+import { all } from 'redux-saga/effects';
+
+import store from '@/core/store/store';
+
+import { componentKey } from './providerGroupProvidersSlice';
 
 function* rootSaga() {
   yield all([]);

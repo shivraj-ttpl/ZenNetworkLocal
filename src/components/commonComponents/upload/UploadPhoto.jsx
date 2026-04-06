@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
 import { ErrorMessage } from 'formik';
+import { useRef, useState } from 'react';
+
 import { Icon } from '@/components/icons';
 
 const UploadPhoto = ({
@@ -48,13 +49,6 @@ const UploadPhoto = ({
     const file = e.target.files?.[0];
     if (file) handleFile(file);
     e.target.value = '';
-  };
-
-  const handleRemove = () => {
-    setSelectedFile(null);
-    setPreview(null);
-    setFileError('');
-    onFileSelect(null, '');
   };
 
   const showError = (touched && error) || fileError;

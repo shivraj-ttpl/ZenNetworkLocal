@@ -1,6 +1,7 @@
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Input from '@/components/commonComponents/input/Input';
-import TextArea from '../../../../../components/commonComponents/textArea/index'
+
+import TextArea from '../../../../../components/commonComponents/textArea/index';
 
 const STRATEGY_OPTIONS = [
   { key: 'pillBox', label: 'Using a pill box' },
@@ -39,7 +40,8 @@ const QUESTIONS = [
   },
   {
     key: 'missBeforeDoctor',
-    label: 'How often do you miss taking your medicine before you go to the doctor?',
+    label:
+      'How often do you miss taking your medicine before you go to the doctor?',
     lastValue: 'Most of the time',
   },
   {
@@ -49,7 +51,8 @@ const QUESTIONS = [
   },
   {
     key: 'stopFeelWorse',
-    label: 'How often do you stop taking your medicine when you feel worse after taking it?',
+    label:
+      'How often do you stop taking your medicine when you feel worse after taking it?',
     lastValue: 'Some of the time',
   },
 ];
@@ -163,7 +166,9 @@ export default function MedicationAdherenceGoals({
                     name={`${prefix}.currentValue`}
                     label={opt}
                     checked={qData.currentValue === opt}
-                    onChange={() => setFieldValue(`${prefix}.currentValue`, opt)}
+                    onChange={() =>
+                      setFieldValue(`${prefix}.currentValue`, opt)
+                    }
                   />
                 ))}
               </div>

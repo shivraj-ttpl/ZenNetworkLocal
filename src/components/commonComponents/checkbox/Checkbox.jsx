@@ -1,36 +1,37 @@
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from 'react';
 
 const VARIANTS = {
   primary: {
-    base: "border-neutral-300",
-    hover: "group-hover:border-primary",
-    focusRing: "group-focus-within:ring-2 group-focus-within:ring-primary-100",
-    checked: "bg-primary border-primary",
-    disabled: "bg-primary-200 border-primary-200",
-    disabledUnchecked: "bg-neutral-100 border-neutral-200",
+    base: 'border-neutral-300',
+    hover: 'group-hover:border-primary',
+    focusRing: 'group-focus-within:ring-2 group-focus-within:ring-primary-100',
+    checked: 'bg-primary border-primary',
+    disabled: 'bg-primary-200 border-primary-200',
+    disabledUnchecked: 'bg-neutral-100 border-neutral-200',
   },
   secondary: {
-    base: "border-neutral-300",
-    hover: "group-hover:border-secondary",
-    focusRing: "group-focus-within:ring-2 group-focus-within:ring-secondary-100",
-    checked: "bg-secondary border-secondary",
-    disabled: "bg-secondary-200 border-secondary-200",
-    disabledUnchecked: "bg-neutral-100 border-neutral-200",
+    base: 'border-neutral-300',
+    hover: 'group-hover:border-secondary',
+    focusRing:
+      'group-focus-within:ring-2 group-focus-within:ring-secondary-100',
+    checked: 'bg-secondary border-secondary',
+    disabled: 'bg-secondary-200 border-secondary-200',
+    disabledUnchecked: 'bg-neutral-100 border-neutral-200',
   },
   blue: {
-    base: "border-neutral-300",
-    hover: "group-hover:border-primary-400",
-    focusRing: "group-focus-within:ring-2 group-focus-within:ring-primary-100",
-    checked: "bg-primary-500 border-primary-500",
-    disabled: "bg-primary-200 border-primary-200",
-    disabledUnchecked: "bg-neutral-100 border-neutral-200",
+    base: 'border-neutral-300',
+    hover: 'group-hover:border-primary-400',
+    focusRing: 'group-focus-within:ring-2 group-focus-within:ring-primary-100',
+    checked: 'bg-primary-500 border-primary-500',
+    disabled: 'bg-primary-200 border-primary-200',
+    disabledUnchecked: 'bg-neutral-100 border-neutral-200',
   },
 };
 
 const SIZES = {
-  sm: "h-3.5 w-3.5",
-  md: "h-4 w-4",
-  lg: "h-5 w-5",
+  sm: 'h-3.5 w-3.5',
+  md: 'h-4 w-4',
+  lg: 'h-5 w-5',
 };
 
 export default function Checkbox({
@@ -41,9 +42,9 @@ export default function Checkbox({
   onChange,
   disabled = false,
   readOnly = false,
-  variant = "primary",
-  size = "md",
-  className = "",
+  variant = 'primary',
+  size = 'md',
+  className = '',
   ...props
 }) {
   const inputRef = useRef(null);
@@ -69,11 +70,11 @@ export default function Checkbox({
     !disabled && colors.focusRing,
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   return (
     <label
-      className={`group inline-flex items-center gap-2 select-none ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"} ${className}`}
+      className={`group inline-flex items-center gap-2 select-none ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer'} ${className}`}
     >
       {/* Hidden native input for a11y + form support */}
       <input
@@ -114,7 +115,9 @@ export default function Checkbox({
       </span>
 
       {label && (
-        <span className={`text-sm ${disabled ? "text-neutral-400" : "text-neutral-700"}`}>
+        <span
+          className={`text-sm ${disabled ? 'text-neutral-400' : 'text-neutral-700'}`}
+        >
           {label}
         </span>
       )}

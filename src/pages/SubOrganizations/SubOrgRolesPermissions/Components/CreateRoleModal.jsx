@@ -1,16 +1,16 @@
-import { useState, useRef } from 'react';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { Form, Formik } from 'formik';
+import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
 
-import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Button from '@/components/commonComponents/button/Button';
 import Input from '@/components/commonComponents/input/Input';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 
 import { FORM_FIELDS_NAMES, ROLE_TYPE_OPTIONS } from '../constant';
-import { setCloseCreateRoleModal } from '../subOrgRolesPermissionsSlice';
 import { subOrgRolesActions } from '../subOrgRolesPermissionsSaga';
+import { setCloseCreateRoleModal } from '../subOrgRolesPermissionsSlice';
 import ConfirmCreateRoleModal from './ConfirmCreateRoleModal';
 
 const validationSchema = Yup.object().shape({

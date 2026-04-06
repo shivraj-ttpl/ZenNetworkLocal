@@ -1,5 +1,5 @@
-import Input from '@/components/commonComponents/input/Input';
 import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
+import Input from '@/components/commonComponents/input/Input';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 
 const GOAL_OPTIONS = [
@@ -41,7 +41,8 @@ const MEASURES = [
   },
   {
     key: 'sugarFood',
-    label: 'Average servings of food or drinks with sugar a day (Pastries, Candy, sodas, juice)',
+    label:
+      'Average servings of food or drinks with sugar a day (Pastries, Candy, sodas, juice)',
     ideal: '0',
   },
   {
@@ -58,7 +59,11 @@ const MEASURES = [
 
 const RADIO_QUESTIONS = [
   { key: 'weighFood', label: 'Do you weigh your food?', ideal: 'Yes' },
-  { key: 'logFoodDrinks', label: 'Do you log your food and drinks?', ideal: 'Yes' },
+  {
+    key: 'logFoodDrinks',
+    label: 'Do you log your food and drinks?',
+    ideal: 'Yes',
+  },
   { key: 'logExercise', label: 'Do you log your exercise?', ideal: 'Yes' },
 ];
 
@@ -90,9 +95,7 @@ export default function NutritionGoals({
         <span className="text-xs font-semibold text-text-secondary">
           Goal this Month
         </span>
-        <span className="text-xs font-semibold text-text-secondary">
-          Ideal
-        </span>
+        <span className="text-xs font-semibold text-text-secondary">Ideal</span>
       </div>
 
       {/* Measure rows */}

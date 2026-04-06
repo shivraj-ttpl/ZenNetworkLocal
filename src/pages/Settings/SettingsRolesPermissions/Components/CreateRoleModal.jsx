@@ -1,27 +1,27 @@
-import { useState, useRef } from "react";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { useDispatch } from "react-redux";
+import { Form, Formik } from 'formik';
+import { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
 
-import ModalComponent from "@/components/commonComponents/modal/ModalComponent";
-import Button from "@/components/commonComponents/button/Button";
-import Input from "@/components/commonComponents/input/Input";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
+import Button from '@/components/commonComponents/button/Button';
+import Input from '@/components/commonComponents/input/Input';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 
-import { FORM_FIELDS_NAMES, ROLE_TYPE_OPTIONS } from "../constant";
-import { setCloseCreateRoleModal } from "../settingsRolesPermissionsSlice";
-import { settingsRolesActions } from "../settingsRolesPermissionsSaga";
-import ConfirmCreateRoleModal from "./ConfirmCreateRoleModal";
+import { FORM_FIELDS_NAMES, ROLE_TYPE_OPTIONS } from '../constant';
+import { settingsRolesActions } from '../settingsRolesPermissionsSaga';
+import { setCloseCreateRoleModal } from '../settingsRolesPermissionsSlice';
+import ConfirmCreateRoleModal from './ConfirmCreateRoleModal';
 
 const validationSchema = Yup.object().shape({
-  [FORM_FIELDS_NAMES.ROLE_NAME]: Yup.string().required("Role Name is required"),
+  [FORM_FIELDS_NAMES.ROLE_NAME]: Yup.string().required('Role Name is required'),
   [FORM_FIELDS_NAMES.ROLE_TYPE]: Yup.object()
     .nullable()
-    .required("Role Type is required"),
+    .required('Role Type is required'),
 });
 
 const initialValues = {
-  [FORM_FIELDS_NAMES.ROLE_NAME]: "",
+  [FORM_FIELDS_NAMES.ROLE_NAME]: '',
   [FORM_FIELDS_NAMES.ROLE_TYPE]: null,
 };
 
@@ -138,8 +138,8 @@ export default function CreateRoleModal({ open }) {
         open={showConfirm}
         onCancel={handleCancelConfirm}
         onConfirm={handleConfirm}
-        roleName={pendingValues?.[FORM_FIELDS_NAMES.ROLE_NAME] || ""}
-        roleType={pendingValues?.[FORM_FIELDS_NAMES.ROLE_TYPE]?.label || ""}
+        roleName={pendingValues?.[FORM_FIELDS_NAMES.ROLE_NAME] || ''}
+        roleType={pendingValues?.[FORM_FIELDS_NAMES.ROLE_TYPE]?.label || ''}
       />
     </>
   );

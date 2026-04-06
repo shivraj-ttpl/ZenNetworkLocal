@@ -72,7 +72,12 @@ function renderFavorite(row) {
 function getColumnDefs(codeLabel, dispatch, codeType, showArchived, canEdit) {
   const cols = [
     { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-    { id: 'code', header: `${codeLabel} Code`, accessorKey: 'code', sortable: true },
+    {
+      id: 'code',
+      header: `${codeLabel} Code`,
+      accessorKey: 'code',
+      sortable: true,
+    },
     {
       id: 'description',
       header: 'Description',
@@ -84,7 +89,11 @@ function getColumnDefs(codeLabel, dispatch, codeType, showArchived, canEdit) {
         if (truncated === row.description) return row.description;
         return (
           <ToolTip
-            content={<p className="p-2 text-sm max-w-80 wrap-break-word">{row.description}</p>}
+            content={
+              <p className="p-2 text-sm max-w-80 wrap-break-word">
+                {row.description}
+              </p>
+            }
             position="bottom"
             usePortal
           >

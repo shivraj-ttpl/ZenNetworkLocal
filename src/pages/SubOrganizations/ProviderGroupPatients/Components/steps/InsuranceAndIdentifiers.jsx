@@ -1,18 +1,20 @@
-import { FieldArray } from "formik";
-import Input from "@/components/commonComponents/input/Input";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import FileUpload from "@/components/commonComponents/upload/FileUpload";
-import Icon from "@/components/icons/Icon";
+import { FieldArray } from 'formik';
+
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import Input from '@/components/commonComponents/input/Input';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import FileUpload from '@/components/commonComponents/upload/FileUpload';
+import Icon from '@/components/icons/Icon';
+
 import {
+  COUNTRY_OPTIONS,
+  COUNTY_OPTIONS,
   FORM_FIELDS_NAMES,
-  INSURANCE_TYPE_OPTIONS,
   INSURANCE_NAME_OPTIONS,
+  INSURANCE_TYPE_OPTIONS,
   RELATIONSHIP_TO_INSURED_OPTIONS,
   STATE_OPTIONS,
-  COUNTY_OPTIONS,
-  COUNTRY_OPTIONS,
-} from "../../constant";
+} from '../../constant';
 
 const emptyInsurance = {
   [FORM_FIELDS_NAMES.INS_NO_INSURANCE]: false,
@@ -20,26 +22,52 @@ const emptyInsurance = {
   [FORM_FIELDS_NAMES.INS_TYPE]: null,
   [FORM_FIELDS_NAMES.INS_NAME]: null,
   [FORM_FIELDS_NAMES.INS_RELATIONSHIP]: null,
-  [FORM_FIELDS_NAMES.INS_POLICY_HOLDER]: "",
-  [FORM_FIELDS_NAMES.INS_EFFECTIVE_DATE]: "",
-  [FORM_FIELDS_NAMES.INS_POLICY_NUMBER]: "",
-  [FORM_FIELDS_NAMES.INS_GROUP_PLAN]: "",
-  [FORM_FIELDS_NAMES.INS_EMPLOYER]: "",
+  [FORM_FIELDS_NAMES.INS_POLICY_HOLDER]: '',
+  [FORM_FIELDS_NAMES.INS_EFFECTIVE_DATE]: '',
+  [FORM_FIELDS_NAMES.INS_POLICY_NUMBER]: '',
+  [FORM_FIELDS_NAMES.INS_GROUP_PLAN]: '',
+  [FORM_FIELDS_NAMES.INS_EMPLOYER]: '',
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { emptyInsurance };
 
-export default function InsuranceAndIdentifiers({ values, errors, touched, handleChange, handleBlur, setFieldValue }) {
+export default function InsuranceAndIdentifiers({
+  values,
+  errors: _errors,
+  touched: _touched,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+}) {
   const handleSameAsPrimary = (checked) => {
     setFieldValue(FORM_FIELDS_NAMES.INS_SAME_AS_PRIMARY, checked);
     if (checked) {
-      setFieldValue(FORM_FIELDS_NAMES.INS_ADDRESS_LINE_1, values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || "");
-      setFieldValue(FORM_FIELDS_NAMES.INS_ADDRESS_LINE_2, values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "");
-      setFieldValue(FORM_FIELDS_NAMES.INS_STATE, values[FORM_FIELDS_NAMES.STATE]);
+      setFieldValue(
+        FORM_FIELDS_NAMES.INS_ADDRESS_LINE_1,
+        values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || '',
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.INS_ADDRESS_LINE_2,
+        values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || '',
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.INS_STATE,
+        values[FORM_FIELDS_NAMES.STATE],
+      );
       setFieldValue(FORM_FIELDS_NAMES.INS_CITY, values[FORM_FIELDS_NAMES.CITY]);
-      setFieldValue(FORM_FIELDS_NAMES.INS_ZIP_CODE, values[FORM_FIELDS_NAMES.ZIP_CODE] || "");
-      setFieldValue(FORM_FIELDS_NAMES.INS_COUNTY, values[FORM_FIELDS_NAMES.COUNTY]);
-      setFieldValue(FORM_FIELDS_NAMES.INS_COUNTRY, values[FORM_FIELDS_NAMES.COUNTRY]);
+      setFieldValue(
+        FORM_FIELDS_NAMES.INS_ZIP_CODE,
+        values[FORM_FIELDS_NAMES.ZIP_CODE] || '',
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.INS_COUNTY,
+        values[FORM_FIELDS_NAMES.COUNTY],
+      );
+      setFieldValue(
+        FORM_FIELDS_NAMES.INS_COUNTRY,
+        values[FORM_FIELDS_NAMES.COUNTRY],
+      );
     }
   };
 
@@ -54,7 +82,10 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
             {values[FORM_FIELDS_NAMES.INSURANCES]?.map((insurance, index) => {
               const prefix = `${FORM_FIELDS_NAMES.INSURANCES}[${index}]`;
               return (
-                <div key={index} className="flex flex-col gap-4 border border-border-light rounded-lg p-4 relative">
+                <div
+                  key={index}
+                  className="flex flex-col gap-4 border border-border-light rounded-lg p-4 relative"
+                >
                   {values[FORM_FIELDS_NAMES.INSURANCES].length > 1 && (
                     <button
                       type="button"
@@ -69,14 +100,24 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
                     <Checkbox
                       label="I don't have Insurance"
                       checked={insurance[FORM_FIELDS_NAMES.INS_NO_INSURANCE]}
-                      onChange={(e) => setFieldValue(`${prefix}.${FORM_FIELDS_NAMES.INS_NO_INSURANCE}`, e.target.checked)}
+                      onChange={(e) =>
+                        setFieldValue(
+                          `${prefix}.${FORM_FIELDS_NAMES.INS_NO_INSURANCE}`,
+                          e.target.checked,
+                        )
+                      }
                       variant="teal"
                       size="sm"
                     />
                     <Checkbox
                       label="Mark as Primary Insurance"
                       checked={insurance[FORM_FIELDS_NAMES.INS_MARK_PRIMARY]}
-                      onChange={(e) => setFieldValue(`${prefix}.${FORM_FIELDS_NAMES.INS_MARK_PRIMARY}`, e.target.checked)}
+                      onChange={(e) =>
+                        setFieldValue(
+                          `${prefix}.${FORM_FIELDS_NAMES.INS_MARK_PRIMARY}`,
+                          e.target.checked,
+                        )
+                      }
                       variant="teal"
                       size="sm"
                     />
@@ -91,7 +132,12 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
                           placeholder="Select Insurance Type"
                           options={INSURANCE_TYPE_OPTIONS}
                           value={insurance[FORM_FIELDS_NAMES.INS_TYPE]}
-                          onChange={(selected) => setFieldValue(`${prefix}.${FORM_FIELDS_NAMES.INS_TYPE}`, selected)}
+                          onChange={(selected) =>
+                            setFieldValue(
+                              `${prefix}.${FORM_FIELDS_NAMES.INS_TYPE}`,
+                              selected,
+                            )
+                          }
                           isRequired
                         />
                         <SelectDropdown
@@ -100,7 +146,12 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
                           placeholder="Select Insurance Name"
                           options={INSURANCE_NAME_OPTIONS}
                           value={insurance[FORM_FIELDS_NAMES.INS_NAME]}
-                          onChange={(selected) => setFieldValue(`${prefix}.${FORM_FIELDS_NAMES.INS_NAME}`, selected)}
+                          onChange={(selected) =>
+                            setFieldValue(
+                              `${prefix}.${FORM_FIELDS_NAMES.INS_NAME}`,
+                              selected,
+                            )
+                          }
                           isRequired
                         />
                         <SelectDropdown
@@ -109,7 +160,12 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
                           placeholder="Select Relationship to Insured"
                           options={RELATIONSHIP_TO_INSURED_OPTIONS}
                           value={insurance[FORM_FIELDS_NAMES.INS_RELATIONSHIP]}
-                          onChange={(selected) => setFieldValue(`${prefix}.${FORM_FIELDS_NAMES.INS_RELATIONSHIP}`, selected)}
+                          onChange={(selected) =>
+                            setFieldValue(
+                              `${prefix}.${FORM_FIELDS_NAMES.INS_RELATIONSHIP}`,
+                              selected,
+                            )
+                          }
                         />
                       </div>
 
@@ -127,7 +183,9 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
                           name={`${prefix}.${FORM_FIELDS_NAMES.INS_EFFECTIVE_DATE}`}
                           placeholder="MM/DD/YYYY"
                           type="date"
-                          value={insurance[FORM_FIELDS_NAMES.INS_EFFECTIVE_DATE]}
+                          value={
+                            insurance[FORM_FIELDS_NAMES.INS_EFFECTIVE_DATE]
+                          }
                           onChange={handleChange}
                           onBlur={handleBlur}
                         />
@@ -179,7 +237,9 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
 
       {/* Insured Address */}
       <div className="flex items-center justify-between">
-        <h4 className="text-base font-semibold text-text-primary">Insured Address</h4>
+        <h4 className="text-base font-semibold text-text-primary">
+          Insured Address
+        </h4>
         <Checkbox
           label="Same as Primary Address"
           checked={values[FORM_FIELDS_NAMES.INS_SAME_AS_PRIMARY]}
@@ -214,7 +274,9 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
           placeholder="Select State"
           options={STATE_OPTIONS}
           value={values[FORM_FIELDS_NAMES.INS_STATE]}
-          onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.INS_STATE, selected)}
+          onChange={(selected) =>
+            setFieldValue(FORM_FIELDS_NAMES.INS_STATE, selected)
+          }
           isDisabled={values[FORM_FIELDS_NAMES.INS_SAME_AS_PRIMARY]}
         />
       </div>
@@ -226,7 +288,9 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
           placeholder="Select City"
           options={STATE_OPTIONS}
           value={values[FORM_FIELDS_NAMES.INS_CITY]}
-          onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.INS_CITY, selected)}
+          onChange={(selected) =>
+            setFieldValue(FORM_FIELDS_NAMES.INS_CITY, selected)
+          }
           isDisabled={values[FORM_FIELDS_NAMES.INS_SAME_AS_PRIMARY]}
         />
         <Input
@@ -244,7 +308,9 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
           placeholder="Select County"
           options={COUNTY_OPTIONS}
           value={values[FORM_FIELDS_NAMES.INS_COUNTY]}
-          onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.INS_COUNTY, selected)}
+          onChange={(selected) =>
+            setFieldValue(FORM_FIELDS_NAMES.INS_COUNTY, selected)
+          }
           isDisabled={values[FORM_FIELDS_NAMES.INS_SAME_AS_PRIMARY]}
         />
         <SelectDropdown
@@ -253,29 +319,37 @@ export default function InsuranceAndIdentifiers({ values, errors, touched, handl
           placeholder="Select Country"
           options={COUNTRY_OPTIONS}
           value={values[FORM_FIELDS_NAMES.INS_COUNTRY]}
-          onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.INS_COUNTRY, selected)}
+          onChange={(selected) =>
+            setFieldValue(FORM_FIELDS_NAMES.INS_COUNTRY, selected)
+          }
           isDisabled={values[FORM_FIELDS_NAMES.INS_SAME_AS_PRIMARY]}
         />
       </div>
 
       {/* Upload Insurance Card */}
-      <h4 className="text-base font-semibold text-text-primary">Upload Insurance Card</h4>
+      <h4 className="text-base font-semibold text-text-primary">
+        Upload Insurance Card
+      </h4>
 
       <div className="grid grid-cols-2 gap-4">
         <FileUpload
           name={FORM_FIELDS_NAMES.INS_CARD_FRONT}
           label="Front Side"
-          allowedFileTypes={[".png", ".jpg", ".pdf"]}
+          allowedFileTypes={['.png', '.jpg', '.pdf']}
           maxFileSize={5}
-          onFileSelect={(file) => setFieldValue(FORM_FIELDS_NAMES.INS_CARD_FRONT, file)}
+          onFileSelect={(file) =>
+            setFieldValue(FORM_FIELDS_NAMES.INS_CARD_FRONT, file)
+          }
           description="png, .jpg, .pdf, up to 5MB"
         />
         <FileUpload
           name={FORM_FIELDS_NAMES.INS_CARD_BACK}
           label="Back Side"
-          allowedFileTypes={[".png", ".jpg", ".pdf"]}
+          allowedFileTypes={['.png', '.jpg', '.pdf']}
           maxFileSize={5}
-          onFileSelect={(file) => setFieldValue(FORM_FIELDS_NAMES.INS_CARD_BACK, file)}
+          onFileSelect={(file) =>
+            setFieldValue(FORM_FIELDS_NAMES.INS_CARD_BACK, file)
+          }
           description="png, .jpg, .pdf, up to 5MB"
         />
       </div>

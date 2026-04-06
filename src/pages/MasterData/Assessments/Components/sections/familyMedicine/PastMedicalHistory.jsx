@@ -32,12 +32,18 @@ export default function PastMedicalHistory({ values, setFieldValue }) {
 
   return (
     <div className="flex flex-col gap-0">
-      <h3 className="text-base font-semibold text-text-primary mb-4">Past Medical History</h3>
+      <h3 className="text-base font-semibold text-text-primary mb-4">
+        Past Medical History
+      </h3>
 
       {/* Header */}
       <div className="grid grid-cols-2 gap-4 px-2 pb-2">
-        <span className="text-sm font-medium text-text-secondary">Chronic Disease Condition</span>
-        <span className="text-sm font-medium text-text-secondary">Onset Date</span>
+        <span className="text-sm font-medium text-text-secondary">
+          Chronic Disease Condition
+        </span>
+        <span className="text-sm font-medium text-text-secondary">
+          Onset Date
+        </span>
       </div>
 
       {/* Rows */}
@@ -47,7 +53,9 @@ export default function PastMedicalHistory({ values, setFieldValue }) {
           className="grid grid-cols-2 gap-4 px-2 py-2.5 border-t border-border items-center"
         >
           <div className="flex items-center gap-2">
-            <span className="text-sm text-text-secondary w-7 shrink-0">{idx + 1}.</span>
+            <span className="text-sm text-text-secondary w-7 shrink-0">
+              {idx + 1}.
+            </span>
             <Checkbox
               checked={!!conditions[condition.key]?.checked}
               onChange={(e) =>

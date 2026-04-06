@@ -1,24 +1,26 @@
-import { Link } from "react-router-dom";
-import { Formik } from "formik";
-import { useDispatch } from "react-redux";
-import { Icon } from "@/components/icons";
-import AuthLayout from "./AuthLayout";
-import Input from "@/components/commonComponents/input/Input";
-import Button from "@/components/commonComponents/button/Button";
-import { getValidationSchema } from "@/utils/formUtils";
-import { FORM_FIELDS_NAMES } from "./constant";
-import { authActions } from "./authSaga";
-import { useLoadingKey } from "@/hooks/useLoadingKey";
-import { LOADING_KEYS } from "@/constants/loadingKeys";
-import { showToast } from "@/utils/toastUtils";
-import { TOASTER_VARIANT } from "@/core/store/notificationSlice";
+import { Formik } from 'formik';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import Button from '@/components/commonComponents/button/Button';
+import Input from '@/components/commonComponents/input/Input';
+import { Icon } from '@/components/icons';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { TOASTER_VARIANT } from '@/core/store/notificationSlice';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import { getValidationSchema } from '@/utils/formUtils';
+import { showToast } from '@/utils/toastUtils';
+
+import AuthLayout from './AuthLayout';
+import { authActions } from './authSaga';
+import { FORM_FIELDS_NAMES } from './constant';
 
 const fields = [
   {
     fieldName: FORM_FIELDS_NAMES.EMAIL,
     isRequired: true,
     isEmail: true,
-    customFieldName: "Email Address",
+    customFieldName: 'Email Address',
   },
 ];
 
@@ -34,10 +36,7 @@ export default function ForgotPassword() {
       postForgotPassword({
         payload: values,
         onSuccessCb: (res) => {
-          showToast(
-            res?.data?.data?.message,
-            TOASTER_VARIANT.SUCCESS,
-          );
+          showToast(res?.data?.data?.message, TOASTER_VARIANT.SUCCESS);
         },
       }),
     );
@@ -45,13 +44,17 @@ export default function ForgotPassword() {
 
   return (
     <AuthLayout
-    
       footer={
         <p className="text-sm text-neutral-400 flex flex-col">
-         <span>Do you need help? Contact our support team</span>
-         <span>Email : <a className="text-primary-500" href="mailto:support@oneteam.com">support@oneteam.com</a></span>
-         <span>9:00 AM - 5:00 PM, Monday to Friday EST</span>
-         <span>(Eastern Standard Time)</span>
+          <span>Do you need help? Contact our support team</span>
+          <span>
+            Email :{' '}
+            <a className="text-primary-500" href="mailto:support@oneteam.com">
+              support@oneteam.com
+            </a>
+          </span>
+          <span>9:00 AM - 5:00 PM, Monday to Friday EST</span>
+          <span>(Eastern Standard Time)</span>
         </p>
       }
     >
@@ -66,11 +69,18 @@ export default function ForgotPassword() {
       </p>
 
       <Formik
-        initialValues={{ [FORM_FIELDS_NAMES.EMAIL]: "" }}
+        initialValues={{ [FORM_FIELDS_NAMES.EMAIL]: '' }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, errors, touched, handleChange, handleBlur, handleSubmit: formikSubmit }) => (
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit: formikSubmit,
+        }) => (
           <form onSubmit={formikSubmit} className="flex flex-col gap-5">
             <Input
               label="Email Address"

@@ -12,10 +12,10 @@ import ProviderGroupDataService from '@/services/appDataService/ProviderGroupDat
 
 import {
   componentKey,
-  setFeeScheduleList,
-  setTotalRecords,
   setCloseDrawer,
+  setFeeScheduleList,
   setRefreshFeeSchedule,
+  setTotalRecords,
 } from './providerGroupFeeScheduleSlice';
 
 export const feeScheduleActions = createSagaActions(componentKey, [
@@ -99,10 +99,22 @@ function* deleteFeeScheduleSaga(action) {
 
 function* rootSaga() {
   yield all([
-    takeLatest(feeScheduleActions.fetchFeeSchedules().type, fetchFeeSchedulesSaga),
-    takeLatest(feeScheduleActions.createFeeSchedule().type, createFeeScheduleSaga),
-    takeLatest(feeScheduleActions.updateFeeSchedule().type, updateFeeScheduleSaga),
-    takeLatest(feeScheduleActions.deleteFeeSchedule().type, deleteFeeScheduleSaga),
+    takeLatest(
+      feeScheduleActions.fetchFeeSchedules().type,
+      fetchFeeSchedulesSaga,
+    ),
+    takeLatest(
+      feeScheduleActions.createFeeSchedule().type,
+      createFeeScheduleSaga,
+    ),
+    takeLatest(
+      feeScheduleActions.updateFeeSchedule().type,
+      updateFeeScheduleSaga,
+    ),
+    takeLatest(
+      feeScheduleActions.deleteFeeSchedule().type,
+      deleteFeeScheduleSaga,
+    ),
   ]);
 }
 

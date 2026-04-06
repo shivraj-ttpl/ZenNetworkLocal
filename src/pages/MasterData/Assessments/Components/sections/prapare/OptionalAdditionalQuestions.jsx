@@ -1,22 +1,24 @@
-const YES_NO_CHOOSE = ["Yes", "No", "I choose not to answer this question"];
+const YES_NO_CHOOSE = ['Yes', 'No', 'I choose not to answer this question'];
 
 const QUESTIONS = [
   {
-    key: "jailPrison",
+    key: 'jailPrison',
     label:
-      "1. In the past year, have you spent more than 2 nights in a row in a jail, prison, detention center, or juvenile correctional facility?",
+      '1. In the past year, have you spent more than 2 nights in a row in a jail, prison, detention center, or juvenile correctional facility?',
   },
   {
-    key: "refugee",
-    label: "2. Are you a refugee?",
+    key: 'refugee',
+    label: '2. Are you a refugee?',
   },
   {
-    key: "physicallySafe",
-    label: "3. Do you feel physically and emotionally safe where you currently live?",
+    key: 'physicallySafe',
+    label:
+      '3. Do you feel physically and emotionally safe where you currently live?',
   },
   {
-    key: "afraidOfPartner",
-    label: "4. In the past year, have you been afraid of your partner or ex-partner?",
+    key: 'afraidOfPartner',
+    label:
+      '4. In the past year, have you been afraid of your partner or ex-partner?',
   },
 ];
 
@@ -25,7 +27,9 @@ export default function OptionalAdditionalQuestions({ values, handleChange }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="text-base font-semibold text-text-primary">Optional Additional Questions</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        Optional Additional Questions
+      </h3>
 
       {QUESTIONS.map((q) => (
         <div key={q.key} className="flex flex-col gap-2">

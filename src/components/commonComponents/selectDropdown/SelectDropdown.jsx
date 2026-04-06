@@ -1,16 +1,18 @@
-import { useState, useRef, useMemo, useCallback, useEffect } from "react";
-import { Icon } from "@/components/icons";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import useDropdownPosition from "./useDropdownPosition";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import { Icon } from '@/components/icons';
+
+import useDropdownPosition from './useDropdownPosition';
 
 // ─── Helpers ───────────────────────────────────────────
 function getLabel(option, labelKey) {
-  if (typeof option === "string") return option;
-  return option?.[labelKey] ?? "";
+  if (typeof option === 'string') return option;
+  return option?.[labelKey] ?? '';
 }
 
 function getValue(option, valueKey) {
-  if (typeof option === "string") return option;
+  if (typeof option === 'string') return option;
   return option?.[valueKey] ?? option;
 }
 
@@ -47,12 +49,12 @@ function isSelected(option, selected, valueKey) {
 export default function SelectDropdown({
   label,
   name,
-  placeholder = "Select...",
+  placeholder = 'Select...',
   options = [],
   value,
   onChange,
-  labelKey = "label",
-  valueKey = "value",
+  labelKey = 'label',
+  valueKey = 'value',
   isMulti = false,
   isSearchable = false,
   required = false,
@@ -61,10 +63,10 @@ export default function SelectDropdown({
   touched,
   selectAll = false,
   renderOption,
-  className = "",
+  className = '',
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const triggerRef = useRef(null);
   const dropdownRef = useRef(null);
   const searchRef = useRef(null);
@@ -78,12 +80,14 @@ export default function SelectDropdown({
       if (
         triggerRef.current?.contains(e.target) ||
         dropdownRef.current?.contains(e.target)
-      ) return;
+      )
+        return;
       setIsOpen(false);
-      setSearch("");
+      setSearch('');
     }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener('mousedown', handleClick);
+    // eslint-disable-next-line consistent-return
+    return () => document.removeEventListener('mousedown', handleClick);
   }, [isOpen]);
 
   // ── Focus search on open ──
@@ -97,24 +101,26 @@ export default function SelectDropdown({
   const filtered = useMemo(() => {
     if (!search.trim()) return options;
     const q = search.toLowerCase();
-    return options.filter((opt) => getLabel(opt, labelKey).toLowerCase().includes(q));
+    return options.filter((opt) =>
+      getLabel(opt, labelKey).toLowerCase().includes(q),
+    );
   }, [options, search, labelKey]);
 
   // ── Display text ──
   const displayText = useMemo(() => {
     if (isMulti) {
-      if (!Array.isArray(value) || value.length === 0) return "";
+      if (!Array.isArray(value) || value.length === 0) return '';
       if (value.length === 1) return getLabel(value[0], labelKey);
       return `${value.length} selected`;
     }
-    return value ? getLabel(value, labelKey) : "";
+    return value ? getLabel(value, labelKey) : '';
   }, [value, isMulti, labelKey]);
 
   // ── Handlers ──
   const toggle = useCallback(() => {
     if (disabled) return;
     setIsOpen((prev) => {
-      if (prev) setSearch("");
+      if (prev) setSearch('');
       return !prev;
     });
   }, [disabled]);
@@ -132,10 +138,10 @@ export default function SelectDropdown({
       } else {
         onChange?.(option);
         setIsOpen(false);
-        setSearch("");
+        setSearch('');
       }
     },
-    [isMulti, value, valueKey, onChange]
+    [isMulti, value, valueKey, onChange],
   );
 
   const handleSelectAll = useCallback(() => {
@@ -152,10 +158,14 @@ export default function SelectDropdown({
       e.stopPropagation();
       onChange?.(isMulti ? [] : null);
     },
-    [isMulti, onChange]
+    [isMulti, onChange],
   );
 
-  const allSelected = isMulti && Array.isArray(value) && value.length === options.length && options.length > 0;
+  const allSelected =
+    isMulti &&
+    Array.isArray(value) &&
+    value.length === options.length &&
+    options.length > 0;
   const hasValue = isMulti ? Array.isArray(value) && value.length > 0 : !!value;
 
   return (
@@ -176,17 +186,23 @@ export default function SelectDropdown({
           onClick={toggle}
           disabled={disabled}
           className={[
-            "w-full h-10 px-4 rounded-lg border bg-surface cursor-pointer",
-            "text-sm text-left outline-none transition-colors",
-            "flex items-center justify-between gap-2",
-            "disabled:bg-neutral-50 disabled:cursor-not-allowed",
-            isOpen ? "border-primary ring-[0.5] ring-primary" : "",
-            showError ? "border-error-400" : !isOpen ? "border-border" : "",
+            'w-full h-10 px-4 rounded-lg border bg-surface cursor-pointer',
+            'text-sm text-left outline-none transition-colors',
+            'flex items-center justify-between gap-2',
+            'disabled:bg-neutral-50 disabled:cursor-not-allowed',
+            isOpen ? 'border-primary ring-[0.5]' : '',
+            showError ? 'border-error-400' : !isOpen ? 'border-border' : '',
           ]
             .filter(Boolean)
-            .join(" ")}
+            .join(' ')}
         >
-          <span className={hasValue ? "text-neutral-800 truncate" : "text-text-placeholder truncate"}>
+          <span
+            className={
+              hasValue
+                ? 'text-neutral-800 truncate'
+                : 'text-text-placeholder truncate'
+            }
+          >
             {displayText || placeholder}
           </span>
           <span className="flex items-center gap-1 shrink-0">
@@ -203,7 +219,7 @@ export default function SelectDropdown({
             <Icon
               name="ChevronDown"
               size={16}
-              className={`text-neutral-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+              className={`text-neutral-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             />
           </span>
         </button>
@@ -213,18 +229,22 @@ export default function SelectDropdown({
           <div
             ref={dropdownRef}
             className={[
-              "absolute left-0 right-0 z-50",
-              "bg-surface border border-border rounded-lg shadow-lg",
-              "flex flex-col",
-              direction === "up" ? "bottom-full mb-1" : "top-full mt-1",
-            ].join(" ")}
+              'absolute left-0 right-0 z-50',
+              'bg-surface border border-border rounded-lg shadow-lg',
+              'flex flex-col',
+              direction === 'up' ? 'bottom-full mb-1' : 'top-full mt-1',
+            ].join(' ')}
             style={{ maxHeight }}
           >
             {/* Search */}
             {isSearchable && (
               <div className="p-2 border-b border-border-light">
                 <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-neutral-50">
-                  <Icon name="Search" size={14} className="text-neutral-400 shrink-0" />
+                  <Icon
+                    name="Search"
+                    size={14}
+                    className="text-neutral-400 shrink-0"
+                  />
                   <input
                     ref={searchRef}
                     type="text"
@@ -236,7 +256,7 @@ export default function SelectDropdown({
                   {search && (
                     <button
                       type="button"
-                      onClick={() => setSearch("")}
+                      onClick={() => setSearch('')}
                       className="text-neutral-400 hover:text-neutral-600 cursor-pointer"
                     >
                       <Icon name="X" size={12} />
@@ -247,7 +267,10 @@ export default function SelectDropdown({
             )}
 
             {/* Options List */}
-            <div className="overflow-y-auto overscroll-contain" style={{ maxHeight: maxHeight - (isSearchable ? 52 : 0) }}>
+            <div
+              className="overflow-y-auto overscroll-contain"
+              style={{ maxHeight: maxHeight - (isSearchable ? 52 : 0) }}
+            >
               {/* Select All */}
               {isMulti && selectAll && filtered.length > 0 && (
                 <button
@@ -270,7 +293,7 @@ export default function SelectDropdown({
 
               {filtered.length === 0 ? (
                 <div className="px-4 py-6 text-sm text-neutral-400 text-center">
-                  {search ? "No results found" : "No options available"}
+                  {search ? 'No results found' : 'No options available'}
                 </div>
               ) : (
                 filtered.map((option, idx) => {
@@ -281,23 +304,36 @@ export default function SelectDropdown({
                       type="button"
                       onClick={() => handleSelect(option)}
                       className={[
-                        "w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer",
-                        selected && !isMulti ? "bg-primary-50 text-primary-700" : "text-neutral-700",
-                        "hover:bg-neutral-50",
-                      ].join(" ")}
+                        'w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer',
+                        selected && !isMulti
+                          ? 'bg-primary-50 text-primary-700'
+                          : 'text-neutral-700',
+                        'hover:bg-neutral-50',
+                      ].join(' ')}
                     >
                       {isMulti && (
                         <span className="pointer-events-none">
-                          <Checkbox checked={selected} readOnly variant="blue" size="sm" />
+                          <Checkbox
+                            checked={selected}
+                            readOnly
+                            variant="blue"
+                            size="sm"
+                          />
                         </span>
                       )}
                       {renderOption ? (
                         renderOption(option, { isSelected: selected })
                       ) : (
-                        <span className="truncate">{getLabel(option, labelKey)}</span>
+                        <span className="truncate">
+                          {getLabel(option, labelKey)}
+                        </span>
                       )}
                       {selected && !isMulti && (
-                        <Icon name="Check" size={16} className="ml-auto text-primary shrink-0" />
+                        <Icon
+                          name="Check"
+                          size={16}
+                          className="ml-auto text-primary shrink-0"
+                        />
                       )}
                     </button>
                   );

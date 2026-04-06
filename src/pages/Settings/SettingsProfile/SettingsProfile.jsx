@@ -1,27 +1,25 @@
 import { useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useOutletContext } from 'react-router-dom';
 
 import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Button from '@/components/commonComponents/button/Button';
 import Icon from '@/components/icons/Icon';
-import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-import { SubOrgAdminProfile } from '@/pages/Settings/UserProfile/UserProfile';
 import EditSubOrganizationProfileDrawer from '@/pages/Settings/UserProfile/Components/EditSubOrganizationProfileDrawer';
-
-import './settingsProfileSaga';
-import { settingsProfileActions } from './settingsProfileSaga';
-import EditOrganizationProfileDrawer from './Components/EditOrganizationProfileDrawer';
-import {
-  componentKey,
-  setOpenEditDrawer,
-  setCloseDrawer,
-} from './settingsProfileSlice';
-import '@/pages/Settings/UserProfile/userProfileSaga';
+import { SubOrgAdminProfile } from '@/pages/Settings/UserProfile/UserProfile';
 import { userProfileActions } from '@/pages/Settings/UserProfile/userProfileSaga';
 import { componentKey as userProfileComponentKey } from '@/pages/Settings/UserProfile/userProfileSlice';
+
+import EditOrganizationProfileDrawer from './Components/EditOrganizationProfileDrawer';
+import { settingsProfileActions } from './settingsProfileSaga';
+import {
+  componentKey,
+  setCloseDrawer,
+  setOpenEditDrawer,
+} from './settingsProfileSlice';
 
 const STATS = [
   { icon: 'Building2', label: 'Sub-Organizations', key: 'subOrganizations' },
@@ -279,25 +277,25 @@ export default function SettingsProfile() {
               <div className="space-y-6  bg-surface p-3 rounded-md border border-border-light">
                 {(profileData?.orgUsers ?? []).map((contact, idx) => (
                   <>
-                  <div key={idx} className="space-y-3">
-                    {ADMIN_FIELDS.map((item) => {
-                      return (
-                      <>
-                      <LabelValue
-                        key={`${idx}-${item.key}`}
-                        label={item.label}
-                        value={
-                          item.format
-                            ? item.format(contact[item.key], contact)
-                            : contact[item.key]
-                        }
-                        isLink={item.isLink}
-                      />
-                      </>
-                      )
-                    })}
-                  </div>
-                  <hr className="border-border-light" />
+                    <div key={idx} className="space-y-3">
+                      {ADMIN_FIELDS.map((item) => {
+                        return (
+                          <>
+                            <LabelValue
+                              key={`${idx}-${item.key}`}
+                              label={item.label}
+                              value={
+                                item.format
+                                  ? item.format(contact[item.key], contact)
+                                  : contact[item.key]
+                              }
+                              isLink={item.isLink}
+                            />
+                          </>
+                        );
+                      })}
+                    </div>
+                    <hr className="border-border-light" />
                   </>
                 ))}
               </div>

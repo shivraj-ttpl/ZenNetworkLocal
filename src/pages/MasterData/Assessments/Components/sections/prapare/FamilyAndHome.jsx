@@ -1,13 +1,14 @@
-import Input from "@/components/commonComponents/input/Input";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import { COUNTRY_OPTIONS, STATE_OPTIONS } from "../../../constant";
+import Input from '@/components/commonComponents/input/Input';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 
-const YES_NO_CHOOSE = ["Yes", "No", "I choose not to answer this question"];
+import { COUNTRY_OPTIONS, STATE_OPTIONS } from '../../../constant';
+
+const YES_NO_CHOOSE = ['Yes', 'No', 'I choose not to answer this question'];
 
 const HOUSING_OPTIONS = [
-  "I have housing",
-  "I do not have housing (staying with others, in a hotel, in a shelter, living outside on the street, on a beach, in a car, or in a park)",
-  "I choose not to answer this question",
+  'I have housing',
+  'I do not have housing (staying with others, in a hotel, in a shelter, living outside on the street, on a beach, in a car, or in a park)',
+  'I choose not to answer this question',
 ];
 
 export default function FamilyAndHome({ values, handleChange, setFieldValue }) {
@@ -15,17 +16,20 @@ export default function FamilyAndHome({ values, handleChange, setFieldValue }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="text-base font-semibold text-text-primary">Family &amp; Home</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        Family &amp; Home
+      </h3>
 
       {/* 1. Family members */}
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-text-primary">
-          1. How many family members, including yourself, do you currently live with?
+          1. How many family members, including yourself, do you currently live
+          with?
         </p>
         <Input
           name="familyAndHome.familyMembers"
           placeholder="e.g. 2"
-          value={fh.familyMembers || ""}
+          value={fh.familyMembers || ''}
           onChange={handleChange}
         />
         <label className="flex items-center gap-2 cursor-pointer">
@@ -33,7 +37,7 @@ export default function FamilyAndHome({ values, handleChange, setFieldValue }) {
             type="radio"
             name="familyAndHome.familyMembersDecline"
             value="decline"
-            checked={fh.familyMembersDecline === "decline"}
+            checked={fh.familyMembersDecline === 'decline'}
             onChange={handleChange}
             className="w-4 h-4 accent-primary"
           />
@@ -93,7 +97,7 @@ export default function FamilyAndHome({ values, handleChange, setFieldValue }) {
             placeholder="Select Country"
             options={COUNTRY_OPTIONS}
             value={fh.country || null}
-            onChangeCb={(val) => setFieldValue("familyAndHome.country", val)}
+            onChangeCb={(val) => setFieldValue('familyAndHome.country', val)}
           />
           <SelectDropdown
             label="State"
@@ -101,20 +105,20 @@ export default function FamilyAndHome({ values, handleChange, setFieldValue }) {
             placeholder="Select State"
             options={STATE_OPTIONS}
             value={fh.state || null}
-            onChangeCb={(val) => setFieldValue("familyAndHome.state", val)}
+            onChangeCb={(val) => setFieldValue('familyAndHome.state', val)}
           />
           <Input
             label="City"
             name="familyAndHome.city"
             placeholder="Enter City"
-            value={fh.city || ""}
+            value={fh.city || ''}
             onChange={handleChange}
           />
           <Input
             label="ZIP CODE Code"
             name="familyAndHome.zipCode"
             placeholder="Enter Zip Code Code"
-            value={fh.zipCode || ""}
+            value={fh.zipCode || ''}
             onChange={handleChange}
           />
         </div>

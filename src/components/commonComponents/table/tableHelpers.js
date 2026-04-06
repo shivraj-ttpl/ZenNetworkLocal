@@ -1,4 +1,4 @@
-import { createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper } from '@tanstack/react-table';
 
 export const columnHelper = createColumnHelper();
 
@@ -46,7 +46,7 @@ export function buildColumn(config) {
     width: config.width,
     minWidth: config.minWidth,
     maxWidth: config.maxWidth,
-    align: config.align || "left",
+    align: config.align || 'left',
   };
 
   return col;
@@ -70,8 +70,8 @@ export function computeStickyOffsets(columns) {
   let leftOffset = 0;
   for (const col of columns) {
     const meta = col.columnDef?.meta || col.meta;
-    if (meta?.sticky === "left") {
-      offsets.set(col.id, { position: "left", offset: leftOffset });
+    if (meta?.sticky === 'left') {
+      offsets.set(col.id, { position: 'left', offset: leftOffset });
       leftOffset += meta.width || 150;
     }
   }
@@ -81,8 +81,8 @@ export function computeStickyOffsets(columns) {
   for (let i = columns.length - 1; i >= 0; i--) {
     const col = columns[i];
     const meta = col.columnDef?.meta || col.meta;
-    if (meta?.sticky === "right") {
-      offsets.set(col.id, { position: "right", offset: rightOffset });
+    if (meta?.sticky === 'right') {
+      offsets.set(col.id, { position: 'right', offset: rightOffset });
       rightOffset += meta.width || 150;
     }
   }
@@ -103,9 +103,9 @@ export function getCellStyle(column, stickyOffsets) {
 
   const sticky = stickyOffsets?.get(column.id);
   if (sticky) {
-    style.position = "sticky";
+    style.position = 'sticky';
     style[sticky.position] = sticky.offset;
-    style.zIndex = sticky.position === "left" ? 20 : 20;
+    style.zIndex = sticky.position === 'left' ? 20 : 20;
   }
 
   return style;
@@ -119,28 +119,28 @@ export function getCellClasses(column, stickyOffsets, isHeader = false) {
   const classes = [];
 
   // Alignment
-  if (meta.align === "center") classes.push("text-center");
-  else if (meta.align === "right") classes.push("text-right");
-  else classes.push("text-left");
+  if (meta.align === 'center') classes.push('text-center');
+  else if (meta.align === 'right') classes.push('text-right');
+  else classes.push('text-left');
 
   // Sticky
   const sticky = stickyOffsets?.get(column.id);
   if (sticky) {
     classes.push(
-      isHeader ? "bg-neutral-150" : "bg-neutral-50",
-      "shadow-[inset_4px_0_6px_-4px_rgba(0,0,0,0.08)]"
+      isHeader ? 'bg-neutral-150' : 'bg-neutral-50',
+      'shadow-[inset_4px_0_6px_-4px_rgba(0,0,0,0.08)]',
     );
   }
 
-  return classes.join(" ");
+  return classes.join(' ');
 }
 
 /**
  * Sort direction constants matching typical backend expectations.
  */
 export const SORT_ORDER = {
-  ASC: "asc",
-  DESC: "desc",
+  ASC: 'asc',
+  DESC: 'desc',
 };
 
 /**

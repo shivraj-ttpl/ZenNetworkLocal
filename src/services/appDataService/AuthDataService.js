@@ -1,13 +1,19 @@
-import AppDataService from "./AppDataService";
-const BASE_URL = "auth";
+import AppDataService from './AppDataService';
+const BASE_URL = 'auth';
 
 export default class AuthDataService {
   static async postLogin(data) {
-    return AppDataService.post(`${BASE_URL}/login`, data , {withCredentials: true});
+    return AppDataService.post(`${BASE_URL}/login`, data, {
+      withCredentials: true,
+    });
   }
- 
+
   static async postLogout() {
-    return AppDataService.post(`${BASE_URL}/logout`, {} , {withCredentials: true});
+    return AppDataService.post(
+      `${BASE_URL}/logout`,
+      {},
+      { withCredentials: true },
+    );
   }
 
   static async postForgotPassword(data) {

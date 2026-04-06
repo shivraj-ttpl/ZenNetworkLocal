@@ -9,7 +9,10 @@ const SECTIONS = [
     num: '1.',
     title: 'Family & Friends',
     questions: [
-      { key: 'satisfiedRelationships', text: 'a) I am satisfied with my relationships.' },
+      {
+        key: 'satisfiedRelationships',
+        text: 'a) I am satisfied with my relationships.',
+      },
       { key: 'someoneToConfide', text: 'b) I have someone I can confide in.' },
     ],
   },
@@ -18,9 +21,18 @@ const SECTIONS = [
     title: 'Sleep, Stress and Relationships:',
     questions: [
       { key: 'qualitySleep', text: 'a) I get 7–9 hours of quality sleep.' },
-      { key: 'stressLevel', text: 'b) How stressed have you felt in the past month?' },
-      { key: 'stressReduction', text: 'c) I practice stress reduction and self-care.' },
-      { key: 'mindfulness', text: 'd) I take time for mindfulness or reflection' },
+      {
+        key: 'stressLevel',
+        text: 'b) How stressed have you felt in the past month?',
+      },
+      {
+        key: 'stressReduction',
+        text: 'c) I practice stress reduction and self-care.',
+      },
+      {
+        key: 'mindfulness',
+        text: 'd) I take time for mindfulness or reflection',
+      },
       { key: 'feelSafe', text: 'e) I feel safe in relationships' },
       { key: 'satisfiedSexLife', text: 'f) I am satisfied with my sex life.' },
       {
@@ -35,7 +47,10 @@ const SECTIONS = [
     questions: [
       { key: 'lifePurpose', text: 'a) I feel my life has purpose.' },
       { key: 'workSatisfaction', text: 'b) I find satisfaction in my work' },
-      { key: 'balanceWork', text: 'c) I balance work, family, and personal time' },
+      {
+        key: 'balanceWork',
+        text: 'c) I balance work, family, and personal time',
+      },
     ],
   },
 ];
@@ -70,11 +85,16 @@ export default function LifestyleAndSocialHabits({ values, setFieldValue }) {
                       value={opt.value}
                       checked={ls[q.key] === opt.value}
                       onChange={() =>
-                        setFieldValue(`lifestyleAndSocialHabits.${q.key}`, opt.value)
+                        setFieldValue(
+                          `lifestyleAndSocialHabits.${q.key}`,
+                          opt.value,
+                        )
                       }
                       className="accent-primary w-4 h-4 shrink-0"
                     />
-                    <span className="text-sm text-text-primary">{opt.label}</span>
+                    <span className="text-sm text-text-primary">
+                      {opt.label}
+                    </span>
                   </label>
                 ))}
               </div>

@@ -1,21 +1,29 @@
-import { all, put, takeLatest } from "redux-saga/effects";
+import { all, put, takeLatest } from 'redux-saga/effects';
 
-import { LOADING_KEYS } from "@/constants/loadingKeys";
-import { toastMessages } from "@/constants/toastMessages";
-import { addNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice";
-import { apiCall, createSagaActions } from "@/core/store/sagaHelpers";
-import store from "@/core/store/store";
-import SettingsRolesDataService from "@/services/appDataService/SettingsRolesDataService";
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { toastMessages } from '@/constants/toastMessages';
+import {
+  addNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
+import { apiCall, createSagaActions } from '@/core/store/sagaHelpers';
+import store from '@/core/store/store';
+import SettingsRolesDataService from '@/services/appDataService/SettingsRolesDataService';
 
-import { componentKey, setRolesData, setRoleDetail, setRefreshRoles } from "./settingsRolesPermissionsSlice";
+import {
+  componentKey,
+  setRefreshRoles,
+  setRoleDetail,
+  setRolesData,
+} from './settingsRolesPermissionsSlice';
 
 export const settingsRolesActions = createSagaActions(componentKey, [
-  "fetchRoles",
-  "fetchRoleById",
-  "createRole",
-  "updateRolePermissions",
-  "updateRoleStatus",
-  "archiveRole",
+  'fetchRoles',
+  'fetchRoleById',
+  'createRole',
+  'updateRolePermissions',
+  'updateRoleStatus',
+  'archiveRole',
 ]);
 
 function* fetchRolesSaga(action) {
@@ -60,7 +68,8 @@ function* updateRolePermissionsSaga(action) {
   const { roleId, payload, onSuccess } = action.payload;
   yield* apiCall({
     loadingKey: LOADING_KEYS.SETTINGS_ROLES_PATCH_UPDATE,
-    apiFunc: () => SettingsRolesDataService.updateRolePermissions(roleId, payload),
+    apiFunc: () =>
+      SettingsRolesDataService.updateRolePermissions(roleId, payload),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -118,8 +127,14 @@ function* rootSaga() {
     takeLatest(settingsRolesActions.fetchRoles().type, fetchRolesSaga),
     takeLatest(settingsRolesActions.fetchRoleById().type, fetchRoleByIdSaga),
     takeLatest(settingsRolesActions.createRole().type, createRoleSaga),
-    takeLatest(settingsRolesActions.updateRolePermissions().type, updateRolePermissionsSaga),
-    takeLatest(settingsRolesActions.updateRoleStatus().type, updateRoleStatusSaga),
+    takeLatest(
+      settingsRolesActions.updateRolePermissions().type,
+      updateRolePermissionsSaga,
+    ),
+    takeLatest(
+      settingsRolesActions.updateRoleStatus().type,
+      updateRoleStatusSaga,
+    ),
     takeLatest(settingsRolesActions.archiveRole().type, archiveRoleSaga),
   ]);
 }

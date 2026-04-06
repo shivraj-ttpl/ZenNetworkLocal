@@ -1,23 +1,31 @@
-import { all, put, takeLatest } from "redux-saga/effects";
+import { all, put, takeLatest } from 'redux-saga/effects';
 
-import { LOADING_KEYS } from "@/constants/loadingKeys";
-import { toastMessages } from "@/constants/toastMessages";
-import { addNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice";
-import { apiCall, createSagaActions } from "@/core/store/sagaHelpers";
-import store from "@/core/store/store";
-import SettingsProfileDataService from "@/services/appDataService/SettingsProfileDataService";
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { toastMessages } from '@/constants/toastMessages';
+import {
+  addNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
+import { apiCall, createSagaActions } from '@/core/store/sagaHelpers';
+import store from '@/core/store/store';
+import SettingsProfileDataService from '@/services/appDataService/SettingsProfileDataService';
 
-import { componentKey, setUsersData, setUserDetail, setRefreshUsers } from "./settingsUsersSlice";
+import {
+  componentKey,
+  setRefreshUsers,
+  setUserDetail,
+  setUsersData,
+} from './settingsUsersSlice';
 
 export const settingsUsersActions = createSagaActions(componentKey, [
-  "fetchUsers",
-  "fetchUserById",
-  "updateUserStatus",
-  "createUser",
-  "updateUser",
-  "archiveUser",
-  "unarchiveUser",
-  "sendInvitation",
+  'fetchUsers',
+  'fetchUserById',
+  'updateUserStatus',
+  'createUser',
+  'updateUser',
+  'archiveUser',
+  'unarchiveUser',
+  'sendInvitation',
 ]);
 
 function* fetchUsersSaga(action) {
@@ -148,7 +156,10 @@ function* rootSaga() {
   yield all([
     takeLatest(settingsUsersActions.fetchUsers().type, fetchUsersSaga),
     takeLatest(settingsUsersActions.fetchUserById().type, fetchUserByIdSaga),
-    takeLatest(settingsUsersActions.updateUserStatus().type, updateUserStatusSaga),
+    takeLatest(
+      settingsUsersActions.updateUserStatus().type,
+      updateUserStatusSaga,
+    ),
     takeLatest(settingsUsersActions.createUser().type, createUserSaga),
     takeLatest(settingsUsersActions.updateUser().type, updateUserSaga),
     takeLatest(settingsUsersActions.archiveUser().type, archiveUserSaga),

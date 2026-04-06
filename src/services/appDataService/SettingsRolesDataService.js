@@ -16,7 +16,9 @@ export default class SettingsRolesDataService {
   }
 
   static updateRoleStatus(roleId, status) {
-    return AppDataService.patch(`${SETTING_URL}/roles/${roleId}/status`, { status });
+    return AppDataService.patch(`${SETTING_URL}/roles/${roleId}/status`, {
+      status,
+    });
   }
 
   static archiveRole(roleId) {

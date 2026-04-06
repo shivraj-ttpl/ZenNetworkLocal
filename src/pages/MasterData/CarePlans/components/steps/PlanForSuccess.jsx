@@ -86,7 +86,10 @@ const EXPECTED_OUTCOMES = [
   { key: 'betterEnergy', label: 'Better daily energy levels' },
   { key: 'improvedAdherence', label: 'Improved medication adherence' },
   { key: 'weightLoss', label: 'Weight loss' },
-  { key: 'bloodSugarReadings', label: 'Blood sugar readings between 80 and 150' },
+  {
+    key: 'bloodSugarReadings',
+    label: 'Blood sugar readings between 80 and 150',
+  },
   { key: 'bloodPressureBelow', label: 'Blood Pressure below 140/90' },
   { key: 'betterQuality', label: 'Better quality of life' },
 ];

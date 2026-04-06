@@ -1,39 +1,44 @@
-import { useDispatch } from "react-redux";
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
+import { useDispatch } from 'react-redux';
 
-import ModalComponent from "@/components/commonComponents/modal/ModalComponent";
-import Icon from "@/components/icons/Icon";
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+import Icon from '@/components/icons/Icon';
 
 import {
   setCloseAvailableSlotsModal,
   setOpenConfigureDrawer,
-} from "../providerGroupProviderAvailabilitySlice";
+} from '../providerGroupProviderAvailabilitySlice';
 
 const MOCK_SLOTS = {
-  "in-person": [
-    "12:30 PM - 02:30 PM",
-    "03:30 PM - 06:30 PM",
-    "07:30 PM - 09:30 PM",
-    "07:30 PM - 09:30 PM",
-    "07:30 PM - 09:30 PM",
+  'in-person': [
+    '12:30 PM - 02:30 PM',
+    '03:30 PM - 06:30 PM',
+    '07:30 PM - 09:30 PM',
+    '07:30 PM - 09:30 PM',
+    '07:30 PM - 09:30 PM',
   ],
   virtual: [
-    "12:30 PM - 02:30 PM",
-    "03:30 PM - 06:30 PM",
-    "07:30 PM - 09:30 PM",
+    '12:30 PM - 02:30 PM',
+    '03:30 PM - 06:30 PM',
+    '07:30 PM - 09:30 PM',
   ],
 };
 
-function SlotGroup({ mode, icon, label, slots, borderColor, badgeColor }) {
+function SlotGroup({
+  mode: _mode,
+  icon,
+  label,
+  slots,
+  borderColor,
+  badgeColor,
+}) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <div className={`w-1 h-6 rounded-full ${borderColor}`} />
         <Icon name={icon} size={18} className="text-neutral-500" />
         <span className="text-sm font-semibold text-text-primary">{label}</span>
-        <span className="text-sm text-neutral-500">
-          ({slots.length} Slots)
-        </span>
+        <span className="text-sm text-neutral-500">({slots.length} Slots)</span>
       </div>
       <div className="flex flex-wrap gap-2 pl-5">
         {slots.map((slot, i) => (
@@ -61,11 +66,11 @@ export default function AvailableSlotsModal({ open, availableSlotsData }) {
   };
 
   const formattedDate = availableSlotsData?.date
-    ? dayjs(availableSlotsData.date).format("D MMMM YYYY")
-    : "";
+    ? dayjs(availableSlotsData.date).format('D MMMM YYYY')
+    : '';
 
-  const inPersonSlots = MOCK_SLOTS["in-person"];
-  const virtualSlots = MOCK_SLOTS["virtual"];
+  const inPersonSlots = MOCK_SLOTS['in-person'];
+  const virtualSlots = MOCK_SLOTS['virtual'];
 
   return (
     <ModalComponent

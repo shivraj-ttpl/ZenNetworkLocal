@@ -1,65 +1,73 @@
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import Drawer from "@/components/commonComponents/drawer/Drawer";
-import Button from "@/components/commonComponents/button/Button";
-import Input from "@/components/commonComponents/input/Input";
-import PhoneInput from "@/components/commonComponents/phoneInput";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import TextArea from "@/components/commonComponents/textArea";
-import UploadPhoto from "@/components/commonComponents/upload/UploadPhoto";
+import { Form, Formik } from 'formik';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
+
+import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import Input from '@/components/commonComponents/input/Input';
+import PhoneInput from '@/components/commonComponents/phoneInput';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import TextArea from '@/components/commonComponents/textArea';
+import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
+
 import {
+  COUNTRY_OPTIONS,
   FORM_FIELDS_NAMES,
   GENDER_OPTIONS,
   LANGUAGE_OPTIONS,
   PROVIDER_TYPE_OPTIONS,
-  SPECIALTIES_OPTIONS,
   ROLE_OPTIONS,
-  TIMEZONE_OPTIONS,
+  SPECIALTIES_OPTIONS,
   STATE_OPTIONS,
-  COUNTRY_OPTIONS,
-} from "../constant";
-import { setCloseDrawer } from "../providerGroupProvidersSlice";
+  TIMEZONE_OPTIONS,
+} from '../constant';
+import { setCloseDrawer } from '../providerGroupProvidersSlice';
 
 const validationSchema = Yup.object().shape({
-  [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required("First Name is required"),
-  [FORM_FIELDS_NAMES.LAST_NAME]: Yup.string().required("Last Name is required"),
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required("Address Line 1 is required"),
+  [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required(
+    'First Name is required',
+  ),
+  [FORM_FIELDS_NAMES.LAST_NAME]: Yup.string().required('Last Name is required'),
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: Yup.string().required(
+    'Address Line 1 is required',
+  ),
 });
 
 const getInitialValues = (editData) => ({
-  [FORM_FIELDS_NAMES.FIRST_NAME]: editData?.firstName || "",
-  [FORM_FIELDS_NAMES.LAST_NAME]: editData?.lastName || "",
+  [FORM_FIELDS_NAMES.FIRST_NAME]: editData?.firstName || '',
+  [FORM_FIELDS_NAMES.LAST_NAME]: editData?.lastName || '',
   [FORM_FIELDS_NAMES.GENDER]: editData?.genderOption || null,
-  [FORM_FIELDS_NAMES.EMAIL]: editData?.email || "",
+  [FORM_FIELDS_NAMES.EMAIL]: editData?.email || '',
   [FORM_FIELDS_NAMES.LANGUAGE]: editData?.languageOption || null,
-  [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contact || "",
+  [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contact || '',
   [FORM_FIELDS_NAMES.PROVIDER_TYPE]: editData?.providerTypeOption || null,
-  [FORM_FIELDS_NAMES.SPECIALTIES]: editData?.specialties?.map((s) => ({ label: s, value: s })) || null,
+  [FORM_FIELDS_NAMES.SPECIALTIES]:
+    editData?.specialties?.map((s) => ({ label: s, value: s })) || null,
   [FORM_FIELDS_NAMES.PRIMARY_ROLE]: editData?.primaryRoleOption || null,
   [FORM_FIELDS_NAMES.SECONDARY_ROLE]: editData?.secondaryRoleOption || null,
-  [FORM_FIELDS_NAMES.NPI_NUMBER]: editData?.npiNumber || "",
-  [FORM_FIELDS_NAMES.STATE_LICENSE]: editData?.stateLicense || "",
-  [FORM_FIELDS_NAMES.YEARS_OF_EXPERIENCE]: editData?.yearsOfExperience || "",
+  [FORM_FIELDS_NAMES.NPI_NUMBER]: editData?.npiNumber || '',
+  [FORM_FIELDS_NAMES.STATE_LICENSE]: editData?.stateLicense || '',
+  [FORM_FIELDS_NAMES.YEARS_OF_EXPERIENCE]: editData?.yearsOfExperience || '',
   [FORM_FIELDS_NAMES.TIMEZONE]: editData?.timezoneOption || null,
-  [FORM_FIELDS_NAMES.BIO]: editData?.bio || "",
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.addressLine1 || "",
-  [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.addressLine2 || "",
+  [FORM_FIELDS_NAMES.BIO]: editData?.bio || '',
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.addressLine1 || '',
+  [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.addressLine2 || '',
   [FORM_FIELDS_NAMES.STATE]: editData?.stateOption || null,
   [FORM_FIELDS_NAMES.COUNTRY]: editData?.countryOption || null,
-  [FORM_FIELDS_NAMES.CITY]: editData?.city || "",
-  [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.zipCode || "",
+  [FORM_FIELDS_NAMES.CITY]: editData?.city || '',
+  [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.zipCode || '',
   photo: null,
 });
 
 export default function AddProviderDrawer({ open, drawerMode, editData }) {
   const dispatch = useDispatch();
-  const isEdit = drawerMode === "edit";
+  const isEdit = drawerMode === 'edit';
 
   const handleClose = () => {
     dispatch(setCloseDrawer());
-  };  
-console.log("editData",editData)
+  };
+  // eslint-disable-next-line no-console
+  console.log('editData', editData);
   const handleFormSubmit = (values, { resetForm }) => {
     // TODO: dispatch saga action
     resetForm();
@@ -68,7 +76,7 @@ console.log("editData",editData)
 
   return (
     <Drawer
-      title={isEdit ? "Edit Provider" : "Add Provider"}
+      title={isEdit ? 'Edit Provider' : 'Add Provider'}
       open={open}
       close={handleClose}
       width="max-w-[50%] w-[50%]"
@@ -80,16 +88,27 @@ console.log("editData",editData)
         onSubmit={handleFormSubmit}
         enableReinitialize
       >
-        {({ values, errors, touched, isValid, dirty, handleChange, handleBlur, handleSubmit, setFieldValue, resetForm }) => (
+        {({
+          values,
+          errors,
+          touched,
+          isValid,
+          dirty,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          setFieldValue,
+          resetForm,
+        }) => (
           <Form className="flex flex-col h-full">
             <div className="flex-1 overflow-y-auto  flex gap-6">
               {/* Photo Upload */}
-              <div className="flex-shrink-0 w-[200px]">
+              <div className="shrink-0 w-50">
                 <UploadPhoto
                   name="photo"
                   label="Profile Photo"
                   maxFileSize={5}
-                  onFileSelect={(file) => setFieldValue("photo", file)}
+                  onFileSelect={(file) => setFieldValue('photo', file)}
                 />
               </div>
 
@@ -127,7 +146,9 @@ console.log("editData",editData)
                     placeholder="Select Gender"
                     options={GENDER_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.GENDER]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.GENDER, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.GENDER, selected)
+                    }
                   />
                   <Input
                     label="Email Address"
@@ -147,13 +168,17 @@ console.log("editData",editData)
                     placeholder="Select Language"
                     options={LANGUAGE_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.LANGUAGE]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.LANGUAGE, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.LANGUAGE, selected)
+                    }
                   />
                   <PhoneInput
                     label="Contact Number"
                     name={FORM_FIELDS_NAMES.CONTACT_NUMBER}
                     value={values[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
-                    onChange={(val) => setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || "")}
+                    onChange={(val) =>
+                      setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || '')
+                    }
                     onBlur={handleBlur}
                     defaultCountry="US"
                   />
@@ -166,7 +191,9 @@ console.log("editData",editData)
                     placeholder="Provider Type"
                     options={PROVIDER_TYPE_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.PROVIDER_TYPE]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.PROVIDER_TYPE, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.PROVIDER_TYPE, selected)
+                    }
                   />
                   <SelectDropdown
                     label="Specialties"
@@ -174,7 +201,9 @@ console.log("editData",editData)
                     placeholder="Enter Specialty"
                     options={SPECIALTIES_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.SPECIALTIES]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.SPECIALTIES, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.SPECIALTIES, selected)
+                    }
                     isMulti
                   />
                 </div>
@@ -186,7 +215,9 @@ console.log("editData",editData)
                     placeholder="Select Primary Role"
                     options={ROLE_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.PRIMARY_ROLE]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.PRIMARY_ROLE, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.PRIMARY_ROLE, selected)
+                    }
                   />
                   <SelectDropdown
                     label="Secondary Role"
@@ -194,7 +225,9 @@ console.log("editData",editData)
                     placeholder="Select Secondary Role"
                     options={ROLE_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.SECONDARY_ROLE]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.SECONDARY_ROLE, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.SECONDARY_ROLE, selected)
+                    }
                   />
                 </div>
 
@@ -232,7 +265,9 @@ console.log("editData",editData)
                     placeholder="Select Time zone"
                     options={TIMEZONE_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.TIMEZONE]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.TIMEZONE, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.TIMEZONE, selected)
+                    }
                   />
                 </div>
 
@@ -247,7 +282,9 @@ console.log("editData",editData)
                 />
 
                 {/* Address Information */}
-                <h4 className="text-sm font-semibold text-text-primary">Address Information</h4>
+                <h4 className="text-sm font-semibold text-text-primary">
+                  Address Information
+                </h4>
 
                 <Input
                   label="Address Line 1"
@@ -277,7 +314,9 @@ console.log("editData",editData)
                     placeholder="Select State"
                     options={STATE_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.STATE]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.STATE, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.STATE, selected)
+                    }
                   />
                   <SelectDropdown
                     label="Country"
@@ -285,7 +324,9 @@ console.log("editData",editData)
                     placeholder="Select Country"
                     options={COUNTRY_OPTIONS}
                     value={values[FORM_FIELDS_NAMES.COUNTRY]}
-                    onChange={(selected) => setFieldValue(FORM_FIELDS_NAMES.COUNTRY, selected)}
+                    onChange={(selected) =>
+                      setFieldValue(FORM_FIELDS_NAMES.COUNTRY, selected)
+                    }
                   />
                 </div>
 
@@ -330,7 +371,7 @@ console.log("editData",editData)
                 onClick={handleSubmit}
                 disabled={!(isValid && dirty)}
               >
-                {isEdit ? "Save" : "Create Provider"}
+                {isEdit ? 'Save' : 'Create Provider'}
               </Button>
             </div>
           </Form>

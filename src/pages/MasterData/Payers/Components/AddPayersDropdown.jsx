@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import Button from "@/components/commonComponents/button/Button";
-import Icon from "@/components/icons/Icon";
-import { setOpenAddDrawer, setOpenImportModal } from "../payersSlice";
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import Button from '@/components/commonComponents/button/Button';
+import Icon from '@/components/icons/Icon';
+
+import { setOpenAddDrawer, setOpenImportModal } from '../payersSlice';
 
 export default function AddPayersDropdown() {
   const dispatch = useDispatch();
@@ -16,9 +18,9 @@ export default function AddPayersDropdown() {
       }
     };
     if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
     }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [open]);
 
   return (
