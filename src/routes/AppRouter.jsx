@@ -1,8 +1,20 @@
-import { Suspense, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { routeConfig, publicRouteConfig, sharedRouteConfig } from "./routeConfig";
-import MainAppLayout from "@/app/MainAppLayout";
-import { setNavigateRef } from "@/utils/navigationService";
+import { Suspense, useEffect } from 'react';
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from 'react-router-dom';
+
+import MainAppLayout from '@/app/MainAppLayout';
+import { setNavigateRef } from '@/utils/navigationService';
+
+import {
+  publicRouteConfig,
+  routeConfig,
+  sharedRouteConfig,
+} from './routeConfig';
 
 function NavigationSetter() {
   const navigate = useNavigate();
@@ -74,37 +86,37 @@ export default function AppRouter() {
             />
           ))}
 
-            {/* Shared routes — accessible by everyone, with or without auth */}
-            {sharedRouteConfig.map((route) => (
+          {/* Shared routes — accessible by everyone, with or without auth */}
+          {sharedRouteConfig.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={
+                <SharedRoute useLayout={route.useLayout}>
+                  <route.element />
+                </SharedRoute>
+              }
+            />
+          ))}
+
+          {/* Protected routes — require auth, wrapped in MainAppLayout */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <MainAppLayout />
+              </ProtectedRoute>
+            }
+          >
+            {routeConfig.map((route) => (
               <Route
                 key={route.path}
                 path={route.path}
-                element={
-                  <SharedRoute useLayout={route.useLayout}>
-                    <route.element />
-                  </SharedRoute>
-                }
-              />
+                element={<route.element />}
+              >
+                {renderChildren(route.children)}
+              </Route>
             ))}
-
-            {/* Protected routes — require auth, wrapped in MainAppLayout */}
-            <Route
-              element={
-                <ProtectedRoute>
-                  <MainAppLayout />
-                </ProtectedRoute>
-              }
-            >
-              {routeConfig.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={<route.element />}
-                >
-                  {renderChildren(route.children)}
-                </Route>
-              ))}
-            </Route>
+          </Route>
 
           {/* Catch-all */}
           <Route path="*" element={<Navigate to="/master-data" replace />} />

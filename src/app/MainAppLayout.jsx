@@ -1,10 +1,13 @@
-import { Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectGlobalLoading } from "@/core/store/loadingSlice";
-import Navbar from "@/components/commonComponents/navbar/Navbar";
+import { useSelector } from 'react-redux';
+import { Outlet } from 'react-router-dom';
+
+import Navbar from '@/components/commonComponents/navbar/Navbar';
+import { selectGlobalLoading } from '@/core/store/loadingSlice';
 
 function GlobalLoader() {
-  return <div className="fixed inset-0 z-1000 backdrop-blur-[0.2px] bg-white/10" />;
+  return (
+    <div className="fixed inset-0 z-1000 backdrop-blur-[0.2px] bg-white/10" />
+  );
 }
 
 export default function MainAppLayout() {

@@ -5,7 +5,7 @@ import store from '@/core/store/store';
 import { handle401Error } from '@/services/utils/tokenRefreshHandler';
 import { deepTrimStrings, isMultipartOrBinary } from '@/utils/sanitizeUtils';
 
-const BASE_URL = import.meta.env.VITE_API_URL 
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // Endpoints that should NOT trigger the global loader
 const NO_LOADER_ENDPOINTS = [];
