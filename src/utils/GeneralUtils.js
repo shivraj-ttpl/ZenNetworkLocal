@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import utc from "dayjs/plugin/utc";
+import { parsePhoneNumber } from 'react-phone-number-input';
 
 dayjs.extend(utc);
 
@@ -105,11 +106,40 @@ export function buildPhoneValue(countryCode, contactNumber) {
   return contactNumber;
 }
 
+/**
+ * Parse a phone string (from react-phone-number-input) into countryCode and nationalNumber.
+ * Returns { countryCode, nationalNumber } or { countryCode: '', nationalNumber: raw }.
+ */
+export function parsePhoneValue(phoneRaw) {
+  if (!phoneRaw) return { countryCode: '', nationalNumber: '' };
+  try {
+    const parsed = parsePhoneNumber(phoneRaw);
+    if (parsed) {
+      return {
+        countryCode: `+${parsed.countryCallingCode}`,
+        nationalNumber: parsed.nationalNumber,
+      };
+    }
+  } catch {
+    // fallback
+  }
+  return { countryCode: '', nationalNumber: phoneRaw };
+}
+
 export function formatZipCode(zip) {
   if (!zip) return '';
   const digits = zip.replace(/\D/g, '');
   if (digits.length > 5) return `${digits.slice(0, 5)}-${digits.slice(5, 9)}`;
   return digits;
+}
+
+/**
+ * Truncate a string to a given character length.
+ * Returns the original string if it's within the limit.
+ */
+export function truncateText(text, maxLength = 50) {
+  if (!text || text.length <= maxLength) return text || '';
+  return text.slice(0, maxLength);
 }
 
   export function toPascalCase (text = "") {

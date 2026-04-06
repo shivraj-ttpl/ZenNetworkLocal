@@ -139,20 +139,20 @@ export default function EditOrganizationProfileDrawer({
             legalName: values[FORM_FIELDS_NAMES.LEGAL_NAME],
             licenseNumber: values[FORM_FIELDS_NAMES.LICENSE_NUMBER],
             taxId: values[FORM_FIELDS_NAMES.TAX_ID],
-            organizationType: values[FORM_FIELDS_NAMES.ORGANIZATION_TYPE]?.value || undefined,
+            organizationType: values[FORM_FIELDS_NAMES.ORGANIZATION_TYPE]?.value || "",
             email: values[FORM_FIELDS_NAMES.EMAIL_ADDRESS],
-            primaryContact: values[FORM_FIELDS_NAMES.PRIMARY_CONTACT_NUMBER] || undefined,
-            secondaryContact: values[FORM_FIELDS_NAMES.SECONDARY_CONTACT_NUMBER] || undefined,
-            fax: values[FORM_FIELDS_NAMES.FAX_NUMBER] || undefined,
-            website: values[FORM_FIELDS_NAMES.WEBSITE_URL] || undefined,
-            description: values[FORM_FIELDS_NAMES.DESCRIPTION] || undefined,
+            primaryContact: values[FORM_FIELDS_NAMES.PRIMARY_CONTACT_NUMBER] || "",
+            secondaryContact: values[FORM_FIELDS_NAMES.SECONDARY_CONTACT_NUMBER] || "",
+            fax: values[FORM_FIELDS_NAMES.FAX_NUMBER] || "",
+            website: values[FORM_FIELDS_NAMES.WEBSITE_URL] || "",
+            description: values[FORM_FIELDS_NAMES.DESCRIPTION] || "",
             address: {
-              addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || undefined,
-              addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || undefined,
-              city: values[FORM_FIELDS_NAMES.CITY] || undefined,
-              state: values[FORM_FIELDS_NAMES.STATE]?.name || undefined,
-              zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || undefined,
-              country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || undefined,
+              addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || "",
+              addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
+              city: values[FORM_FIELDS_NAMES.CITY] || "",
+              state: values[FORM_FIELDS_NAMES.STATE]?.name || "",
+              zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || "",
+              country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || "",
             },
           };
           dispatch(
@@ -183,7 +183,7 @@ export default function EditOrganizationProfileDrawer({
           <Form className="flex h-full flex-col">
             <div className=" flex-1 overflow-y-auto p-1">
               <div className="flex gap-6 rounded-lg border border-border-light p-5">
-                <div className="w-[200px] flex-shrink-0">
+                <div className="w-50 shrink-0">
                   <UploadPhoto
                     name={FORM_FIELDS_NAMES.PHOTO}
                     label="Profile Photo"

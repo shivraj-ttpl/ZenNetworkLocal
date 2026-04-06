@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from 'react';
+import { useEffect, useMemo, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import AddPayerDrawer from './Components/AddPayerDrawer';
 import AddPayersDropdown from './Components/AddPayersDropdown';
@@ -64,6 +65,8 @@ export default function Payers() {
 
   const isLoading = useLoadingKey(LOADING_KEYS.PAYERS_GET_LIST);
   const debouncedSearch = useDebounce(search);
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
 
   useEffect(() => {
     registerReducer();
@@ -151,7 +154,7 @@ export default function Payers() {
     () =>
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-        { id: 'name', header: 'Name', accessorKey: 'name', sortable: true },
+        { id: 'name', header: 'Name', accessorKey: 'name', sortable: true,  width: 200, },
         {
           id: 'type',
           header: 'Type',
@@ -186,13 +189,12 @@ export default function Payers() {
         {
           id: 'favorites',
           header: 'Favorites',
-          width: 100,
+          width: 50,
           align: 'center',
           render: (row) => (
             <span
-              className={
-                row.isFavorite ? 'text-primary-700' : 'text-neutral-400'
-              }
+              className={`${ row.isFavorite ? 'text-primary-700 ' : 'text-neutral-400'} flex items-center justify-center`
+               }
             >
               {row.isFavorite ? <Icon name="check" size={18} /> : '-'}
             </span>
@@ -248,12 +250,12 @@ export default function Payers() {
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 260px)"
+        maxHeight={tableMaxHeight}
         loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}

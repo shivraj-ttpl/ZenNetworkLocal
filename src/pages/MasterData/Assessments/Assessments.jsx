@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useState } from 'react';
+import { useEffect, useMemo, useCallback, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
@@ -6,6 +6,7 @@ import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { Table, buildColumns } from '@/components/commonComponents/table';
+import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
@@ -13,8 +14,9 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
-import { formatDate } from '@/utils/GeneralUtils';
+import { formatDate, truncateText } from '@/utils/GeneralUtils';
 
 import { assessmentsActions, registerSaga } from './assessmentsSaga';
 import {
@@ -52,6 +54,8 @@ export default function Assessments() {
 
   const isLoading = useLoadingKey(LOADING_KEYS.ASSESSMENTS_GET_LIST);
   const debouncedSearch = useDebounce(search);
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
 
   useEffect(() => {
     registerReducer();
@@ -117,6 +121,20 @@ export default function Assessments() {
           id: 'description',
           header: 'Description',
           accessorKey: 'description',
+          render: (row) => {
+            const truncated = truncateText(row.description, 80);
+            if (!row.description) return '-';
+            if (truncated === row.description) return row.description;
+            return (
+              <ToolTip
+                content={<p className="p-2 text-sm max-w-80 wrap-break-word">{row.description}</p>}
+                position="bottom"
+                usePortal
+              >
+                <span className="cursor-default">{truncated}...</span>
+              </ToolTip>
+            );
+          },
         },
 
         {
@@ -198,12 +216,12 @@ export default function Assessments() {
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 300px)"
+        maxHeight={tableMaxHeight}
         loading={isLoading}
       />
       <Pagination

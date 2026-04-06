@@ -46,7 +46,7 @@ export default function AddMaterialDrawer() {
     const file = values[FORM_FIELDS_NAMES.FILE];
     const data = {
       fileName: values[FORM_FIELDS_NAMES.FILE_NAME],
-      specialty: values[FORM_FIELDS_NAMES.SPECIALTY]?.value || undefined,
+      specialty: values[FORM_FIELDS_NAMES.SPECIALTY]?.value || "",
       fileType: file?.type?.includes('pdf')
         ? 'PDF'
         : file?.type?.includes('video')
@@ -54,8 +54,8 @@ export default function AddMaterialDrawer() {
           : file?.type?.includes('image')
             ? 'IMAGE'
             : 'DOCUMENT',
-      fileSize: file?.size || undefined,
-      contentType: file?.type || undefined,
+      fileSize: file?.size || "",
+      contentType: file?.type || "",
     };
 
     if (isEdit) {

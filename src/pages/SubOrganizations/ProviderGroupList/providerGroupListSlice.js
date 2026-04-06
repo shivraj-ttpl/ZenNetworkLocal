@@ -45,9 +45,18 @@ const sliceConfig = {
     },
     setDrawerOpen: (state, action) => {
       state.drawerOpen = action.payload;
+      state.drawerMode = 'add';
+      state.editData = null;
+    },
+    setEditDrawer: (state, action) => {
+      state.drawerOpen = true;
+      state.drawerMode = 'edit';
+      state.editData = action.payload;
     },
     setCloseDrawer: (state) => {
       state.drawerOpen = false;
+      state.drawerMode = '';
+      state.editData = null;
     },
     setStatusModal: (state, action) => {
       state.statusModal = action.payload;
@@ -66,6 +75,8 @@ const sliceConfig = {
     sortOrder: null,
     refreshFlag: 0,
     drawerOpen: false,
+    drawerMode: '',
+    editData: null,
     statusModal: { open: false, row: null },
   },
 };
@@ -89,6 +100,7 @@ export const {
   setSortOrder,
   setRefreshList,
   setDrawerOpen,
+  setEditDrawer,
   setCloseDrawer,
   setStatusModal,
 } = slice.actions;

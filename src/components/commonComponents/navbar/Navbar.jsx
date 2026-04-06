@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 import OneTeamLogo from '@/assets/brand/OneTeam-Logo.png';
 import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Icon from '@/components/icons/Icon';
 import { routeConfig } from '@/routes/routeConfig';
+import { useSelector } from 'react-redux';
+import { componentKey } from '@/pages/Auth/authSlice';
 
 const navRoutes = routeConfig.filter((r) => r.nav);
 
@@ -12,6 +14,7 @@ function AvatarDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const navigate = useNavigate();
+  const {loggedInUser} = useSelector((state) => state[componentKey] ?? {})
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -24,7 +27,7 @@ function AvatarDropdown() {
   return (
     <div className="relative" ref={ref}>
       <button onClick={() => setOpen((p) => !p)} className="cursor-pointer">
-        <Avatar name="John Doe" size="sm" online />
+        <Avatar name={`${loggedInUser?.firstName} ${loggedInUser?.lastName}`} size="sm" online />
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-2 w-44 bg-surface border border-border-light rounded-lg shadow-lg z-50 py-1">

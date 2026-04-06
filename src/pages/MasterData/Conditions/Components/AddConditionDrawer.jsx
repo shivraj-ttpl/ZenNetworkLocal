@@ -47,9 +47,9 @@ export default function AddConditionDrawer() {
   const handleFormSubmit = (values) => {
     const data = {
       name: values[FORM_FIELDS_NAMES.CONDITION_NAME],
-      codeId: values[FORM_FIELDS_NAMES.ICD_CODE]?.id ?? undefined,
-      linkedCarePlanId: values[FORM_FIELDS_NAMES.CARE_PLAN]?.id ?? undefined,
-      description: values[FORM_FIELDS_NAMES.DESCRIPTION] || undefined,
+      codeId: values[FORM_FIELDS_NAMES.ICD_CODE]?.id ?? "",
+      linkedCarePlanId: values[FORM_FIELDS_NAMES.CARE_PLAN]?.id ?? "",
+      description: values[FORM_FIELDS_NAMES.DESCRIPTION] || "",
     };
 
     if (isEdit) {
