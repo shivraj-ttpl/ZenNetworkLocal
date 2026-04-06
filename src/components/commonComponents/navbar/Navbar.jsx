@@ -1,12 +1,12 @@
-import { use, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 
 import OneTeamLogo from '@/assets/brand/OneTeam-Logo.png';
 import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Icon from '@/components/icons/Icon';
-import { routeConfig } from '@/routes/routeConfig';
-import { useSelector } from 'react-redux';
 import { componentKey } from '@/pages/Auth/authSlice';
+import { routeConfig } from '@/routes/routeConfig';
 
 const navRoutes = routeConfig.filter((r) => r.nav);
 
@@ -14,7 +14,7 @@ function AvatarDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   const navigate = useNavigate();
-  const {loggedInUser} = useSelector((state) => state[componentKey] ?? {})
+  const { loggedInUser } = useSelector((state) => state[componentKey] ?? {});
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -27,7 +27,11 @@ function AvatarDropdown() {
   return (
     <div className="relative" ref={ref}>
       <button onClick={() => setOpen((p) => !p)} className="cursor-pointer">
-        <Avatar name={`${loggedInUser?.firstName} ${loggedInUser?.lastName}`} size="sm" online />
+        <Avatar
+          name={`${loggedInUser?.firstName} ${loggedInUser?.lastName}`}
+          size="sm"
+          online
+        />
       </button>
       {open && (
         <div className="absolute right-0 top-full mt-2 w-44 bg-surface border border-border-light rounded-lg shadow-lg z-50 py-1">
@@ -46,7 +50,7 @@ function AvatarDropdown() {
             type="button"
             className="w-full cursor-pointer flex items-center gap-2 px-3 py-2 text-sm hover:bg-error-50 text-error-500"
             onClick={() => {
-              window.__handleLogout()
+              window.__handleLogout();
               setOpen(false);
             }}
           >

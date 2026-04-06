@@ -1,4 +1,4 @@
-import { createSlice, combineReducers } from "@reduxjs/toolkit";
+import { combineReducers, createSlice } from '@reduxjs/toolkit';
 
 export function createReducerManager(initialReducers = {}) {
   const reducers = { ...initialReducers };

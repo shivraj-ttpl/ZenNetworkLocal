@@ -86,7 +86,11 @@ export default function SubOrgViewRolePermissions() {
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -105,7 +109,11 @@ export default function SubOrgViewRolePermissions() {
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -126,11 +134,16 @@ export default function SubOrgViewRolePermissions() {
                 usePortal
                 content={
                   <p className="text-sm text-text-secondary p-3 w-72">
-                    Allows users to add new entries and make changes within this module or feature.
+                    Allows users to add new entries and make changes within this
+                    module or feature.
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -151,11 +164,16 @@ export default function SubOrgViewRolePermissions() {
                 usePortal
                 content={
                   <p className="text-sm text-text-secondary p-3 w-72">
-                    Restricts users from viewing or interacting with this module or feature.
+                    Restricts users from viewing or interacting with this module
+                    or feature.
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),

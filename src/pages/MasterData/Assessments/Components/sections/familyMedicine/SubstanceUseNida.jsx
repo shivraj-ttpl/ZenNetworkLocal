@@ -48,7 +48,9 @@ export default function SubstanceUseNida({ values, setFieldValue }) {
                   name={`substanceUseNida.${q.key}`}
                   value={opt.value}
                   checked={su[q.key] === opt.value}
-                  onChange={() => setFieldValue(`substanceUseNida.${q.key}`, opt.value)}
+                  onChange={() =>
+                    setFieldValue(`substanceUseNida.${q.key}`, opt.value)
+                  }
                   className="accent-primary w-4 h-4 shrink-0"
                 />
                 <span className="text-sm text-text-primary">{opt.label}</span>

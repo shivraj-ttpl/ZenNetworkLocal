@@ -1,26 +1,29 @@
-import { takeLatest, all, put } from "redux-saga/effects";
-import store from "@/core/store/store";
-import { apiCall, createSagaActions } from "@/core/store/sagaHelpers";
-import { LOADING_KEYS } from "@/constants/loadingKeys";
-import { componentKey } from "./authSlice";
-import AuthDataService from "../../services/appDataService/AuthDataService";
+import { all, takeLatest } from 'redux-saga/effects';
+
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { apiCall, createSagaActions } from '@/core/store/sagaHelpers';
+import store from '@/core/store/store';
+
+import AuthDataService from '../../services/appDataService/AuthDataService';
+import { componentKey } from './authSlice';
 
 // Action creators for saga dispatch
 export const authActions = createSagaActions(componentKey, [
-  "postLogin",
-  "postLogout",
-  "postForgotPassword",
-  "postSetPassword",
-  "postResetPassword",
+  'postLogin',
+  'postLogout',
+  'postForgotPassword',
+  'postSetPassword',
+  'postResetPassword',
 ]);
 
 function* postLoginSaga(action) {
-  const {payload, onSuccessCb} = action.payload
+  const { payload, onSuccessCb } = action.payload;
   yield* apiCall({
     loadingKey: LOADING_KEYS.AUTH_POST_LOGIN,
     apiFunc: () => AuthDataService.postLogin(payload),
+    // eslint-disable-next-line require-yield
     onSuccess: function* (response) {
-      onSuccessCb(response)
+      onSuccessCb(response);
     },
   });
 }
@@ -37,6 +40,7 @@ function* postForgotPasswordSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.AUTH_POST_FORGOT_PASSWORD,
     apiFunc: () => AuthDataService.postForgotPassword(payload),
+    // eslint-disable-next-line require-yield
     onSuccess: function* (response) {
       if (onSuccessCb) onSuccessCb(response);
     },
@@ -48,6 +52,7 @@ function* postSetPasswordSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.AUTH_POST_SET_PASSWORD,
     apiFunc: () => AuthDataService.postSetPassword(payload),
+    // eslint-disable-next-line require-yield
     onSuccess: function* (response) {
       if (onSuccessCb) onSuccessCb(response);
     },
@@ -59,6 +64,7 @@ function* postResetPasswordSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.AUTH_POST_RESET_PASSWORD,
     apiFunc: () => AuthDataService.postResetPassword(payload),
+    // eslint-disable-next-line require-yield
     onSuccess: function* (response) {
       if (onSuccessCb) onSuccessCb(response);
     },

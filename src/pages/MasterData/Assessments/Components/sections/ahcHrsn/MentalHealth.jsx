@@ -1,17 +1,30 @@
-const PHQ_OPTIONS = ["Not at all", "Several days", "More than half the days", "Nearly every day"];
-const STRESS_OPTIONS = ["Not at all", "A little bit", "Somewhat", "Quite a bit", "Very much"];
+const PHQ_OPTIONS = [
+  'Not at all',
+  'Several days',
+  'More than half the days',
+  'Nearly every day',
+];
+const STRESS_OPTIONS = [
+  'Not at all',
+  'A little bit',
+  'Somewhat',
+  'Quite a bit',
+  'Very much',
+];
 
 export default function MentalHealth({ values, handleChange }) {
   const mh = values?.mentalHealth || {};
 
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="text-base font-semibold text-text-primary">Mental Health</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        Mental Health
+      </h3>
 
       <div className="flex flex-col gap-4">
         <p className="text-sm font-medium text-text-primary">
-          1. Over the past 2 weeks, how often have you been bothered by any of the following
-          problems?
+          1. Over the past 2 weeks, how often have you been bothered by any of
+          the following problems?
         </p>
 
         <div className="flex flex-col gap-2 ml-4">
@@ -55,9 +68,10 @@ export default function MentalHealth({ values, handleChange }) {
 
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-text-primary">
-          2. Stress means a situation in which a person feels tense, restless, nervous, or
-          anxious, or is unable to sleep at night because his or her mind is troubled all the
-          time. Do you feel this kind of stress these days?
+          2. Stress means a situation in which a person feels tense, restless,
+          nervous, or anxious, or is unable to sleep at night because his or her
+          mind is troubled all the time. Do you feel this kind of stress these
+          days?
         </p>
         {STRESS_OPTIONS.map((opt) => (
           <label key={opt} className="flex items-center gap-2 cursor-pointer">

@@ -1,17 +1,19 @@
-import { useState } from "react";
-import ToggleSwitch from "./ToggleSwitch";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useState } from 'react';
+
+import ToggleSwitch from './ToggleSwitch';
 
 export default {
-  title: "Components/ToggleSwitch",
+  title: 'Components/ToggleSwitch',
   component: ToggleSwitch,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
-    checked: { control: "boolean" },
-    disabled: { control: "boolean" },
-    showLabel: { control: "boolean" },
-    activeLabel: { control: "text" },
-    inactiveLabel: { control: "text" },
-    title: { control: "text" },
+    checked: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+    showLabel: { control: 'boolean' },
+    activeLabel: { control: 'text' },
+    inactiveLabel: { control: 'text' },
+    title: { control: 'text' },
   },
 };
 
@@ -45,19 +47,19 @@ export const Active = {
 
 export const Disabled = {
   args: {
-    name: "status",
+    name: 'status',
     checked: false,
     disabled: true,
-    title: "Disabled toggle",
+    title: 'Disabled toggle',
   },
 };
 
 export const DisabledActive = {
   args: {
-    name: "status",
+    name: 'status',
     checked: true,
     disabled: true,
-    title: "Disabled active toggle",
+    title: 'Disabled active toggle',
   },
 };
 

@@ -1,20 +1,23 @@
-import { useState, useCallback } from "react";
-import { useDispatch } from "react-redux";
-import { Formik, Form } from "formik";
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
+import { Form, Formik } from 'formik';
+import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import Drawer from "@/components/commonComponents/drawer/Drawer";
-import Button from "@/components/commonComponents/button/Button";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import TimePicker from "@/components/commonComponents/timePicker/TimePicker";
-import Icon from "@/components/icons/Icon";
+import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import TimePicker from '@/components/commonComponents/timePicker/TimePicker';
+import Icon from '@/components/icons/Icon';
 
-import { APPOINTMENT_MODE_OPTIONS } from "../constant";
-import { setCloseConfigureDateDrawer } from "../providerGroupProviderAvailabilitySlice";
+import { APPOINTMENT_MODE_OPTIONS } from '../constant';
+import { setCloseConfigureDateDrawer } from '../providerGroupProviderAvailabilitySlice';
 
 const EMPTY_SLOT = { startTime: null, endTime: null, appointmentMode: null };
 
-export default function ConfigureDateAvailabilityDrawer({ open, configureDate }) {
+export default function ConfigureDateAvailabilityDrawer({
+  open,
+  configureDate,
+}) {
   const dispatch = useDispatch();
 
   const [timeSlots, setTimeSlots] = useState([{ ...EMPTY_SLOT }]);
@@ -40,8 +43,8 @@ export default function ConfigureDateAvailabilityDrawer({ open, configureDate })
   };
 
   const drawerTitle = configureDate
-    ? `Configure Provider Availability- ${dayjs(configureDate).format("Do MMMM YYYY")}`
-    : "Configure Provider Availability";
+    ? `Configure Provider Availability- ${dayjs(configureDate).format('Do MMMM YYYY')}`
+    : 'Configure Provider Availability';
 
   return (
     <Drawer
@@ -68,7 +71,9 @@ export default function ConfigureDateAvailabilityDrawer({ open, configureDate })
                     name={`startTime-${index}`}
                     placeholder="Select Start Time"
                     value={slot.startTime}
-                    onChangeCb={(val) => updateTimeSlot(index, "startTime", val)}
+                    onChangeCb={(val) =>
+                      updateTimeSlot(index, 'startTime', val)
+                    }
                     isRequired
                     timeIntervals={30}
                   />
@@ -77,7 +82,7 @@ export default function ConfigureDateAvailabilityDrawer({ open, configureDate })
                     name={`endTime-${index}`}
                     placeholder="Select End Time"
                     value={slot.endTime}
-                    onChangeCb={(val) => updateTimeSlot(index, "endTime", val)}
+                    onChangeCb={(val) => updateTimeSlot(index, 'endTime', val)}
                     isRequired
                     timeIntervals={30}
                   />
@@ -88,7 +93,7 @@ export default function ConfigureDateAvailabilityDrawer({ open, configureDate })
                     options={APPOINTMENT_MODE_OPTIONS}
                     value={slot.appointmentMode}
                     onChange={(val) =>
-                      updateTimeSlot(index, "appointmentMode", val)
+                      updateTimeSlot(index, 'appointmentMode', val)
                     }
                     required
                   />

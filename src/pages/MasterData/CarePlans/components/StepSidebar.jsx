@@ -1,7 +1,12 @@
-import { Icon } from "@/components/icons";
-import { CARE_PLAN_STEPS } from "./carePlanConstants";
+import { Icon } from '@/components/icons';
 
-export default function StepSidebar({ activeStep, completedSteps = new Set(), onStepClick }) {
+import { CARE_PLAN_STEPS } from './carePlanConstants';
+
+export default function StepSidebar({
+  activeStep,
+  completedSteps = new Set(),
+  onStepClick,
+}) {
   const totalSteps = CARE_PLAN_STEPS.length;
 
   return (
@@ -24,11 +29,12 @@ export default function StepSidebar({ activeStep, completedSteps = new Set(), on
                   className={`
                     w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0
                     text-xs font-semibold transition-colors
-                    ${isCompleted
-                      ? "bg-green-500 text-white"
-                      : isActive
-                        ? "bg-primary text-white"
-                        : "bg-neutral-200 text-text-secondary"
+                    ${
+                      isCompleted
+                        ? 'bg-green-500 text-white'
+                        : isActive
+                          ? 'bg-primary text-white'
+                          : 'bg-neutral-200 text-text-secondary'
                     }
                   `}
                 >
@@ -37,10 +43,10 @@ export default function StepSidebar({ activeStep, completedSteps = new Set(), on
                 <span
                   className={`text-sm transition-colors ${
                     isActive
-                      ? "text-text-primary font-medium"
+                      ? 'text-text-primary font-medium'
                       : isCompleted
-                        ? "text-text-primary"
-                        : "text-text-secondary"
+                        ? 'text-text-primary'
+                        : 'text-text-secondary'
                   }`}
                 >
                   {step.label}
@@ -52,7 +58,7 @@ export default function StepSidebar({ activeStep, completedSteps = new Set(), on
                 <div className="flex justify-center w-8 py-1">
                   <div
                     className={`w-0.5 h-6 ${
-                      isCompleted ? "bg-green-500" : "bg-neutral-200"
+                      isCompleted ? 'bg-green-500' : 'bg-neutral-200'
                     }`}
                   />
                 </div>

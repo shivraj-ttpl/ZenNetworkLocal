@@ -1,22 +1,23 @@
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
+
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import { Icon } from '@/components/icons';
 import {
-  SEX_AT_BIRTH_OPTIONS,
-  MARITAL_STATUS_OPTIONS,
-  IDENTIFIED_GENDER_OPTIONS,
-  RACE_ETHNICITY_OPTIONS,
-  LANGUAGE_OPTIONS,
-  PRONOUNS_OPTIONS,
-  CONTACT_METHOD_OPTIONS,
-  STATE_OPTIONS,
-  COUNTY_OPTIONS,
-  COUNTRY_OPTIONS,
   CITY_OPTIONS,
+  CONTACT_METHOD_OPTIONS,
+  COUNTRY_OPTIONS,
+  COUNTY_OPTIONS,
+  IDENTIFIED_GENDER_OPTIONS,
+  LANGUAGE_OPTIONS,
+  MARITAL_STATUS_OPTIONS,
+  PRONOUNS_OPTIONS,
+  RACE_ETHNICITY_OPTIONS,
   RELATIONSHIP_TO_INSURED_OPTIONS,
+  SEX_AT_BIRTH_OPTIONS,
+  STATE_OPTIONS,
 } from '@/pages/MasterData/Assessments/constant';
 
 const YES_NO = [
@@ -54,7 +55,10 @@ function RadioGroup({ name, options, value, onChange }) {
   return (
     <div className="flex items-center gap-6">
       {options.map((opt) => (
-        <label key={opt.value} className="flex items-center gap-2 cursor-pointer select-none">
+        <label
+          key={opt.value}
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
           <input
             type="radio"
             name={name}
@@ -113,7 +117,12 @@ function UploadBox({ label, file, onFileChange }) {
   );
 }
 
-export default function Demographics({ values, handleChange, handleBlur, setFieldValue }) {
+export default function Demographics({
+  values,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+}) {
   const d = values?.demographics || {};
   const [insurances, setInsurances] = useState([{ ...EMPTY_INSURANCE }]);
 
@@ -125,12 +134,15 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
     });
   };
 
-  const addInsurance = () => setInsurances((prev) => [...prev, { ...EMPTY_INSURANCE }]);
+  const addInsurance = () =>
+    setInsurances((prev) => [...prev, { ...EMPTY_INSURANCE }]);
 
   return (
     <div className="flex flex-col gap-6">
       {/* ─── Demographics ─── */}
-      <h3 className="text-base font-semibold text-text-primary">Demographics</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        Demographics
+      </h3>
 
       <div className="grid grid-cols-3 gap-4">
         <Input
@@ -168,8 +180,12 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           name="demographics.sexAtBirth"
           placeholder="Select"
           options={SEX_AT_BIRTH_OPTIONS}
-          value={SEX_AT_BIRTH_OPTIONS.find((o) => o.value === d.sexAtBirth) || null}
-          onChange={(opt) => setFieldValue('demographics.sexAtBirth', opt?.value || '')}
+          value={
+            SEX_AT_BIRTH_OPTIONS.find((o) => o.value === d.sexAtBirth) || null
+          }
+          onChange={(opt) =>
+            setFieldValue('demographics.sexAtBirth', opt?.value || '')
+          }
         />
         <Input
           label="Date of Birth"
@@ -185,8 +201,13 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           name="demographics.maritalStatus"
           placeholder="Select"
           options={MARITAL_STATUS_OPTIONS}
-          value={MARITAL_STATUS_OPTIONS.find((o) => o.value === d.maritalStatus) || null}
-          onChange={(opt) => setFieldValue('demographics.maritalStatus', opt?.value || '')}
+          value={
+            MARITAL_STATUS_OPTIONS.find((o) => o.value === d.maritalStatus) ||
+            null
+          }
+          onChange={(opt) =>
+            setFieldValue('demographics.maritalStatus', opt?.value || '')
+          }
         />
       </div>
 
@@ -196,24 +217,40 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           name="demographics.identifiedGender"
           placeholder="Select"
           options={IDENTIFIED_GENDER_OPTIONS}
-          value={IDENTIFIED_GENDER_OPTIONS.find((o) => o.value === d.identifiedGender) || null}
-          onChange={(opt) => setFieldValue('demographics.identifiedGender', opt?.value || '')}
+          value={
+            IDENTIFIED_GENDER_OPTIONS.find(
+              (o) => o.value === d.identifiedGender,
+            ) || null
+          }
+          onChange={(opt) =>
+            setFieldValue('demographics.identifiedGender', opt?.value || '')
+          }
         />
         <SelectDropdown
           label="Race / Ethnicity"
           name="demographics.raceEthnicity"
           placeholder="Select"
           options={RACE_ETHNICITY_OPTIONS}
-          value={RACE_ETHNICITY_OPTIONS.find((o) => o.value === d.raceEthnicity) || null}
-          onChange={(opt) => setFieldValue('demographics.raceEthnicity', opt?.value || '')}
+          value={
+            RACE_ETHNICITY_OPTIONS.find((o) => o.value === d.raceEthnicity) ||
+            null
+          }
+          onChange={(opt) =>
+            setFieldValue('demographics.raceEthnicity', opt?.value || '')
+          }
         />
         <SelectDropdown
           label="Preferred Language"
           name="demographics.preferredLanguage"
           placeholder="Select"
           options={LANGUAGE_OPTIONS}
-          value={LANGUAGE_OPTIONS.find((o) => o.value === d.preferredLanguage) || null}
-          onChange={(opt) => setFieldValue('demographics.preferredLanguage', opt?.value || '')}
+          value={
+            LANGUAGE_OPTIONS.find((o) => o.value === d.preferredLanguage) ||
+            null
+          }
+          onChange={(opt) =>
+            setFieldValue('demographics.preferredLanguage', opt?.value || '')
+          }
         />
       </div>
 
@@ -231,7 +268,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           label="Primary Contact Number"
           name="demographics.primaryPhone"
           value={d.primaryPhone || ''}
-          onChange={(val) => setFieldValue('demographics.primaryPhone', val || '')}
+          onChange={(val) =>
+            setFieldValue('demographics.primaryPhone', val || '')
+          }
           onBlur={handleBlur}
           defaultCountry="US"
         />
@@ -239,7 +278,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           label="Secondary Contact Number"
           name="demographics.secondaryPhone"
           value={d.secondaryPhone || ''}
-          onChange={(val) => setFieldValue('demographics.secondaryPhone', val || '')}
+          onChange={(val) =>
+            setFieldValue('demographics.secondaryPhone', val || '')
+          }
           onBlur={handleBlur}
           defaultCountry="US"
         />
@@ -251,8 +292,14 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           name="demographics.preferredContact"
           placeholder="Select"
           options={CONTACT_METHOD_OPTIONS}
-          value={CONTACT_METHOD_OPTIONS.find((o) => o.value === d.preferredContact) || null}
-          onChange={(opt) => setFieldValue('demographics.preferredContact', opt?.value || '')}
+          value={
+            CONTACT_METHOD_OPTIONS.find(
+              (o) => o.value === d.preferredContact,
+            ) || null
+          }
+          onChange={(opt) =>
+            setFieldValue('demographics.preferredContact', opt?.value || '')
+          }
         />
         <SelectDropdown
           label="Pronouns"
@@ -260,12 +307,16 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           placeholder="Select"
           options={PRONOUNS_OPTIONS}
           value={PRONOUNS_OPTIONS.find((o) => o.value === d.pronouns) || null}
-          onChange={(opt) => setFieldValue('demographics.pronouns', opt?.value || '')}
+          onChange={(opt) =>
+            setFieldValue('demographics.pronouns', opt?.value || '')
+          }
         />
       </div>
 
       {/* ─── Address Information ─── */}
-      <h3 className="text-base font-semibold text-text-primary">Address Information</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        Address Information
+      </h3>
 
       <div className="grid grid-cols-3 gap-4">
         <Input
@@ -292,7 +343,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           placeholder="Select State"
           options={STATE_OPTIONS}
           value={STATE_OPTIONS.find((o) => o.value === d.state) || null}
-          onChange={(opt) => setFieldValue('demographics.state', opt?.value || '')}
+          onChange={(opt) =>
+            setFieldValue('demographics.state', opt?.value || '')
+          }
         />
       </div>
 
@@ -304,7 +357,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           placeholder="Select State"
           options={CITY_OPTIONS}
           value={CITY_OPTIONS.find((o) => o.value === d.city) || null}
-          onChange={(opt) => setFieldValue('demographics.city', opt?.value || '')}
+          onChange={(opt) =>
+            setFieldValue('demographics.city', opt?.value || '')
+          }
         />
         <Input
           label="ZIP CODE"
@@ -321,7 +376,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           placeholder="Select County"
           options={COUNTY_OPTIONS}
           value={COUNTY_OPTIONS.find((o) => o.value === d.county) || null}
-          onChange={(opt) => setFieldValue('demographics.county', opt?.value || '')}
+          onChange={(opt) =>
+            setFieldValue('demographics.county', opt?.value || '')
+          }
         />
         <SelectDropdown
           label="Country"
@@ -329,7 +386,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           placeholder="Select County"
           options={COUNTRY_OPTIONS}
           value={COUNTRY_OPTIONS.find((o) => o.value === d.country) || null}
-          onChange={(opt) => setFieldValue('demographics.country', opt?.value || '')}
+          onChange={(opt) =>
+            setFieldValue('demographics.country', opt?.value || '')
+          }
         />
       </div>
 
@@ -340,7 +399,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
         label="I don't have Insurance"
         name="demographics.noInsurance"
         checked={!!d.noInsurance}
-        onChange={(e) => setFieldValue('demographics.noInsurance', e.target.checked)}
+        onChange={(e) =>
+          setFieldValue('demographics.noInsurance', e.target.checked)
+        }
         variant="blue"
       />
 
@@ -354,7 +415,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                 name={`insurance_${idx}_type`}
                 placeholder="Enter"
                 value={ins.insuranceType}
-                onChange={(e) => updateInsurance(idx, 'insuranceType', e.target.value)}
+                onChange={(e) =>
+                  updateInsurance(idx, 'insuranceType', e.target.value)
+                }
               />
               <Input
                 label="Insurance Name"
@@ -362,7 +425,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                 name={`insurance_${idx}_name`}
                 placeholder="Enter"
                 value={ins.insuranceName}
-                onChange={(e) => updateInsurance(idx, 'insuranceName', e.target.value)}
+                onChange={(e) =>
+                  updateInsurance(idx, 'insuranceName', e.target.value)
+                }
               />
               <SelectDropdown
                 label="Relationship to Insured"
@@ -374,7 +439,13 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                     (o) => o.value === ins.relationshipToInsured,
                   ) || null
                 }
-                onChange={(opt) => updateInsurance(idx, 'relationshipToInsured', opt?.value || '')}
+                onChange={(opt) =>
+                  updateInsurance(
+                    idx,
+                    'relationshipToInsured',
+                    opt?.value || '',
+                  )
+                }
               />
             </div>
 
@@ -384,21 +455,27 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                 name={`insurance_${idx}_policyHolder`}
                 placeholder="Enter"
                 value={ins.policyHolderName}
-                onChange={(e) => updateInsurance(idx, 'policyHolderName', e.target.value)}
+                onChange={(e) =>
+                  updateInsurance(idx, 'policyHolderName', e.target.value)
+                }
               />
               <Input
                 label="Insurance Effective Date"
                 name={`insurance_${idx}_effectiveDate`}
                 type="date"
                 value={ins.insuranceEffectiveDate}
-                onChange={(e) => updateInsurance(idx, 'insuranceEffectiveDate', e.target.value)}
+                onChange={(e) =>
+                  updateInsurance(idx, 'insuranceEffectiveDate', e.target.value)
+                }
               />
               <Input
                 label="Policy Number"
                 name={`insurance_${idx}_policyNumber`}
                 placeholder="Enter"
                 value={ins.policyNumber}
-                onChange={(e) => updateInsurance(idx, 'policyNumber', e.target.value)}
+                onChange={(e) =>
+                  updateInsurance(idx, 'policyNumber', e.target.value)
+                }
               />
             </div>
 
@@ -408,25 +485,33 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                 name={`insurance_${idx}_groupPlan`}
                 placeholder="Enter"
                 value={ins.insuredGroupPlan}
-                onChange={(e) => updateInsurance(idx, 'insuredGroupPlan', e.target.value)}
+                onChange={(e) =>
+                  updateInsurance(idx, 'insuredGroupPlan', e.target.value)
+                }
               />
               <Input
                 label="Employer/ School Name"
                 name={`insurance_${idx}_employer`}
                 placeholder="Enter"
                 value={ins.employerSchoolName}
-                onChange={(e) => updateInsurance(idx, 'employerSchoolName', e.target.value)}
+                onChange={(e) =>
+                  updateInsurance(idx, 'employerSchoolName', e.target.value)
+                }
               />
             </div>
 
             {/* Insured Address */}
             <div className="flex items-center justify-between">
-              <h4 className="text-sm font-semibold text-text-primary">Insured Address</h4>
+              <h4 className="text-sm font-semibold text-text-primary">
+                Insured Address
+              </h4>
               <Checkbox
                 label="Same as Primary Address"
                 name={`insurance_${idx}_sameAddress`}
                 checked={!!ins.sameAsPrimaryAddress}
-                onChange={(e) => updateInsurance(idx, 'sameAsPrimaryAddress', e.target.checked)}
+                onChange={(e) =>
+                  updateInsurance(idx, 'sameAsPrimaryAddress', e.target.checked)
+                }
                 variant="blue"
               />
             </div>
@@ -440,7 +525,11 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                     placeholder="Enter Address Line 1"
                     value={ins.insuredAddressLine1}
                     onChange={(e) =>
-                      updateInsurance(idx, 'insuredAddressLine1', e.target.value)
+                      updateInsurance(
+                        idx,
+                        'insuredAddressLine1',
+                        e.target.value,
+                      )
                     }
                   />
                   <Input
@@ -449,7 +538,11 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                     placeholder="Enter Address Line 1"
                     value={ins.insuredAddressLine2}
                     onChange={(e) =>
-                      updateInsurance(idx, 'insuredAddressLine2', e.target.value)
+                      updateInsurance(
+                        idx,
+                        'insuredAddressLine2',
+                        e.target.value,
+                      )
                     }
                   />
                   <SelectDropdown
@@ -457,8 +550,13 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                     name={`insurance_${idx}_state`}
                     placeholder="Select State"
                     options={STATE_OPTIONS}
-                    value={STATE_OPTIONS.find((o) => o.value === ins.insuredState) || null}
-                    onChange={(opt) => updateInsurance(idx, 'insuredState', opt?.value || '')}
+                    value={
+                      STATE_OPTIONS.find((o) => o.value === ins.insuredState) ||
+                      null
+                    }
+                    onChange={(opt) =>
+                      updateInsurance(idx, 'insuredState', opt?.value || '')
+                    }
                   />
                 </div>
 
@@ -468,40 +566,59 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
                     name={`insurance_${idx}_city`}
                     placeholder="Select City"
                     options={CITY_OPTIONS}
-                    value={CITY_OPTIONS.find((o) => o.value === ins.insuredCity) || null}
-                    onChange={(opt) => updateInsurance(idx, 'insuredCity', opt?.value || '')}
+                    value={
+                      CITY_OPTIONS.find((o) => o.value === ins.insuredCity) ||
+                      null
+                    }
+                    onChange={(opt) =>
+                      updateInsurance(idx, 'insuredCity', opt?.value || '')
+                    }
                   />
                   <Input
                     label="ZIP CODE"
                     name={`insurance_${idx}_zip`}
                     placeholder="Enter ZIP CODE"
                     value={ins.insuredZipCode}
-                    onChange={(e) => updateInsurance(idx, 'insuredZipCode', e.target.value)}
+                    onChange={(e) =>
+                      updateInsurance(idx, 'insuredZipCode', e.target.value)
+                    }
                   />
                   <SelectDropdown
                     label="County"
                     name={`insurance_${idx}_county`}
                     placeholder="Select County"
                     options={COUNTY_OPTIONS}
-                    value={COUNTY_OPTIONS.find((o) => o.value === ins.insuredCounty) || null}
-                    onChange={(opt) => updateInsurance(idx, 'insuredCounty', opt?.value || '')}
+                    value={
+                      COUNTY_OPTIONS.find(
+                        (o) => o.value === ins.insuredCounty,
+                      ) || null
+                    }
+                    onChange={(opt) =>
+                      updateInsurance(idx, 'insuredCounty', opt?.value || '')
+                    }
                   />
                 </div>
               </>
             )}
 
             {/* Upload Insurance Card */}
-            <h4 className="text-sm font-semibold text-text-primary">Upload Insurance Card</h4>
+            <h4 className="text-sm font-semibold text-text-primary">
+              Upload Insurance Card
+            </h4>
             <div className="grid grid-cols-2 gap-4">
               <UploadBox
                 label="Front Side"
                 file={ins.insuranceCardFront}
-                onFileChange={(f) => updateInsurance(idx, 'insuranceCardFront', f)}
+                onFileChange={(f) =>
+                  updateInsurance(idx, 'insuranceCardFront', f)
+                }
               />
               <UploadBox
                 label="Back Side"
                 file={ins.insuranceCardBack}
-                onFileChange={(f) => updateInsurance(idx, 'insuranceCardBack', f)}
+                onFileChange={(f) =>
+                  updateInsurance(idx, 'insuranceCardBack', f)
+                }
               />
             </div>
           </div>
@@ -513,7 +630,8 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           onClick={addInsurance}
           className="flex items-center gap-1 text-sm text-blue-500 font-medium w-fit hover:underline"
         >
-          <span className="text-base leading-none font-bold">+</span> Add Another Insurance
+          <span className="text-base leading-none font-bold">+</span> Add
+          Another Insurance
         </button>
       )}
 
@@ -579,17 +697,23 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
 
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-text-primary">1. Do you have Internet access?</p>
+          <p className="text-sm text-text-primary">
+            1. Do you have Internet access?
+          </p>
           <RadioGroup
             name="demographics.hasInternetAccess"
             options={YES_NO}
             value={d.hasInternetAccess || ''}
-            onChange={(val) => setFieldValue('demographics.hasInternetAccess', val)}
+            onChange={(val) =>
+              setFieldValue('demographics.hasInternetAccess', val)
+            }
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-text-primary">2. Do you have a Smart Phone?</p>
+          <p className="text-sm text-text-primary">
+            2. Do you have a Smart Phone?
+          </p>
           <RadioGroup
             name="demographics.hasSmartPhone"
             options={YES_NO}
@@ -604,33 +728,40 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
             name="demographics.preferredContactMethod"
             options={PREFERRED_CONTACT_RADIO}
             value={d.preferredContactMethod || ''}
-            onChange={(val) => setFieldValue('demographics.preferredContactMethod', val)}
+            onChange={(val) =>
+              setFieldValue('demographics.preferredContactMethod', val)
+            }
           />
         </div>
 
         <div className="flex flex-col gap-2">
           <p className="text-sm text-text-primary">
-            4. If there are new programs or research opportunities to participate in would you like
-            to hear about them?
+            4. If there are new programs or research opportunities to
+            participate in would you like to hear about them?
           </p>
           <RadioGroup
             name="demographics.interestedInPrograms"
             options={YES_NO}
             value={d.interestedInPrograms || ''}
-            onChange={(val) => setFieldValue('demographics.interestedInPrograms', val)}
+            onChange={(val) =>
+              setFieldValue('demographics.interestedInPrograms', val)
+            }
           />
         </div>
 
         <div className="flex flex-col gap-2">
           <p className="text-sm text-text-primary">
-            5. Would you be interested in working part time as a patient advisor to help prioritize
-            ideas to improve healthcare for your clinic and community?
+            5. Would you be interested in working part time as a patient advisor
+            to help prioritize ideas to improve healthcare for your clinic and
+            community?
           </p>
           <RadioGroup
             name="demographics.interestedInAdvisory"
             options={YES_NO}
             value={d.interestedInAdvisory || ''}
-            onChange={(val) => setFieldValue('demographics.interestedInAdvisory', val)}
+            onChange={(val) =>
+              setFieldValue('demographics.interestedInAdvisory', val)
+            }
           />
         </div>
 
@@ -638,7 +769,9 @@ export default function Demographics({ values, handleChange, handleBlur, setFiel
           label="Information in above section has been confirmed"
           name="demographics.informationConfirmed"
           checked={!!d.informationConfirmed}
-          onChange={(e) => setFieldValue('demographics.informationConfirmed', e.target.checked)}
+          onChange={(e) =>
+            setFieldValue('demographics.informationConfirmed', e.target.checked)
+          }
           variant="blue"
         />
       </div>

@@ -1,7 +1,8 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import store from "@/core/store/store";
-import { clearLoadingKeysByPrefix } from "@/core/store/loadingSlice";
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { clearLoadingKeysByPrefix } from '@/core/store/loadingSlice';
+import store from '@/core/store/store';
 
 /**
  * Auto-cleanup hook — on unmount:

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import utc from "dayjs/plugin/utc";
+import utc from 'dayjs/plugin/utc';
 import { parsePhoneNumber } from 'react-phone-number-input';
 
 dayjs.extend(utc);
@@ -27,7 +27,7 @@ export function formatDate(date, format = 'MM/DD/YYYY') {
 /**
  * Format a date string with time — e.g. 10/27/2024 5:00:02 PM
  */
-export function formatDateTime(date , format = 'MM/DD/YYYY h:mm:ss A') {
+export function formatDateTime(date, format = 'MM/DD/YYYY h:mm:ss A') {
   return date ? dayjs(date).format(format) : '';
 }
 
@@ -90,15 +90,14 @@ export function downloadBlobFile(
   window.URL.revokeObjectURL(url);
 }
 
-
-export function toPascalCaseWithSpaces (text = "") {
-    if (!text) return "";
-    return text
-      .toLowerCase()
-      .split(/[\s_-]+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
+export function toPascalCaseWithSpaces(text = '') {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .split(/[\s_-]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
 
 export function buildPhoneValue(countryCode, contactNumber) {
   if (!contactNumber) return '';
@@ -142,11 +141,11 @@ export function truncateText(text, maxLength = 50) {
   return text.slice(0, maxLength);
 }
 
-  export function toPascalCase (text = "") {
-    if (!text) return "";
-    return text
-      .toLowerCase()
-      .split(/[\s_-]+/)
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("");
-  };
+export function toPascalCase(text = '') {
+  if (!text) return '';
+  return text
+    .toLowerCase()
+    .split(/[\s_-]+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+}

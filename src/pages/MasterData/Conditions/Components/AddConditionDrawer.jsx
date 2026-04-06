@@ -1,17 +1,17 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { Formik, Form } from 'formik';
+import { Form, Formik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
-import TextArea from '@/components/commonComponents/textArea';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
+import TextArea from '@/components/commonComponents/textArea';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
-import { componentKey, setCloseDrawer } from '../conditionsSlice';
 import { conditionsActions } from '../conditionsSaga';
+import { componentKey, setCloseDrawer } from '../conditionsSlice';
 import { FORM_FIELDS_NAMES } from '../constant';
 
 const { createCondition, updateCondition } = conditionsActions;
@@ -32,9 +32,11 @@ const EMPTY_STATE = {};
 
 export default function AddConditionDrawer() {
   const dispatch = useDispatch();
-  const { drawerOpen = false, drawerMode = '', editData = null } = useSelector(
-    (state) => state[componentKey] ?? EMPTY_STATE,
-  );
+  const {
+    drawerOpen = false,
+    drawerMode = '',
+    editData = null,
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
   const isEdit = drawerMode === 'edit';
   const isCreating = useLoadingKey(LOADING_KEYS.CONDITIONS_POST_CREATE);
   const isUpdating = useLoadingKey(LOADING_KEYS.CONDITIONS_PATCH_UPDATE);
@@ -47,9 +49,9 @@ export default function AddConditionDrawer() {
   const handleFormSubmit = (values) => {
     const data = {
       name: values[FORM_FIELDS_NAMES.CONDITION_NAME],
-      codeId: values[FORM_FIELDS_NAMES.ICD_CODE]?.id ?? "",
-      linkedCarePlanId: values[FORM_FIELDS_NAMES.CARE_PLAN]?.id ?? "",
-      description: values[FORM_FIELDS_NAMES.DESCRIPTION] || "",
+      codeId: values[FORM_FIELDS_NAMES.ICD_CODE]?.id ?? '',
+      linkedCarePlanId: values[FORM_FIELDS_NAMES.CARE_PLAN]?.id ?? '',
+      description: values[FORM_FIELDS_NAMES.DESCRIPTION] || '',
     };
 
     if (isEdit) {
@@ -76,11 +78,18 @@ export default function AddConditionDrawer() {
         initialValues={{
           [FORM_FIELDS_NAMES.CONDITION_NAME]: editData?.name ?? '',
           [FORM_FIELDS_NAMES.ICD_CODE]: editData?.codeId
-            ? { id: editData.codeId, code: editData.code, description: editData.codeDescription }
+            ? {
+                id: editData.codeId,
+                code: editData.code,
+                description: editData.codeDescription,
+              }
             : null,
           [FORM_FIELDS_NAMES.ICD_DETAILS]: editData?.codeDescription ?? '',
           [FORM_FIELDS_NAMES.CARE_PLAN]: editData?.linkedCarePlanId
-            ? { id: editData.linkedCarePlanId, name: editData.linkedCarePlanName }
+            ? {
+                id: editData.linkedCarePlanId,
+                name: editData.linkedCarePlanName,
+              }
             : null,
           [FORM_FIELDS_NAMES.DESCRIPTION]: editData?.description ?? '',
         }}

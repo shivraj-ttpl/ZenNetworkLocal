@@ -1,9 +1,10 @@
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
+import { Form, Formik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import Drawer from '@/components/commonComponents/drawer/Drawer';
+import * as Yup from 'yup';
+
 import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
@@ -13,21 +14,19 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { parsePhoneValue } from '@/utils/GeneralUtils';
 
 import {
+  COUNTRY_OPTIONS,
   FORM_FIELDS_NAMES,
   ROLE_OPTIONS,
   STATE_OPTIONS,
-  COUNTRY_OPTIONS,
 } from '../constant';
-import { componentKey, setCloseDrawer } from '../providerGroupUsersSlice';
 import { providerGroupUsersActions } from '../providerGroupUsersSaga';
+import { componentKey, setCloseDrawer } from '../providerGroupUsersSlice';
 
 const { createUser, updateUser } = providerGroupUsersActions;
 const EMPTY_STATE = {};
 
 const validationSchema = Yup.object().shape({
-  [FORM_FIELDS_NAMES.FULL_NAME]: Yup.string().required(
-    'Full Name is required',
-  ),
+  [FORM_FIELDS_NAMES.FULL_NAME]: Yup.string().required('Full Name is required'),
   [FORM_FIELDS_NAMES.EMAIL]: Yup.string()
     .email('Invalid email')
     .required('Email is required'),
@@ -49,15 +48,17 @@ const validationSchema = Yup.object().shape({
 
 const getInitialValues = (editData) => ({
   photo: null,
-  [FORM_FIELDS_NAMES.FULL_NAME]:
-    editData
-      ? `${editData.firstName || ''} ${editData.lastName || ''}`.trim()
-      : '',
+  [FORM_FIELDS_NAMES.FULL_NAME]: editData
+    ? `${editData.firstName || ''} ${editData.lastName || ''}`.trim()
+    : '',
   [FORM_FIELDS_NAMES.EMAIL]: editData?.email || '',
   [FORM_FIELDS_NAMES.ROLE]: editData?.providerGroups?.[0]?.roleTitle
     ? ROLE_OPTIONS.find(
         (o) => o.value === editData.providerGroups[0].roleTitle,
-      ) || { label: editData.providerGroups[0].roleTitle, value: editData.providerGroups[0].roleTitle }
+      ) || {
+        label: editData.providerGroups[0].roleTitle,
+        value: editData.providerGroups[0].roleTitle,
+      }
     : null,
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber
     ? `${editData.countryCode || ''}${editData.contactNumber}`
@@ -91,8 +92,12 @@ export default function AddUserDrawer() {
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
   const isEdit = drawerMode === 'edit';
-  const isCreating = useLoadingKey(LOADING_KEYS.PROVIDER_GROUP_USERS_POST_CREATE);
-  const isUpdating = useLoadingKey(LOADING_KEYS.PROVIDER_GROUP_USERS_PATCH_UPDATE);
+  const isCreating = useLoadingKey(
+    LOADING_KEYS.PROVIDER_GROUP_USERS_POST_CREATE,
+  );
+  const isUpdating = useLoadingKey(
+    LOADING_KEYS.PROVIDER_GROUP_USERS_PATCH_UPDATE,
+  );
   const isSaving = isCreating || isUpdating;
 
   const handleClose = () => {
@@ -219,10 +224,7 @@ export default function AddUserDrawer() {
                     name={FORM_FIELDS_NAMES.CONTACT_NUMBER}
                     value={values[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
                     onChange={(val) =>
-                      setFieldValue(
-                        FORM_FIELDS_NAMES.CONTACT_NUMBER,
-                        val || '',
-                      )
+                      setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || '')
                     }
                     onBlur={handleBlur}
                     defaultCountry="US"

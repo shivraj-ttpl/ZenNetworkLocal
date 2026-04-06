@@ -1,4 +1,4 @@
-import "../src/index.css";
+import '../src/index.css';
 
 export const parameters = {
   controls: {
@@ -8,10 +8,10 @@ export const parameters = {
     },
   },
   backgrounds: {
-    default: "light",
+    default: 'light',
     values: [
-      { name: "light", value: "#ffffff" },
-      { name: "surface", value: "#F9FAFB" },
+      { name: 'light', value: '#ffffff' },
+      { name: 'surface', value: '#F9FAFB' },
     ],
   },
 };

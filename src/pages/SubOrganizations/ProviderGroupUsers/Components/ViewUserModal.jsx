@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Avatar from '@/components/commonComponents/avatar/Avatar';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 
 import { componentKey, setCloseViewModal } from '../providerGroupUsersSlice';
 

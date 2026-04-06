@@ -1,8 +1,20 @@
-import { Suspense, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { routeConfig, publicRouteConfig, sharedRouteConfig } from "./routeConfig";
-import MainAppLayout from "@/app/MainAppLayout";
-import { setNavigateRef } from "@/utils/navigationService";
+import { Suspense, useEffect } from 'react';
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from 'react-router-dom';
+
+import MainAppLayout from '@/app/MainAppLayout';
+import { setNavigateRef } from '@/utils/navigationService';
+
+import {
+  publicRouteConfig,
+  routeConfig,
+  sharedRouteConfig,
+} from './routeConfig';
 
 function NavigationSetter() {
   const navigate = useNavigate();
@@ -12,25 +24,23 @@ function NavigationSetter() {
   return null;
 }
 
-
-
 // Auth guard — redirects to login if not authenticated
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (!token) return <Navigate to="/login" replace />;
   return children;
 }
 
 // Redirect away from login/signup if already authenticated
 function PublicOnlyRoute({ children }) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (token) return <Navigate to="/master-data" replace />;
   return children;
 }
 
 // Conditionally wraps in MainAppLayout if user is logged in and route opts in
 function SharedRoute({ children, useLayout = false }) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
   if (token && useLayout) {
     return <MainAppLayout>{children}</MainAppLayout>;
   }
@@ -45,7 +55,7 @@ function renderChildren(children) {
       <Route key={child.path} path={child.path} element={<child.element />}>
         {renderChildren(child.children)}
       </Route>
-    )
+    ),
   );
 }
 

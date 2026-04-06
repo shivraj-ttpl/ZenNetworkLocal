@@ -1,5 +1,5 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { Formik, Form } from 'formik';
+import { Form, Formik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 import Button from '@/components/commonComponents/button/Button';
@@ -27,9 +27,11 @@ const validationSchema = Yup.object().shape({
 
 export default function AddPayerDrawer() {
   const dispatch = useDispatch();
-  const { drawerOpen = false, drawerMode = '', editData = null } = useSelector(
-    (state) => state[componentKey] ?? EMPTY_STATE,
-  );
+  const {
+    drawerOpen = false,
+    drawerMode = '',
+    editData = null,
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
   const isEdit = drawerMode === 'edit';
   const isCreating = useLoadingKey(LOADING_KEYS.PAYERS_POST_CREATE);
   const isUpdating = useLoadingKey(LOADING_KEYS.PAYERS_PATCH_UPDATE);
@@ -42,7 +44,7 @@ export default function AddPayerDrawer() {
   const handleFormSubmit = (values) => {
     const data = {
       name: values[FORM_FIELDS_NAMES.PAYER_NAME],
-      payerType: values[FORM_FIELDS_NAMES.PAYER_TYPE]?.value || "",
+      payerType: values[FORM_FIELDS_NAMES.PAYER_TYPE]?.value || '',
     };
 
     if (isEdit) {

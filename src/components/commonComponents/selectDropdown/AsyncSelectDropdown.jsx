@@ -1,19 +1,21 @@
-import { useState, useRef, useMemo, useCallback, useEffect } from "react";
-import { Icon } from "@/components/icons";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import AppDataService from "@/services/appDataService/AppDataService";
-import useDropdownPosition from "./useDropdownPosition";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import { Icon } from '@/components/icons';
+import AppDataService from '@/services/appDataService/AppDataService';
+
+import useDropdownPosition from './useDropdownPosition';
 
 // ─── Helpers ───────────────────────────────────────────
 function getLabel(option, labelKey, labelKey2) {
-  if (typeof option === "string") return option;
-  const primary = option?.[labelKey] ?? "";
+  if (typeof option === 'string') return option;
+  const primary = option?.[labelKey] ?? '';
   if (!labelKey2 || !option?.[labelKey2]) return primary;
   return `${primary} ${option[labelKey2]}`;
 }
 
 function getValue(option, valueKey) {
-  if (typeof option === "string") return option;
+  if (typeof option === 'string') return option;
   return option?.[valueKey] ?? option;
 }
 
@@ -29,7 +31,7 @@ function isSelected(option, selected, valueKey) {
  * Resolves a dot-path like "data.results" from an object.
  */
 function resolvePath(obj, path) {
-  return path.split(".").reduce((acc, key) => acc?.[key], obj);
+  return path.split('.').reduce((acc, key) => acc?.[key], obj);
 }
 
 // ─── Component ─────────────────────────────────────────
@@ -70,17 +72,17 @@ function resolvePath(obj, path) {
 export default function AsyncSelectDropdown({
   label,
   name,
-  placeholder = "Select...",
+  placeholder = 'Select...',
   value,
   onChange,
   url,
   fetchOptions: fetchOptionsProp,
-  searchKey = "search",
-  dataPath = "data",
-  totalPath = "totalRecords",
-  labelKey = "label",
+  searchKey = 'search',
+  dataPath = 'data',
+  totalPath = 'totalRecords',
+  labelKey = 'label',
   labelKey2,
-  valueKey = "value",
+  valueKey = 'value',
   limit = 20,
   debounceMs = 400,
   isMulti = false,
@@ -89,10 +91,10 @@ export default function AsyncSelectDropdown({
   error,
   touched,
   renderOption,
-  className = "",
+  className = '',
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [options, setOptions] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -114,7 +116,12 @@ export default function AsyncSelectDropdown({
     async ({ search: searchTerm, page: pageNum, limit: pageLimit, signal }) => {
       // Custom fetch takes priority
       if (fetchOptionsProp) {
-        return fetchOptionsProp({ search: searchTerm, page: pageNum, limit: pageLimit, signal });
+        return fetchOptionsProp({
+          search: searchTerm,
+          page: pageNum,
+          limit: pageLimit,
+          signal,
+        });
       }
 
       // URL-based fetch via AppDataService
@@ -135,14 +142,14 @@ export default function AsyncSelectDropdown({
       const responseData = response?.data?.data;
       const items = Array.isArray(responseData)
         ? responseData
-        : resolvePath(responseData, dataPath) ?? [];
+        : (resolvePath(responseData, dataPath) ?? []);
       const total = Array.isArray(responseData)
         ? responseData.length
-        : resolvePath(responseData, totalPath) ?? Infinity;
+        : (resolvePath(responseData, totalPath) ?? Infinity);
 
       return { data: items, totalRecords: total };
     },
-    [fetchOptionsProp, url, searchKey, dataPath, totalPath]
+    [fetchOptionsProp, url, searchKey, dataPath, totalPath],
   );
 
   // ── Fetch wrapper ──
@@ -170,21 +177,21 @@ export default function AsyncSelectDropdown({
         setHasMore(pageNum * limit < total);
         setPage(pageNum);
       } catch (err) {
-        if (err?.name === "AbortError") return;
+        if (err?.name === 'AbortError') return;
         if (!append) setOptions([]);
         setHasMore(false);
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
     },
-    [fetchOptions, limit]
+    [fetchOptions, limit],
   );
 
   // ── Load on open ──
   useEffect(() => {
     if (isOpen && !initialLoad) {
       setInitialLoad(true);
-      loadOptions("", 1, false);
+      loadOptions('', 1, false);
     }
   }, [isOpen, initialLoad, loadOptions]);
 
@@ -200,6 +207,7 @@ export default function AsyncSelectDropdown({
       loadOptions(search, 1, false);
     }, debounceMs);
 
+    // eslint-disable-next-line consistent-return
     return () => clearTimeout(debounceRef.current);
   }, [search]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -216,10 +224,11 @@ export default function AsyncSelectDropdown({
           loadOptions(search, page + 1, true);
         }
       },
-      { root: sentinel.closest("[data-scroll-container]"), threshold: 0.1 }
+      { root: sentinel.closest('[data-scroll-container]'), threshold: 0.1 },
     );
 
     observer.observe(sentinel);
+    // eslint-disable-next-line consistent-return
     return () => observer.disconnect();
   }, [isOpen, hasMore, loading, page, search, loadOptions]);
 
@@ -230,12 +239,14 @@ export default function AsyncSelectDropdown({
       if (
         triggerRef.current?.contains(e.target) ||
         dropdownRef.current?.contains(e.target)
-      ) return;
+      )
+        return;
       setIsOpen(false);
-      setSearch("");
+      setSearch('');
     }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener('mousedown', handleClick);
+    // eslint-disable-next-line consistent-return
+    return () => document.removeEventListener('mousedown', handleClick);
   }, [isOpen]);
 
   // ── Focus search on open ──
@@ -246,7 +257,7 @@ export default function AsyncSelectDropdown({
   // ── Reset on close ──
   const handleClose = useCallback(() => {
     setIsOpen(false);
-    setSearch("");
+    setSearch('');
     setOptions([]);
     setPage(1);
     setHasMore(true);
@@ -257,11 +268,11 @@ export default function AsyncSelectDropdown({
   // ── Display text ──
   const displayText = useMemo(() => {
     if (isMulti) {
-      if (!Array.isArray(value) || value.length === 0) return "";
+      if (!Array.isArray(value) || value.length === 0) return '';
       if (value.length === 1) return getLabel(value[0], labelKey, labelKey2);
       return `${value.length} selected`;
     }
-    return value ? getLabel(value, labelKey, labelKey2) : "";
+    return value ? getLabel(value, labelKey, labelKey2) : '';
   }, [value, isMulti, labelKey, labelKey2]);
 
   // ── Handlers ──
@@ -289,7 +300,7 @@ export default function AsyncSelectDropdown({
         handleClose();
       }
     },
-    [isMulti, value, valueKey, onChange, handleClose]
+    [isMulti, value, valueKey, onChange, handleClose],
   );
 
   const handleClear = useCallback(
@@ -297,7 +308,7 @@ export default function AsyncSelectDropdown({
       e.stopPropagation();
       onChange?.(isMulti ? [] : null);
     },
-    [isMulti, onChange]
+    [isMulti, onChange],
   );
 
   const hasValue = isMulti ? Array.isArray(value) && value.length > 0 : !!value;
@@ -320,17 +331,23 @@ export default function AsyncSelectDropdown({
           onClick={toggle}
           disabled={disabled}
           className={[
-            "w-full h-10 px-4 rounded-lg border bg-surface cursor-pointer",
-            "text-sm text-left outline-none transition-colors",
-            "flex items-center justify-between gap-2",
-            "disabled:bg-neutral-50 disabled:cursor-not-allowed",
-            isOpen ? "border-primary ring-[0.5] " : "",
-            showError ? "border-error-400" : !isOpen ? "border-border" : "",
+            'w-full h-10 px-4 rounded-lg border bg-surface cursor-pointer',
+            'text-sm text-left outline-none transition-colors',
+            'flex items-center justify-between gap-2',
+            'disabled:bg-neutral-50 disabled:cursor-not-allowed',
+            isOpen ? 'border-primary ring-[0.5] ' : '',
+            showError ? 'border-error-400' : !isOpen ? 'border-border' : '',
           ]
             .filter(Boolean)
-            .join(" ")}
+            .join(' ')}
         >
-          <span className={hasValue ? "text-neutral-800 truncate" : "text-text-placeholder truncate"}>
+          <span
+            className={
+              hasValue
+                ? 'text-neutral-800 truncate'
+                : 'text-text-placeholder truncate'
+            }
+          >
             {displayText || placeholder}
           </span>
           <span className="flex items-center gap-1 shrink-0">
@@ -347,7 +364,7 @@ export default function AsyncSelectDropdown({
             <Icon
               name="ChevronDown"
               size={16}
-              className={`text-neutral-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+              className={`text-neutral-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
             />
           </span>
         </button>
@@ -357,17 +374,21 @@ export default function AsyncSelectDropdown({
           <div
             ref={dropdownRef}
             className={[
-              "absolute left-0 right-0 z-50",
-              "bg-surface border border-border rounded-lg shadow-lg",
-              "flex flex-col",
-              direction === "up" ? "bottom-full mb-1" : "top-full mt-1",
-            ].join(" ")}
+              'absolute left-0 right-0 z-50',
+              'bg-surface border border-border rounded-lg shadow-lg',
+              'flex flex-col',
+              direction === 'up' ? 'bottom-full mb-1' : 'top-full mt-1',
+            ].join(' ')}
             style={{ maxHeight }}
           >
             {/* Search — always shown for async */}
             <div className="p-2 border-b border-border-light">
               <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-neutral-50">
-                <Icon name="Search" size={14} className="text-neutral-400 shrink-0" />
+                <Icon
+                  name="Search"
+                  size={14}
+                  className="text-neutral-400 shrink-0"
+                />
                 <input
                   ref={searchRef}
                   type="text"
@@ -379,7 +400,7 @@ export default function AsyncSelectDropdown({
                 {search && (
                   <button
                     type="button"
-                    onClick={() => setSearch("")}
+                    onClick={() => setSearch('')}
                     className="text-neutral-400 hover:text-neutral-600 cursor-pointer"
                   >
                     <Icon name="X" size={12} />
@@ -396,7 +417,7 @@ export default function AsyncSelectDropdown({
             >
               {options.length === 0 && !loading ? (
                 <div className="px-4 py-6 text-sm text-neutral-400 text-center">
-                  {search ? "No results found" : "No options available"}
+                  {search ? 'No results found' : 'No options available'}
                 </div>
               ) : (
                 options.map((option, idx) => {
@@ -407,23 +428,36 @@ export default function AsyncSelectDropdown({
                       type="button"
                       onClick={() => handleSelect(option)}
                       className={[
-                        "w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer",
-                        selected && !isMulti ? "bg-primary-50 text-primary-700" : "text-neutral-700",
-                        "hover:bg-neutral-50",
-                      ].join(" ")}
+                        'w-full flex items-center gap-3 px-4 py-2.5 text-sm text-left transition-colors cursor-pointer',
+                        selected && !isMulti
+                          ? 'bg-primary-50 text-primary-700'
+                          : 'text-neutral-700',
+                        'hover:bg-neutral-50',
+                      ].join(' ')}
                     >
                       {isMulti && (
                         <span className="pointer-events-none">
-                          <Checkbox checked={selected} readOnly variant="blue" size="sm" />
+                          <Checkbox
+                            checked={selected}
+                            readOnly
+                            variant="blue"
+                            size="sm"
+                          />
                         </span>
                       )}
                       {renderOption ? (
                         renderOption(option, { isSelected: selected })
                       ) : (
-                        <span className="truncate">{getLabel(option, labelKey, labelKey2)}</span>
+                        <span className="truncate">
+                          {getLabel(option, labelKey, labelKey2)}
+                        </span>
                       )}
                       {selected && !isMulti && (
-                        <Icon name="Check" size={16} className="ml-auto text-primary shrink-0" />
+                        <Icon
+                          name="Check"
+                          size={16}
+                          className="ml-auto text-primary shrink-0"
+                        />
                       )}
                     </button>
                   );
@@ -432,7 +466,10 @@ export default function AsyncSelectDropdown({
 
               {/* Sentinel for infinite scroll */}
               {hasMore && (
-                <div ref={sentinelRef} className="flex items-center justify-center py-3">
+                <div
+                  ref={sentinelRef}
+                  className="flex items-center justify-center py-3"
+                >
                   {loading && (
                     <div className="flex items-center gap-2 text-xs text-neutral-400">
                       <Icon name="Loader2" size={14} className="animate-spin" />

@@ -57,7 +57,8 @@ const CORE_TESTS = [
     key: 'immunizationReview',
     name: 'Immunization review',
     frequency: 'Annually',
-    purpose: 'Ensures up-to-date vaccines (flu, COVID-19, Tdap, shingles, etc.)',
+    purpose:
+      'Ensures up-to-date vaccines (flu, COVID-19, Tdap, shingles, etc.)',
   },
   {
     key: 'hepatitisC',
@@ -130,17 +131,34 @@ const SEX_SPECIFIC_TESTS = [
   },
 ];
 
-function TestRow({ testKey, name, frequency, purpose, value, onChange, index }) {
+function TestRow({
+  testKey,
+  name,
+  frequency,
+  purpose,
+  value,
+  onChange,
+  index,
+}) {
   return (
     <tr className="border-t border-border">
       <td className="px-4 py-2.5 text-text-secondary text-sm w-8">{index}.</td>
-      <td className="px-4 py-2.5 text-text-primary text-sm min-w-[200px]">{name}</td>
-      <td className="px-4 py-2.5 text-text-secondary text-sm min-w-[180px]">{frequency}</td>
-      <td className="px-4 py-2.5 text-text-secondary text-sm min-w-[180px]">{purpose}</td>
+      <td className="px-4 py-2.5 text-text-primary text-sm min-w-[200px]">
+        {name}
+      </td>
+      <td className="px-4 py-2.5 text-text-secondary text-sm min-w-[180px]">
+        {frequency}
+      </td>
+      <td className="px-4 py-2.5 text-text-secondary text-sm min-w-[180px]">
+        {purpose}
+      </td>
       <td className="px-4 py-2.5">
         <div className="flex items-center gap-4">
           {['Yes', 'No', 'Today'].map((opt) => (
-            <label key={opt} className="flex items-center gap-1.5 cursor-pointer select-none">
+            <label
+              key={opt}
+              className="flex items-center gap-1.5 cursor-pointer select-none"
+            >
               <input
                 type="radio"
                 name={`annualTesting.tests.${testKey}`}
@@ -168,10 +186,18 @@ function SectionTable({ label, tests, values, onTestChange }) {
         <thead>
           <tr className="bg-neutral-50 text-left border-t border-border">
             <th className="px-4 py-2.5 w-8"></th>
-            <th className="px-4 py-2.5 font-medium text-text-secondary">Test / Screening</th>
-            <th className="px-4 py-2.5 font-medium text-text-secondary">Typical Frequency</th>
-            <th className="px-4 py-2.5 font-medium text-text-secondary">Purpose column</th>
-            <th className="px-4 py-2.5 font-medium text-text-secondary">Completed in Last year?</th>
+            <th className="px-4 py-2.5 font-medium text-text-secondary">
+              Test / Screening
+            </th>
+            <th className="px-4 py-2.5 font-medium text-text-secondary">
+              Typical Frequency
+            </th>
+            <th className="px-4 py-2.5 font-medium text-text-secondary">
+              Purpose column
+            </th>
+            <th className="px-4 py-2.5 font-medium text-text-secondary">
+              Completed in Last year?
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -193,7 +219,12 @@ function SectionTable({ label, tests, values, onTestChange }) {
   );
 }
 
-export default function AnnualTesting({ values, handleChange, handleBlur, setFieldValue }) {
+export default function AnnualTesting({
+  values,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+}) {
   const a = values?.annualTesting || {};
 
   const handleTestChange = (key, val) => {
@@ -205,17 +236,26 @@ export default function AnnualTesting({ values, handleChange, handleBlur, setFie
       {/* Q1 */}
       <div className="flex flex-col gap-3">
         <p className="text-sm text-text-primary">
-          1. Have you had all the below recommended screening tests within the past year?
+          1. Have you had all the below recommended screening tests within the
+          past year?
         </p>
         <div className="flex items-center gap-8">
           {['Yes', 'No'].map((opt) => (
-            <label key={opt} className="flex items-center gap-2 cursor-pointer select-none">
+            <label
+              key={opt}
+              className="flex items-center gap-2 cursor-pointer select-none"
+            >
               <input
                 type="radio"
                 name="annualTesting.allScreeningsDone"
                 value={opt.toLowerCase()}
                 checked={a.allScreeningsDone === opt.toLowerCase()}
-                onChange={() => setFieldValue('annualTesting.allScreeningsDone', opt.toLowerCase())}
+                onChange={() =>
+                  setFieldValue(
+                    'annualTesting.allScreeningsDone',
+                    opt.toLowerCase(),
+                  )
+                }
                 className="accent-primary w-4 h-4"
               />
               <span className="text-sm text-text-primary">{opt}</span>
@@ -234,9 +274,13 @@ export default function AnnualTesting({ values, handleChange, handleBlur, setFie
 
       {/* Outer column labels */}
       <div className="grid grid-cols-3 px-1">
-        <span className="text-sm font-medium text-text-secondary">Screening</span>
+        <span className="text-sm font-medium text-text-secondary">
+          Screening
+        </span>
         <span className="text-sm font-medium text-text-secondary">Date</span>
-        <span className="text-sm font-medium text-text-secondary">Result/Findings</span>
+        <span className="text-sm font-medium text-text-secondary">
+          Result/Findings
+        </span>
       </div>
 
       {/* Core section */}

@@ -1,4 +1,9 @@
-const SearchIcon = ({ color = "currentColor", width = 20, height = 20, ...props }) => (
+const SearchIcon = ({
+  color = 'currentColor',
+  width = 20,
+  height = 20,
+  ...props
+}) => (
   <svg
     width={width}
     height={height}

@@ -1,2 +1,7 @@
-export { default as Table } from "./Table";
-export { buildColumn, buildColumns, SORT_ORDER, getNextSort } from "./tableHelpers";
+export { default as Table } from './Table';
+export {
+  buildColumn,
+  buildColumns,
+  getNextSort,
+  SORT_ORDER,
+} from './tableHelpers';

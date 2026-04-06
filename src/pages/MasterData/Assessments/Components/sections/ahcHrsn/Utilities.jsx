@@ -1,4 +1,4 @@
-const OPTIONS = ["Yes", "No", "Already shut off"];
+const OPTIONS = ['Yes', 'No', 'Already shut off'];
 
 export default function Utilities({ values, handleChange }) {
   const u = values?.utilities || {};
@@ -9,8 +9,8 @@ export default function Utilities({ values, handleChange }) {
 
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-text-primary">
-          1. In the past 12 months has the electric, gas, oil, or water company threatened to
-          shut off services in your home?
+          1. In the past 12 months has the electric, gas, oil, or water company
+          threatened to shut off services in your home?
         </p>
         {OPTIONS.map((opt) => (
           <label key={opt} className="flex items-center gap-2 cursor-pointer">

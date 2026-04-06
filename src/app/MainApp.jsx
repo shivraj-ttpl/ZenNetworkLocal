@@ -1,13 +1,15 @@
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import AppRouter from '../routes/AppRouter';
+
+import { appNavigate } from '@/utils/navigationService';
+
+import { authActions } from '../pages/Auth/authSaga';
 import {
-  setIsAuthenticated,
   setCurrentUserRole,
+  setIsAuthenticated,
   setLoggedInUser,
 } from '../pages/Auth/authSlice';
-import { useEffect } from 'react';
-import { authActions } from '../pages/Auth/authSaga';
-import { appNavigate } from '@/utils/navigationService';
+import AppRouter from '../routes/AppRouter';
 
 const MainApp = () => {
   const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const MainApp = () => {
       dispatch(setIsAuthenticated(true));
       dispatch(setCurrentUserRole(loggedInUserData?.userType));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   window.__handleLogout = () => {

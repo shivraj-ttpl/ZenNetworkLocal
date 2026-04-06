@@ -1,8 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 // Manages both a global loading flag and granular per-key loading states
 const loadingSlice = createSlice({
-  name: "loading",
+  name: 'loading',
   initialState: {
     global: false, // single global flag (toggled by interceptors)
     keys: {}, // { [loadingKey]: true/false }
@@ -41,9 +41,8 @@ export default loadingSlice.reducer;
 
 // --- Selectors ---
 export const selectGlobalLoading = (state) => state.loading.global;
-export const selectLoadingByKey = (key) => (state) =>
-  !!state.loading.keys[key];
+export const selectLoadingByKey = (key) => (state) => !!state.loading.keys[key];
 export const selectAnyLoadingByPrefix = (prefix) => (state) =>
   Object.keys(state.loading.keys).some(
-    (k) => k.startsWith(prefix) && state.loading.keys[k]
+    (k) => k.startsWith(prefix) && state.loading.keys[k],
   );

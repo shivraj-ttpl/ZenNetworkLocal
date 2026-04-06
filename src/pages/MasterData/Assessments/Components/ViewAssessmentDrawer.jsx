@@ -1,55 +1,57 @@
-import { useState, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Formik, Form } from 'formik';
-import Drawer from '@/components/commonComponents/drawer/Drawer';
+import { Form, Formik } from 'formik';
+import { useCallback, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Button from '@/components/commonComponents/button/Button';
-import AssessmentStepSidebar from './AssessmentStepSidebar';
-import StepPlaceholder from './sections/StepPlaceholder';
-import {
-  PersonalCharacteristics,
-  FamilyAndHome,
-  MoneyAndResources,
-  SocialEmotionalHealth,
-  OptionalAdditionalQuestions,
-} from './sections/prapare';
-import {
-  LivingSituation,
-  Food,
-  Transportation,
-  Utilities,
-  Safety,
-  FinancialStrain,
-  Employment,
-  FamilyCommunitySupport,
-  Education,
-  PhysicalActivity,
-  SubstanceUse,
-  MentalHealth,
-  Disabilities,
-} from './sections/ahcHrsn';
-import {
-  Demographics,
-  ReasonForVisit,
-  HealthCareAccess,
-  PromisGlobalHealth,
-  Medications,
-  MedicationAdherence,
-  Allergies,
-  PastMedicalHistory,
-  WomensHealth,
-  FamilyHistory,
-  LifestyleAndSocialHabits,
-  LifestyleBehaviorQuestions,
-  SubstanceUseNida,
-  EmotionalMentalHealth,
-  SocialDeterminants,
-  Immunizations,
-  CancerScreeningSummary,
-  AnnualTesting,
-  Signatures,
-} from './sections/familyMedicine';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+
 import { componentKey, setCloseDrawer } from '../assessmentsSlice';
 import { ASSESSMENT_STEPS_MAP, PRAPARE_STEPS } from '../constant';
+import AssessmentStepSidebar from './AssessmentStepSidebar';
+import {
+  Disabilities,
+  Education,
+  Employment,
+  FamilyCommunitySupport,
+  FinancialStrain,
+  Food,
+  LivingSituation,
+  MentalHealth,
+  PhysicalActivity,
+  Safety,
+  SubstanceUse,
+  Transportation,
+  Utilities,
+} from './sections/ahcHrsn';
+import {
+  Allergies,
+  AnnualTesting,
+  CancerScreeningSummary,
+  Demographics,
+  EmotionalMentalHealth,
+  FamilyHistory,
+  HealthCareAccess,
+  Immunizations,
+  LifestyleAndSocialHabits,
+  LifestyleBehaviorQuestions,
+  MedicationAdherence,
+  Medications,
+  PastMedicalHistory,
+  PromisGlobalHealth,
+  ReasonForVisit,
+  Signatures,
+  SocialDeterminants,
+  SubstanceUseNida,
+  WomensHealth,
+} from './sections/familyMedicine';
+import {
+  FamilyAndHome,
+  MoneyAndResources,
+  OptionalAdditionalQuestions,
+  PersonalCharacteristics,
+  SocialEmotionalHealth,
+} from './sections/prapare';
+import StepPlaceholder from './sections/StepPlaceholder';
 
 // ─── Step component registry per assessment ───
 const PRAPARE_STEP_COMPONENTS = {
@@ -460,8 +462,8 @@ export default function ViewAssessmentDrawer() {
               ? assessmentName === 'AHC HRSN Screening'
                 ? 'Assign to Patient'
                 : isFamilyMedicine
-                ? 'Save & Finish'
-                : 'Close'
+                  ? 'Save & Finish'
+                  : 'Close'
               : 'Next'}
           </Button>
         </div>
@@ -474,7 +476,7 @@ export default function ViewAssessmentDrawer() {
       >
         {({ values, handleChange, handleBlur, setFieldValue }) => (
           <Form className="flex min-h-0 h-[calc(100vh-130px)] overflow-hidden">
-            <div className='h-[calc(100vh-140px)]  border-border  border-r overflow-hidden overflow-y-auto'>
+            <div className="h-[calc(100vh-140px)]  border-border  border-r overflow-hidden overflow-y-auto">
               {' '}
               <AssessmentStepSidebar
                 steps={steps}

@@ -1,15 +1,16 @@
 import { useState } from 'react';
+
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Input from '@/components/commonComponents/input/Input';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import TextArea from '@/components/commonComponents/textArea/index';
 import {
-  MEDICATION_NAME_OPTIONS,
   DOSAGE_UNIT_OPTIONS,
-  MEDICATION_WHEN_OPTIONS,
   MEDICATION_FREQUENCY_OPTIONS,
+  MEDICATION_NAME_OPTIONS,
   MEDICATION_ROUTE_OPTIONS,
   MEDICATION_STATUS_OPTIONS,
+  MEDICATION_WHEN_OPTIONS,
 } from '@/pages/MasterData/Assessments/constant';
 
 const EMPTY_MED = {
@@ -50,8 +51,14 @@ export default function Medications({ values, setFieldValue }) {
             name={`med_${idx}_name`}
             placeholder="Select"
             options={MEDICATION_NAME_OPTIONS}
-            value={MEDICATION_NAME_OPTIONS.find((o) => o.value === med.medicationName) || null}
-            onChange={(opt) => updateMed(idx, 'medicationName', opt?.value || '')}
+            value={
+              MEDICATION_NAME_OPTIONS.find(
+                (o) => o.value === med.medicationName,
+              ) || null
+            }
+            onChange={(opt) =>
+              updateMed(idx, 'medicationName', opt?.value || '')
+            }
           />
 
           <h4 className="text-sm font-semibold text-text-primary">Sig</h4>
@@ -69,7 +76,10 @@ export default function Medications({ values, setFieldValue }) {
               name={`med_${idx}_dosageUnit`}
               placeholder="Select"
               options={DOSAGE_UNIT_OPTIONS}
-              value={DOSAGE_UNIT_OPTIONS.find((o) => o.value === med.dosageUnit) || null}
+              value={
+                DOSAGE_UNIT_OPTIONS.find((o) => o.value === med.dosageUnit) ||
+                null
+              }
               onChange={(opt) => updateMed(idx, 'dosageUnit', opt?.value || '')}
             />
             <SelectDropdown
@@ -77,7 +87,10 @@ export default function Medications({ values, setFieldValue }) {
               name={`med_${idx}_when`}
               placeholder="Select"
               options={MEDICATION_WHEN_OPTIONS}
-              value={MEDICATION_WHEN_OPTIONS.find((o) => o.value === med.when) || null}
+              value={
+                MEDICATION_WHEN_OPTIONS.find((o) => o.value === med.when) ||
+                null
+              }
               onChange={(opt) => updateMed(idx, 'when', opt?.value || '')}
             />
           </div>
@@ -88,7 +101,11 @@ export default function Medications({ values, setFieldValue }) {
               name={`med_${idx}_frequency`}
               placeholder="Select"
               options={MEDICATION_FREQUENCY_OPTIONS}
-              value={MEDICATION_FREQUENCY_OPTIONS.find((o) => o.value === med.frequency) || null}
+              value={
+                MEDICATION_FREQUENCY_OPTIONS.find(
+                  (o) => o.value === med.frequency,
+                ) || null
+              }
               onChange={(opt) => updateMed(idx, 'frequency', opt?.value || '')}
             />
             <SelectDropdown
@@ -96,7 +113,10 @@ export default function Medications({ values, setFieldValue }) {
               name={`med_${idx}_route`}
               placeholder="Select"
               options={MEDICATION_ROUTE_OPTIONS}
-              value={MEDICATION_ROUTE_OPTIONS.find((o) => o.value === med.route) || null}
+              value={
+                MEDICATION_ROUTE_OPTIONS.find((o) => o.value === med.route) ||
+                null
+              }
               onChange={(opt) => updateMed(idx, 'route', opt?.value || '')}
             />
             <SelectDropdown
@@ -104,7 +124,10 @@ export default function Medications({ values, setFieldValue }) {
               name={`med_${idx}_status`}
               placeholder="Select"
               options={MEDICATION_STATUS_OPTIONS}
-              value={MEDICATION_STATUS_OPTIONS.find((o) => o.value === med.status) || null}
+              value={
+                MEDICATION_STATUS_OPTIONS.find((o) => o.value === med.status) ||
+                null
+              }
               onChange={(opt) => updateMed(idx, 'status', opt?.value || '')}
             />
           </div>
@@ -150,7 +173,9 @@ export default function Medications({ values, setFieldValue }) {
         label="Information in above section has been confirmed"
         name="medications.informationConfirmed"
         checked={!!m.informationConfirmed}
-        onChange={(e) => setFieldValue('medications.informationConfirmed', e.target.checked)}
+        onChange={(e) =>
+          setFieldValue('medications.informationConfirmed', e.target.checked)
+        }
         variant="blue"
       />
     </div>

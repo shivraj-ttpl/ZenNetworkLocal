@@ -1,26 +1,25 @@
+import { FieldArray, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
-import { Formik, Form, FieldArray } from 'formik';
-import * as Yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
 import { parsePhoneNumber } from 'react-phone-number-input';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
 
-import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Button from '@/components/commonComponents/button/Button';
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
 import TextArea from '@/components/commonComponents/textArea';
-import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
-import Icon from '@/components/icons/Icon';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
+import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-
 import { formatZipCode } from '@/utils/GeneralUtils';
 
 import { FORM_FIELDS_NAMES } from '../constant';
-import { componentKey, setCloseDrawer } from '../providerGroupListSlice';
 import { providerGroupListActions } from '../providerGroupListSaga';
+import { componentKey, setCloseDrawer } from '../providerGroupListSlice';
 
 const { createProviderGroup } = providerGroupListActions;
 
@@ -231,6 +230,7 @@ export default function AddProviderGroupDrawer({
 
   useEffect(() => {
     if (isEdit && editData?.userProviderGroups?.length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowAdminSection(true);
     }
   }, [isEdit, editData]);

@@ -1,33 +1,37 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useOutletContext } from "react-router-dom";
-import { Calendar, dayjsLocalizer } from "react-big-calendar";
-import dayjs from "dayjs";
-import Icon from "@/components/icons/Icon";
-import Button from "@/components/commonComponents/button/Button";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import { providerAvailabilityData, APPOINTMENT_MODE_OPTIONS } from "@/data/subOrganizationsData";
-import { useFlexCleanup } from "@/hooks/useFlexCleanup";
+import './providerGroupProviderAvailabilitySaga';
+import './providerAvailability.css';
 
+import dayjs from 'dayjs';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Calendar, dayjsLocalizer } from 'react-big-calendar';
+import { useDispatch, useSelector } from 'react-redux';
+import { useOutletContext } from 'react-router-dom';
+
+import Button from '@/components/commonComponents/button/Button';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import Icon from '@/components/icons/Icon';
+import {
+  APPOINTMENT_MODE_OPTIONS,
+  providerAvailabilityData,
+} from '@/data/subOrganizationsData';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+
+import AvailableSlotsModal from './Components/AvailableSlotsModal';
+import ConfigureAvailabilityDrawer from './Components/ConfigureAvailabilityDrawer';
+import ConfigureDateAvailabilityDrawer from './Components/ConfigureDateAvailabilityDrawer';
+import EditBlockDayModal from './Components/EditBlockDayModal';
 import {
   componentKey,
-  setOpenConfigureDrawer,
-  setOpenBlockDayModal,
   setOpenAvailableSlotsModal,
+  setOpenBlockDayModal,
   setOpenConfigureDateDrawer,
-} from "./providerGroupProviderAvailabilitySlice";
-import "./providerGroupProviderAvailabilitySaga";
-
-import ConfigureAvailabilityDrawer from "./Components/ConfigureAvailabilityDrawer";
-import ConfigureDateAvailabilityDrawer from "./Components/ConfigureDateAvailabilityDrawer";
-import EditBlockDayModal from "./Components/EditBlockDayModal";
-import AvailableSlotsModal from "./Components/AvailableSlotsModal";
-import "./providerAvailability.css";
+  setOpenConfigureDrawer,
+} from './providerGroupProviderAvailabilitySlice';
 
 const localizer = dayjsLocalizer(dayjs);
 
 function AvailabilityEvent({ event }) {
-  if (event.type === "block") {
+  if (event.type === 'block') {
     return (
       <div className="rbc-availability-block">
         <div className="rbc-availability-block-stripes" />
@@ -36,14 +40,16 @@ function AvailabilityEvent({ event }) {
     );
   }
 
-  const isWarning = event.variant === "warning";
-  const label = event.mode === "in-person" ? "In Person" : "Virtual";
+  const isWarning = event.variant === 'warning';
+  const label = event.mode === 'in-person' ? 'In Person' : 'Virtual';
 
   return (
-    <div className={`rbc-availability-card ${isWarning ? "rbc-availability-card--warning" : ""}`}>
+    <div
+      className={`rbc-availability-card ${isWarning ? 'rbc-availability-card--warning' : ''}`}
+    >
       <p className="rbc-availability-card__label">{label}</p>
       <p className="rbc-availability-card__slots">
-        {String(event.slots).padStart(2, "0")} Slots Available
+        {String(event.slots).padStart(2, '0')} Slots Available
       </p>
     </div>
   );
@@ -75,15 +81,15 @@ export default function ProviderGroupProviderAvailability() {
   }, []);
 
   const goToPrevMonth = useCallback(() => {
-    setCurrentDate((prev) => dayjs(prev).subtract(1, "month").toDate());
+    setCurrentDate((prev) => dayjs(prev).subtract(1, 'month').toDate());
   }, []);
 
   const goToNextMonth = useCallback(() => {
-    setCurrentDate((prev) => dayjs(prev).add(1, "month").toDate());
+    setCurrentDate((prev) => dayjs(prev).add(1, 'month').toDate());
   }, []);
 
   const monthLabel = useMemo(
-    () => dayjs(currentDate).format("MMMM YYYY"),
+    () => dayjs(currentDate).format('MMMM YYYY'),
     [currentDate],
   );
 
@@ -143,7 +149,7 @@ export default function ProviderGroupProviderAvailability() {
     let data = providerAvailabilityData;
     if (appointmentMode) {
       data = data.filter(
-        (e) => e.type === "block" || e.mode === appointmentMode.value,
+        (e) => e.type === 'block' || e.mode === appointmentMode.value,
       );
     }
     return data.map((entry, idx) => {
@@ -151,9 +157,9 @@ export default function ProviderGroupProviderAvailability() {
       return {
         id: `${entry.date}-${entry.mode}-${idx}`,
         title:
-          entry.type === "block"
-            ? "Block Day"
-            : `${entry.mode === "in-person" ? "In Person" : "Virtual"} — ${entry.slots} slots`,
+          entry.type === 'block'
+            ? 'Block Day'
+            : `${entry.mode === 'in-person' ? 'In Person' : 'Virtual'} — ${entry.slots} slots`,
         start: dateObj,
         end: dateObj,
         allDay: true,
@@ -168,7 +174,7 @@ export default function ProviderGroupProviderAvailability() {
 
   const handleSelectEvent = useCallback(
     (event) => {
-      if (event.type === "block") {
+      if (event.type === 'block') {
         dispatch(setOpenBlockDayModal(event.rawDate));
       } else {
         dispatch(
@@ -184,7 +190,7 @@ export default function ProviderGroupProviderAvailability() {
 
   const handleSelectSlot = useCallback(
     (slotInfo) => {
-      const dateStr = dayjs(slotInfo.start).format("YYYY-MM-DD");
+      const dateStr = dayjs(slotInfo.start).format('YYYY-MM-DD');
       const hasEvents = providerAvailabilityData.some(
         (e) => e.date === dateStr,
       );
@@ -212,7 +218,7 @@ export default function ProviderGroupProviderAvailability() {
           date={currentDate}
           onNavigate={handleNavigate}
           view="month"
-          views={["month"]}
+          views={['month']}
           components={components}
           startAccessor="start"
           endAccessor="end"
@@ -229,10 +235,7 @@ export default function ProviderGroupProviderAvailability() {
         open={configureDrawerOpen}
         configureDate={configureDate}
       />
-      <EditBlockDayModal
-        open={blockDayModalOpen}
-        blockDayDate={blockDayDate}
-      />
+      <EditBlockDayModal open={blockDayModalOpen} blockDayDate={blockDayDate} />
       <AvailableSlotsModal
         open={availableSlotsModalOpen}
         availableSlotsData={availableSlotsData}

@@ -1,5 +1,9 @@
-import { useSelector } from "react-redux";
-import { selectLoadingByKey, selectAnyLoadingByPrefix } from "@/core/store/loadingSlice";
+import { useSelector } from 'react-redux';
+
+import {
+  selectAnyLoadingByPrefix,
+  selectLoadingByKey,
+} from '@/core/store/loadingSlice';
 
 /**
  * Check if a specific loading key is active.

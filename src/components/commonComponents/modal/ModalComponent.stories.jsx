@@ -1,13 +1,16 @@
-import { useState } from "react";
-import ModalComponent from "./ModalComponent";
-import Button from "@/components/commonComponents/button/Button";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useState } from 'react';
+
+import Button from '@/components/commonComponents/button/Button';
+
+import ModalComponent from './ModalComponent';
 
 export default {
-  title: "Components/ModalComponent",
+  title: 'Components/ModalComponent',
   component: ModalComponent,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
 };
 
@@ -75,7 +78,8 @@ export const WithFooterButtons = {
           }
         >
           <p className="text-sm text-neutral-600">
-            Are you sure you want to proceed with this action? This cannot be undone.
+            Are you sure you want to proceed with this action? This cannot be
+            undone.
           </p>
         </ModalComponent>
       </>
@@ -95,9 +99,9 @@ export const WithEditAndDelete = {
           close={() => setOpen(false)}
           customClasses="w-[480px]"
           showEditIcon
-          edit={() => alert("Edit clicked")}
+          edit={() => alert('Edit clicked')}
           showDeleteIcon
-          deleteClick={() => alert("Delete clicked")}
+          deleteClick={() => alert('Delete clicked')}
         >
           <p className="text-sm text-neutral-600">Record content goes here.</p>
         </ModalComponent>

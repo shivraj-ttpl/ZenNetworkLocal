@@ -1,13 +1,16 @@
-import { useState } from "react";
-import Drawer from "./Drawer";
-import Button from "@/components/commonComponents/button/Button";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useState } from 'react';
+
+import Button from '@/components/commonComponents/button/Button';
+
+import Drawer from './Drawer';
 
 export default {
-  title: "Components/Drawer",
+  title: 'Components/Drawer',
   component: Drawer,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 
@@ -17,11 +20,7 @@ export const Default = {
     return (
       <div className="p-8">
         <Button onClick={() => setOpen(true)}>Open Drawer</Button>
-        <Drawer
-          title="Drawer Title"
-          open={open}
-          close={() => setOpen(false)}
-        >
+        <Drawer title="Drawer Title" open={open} close={() => setOpen(false)}>
           <p className="text-sm text-neutral-600">
             This is the drawer body content. You can put any content here.
           </p>

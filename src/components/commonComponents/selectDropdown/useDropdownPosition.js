@@ -1,11 +1,14 @@
-import { useState, useCallback, useLayoutEffect } from "react";
+import { useCallback, useLayoutEffect, useState } from 'react';
 
 /**
  * Auto-detects whether dropdown should open above or below the trigger.
  * Returns { direction, maxHeight } for the dropdown panel.
  */
 export default function useDropdownPosition(triggerRef, isOpen, gap = 4) {
-  const [position, setPosition] = useState({ direction: "down", maxHeight: 260 });
+  const [position, setPosition] = useState({
+    direction: 'down',
+    maxHeight: 260,
+  });
 
   const calculate = useCallback(() => {
     if (!triggerRef.current) return;
@@ -15,20 +18,21 @@ export default function useDropdownPosition(triggerRef, isOpen, gap = 4) {
     const minHeight = 120;
 
     if (spaceBelow >= minHeight || spaceBelow >= spaceAbove) {
-      setPosition({ direction: "down", maxHeight: Math.min(spaceBelow, 300) });
+      setPosition({ direction: 'down', maxHeight: Math.min(spaceBelow, 300) });
     } else {
-      setPosition({ direction: "up", maxHeight: Math.min(spaceAbove, 300) });
+      setPosition({ direction: 'up', maxHeight: Math.min(spaceAbove, 300) });
     }
   }, [triggerRef, gap]);
 
   useLayoutEffect(() => {
     if (!isOpen) return;
     calculate();
-    window.addEventListener("scroll", calculate, true);
-    window.addEventListener("resize", calculate);
+    window.addEventListener('scroll', calculate, true);
+    window.addEventListener('resize', calculate);
+    // eslint-disable-next-line consistent-return
     return () => {
-      window.removeEventListener("scroll", calculate, true);
-      window.removeEventListener("resize", calculate);
+      window.removeEventListener('scroll', calculate, true);
+      window.removeEventListener('resize', calculate);
     };
   }, [isOpen, calculate]);
 

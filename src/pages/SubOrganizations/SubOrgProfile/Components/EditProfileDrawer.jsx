@@ -1,23 +1,27 @@
-import { useState, useMemo, useEffect } from 'react';
-import { Formik, Form, FieldArray } from 'formik';
-import * as Yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
+import { FieldArray, Form, Formik } from 'formik';
+import { useEffect, useMemo, useState } from 'react';
 import { parsePhoneNumber } from 'react-phone-number-input';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
 
-import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
-import Icon from '@/components/icons/Icon';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
+import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-import { buildPhoneValue, formatZipCode, toPascalCase } from '@/utils/GeneralUtils';
+import {
+  buildPhoneValue,
+  formatZipCode,
+  toPascalCase,
+} from '@/utils/GeneralUtils';
 
 import { FORM_FIELDS_NAMES } from '../constant';
-import { componentKey, setCloseDrawer } from '../subOrgProfileSlice';
 import { subOrgProfileActions } from '../subOrgProfileSaga';
+import { componentKey, setCloseDrawer } from '../subOrgProfileSlice';
 
 const { updateProfile } = subOrgProfileActions;
 
@@ -72,7 +76,10 @@ function buildEditInitialValues(data) {
           [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: a.firstName || '',
           [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: a.lastName || '',
           [FORM_FIELDS_NAMES.ADMIN_EMAIL]: a.email || '',
-          [FORM_FIELDS_NAMES.ADMIN_PHONE]: buildPhoneValue(a.countryCode, a.contactNumber),
+          [FORM_FIELDS_NAMES.ADMIN_PHONE]: buildPhoneValue(
+            a.countryCode,
+            a.contactNumber,
+          ),
         }))
       : [{ ...emptyContact }];
 
@@ -99,11 +106,11 @@ function buildPayload(values, showAdminSection) {
     name: values[FORM_FIELDS_NAMES.SUB_ORG_NAME],
     address: {
       addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1],
-      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
+      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || '',
       city: values[FORM_FIELDS_NAMES.CITY],
       state: values[FORM_FIELDS_NAMES.STATE]?.name || '',
       zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]),
-      county: values[FORM_FIELDS_NAMES.COUNTY] || "",
+      county: values[FORM_FIELDS_NAMES.COUNTY] || '',
       country: values[FORM_FIELDS_NAMES.COUNTRY]?.name,
     },
   };
@@ -167,6 +174,7 @@ export default function EditProfileDrawer() {
     Array.isArray(editData?.admins) && editData.admins.length > 0;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (hasExistingAdmins) setShowAdminSection(true);
   }, [hasExistingAdmins]);
 
@@ -251,10 +259,7 @@ export default function EditProfileDrawer() {
                     name={FORM_FIELDS_NAMES.CONTACT_NUMBER}
                     value={values[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
                     onChange={(val) =>
-                      setFieldValue(
-                        FORM_FIELDS_NAMES.CONTACT_NUMBER,
-                        val || '',
-                      )
+                      setFieldValue(FORM_FIELDS_NAMES.CONTACT_NUMBER, val || '')
                     }
                     onBlur={handleBlur}
                     defaultCountry="US"
@@ -409,9 +414,7 @@ export default function EditProfileDrawer() {
                         name={FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN}
                         placeholder="Search by Name/Email"
                         url={`dropdown-apis/sub-org/admins?subOrgId=${values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]?.id}`}
-                        value={
-                          values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]
-                        }
+                        value={values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]}
                         onChange={(selected) =>
                           setFieldValue(
                             FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN,

@@ -1,23 +1,27 @@
-import { useState, useMemo, useEffect } from 'react';
-import { Formik, Form, FieldArray } from 'formik';
-import * as Yup from 'yup';
-import { useDispatch, useSelector } from 'react-redux';
+import { FieldArray, Form, Formik } from 'formik';
+import { useEffect, useMemo, useState } from 'react';
 import { parsePhoneNumber } from 'react-phone-number-input';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Yup from 'yup';
 
-import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
-import Icon from '@/components/icons/Icon';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
+import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
+import {
+  buildPhoneValue,
+  formatZipCode,
+  toPascalCase,
+} from '../../../../utils/GeneralUtils';
 import { FORM_FIELDS_NAMES } from '../constant';
-import { componentKey, setDrawerOpen, setEditDrawer } from '../subOrgListSlice';
 import { subOrgListActions } from '../subOrgListSaga';
-import { buildPhoneValue, formatZipCode, toPascalCase } from '../../../../utils/GeneralUtils';
+import { componentKey, setDrawerOpen, setEditDrawer } from '../subOrgListSlice';
 
 const { createSubOrganization, updateSubOrganization } = subOrgListActions;
 
@@ -89,7 +93,10 @@ function buildEditInitialValues(data) {
           [FORM_FIELDS_NAMES.ADMIN_FIRST_NAME]: a.firstName || '',
           [FORM_FIELDS_NAMES.ADMIN_LAST_NAME]: a.lastName || '',
           [FORM_FIELDS_NAMES.ADMIN_EMAIL]: a.email || '',
-          [FORM_FIELDS_NAMES.ADMIN_PHONE]: buildPhoneValue(a.countryCode, a.contactNumber),
+          [FORM_FIELDS_NAMES.ADMIN_PHONE]: buildPhoneValue(
+            a.countryCode,
+            a.contactNumber,
+          ),
         }))
       : [{ ...emptyContact }];
 
@@ -116,11 +123,11 @@ function buildPayload(values, showAdminSection) {
     name: values[FORM_FIELDS_NAMES.SUB_ORG_NAME],
     address: {
       addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1],
-      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
+      addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || '',
       city: values[FORM_FIELDS_NAMES.CITY],
       state: values[FORM_FIELDS_NAMES.STATE]?.name || '',
       zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]),
-      county: values[FORM_FIELDS_NAMES.COUNTY] || "",
+      county: values[FORM_FIELDS_NAMES.COUNTY] || '',
       country: values[FORM_FIELDS_NAMES.COUNTRY]?.name,
     },
   };
@@ -191,6 +198,7 @@ export default function AddSubOrgDrawer() {
     editDrawer.data.admins.length > 0;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (hasExistingAdmins) setShowAdminSection(true);
   }, [hasExistingAdmins]);
   const isCreating = useLoadingKey(LOADING_KEYS.SUB_ORG_LIST_POST_CREATE);
@@ -233,7 +241,9 @@ export default function AddSubOrgDrawer() {
     >
       <Formik
         initialValues={initialValues}
-        validationSchema={showAdminSection ? fullValidationSchema : baseValidationSchema}
+        validationSchema={
+          showAdminSection ? fullValidationSchema : baseValidationSchema
+        }
         onSubmit={handleFormSubmit}
         enableReinitialize
       >
@@ -389,7 +399,8 @@ export default function AddSubOrgDrawer() {
                     value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
                     onChange={(e) => {
                       let val = e.target.value.replace(/\D/g, '');
-                      if (val.length > 5) val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
+                      if (val.length > 5)
+                        val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
                       setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
                     }}
                     onBlur={handleBlur}
@@ -415,8 +426,14 @@ export default function AddSubOrgDrawer() {
                         url="dropdown-apis/sub-organizations"
                         value={values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]}
                         onChange={(selected) => {
-                          setFieldValue(FORM_FIELDS_NAMES.IMPORT_SUB_ORG, selected);
-                          setFieldValue(FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN, null);
+                          setFieldValue(
+                            FORM_FIELDS_NAMES.IMPORT_SUB_ORG,
+                            selected,
+                          );
+                          setFieldValue(
+                            FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN,
+                            null,
+                          );
                         }}
                         valueKey="id"
                         labelKey="name"
@@ -425,7 +442,10 @@ export default function AddSubOrgDrawer() {
                     </div>
                     <div className="flex-1">
                       <AsyncSelectDropdown
-                        key={values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]?.id ?? 'no-suborg'}
+                        key={
+                          values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]?.id ??
+                          'no-suborg'
+                        }
                         label="Sub-Organization Admin"
                         name={FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN}
                         placeholder="Search by Name/Email"
@@ -448,40 +468,45 @@ export default function AddSubOrgDrawer() {
                   </div>
 
                   {/* Selected Sub-Organization Admin */}
-                  {Array.isArray(values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]) &&
-                    values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN].length > 0 && (
-                    <div className="flex flex-col gap-1.5">
-                      <p className="text-xs font-medium text-text-primary">
-                        Selected Sub-Organization Admin
-                        <span className="text-error-500 ml-0.5">*</span>
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN].map((admin, i) => (
-                          <span
-                            key={admin.id ?? i}
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-medium"
-                          >
-                            {admin.firstName} {admin.lastName}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const updated = values[
-                                  FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN
-                                ].filter((_, idx) => idx !== i);
-                                setFieldValue(
-                                  FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN,
-                                  updated,
-                                );
-                              }}
-                              className="text-primary-400 hover:text-primary-700 cursor-pointer"
-                            >
-                              <Icon name="X" size={12} />
-                            </button>
-                          </span>
-                        ))}
+                  {Array.isArray(
+                    values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN],
+                  ) &&
+                    values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN].length >
+                      0 && (
+                      <div className="flex flex-col gap-1.5">
+                        <p className="text-xs font-medium text-text-primary">
+                          Selected Sub-Organization Admin
+                          <span className="text-error-500 ml-0.5">*</span>
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {values[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN].map(
+                            (admin, i) => (
+                              <span
+                                key={admin.id ?? i}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-medium"
+                              >
+                                {admin.firstName} {admin.lastName}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = values[
+                                      FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN
+                                    ].filter((_, idx) => idx !== i);
+                                    setFieldValue(
+                                      FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN,
+                                      updated,
+                                    );
+                                  }}
+                                  className="text-primary-400 hover:text-primary-700 cursor-pointer"
+                                >
+                                  <Icon name="X" size={12} />
+                                </button>
+                              </span>
+                            ),
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   <p className="text-xs text-text-secondary">
                     You can either import an existing Sub-Organization Admin or
@@ -517,9 +542,15 @@ export default function AddSubOrgDrawer() {
                         type="button"
                         onClick={() => {
                           setShowAdminSection(false);
-                          setFieldValue(FORM_FIELDS_NAMES.ADMIN_CONTACTS, [{ ...emptyContact }], false);
+                          setFieldValue(
+                            FORM_FIELDS_NAMES.ADMIN_CONTACTS,
+                            [{ ...emptyContact }],
+                            false,
+                          );
                           const clearedErrors = { ...errors };
-                          delete clearedErrors[FORM_FIELDS_NAMES.ADMIN_CONTACTS];
+                          delete clearedErrors[
+                            FORM_FIELDS_NAMES.ADMIN_CONTACTS
+                          ];
                           setErrors(clearedErrors);
                         }}
                         className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
@@ -531,138 +562,140 @@ export default function AddSubOrgDrawer() {
 
                   {showAdminSection && (
                     <FieldArray name={FORM_FIELDS_NAMES.ADMIN_CONTACTS}>
-                    {({ push, remove }) => (
-                      <div className="flex flex-col gap-5">
-                        {values[FORM_FIELDS_NAMES.ADMIN_CONTACTS].map(
-                          (contact, index) => {
-                            const prefix = `${FORM_FIELDS_NAMES.ADMIN_CONTACTS}[${index}]`;
-                            const contactErrors =
-                              errors?.[FORM_FIELDS_NAMES.ADMIN_CONTACTS]?.[
-                                index
-                              ] || {};
-                            const contactTouched =
-                              touched?.[FORM_FIELDS_NAMES.ADMIN_CONTACTS]?.[
-                                index
-                              ] || {};
+                      {({ push, remove }) => (
+                        <div className="flex flex-col gap-5">
+                          {values[FORM_FIELDS_NAMES.ADMIN_CONTACTS].map(
+                            (contact, index) => {
+                              const prefix = `${FORM_FIELDS_NAMES.ADMIN_CONTACTS}[${index}]`;
+                              const contactErrors =
+                                errors?.[FORM_FIELDS_NAMES.ADMIN_CONTACTS]?.[
+                                  index
+                                ] || {};
+                              const contactTouched =
+                                touched?.[FORM_FIELDS_NAMES.ADMIN_CONTACTS]?.[
+                                  index
+                                ] || {};
 
-                            return (
-                              <div
-                                key={index}
-                                className="flex flex-col gap-4 relative border border-border-light rounded-lg p-4"
-                              >
-                                {values[FORM_FIELDS_NAMES.ADMIN_CONTACTS]
-                                  .length > 1 && (
-                                  <button
-                                    type="button"
-                                    onClick={() => remove(index)}
-                                    className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
-                                  >
-                                    <Icon name="X" size={14} />
-                                  </button>
-                                )}
+                              return (
+                                <div
+                                  key={index}
+                                  className="flex flex-col gap-4 relative border border-border-light rounded-lg p-4"
+                                >
+                                  {values[FORM_FIELDS_NAMES.ADMIN_CONTACTS]
+                                    .length > 1 && (
+                                    <button
+                                      type="button"
+                                      onClick={() => remove(index)}
+                                      className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-error-500 cursor-pointer"
+                                    >
+                                      <Icon name="X" size={14} />
+                                    </button>
+                                  )}
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                  <Input
-                                    label="First Name"
-                                    name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_FIRST_NAME}`}
-                                    placeholder="Enter First Name"
-                                    value={
-                                      contact[
-                                        FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
-                                      ]
-                                    }
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={
-                                      contactErrors[
-                                        FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
-                                      ]
-                                    }
-                                    touched={
-                                      contactTouched[
-                                        FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
-                                      ]
-                                    }
-                                    required
-                                  />
-                                  <Input
-                                    label="Last Name"
-                                    name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_LAST_NAME}`}
-                                    placeholder="Enter Last Name"
-                                    value={
-                                      contact[FORM_FIELDS_NAMES.ADMIN_LAST_NAME]
-                                    }
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={
-                                      contactErrors[
-                                        FORM_FIELDS_NAMES.ADMIN_LAST_NAME
-                                      ]
-                                    }
-                                    touched={
-                                      contactTouched[
-                                        FORM_FIELDS_NAMES.ADMIN_LAST_NAME
-                                      ]
-                                    }
-                                    required
-                                  />
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <Input
+                                      label="First Name"
+                                      name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_FIRST_NAME}`}
+                                      placeholder="Enter First Name"
+                                      value={
+                                        contact[
+                                          FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
+                                        ]
+                                      }
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      error={
+                                        contactErrors[
+                                          FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
+                                        ]
+                                      }
+                                      touched={
+                                        contactTouched[
+                                          FORM_FIELDS_NAMES.ADMIN_FIRST_NAME
+                                        ]
+                                      }
+                                      required
+                                    />
+                                    <Input
+                                      label="Last Name"
+                                      name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_LAST_NAME}`}
+                                      placeholder="Enter Last Name"
+                                      value={
+                                        contact[
+                                          FORM_FIELDS_NAMES.ADMIN_LAST_NAME
+                                        ]
+                                      }
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      error={
+                                        contactErrors[
+                                          FORM_FIELDS_NAMES.ADMIN_LAST_NAME
+                                        ]
+                                      }
+                                      touched={
+                                        contactTouched[
+                                          FORM_FIELDS_NAMES.ADMIN_LAST_NAME
+                                        ]
+                                      }
+                                      required
+                                    />
+                                  </div>
+
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <PhoneInput
+                                      label="Contact Number"
+                                      name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_PHONE}`}
+                                      value={
+                                        contact[FORM_FIELDS_NAMES.ADMIN_PHONE]
+                                      }
+                                      onChange={(val) =>
+                                        setFieldValue(
+                                          `${prefix}.${FORM_FIELDS_NAMES.ADMIN_PHONE}`,
+                                          val || '',
+                                        )
+                                      }
+                                      onBlur={handleBlur}
+                                      defaultCountry="US"
+                                    />
+                                    <Input
+                                      label="Email Address"
+                                      name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_EMAIL}`}
+                                      placeholder="Enter Email Address"
+                                      type="email"
+                                      value={
+                                        contact[FORM_FIELDS_NAMES.ADMIN_EMAIL]
+                                      }
+                                      onChange={handleChange}
+                                      onBlur={handleBlur}
+                                      error={
+                                        contactErrors[
+                                          FORM_FIELDS_NAMES.ADMIN_EMAIL
+                                        ]
+                                      }
+                                      touched={
+                                        contactTouched[
+                                          FORM_FIELDS_NAMES.ADMIN_EMAIL
+                                        ]
+                                      }
+                                      required
+                                    />
+                                  </div>
                                 </div>
+                              );
+                            },
+                          )}
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                  <PhoneInput
-                                    label="Contact Number"
-                                    name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_PHONE}`}
-                                    value={
-                                      contact[FORM_FIELDS_NAMES.ADMIN_PHONE]
-                                    }
-                                    onChange={(val) =>
-                                      setFieldValue(
-                                        `${prefix}.${FORM_FIELDS_NAMES.ADMIN_PHONE}`,
-                                        val || '',
-                                      )
-                                    }
-                                    onBlur={handleBlur}
-                                    defaultCountry="US"
-                                  />
-                                  <Input
-                                    label="Email Address"
-                                    name={`${prefix}.${FORM_FIELDS_NAMES.ADMIN_EMAIL}`}
-                                    placeholder="Enter Email Address"
-                                    type="email"
-                                    value={
-                                      contact[FORM_FIELDS_NAMES.ADMIN_EMAIL]
-                                    }
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    error={
-                                      contactErrors[
-                                        FORM_FIELDS_NAMES.ADMIN_EMAIL
-                                      ]
-                                    }
-                                    touched={
-                                      contactTouched[
-                                        FORM_FIELDS_NAMES.ADMIN_EMAIL
-                                      ]
-                                    }
-                                    required
-                                  />
-                                </div>
-                              </div>
-                            );
-                          },
-                        )}
-
-                        <button
-                          type="button"
-                          onClick={() => push({ ...emptyContact })}
-                          className="flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 cursor-pointer w-fit"
-                        >
-                          <Icon name="Plus" size={16} />
-                          Add
-                        </button>
-                      </div>
-                    )}
-                  </FieldArray>
+                          <button
+                            type="button"
+                            onClick={() => push({ ...emptyContact })}
+                            className="flex items-center gap-1.5 text-sm font-medium text-primary-600 hover:text-primary-700 cursor-pointer w-fit"
+                          >
+                            <Icon name="Plus" size={16} />
+                            Add
+                          </button>
+                        </div>
+                      )}
+                    </FieldArray>
                   )}
                 </div>
               </div>

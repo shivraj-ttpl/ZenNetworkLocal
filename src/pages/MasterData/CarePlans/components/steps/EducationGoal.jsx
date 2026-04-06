@@ -1,17 +1,26 @@
-import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
 
 const EDUCATION_MODULES = [
-  { key: 'welcomeGettingStarted', label: '1. Welcome to the Program / Getting Started Understanding Diabetes' },
+  {
+    key: 'welcomeGettingStarted',
+    label: '1. Welcome to the Program / Getting Started Understanding Diabetes',
+  },
   { key: 'trackingFoodActivity', label: '2. Tracking Food and Activity' },
   { key: 'beFatDetective', label: '3. Be a Fat Detective' },
   { key: 'healthyEating', label: '4. Healthy Eating' },
   { key: 'moveThoseMuscles', label: '5. Move Those Muscles' },
   { key: 'problemSolving', label: '6. Problem Solving' },
-  { key: 'slipperySlopeLifestyle', label: '7. Slippery Slope of Lifestyle Change' },
+  {
+    key: 'slipperySlopeLifestyle',
+    label: '7. Slippery Slope of Lifestyle Change',
+  },
   { key: 'healthyEatingOut', label: '8. Healthy Eating Out' },
   { key: 'managingStress', label: '9. Managing Stress' },
-  { key: 'stayingMotivated', label: '10. Staying Motivated / Staying on Track' },
+  {
+    key: 'stayingMotivated',
+    label: '10. Staying Motivated / Staying on Track',
+  },
   { key: 'heartHealth', label: '11. Heart Health' },
   { key: 'takeChargeThoughts', label: '12. Take Charge of Your Thoughts' },
   { key: 'gettingBackOnTrack', label: '13. Getting Back on Track' },
@@ -20,7 +29,10 @@ const EDUCATION_MODULES = [
   { key: 'stayingActiveForLife', label: '16. Staying Active for Life' },
   { key: 'healthyEatingForLife', label: '17. Healthy Eating for Life' },
   { key: 'lookingBackForward', label: '18. Looking Back and Looking Forward' },
-  { key: 'copingHolidays', label: '19. Coping with Holidays & Special Occasions' },
+  {
+    key: 'copingHolidays',
+    label: '19. Coping with Holidays & Special Occasions',
+  },
   { key: 'familySocialSupport', label: '20. Family & Social Support' },
   { key: 'mindfulEating', label: '21. Mindful Eating' },
   { key: 'preventingWeightRegain', label: '22. Preventing Weight Regain' },

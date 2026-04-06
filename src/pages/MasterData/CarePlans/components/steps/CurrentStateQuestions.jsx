@@ -1,6 +1,10 @@
-import Input from "@/components/commonComponents/input/Input";
+import Input from '@/components/commonComponents/input/Input';
 
-export default function CurrentStateQuestions({ values, handleChange, handleBlur }) {
+export default function CurrentStateQuestions({
+  values,
+  handleChange,
+  handleBlur,
+}) {
   return (
     <div className="flex flex-col gap-6">
       {/* a. Life Goals */}
@@ -58,7 +62,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
               <Input
                 name="lifeGoals.otherSpecify"
                 placeholder="Specify"
-                value={values?.lifeGoals?.otherSpecify || ""}
+                value={values?.lifeGoals?.otherSpecify || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -80,14 +84,16 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
               name="careGapQuestions.hemoglobinA1C"
               value={values?.careGapQuestions?.hemoglobinA1C}
               onChange={handleChange}
-              options={["Yes", "No", "Don't Know"]}
+              options={['Yes', 'No', "Don't Know"]}
             />
             <div className="ml-6">
-              <p className="text-sm text-text-secondary mb-1.5">What was your last HbA1C?</p>
+              <p className="text-sm text-text-secondary mb-1.5">
+                What was your last HbA1C?
+              </p>
               <Input
                 name="careGapQuestions.lastHbA1C"
                 placeholder="Specify"
-                value={values?.careGapQuestions?.lastHbA1C || ""}
+                value={values?.careGapQuestions?.lastHbA1C || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className="max-w-md"
@@ -103,7 +109,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
               name="careGapQuestions.urineAlbumin"
               value={values?.careGapQuestions?.urineAlbumin}
               onChange={handleChange}
-              options={["Yes", "No", "Don't Know"]}
+              options={['Yes', 'No', "Don't Know"]}
             />
             <div className="ml-6">
               <RadioQuestion
@@ -111,7 +117,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
                 name="careGapQuestions.urineAlbuminNormal"
                 value={values?.careGapQuestions?.urineAlbuminNormal}
                 onChange={handleChange}
-                options={["Yes", "No", "Don't Know"]}
+                options={['Yes', 'No', "Don't Know"]}
               />
             </div>
             <div className="ml-6">
@@ -120,7 +126,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
                 name="careGapQuestions.kidneyMedication"
                 value={values?.careGapQuestions?.kidneyMedication}
                 onChange={handleChange}
-                options={["Yes", "No", "Don't Know"]}
+                options={['Yes', 'No', "Don't Know"]}
               />
             </div>
           </div>
@@ -133,14 +139,16 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
               name="careGapQuestions.cholesterol"
               value={values?.careGapQuestions?.cholesterol}
               onChange={handleChange}
-              options={["Yes", "No", "Don't Know"]}
+              options={['Yes', 'No', "Don't Know"]}
             />
             <div className="ml-6">
-              <p className="text-sm text-text-secondary mb-1.5">What was your last LDL?</p>
+              <p className="text-sm text-text-secondary mb-1.5">
+                What was your last LDL?
+              </p>
               <Input
                 name="careGapQuestions.lastLDL"
                 placeholder="Specify"
-                value={values?.careGapQuestions?.lastLDL || ""}
+                value={values?.careGapQuestions?.lastLDL || ''}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className="max-w-md"
@@ -156,7 +164,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
               name="careGapQuestions.retinalExam"
               value={values?.careGapQuestions?.retinalExam}
               onChange={handleChange}
-              options={["Yes", "No", "Don't Know"]}
+              options={['Yes', 'No', "Don't Know"]}
             />
             <div className="ml-6">
               <RadioQuestion
@@ -164,7 +172,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
                 name="careGapQuestions.retinopathy"
                 value={values?.careGapQuestions?.retinopathy}
                 onChange={handleChange}
-                options={["Yes", "No", "Don't Know"]}
+                options={['Yes', 'No', "Don't Know"]}
               />
             </div>
           </div>
@@ -176,7 +184,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
             name="careGapQuestions.statinMedication"
             value={values?.careGapQuestions?.statinMedication}
             onChange={handleChange}
-            options={["Yes", "No", "Don't Know"]}
+            options={['Yes', 'No', "Don't Know"]}
           />
 
           {/* Q6 */}
@@ -187,7 +195,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
               name="careGapQuestions.footExam"
               value={values?.careGapQuestions?.footExam}
               onChange={handleChange}
-              options={["Yes", "No", "Don't Know"]}
+              options={['Yes', 'No', "Don't Know"]}
             />
             <div className="ml-6">
               <RadioQuestion
@@ -195,7 +203,7 @@ export default function CurrentStateQuestions({ values, handleChange, handleBlur
                 name="careGapQuestions.footNumbness"
                 value={values?.careGapQuestions?.footNumbness}
                 onChange={handleChange}
-                options={["Yes", "No", "Don't Know"]}
+                options={['Yes', 'No', "Don't Know"]}
               />
             </div>
           </div>
@@ -213,15 +221,29 @@ function SectionHeader({ title }) {
   );
 }
 
-function RadioQuestion({ number, label, name, value, onChange, options = ["Yes", "No"] }) {
+function RadioQuestion({
+  number,
+  label,
+  name,
+  value,
+  onChange,
+  options = ['Yes', 'No'],
+}) {
   return (
     <div className="flex flex-col gap-2">
       <p className="text-sm text-text-primary">
-        {number ? `${number}. ` : ""}{label}
+        {number ? `${number}. ` : ''}
+        {label}
       </p>
-      <div className="grid ml-2" style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}>
+      <div
+        className="grid ml-2"
+        style={{ gridTemplateColumns: `repeat(${options.length}, 1fr)` }}
+      >
         {options.map((option) => (
-          <label key={option} className="flex items-center gap-2 cursor-pointer">
+          <label
+            key={option}
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <input
               type="radio"
               name={name}

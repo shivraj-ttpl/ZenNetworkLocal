@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const REFRESH_URL = `${import.meta.env.VITE_API_URL}/auth/refresh`;
 
@@ -25,9 +25,13 @@ const processQueue = (error, token = null) => {
  */
 export const handle401Error = async (error) => {
   const originalRequest = error.config;
-  const isAuthEndpoint = originalRequest?.url?.includes("/auth/");
+  const isAuthEndpoint = originalRequest?.url?.includes('/auth/');
 
-  if (error.response?.status !== 401 || isAuthEndpoint || originalRequest._retry) {
+  if (
+    error.response?.status !== 401 ||
+    isAuthEndpoint ||
+    originalRequest._retry
+  ) {
     return Promise.reject(error);
   }
 
@@ -47,7 +51,7 @@ export const handle401Error = async (error) => {
       .post(REFRESH_URL, {}, { withCredentials: true, _skipGlobalLoader: true })
       .then((response) => {
         const newToken = response?.data?.data?.accessToken;
-        localStorage.setItem("token", newToken);
+        localStorage.setItem('token', newToken);
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         processQueue(null, newToken);
         resolve(axios(originalRequest));

@@ -1,23 +1,20 @@
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { Form, Formik } from 'formik';
 import { parsePhoneNumber } from 'react-phone-number-input';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
 
-import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
-
 import useCurrentUserRole from '@/hooks/getCurrentUserRole';
-
-import { toPascalCase } from '@/utils/GeneralUtils';
+import { formatZipCode, toPascalCase } from '@/utils/GeneralUtils';
 
 import { FORM_FIELDS_NAMES } from '../constant';
-import { setCloseDrawer } from '../settingsUsersSlice';
 import { settingsUsersActions } from '../settingsUsersSaga';
-import { formatZipCode } from '../../../../utils/GeneralUtils';
+import { setCloseDrawer } from '../settingsUsersSlice';
 
 const validationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.FIRST_NAME]: Yup.string().required(
@@ -49,7 +46,7 @@ const getInitialValues = (editData) => ({
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]:
     editData?.countryCode && editData?.contactNumber
       ? `${editData.countryCode}${editData.contactNumber}`
-      : editData?.contactNumber ?? '',
+      : (editData?.contactNumber ?? ''),
   [FORM_FIELDS_NAMES.EMAIL]: editData?.email ?? '',
   [FORM_FIELDS_NAMES.ADDRESS_LINE_1]: editData?.address?.addressLine1 ?? '',
   [FORM_FIELDS_NAMES.ADDRESS_LINE_2]: editData?.address?.addressLine2 ?? '',
@@ -78,7 +75,9 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
       firstName: values[FORM_FIELDS_NAMES.FIRST_NAME],
       lastName: values[FORM_FIELDS_NAMES.LAST_NAME],
       email: values[FORM_FIELDS_NAMES.EMAIL],
-      contactNumber: parsed ? parsed.nationalNumber : (values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || ""),
+      contactNumber: parsed
+        ? parsed.nationalNumber
+        : values[FORM_FIELDS_NAMES.CONTACT_NUMBER] || '',
       countryCode: parsed ? `+${parsed.countryCallingCode}` : undefined,
       ...(!isEdit && {
         userType: isOrgAdmin ? 'ORG_ADMIN' : 'SUB_ORG_ADMIN',
@@ -86,12 +85,12 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
         isSubOrgAdmin: !isOrgAdmin,
       }),
       address: {
-        addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || "",
-        addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || "",
-        city: values[FORM_FIELDS_NAMES.CITY] || "",
-        state: values[FORM_FIELDS_NAMES.STATE]?.name || "",
-        zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || "",
-        country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || "",
+        addressLine1: values[FORM_FIELDS_NAMES.ADDRESS_LINE_1] || '',
+        addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || '',
+        city: values[FORM_FIELDS_NAMES.CITY] || '',
+        state: values[FORM_FIELDS_NAMES.STATE]?.name || '',
+        zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || '',
+        country: values[FORM_FIELDS_NAMES.COUNTRY]?.name || '',
       },
     };
 
@@ -138,7 +137,7 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
           errors,
           touched,
           isValid,
-          dirty,
+          dirty: _dirty,
           handleChange,
           handleBlur,
           handleSubmit,
@@ -289,7 +288,8 @@ export default function AddUserDrawer({ open, drawerMode, editData }) {
                     value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
                     onChange={(e) => {
                       let val = e.target.value.replace(/\D/g, '');
-                      if (val.length > 5) val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
+                      if (val.length > 5)
+                        val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
                       setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
                     }}
                     onBlur={handleBlur}

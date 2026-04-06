@@ -1,6 +1,6 @@
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
-import Input from '@/components/commonComponents/input/Input';
 import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
+import Input from '@/components/commonComponents/input/Input';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 
 const GOAL_OPTIONS = [
@@ -79,10 +79,7 @@ export default function ExerciseGoals({
             label="Other"
             checked={!!exercise.types?.other}
             onChange={() =>
-              setFieldValue(
-                'exerciseGoals.types.other',
-                !exercise.types?.other,
-              )
+              setFieldValue('exerciseGoals.types.other', !exercise.types?.other)
             }
           />
           <Input
@@ -142,9 +139,7 @@ export default function ExerciseGoals({
                 <DatePicker
                   name={`${prefix}.lastDate`}
                   value={data.lastDate || null}
-                  onChangeCb={(val) =>
-                    setFieldValue(`${prefix}.lastDate`, val)
-                  }
+                  onChangeCb={(val) => setFieldValue(`${prefix}.lastDate`, val)}
                   placeholder="Select Date"
                 />
               </div>

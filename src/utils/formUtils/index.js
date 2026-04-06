@@ -1,4 +1,4 @@
-import * as Yup from "yup";
+import * as Yup from 'yup';
 
 /**
  * Convert camelCase field name to "Pascal With Spaces" for error messages.
@@ -6,7 +6,7 @@ import * as Yup from "yup";
  */
 function camelToPascalWithSpaces(str) {
   return str
-    .replace(/([A-Z])/g, " $1")
+    .replace(/([A-Z])/g, ' $1')
     .replace(/^./, (s) => s.toUpperCase())
     .trim();
 }
@@ -42,8 +42,7 @@ export const getValidationSchema = (fields) => {
       customFieldName,
     }) => {
       let fieldSchema = Yup.string().trim();
-      const labelName =
-        customFieldName || camelToPascalWithSpaces(fieldName);
+      const labelName = customFieldName || camelToPascalWithSpaces(fieldName);
 
       if (when) {
         fieldSchema = fieldSchema.when(when.field, {
@@ -55,7 +54,7 @@ export const getValidationSchema = (fields) => {
             if (when.then.regexPattern) {
               schema = schema.matches(
                 when.then.regexPattern,
-                `${labelName} is invalid`
+                `${labelName} is invalid`,
               );
             }
             if (when.then.isEmail) {
@@ -63,11 +62,11 @@ export const getValidationSchema = (fields) => {
                 .email(`${labelName} must be a valid email`)
                 .matches(
                   /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  `${labelName} must be a valid email`
+                  `${labelName} must be a valid email`,
                 );
             }
             if (when.then.customValidation) {
-              schema = schema.test("custom", "", function (value) {
+              schema = schema.test('custom', '', function (value) {
                 const { parent } = this;
                 const error = when.then.customValidation(value, parent);
                 return error ? this.createError({ message: error }) : true;
@@ -79,7 +78,7 @@ export const getValidationSchema = (fields) => {
         });
       } else if (isArray) {
         let itemSchema = Yup.string().required(`${labelName} is required`);
-        if (arrayItemType === "date") {
+        if (arrayItemType === 'date') {
           if (arrayItemRequired) {
             itemSchema = Yup.date()
               .typeError(`${labelName} is required`)
@@ -98,7 +97,9 @@ export const getValidationSchema = (fields) => {
           if (isRequired) {
             fieldSchema = Yup.object({
               label: Yup.string().trim().required(`${labelName} is required`),
-              value: Yup.string().trim().required(`${labelName} value is required`),
+              value: Yup.string()
+                .trim()
+                .required(`${labelName} value is required`),
             })
               .nullable()
               .required(`${labelName} is required`);
@@ -116,7 +117,7 @@ export const getValidationSchema = (fields) => {
               Yup.object().shape({
                 label: Yup.string().required(),
                 value: Yup.string().required(),
-              })
+              }),
             )
             .when([], {
               is: () => isRequired,
@@ -130,32 +131,32 @@ export const getValidationSchema = (fields) => {
           if (isMinLength) {
             fieldSchema = fieldSchema.min(
               isMinLength,
-              `${labelName} must be at least ${isMinLength} characters`
+              `${labelName} must be at least ${isMinLength} characters`,
             );
           }
           if (isMaxLength) {
             fieldSchema = fieldSchema.max(
               isMaxLength,
-              `${labelName} must be at most ${isMaxLength} characters`
+              `${labelName} must be at most ${isMaxLength} characters`,
             );
           }
           if (regexPattern) {
             if (isRequired) {
               fieldSchema = fieldSchema.matches(
                 regexPattern,
-                `${labelName} is invalid`
+                `${labelName} is invalid`,
               );
             } else {
               fieldSchema = fieldSchema.test(
-                "optional-regex",
-                "",
+                'optional-regex',
+                '',
                 function (value) {
-                  if (!value || value.trim() === "") return true;
+                  if (!value || value.trim() === '') return true;
                   return (
                     regexPattern.test(value) ||
                     this.createError({ message: `${labelName} is invalid` })
                   );
-                }
+                },
               );
             }
           }
@@ -164,17 +165,17 @@ export const getValidationSchema = (fields) => {
               .email(`${labelName} must be a valid email`)
               .matches(
                 /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                `${labelName} must be a valid email`
+                `${labelName} must be a valid email`,
               );
           }
           if (isPassword) {
             fieldSchema = fieldSchema.matches(
               regexPattern,
-              `${labelName} must contain at least one uppercase letter, one lowercase letter, one number, and one special character`
+              `${labelName} must contain at least one uppercase letter, one lowercase letter, one number, and one special character`,
             );
           }
           if (customValidation) {
-            fieldSchema = fieldSchema.test("custom", "", function (value) {
+            fieldSchema = fieldSchema.test('custom', '', function (value) {
               const { parent } = this;
               const error = customValidation(value, parent);
               return error ? this.createError({ message: error }) : true;
@@ -184,7 +185,7 @@ export const getValidationSchema = (fields) => {
       }
 
       schemaFields[fieldName] = fieldSchema;
-    }
+    },
   );
 
   return Yup.object().shape(schemaFields);

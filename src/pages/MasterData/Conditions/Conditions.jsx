@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
@@ -6,10 +6,10 @@ import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
-import { Table, buildColumns } from '@/components/commonComponents/table';
-import RoleGuard from '@/components/RoleGuard/RoleGuard';
+import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
+import RoleGuard from '@/components/RoleGuard/RoleGuard';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -17,23 +17,22 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
 import { useTableHeight } from '@/hooks/useTableHeight';
-
 import { formatDate, truncateText } from '@/utils/GeneralUtils';
 
+import AddConditionDrawer from './Components/AddConditionDrawer';
 import { conditionsActions, registerSaga } from './conditionsSaga';
 import {
   componentKey,
   registerReducer,
-  setPage,
   setLimit,
+  setOpenAddDrawer,
+  setOpenEditDrawer,
+  setPage,
   setSearch,
   setShowArchived,
   setSortKey,
   setSortOrder,
-  setOpenAddDrawer,
-  setOpenEditDrawer,
 } from './conditionsSlice';
-import AddConditionDrawer from './Components/AddConditionDrawer';
 
 const { fetchConditions, toggleFavorite, archiveCondition } = conditionsActions;
 const EMPTY_STATE = {};
@@ -70,7 +69,16 @@ export default function Conditions() {
 
   useEffect(() => {
     dispatch(fetchConditions());
-  }, [dispatch, page, limit, debouncedSearch, showArchived, sortKey, sortOrder, refreshFlag]);
+  }, [
+    dispatch,
+    page,
+    limit,
+    debouncedSearch,
+    showArchived,
+    sortKey,
+    sortOrder,
+    refreshFlag,
+  ]);
 
   useEffect(() => {
     setToolbar(
@@ -124,10 +132,7 @@ export default function Conditions() {
     [dispatch],
   );
 
-  const handlePageChange = useCallback(
-    (p) => dispatch(setPage(p)),
-    [dispatch],
-  );
+  const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
 
   const handleLimitChange = useCallback(
     (l) => dispatch(setLimit(l)),
@@ -138,7 +143,12 @@ export default function Conditions() {
     () =>
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-        { id: 'name', header: 'Condition Name', accessorKey: 'name', sortable: true },
+        {
+          id: 'name',
+          header: 'Condition Name',
+          accessorKey: 'name',
+          sortable: true,
+        },
         {
           id: 'icdCode',
           header: 'ICD Code',
@@ -164,7 +174,11 @@ export default function Conditions() {
             if (truncated === row.description) return row.description;
             return (
               <ToolTip
-                content={<p className="p-2 text-sm max-w-80 wrap-break-word">{row.description}</p>}
+                content={
+                  <p className="p-2 text-sm max-w-80 wrap-break-word">
+                    {row.description}
+                  </p>
+                }
                 position="bottom"
                 usePortal
               >

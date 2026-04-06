@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 /**
  * Dynamically calculate the max height for a table based on its position
@@ -32,6 +32,7 @@ export function useTableHeight(ref, bottomOffset = 70) {
       observer.disconnect();
       window.removeEventListener('resize', calculate);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [calculate]);
 
   return maxHeight;

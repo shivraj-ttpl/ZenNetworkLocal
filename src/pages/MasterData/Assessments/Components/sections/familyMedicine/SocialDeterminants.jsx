@@ -1,10 +1,18 @@
 import Input from '@/components/commonComponents/input/Input';
 
-export default function SocialDeterminants({ values, handleChange, handleBlur, setFieldValue }) {
+export default function SocialDeterminants({
+  values,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+}) {
   const sd = values?.socialDeterminants || {};
 
   const radio = (key, opt) => (
-    <label key={opt} className="flex items-center gap-2 cursor-pointer select-none">
+    <label
+      key={opt}
+      className="flex items-center gap-2 cursor-pointer select-none"
+    >
       <input
         type="radio"
         name={`socialDeterminants.${key}`}
@@ -19,21 +27,29 @@ export default function SocialDeterminants({ values, handleChange, handleBlur, s
 
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="text-base font-semibold text-text-primary">Social Determinants of Health (PRAPARE)</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        Social Determinants of Health (PRAPARE)
+      </h3>
 
       {/* Q1 */}
       <div className="flex flex-col gap-2">
         <p className="text-sm text-text-primary">1. Current housing</p>
         <div className="grid grid-cols-4 gap-3">
-          {['Have housing', 'No housing', 'Prefer not to answer'].map((opt) => radio('currentHousing', opt))}
+          {['Have housing', 'No housing', 'Prefer not to answer'].map((opt) =>
+            radio('currentHousing', opt),
+          )}
         </div>
       </div>
 
       {/* Q2 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">2. Worried about losing housing?</p>
+        <p className="text-sm text-text-primary">
+          2. Worried about losing housing?
+        </p>
         <div className="grid grid-cols-4 gap-3">
-          {['Yes', 'No', 'Prefer not to answer'].map((opt) => radio('worriedHousing', opt))}
+          {['Yes', 'No', 'Prefer not to answer'].map((opt) =>
+            radio('worriedHousing', opt),
+          )}
         </div>
       </div>
 
@@ -41,8 +57,20 @@ export default function SocialDeterminants({ values, handleChange, handleBlur, s
       <div className="flex flex-col gap-2">
         <p className="text-sm text-text-primary">3. In past year, lacked</p>
         <div className="grid grid-cols-4 gap-3">
-          {['Food', 'Utilities', 'Clothing', 'Childcare', 'Medicine', 'Phone', 'Other', 'None'].map((opt) => (
-            <label key={opt} className="flex items-center gap-2 cursor-pointer select-none">
+          {[
+            'Food',
+            'Utilities',
+            'Clothing',
+            'Childcare',
+            'Medicine',
+            'Phone',
+            'Other',
+            'None',
+          ].map((opt) => (
+            <label
+              key={opt}
+              className="flex items-center gap-2 cursor-pointer select-none"
+            >
               <input
                 type="radio"
                 name="socialDeterminants.lacked"
@@ -59,25 +87,37 @@ export default function SocialDeterminants({ values, handleChange, handleBlur, s
 
       {/* Q4 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">4. Transportation kept from work or healthcare?</p>
+        <p className="text-sm text-text-primary">
+          4. Transportation kept from work or healthcare?
+        </p>
         <div className="grid grid-cols-4 gap-3">
-          {['Yes', 'No', 'Prefer not to answer'].map((opt) => radio('transportation', opt))}
+          {['Yes', 'No', 'Prefer not to answer'].map((opt) =>
+            radio('transportation', opt),
+          )}
         </div>
       </div>
 
       {/* Q5 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">5. Feel safe where you live?</p>
+        <p className="text-sm text-text-primary">
+          5. Feel safe where you live?
+        </p>
         <div className="grid grid-cols-4 gap-3">
-          {['Yes', 'No', 'Sometimes', 'Prefer not to answer'].map((opt) => radio('feelSafe', opt))}
+          {['Yes', 'No', 'Sometimes', 'Prefer not to answer'].map((opt) =>
+            radio('feelSafe', opt),
+          )}
         </div>
       </div>
 
       {/* Q6 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">6. How often do you talk to people you care about?</p>
+        <p className="text-sm text-text-primary">
+          6. How often do you talk to people you care about?
+        </p>
         <div className="grid grid-cols-4 gap-3">
-          {['<1/wk', '1–2x/wk', '3–5x/wk', 'Nearly daily'].map((opt) => radio('talkToPeople', opt))}
+          {['<1/wk', '1–2x/wk', '3–5x/wk', 'Nearly daily'].map((opt) =>
+            radio('talkToPeople', opt),
+          )}
         </div>
       </div>
 
@@ -85,14 +125,21 @@ export default function SocialDeterminants({ values, handleChange, handleBlur, s
       <div className="flex flex-col gap-2">
         <p className="text-sm text-text-primary">7. Work situation:</p>
         <div className="grid grid-cols-4 gap-3">
-          {['Full-time', 'Part-time', 'Unemployed (looking)', 'Unemployed (not looking)'].map((opt) =>
-            radio('workSituation', opt),
-          )}
+          {[
+            'Full-time',
+            'Part-time',
+            'Unemployed (looking)',
+            'Unemployed (not looking)',
+          ].map((opt) => radio('workSituation', opt))}
         </div>
         <div className="grid grid-cols-4 gap-3 items-center">
-          {['Retired', 'Unable to work'].map((opt) => radio('workSituation', opt))}
+          {['Retired', 'Unable to work'].map((opt) =>
+            radio('workSituation', opt),
+          )}
           <div className="col-span-2 flex items-center gap-2">
-            <span className="text-sm text-text-primary whitespace-nowrap">Job Title :</span>
+            <span className="text-sm text-text-primary whitespace-nowrap">
+              Job Title :
+            </span>
             <input
               name="socialDeterminants.jobTitle"
               placeholder="Enter"
@@ -116,7 +163,9 @@ export default function SocialDeterminants({ values, handleChange, handleBlur, s
       <div className="flex flex-col gap-2">
         <p className="text-sm text-text-primary">8. Education:</p>
         <div className="grid grid-cols-5 gap-3">
-          {['<HS', 'HS/GED', 'Some college', "Bachelor's", 'Graduate'].map((opt) => radio('education', opt))}
+          {['<HS', 'HS/GED', 'Some college', "Bachelor's", 'Graduate'].map(
+            (opt) => radio('education', opt),
+          )}
         </div>
       </div>
 
@@ -124,7 +173,9 @@ export default function SocialDeterminants({ values, handleChange, handleBlur, s
       <div className="flex flex-col gap-2">
         <p className="text-sm text-text-primary">9. Household income</p>
         <div className="grid grid-cols-5 gap-3">
-          {['<$10k', '$10-19k', '$20-29k', '$30-49k', '≥$50k'].map((opt) => radio('householdIncome', opt))}
+          {['<$10k', '$10-19k', '$20-29k', '$30-49k', '≥$50k'].map((opt) =>
+            radio('householdIncome', opt),
+          )}
         </div>
         <div className="flex items-center gap-2">
           {radio('householdIncome', 'Prefer not to answer')}
@@ -133,7 +184,9 @@ export default function SocialDeterminants({ values, handleChange, handleBlur, s
 
       {/* Q10 — text input */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">10. How many falls have you had in the past year?</p>
+        <p className="text-sm text-text-primary">
+          10. How many falls have you had in the past year?
+        </p>
         <input
           name="socialDeterminants.falls"
           placeholder="Enter"
@@ -146,7 +199,9 @@ export default function SocialDeterminants({ values, handleChange, handleBlur, s
 
       {/* Q11 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">11. Want help meeting any of the above needs?</p>
+        <p className="text-sm text-text-primary">
+          11. Want help meeting any of the above needs?
+        </p>
         <div className="flex items-center gap-6">
           {['Yes', 'No'].map((opt) => radio('wantHelp', opt))}
         </div>

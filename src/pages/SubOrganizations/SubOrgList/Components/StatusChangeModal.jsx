@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Button from '@/components/commonComponents/button/Button';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
-import { componentKey, setStatusModal } from '../subOrgListSlice';
 import { subOrgListActions } from '../subOrgListSaga';
+import { componentKey, setStatusModal } from '../subOrgListSlice';
 
 const { changeSubOrgStatus } = subOrgListActions;
 
@@ -56,6 +56,7 @@ export default function StatusChangeModal() {
   const [step, setStep] = useState(1);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (open) setStep(1);
   }, [open]);
   const isLoading = useLoadingKey(LOADING_KEYS.SUB_ORG_LIST_PATCH_STATUS);

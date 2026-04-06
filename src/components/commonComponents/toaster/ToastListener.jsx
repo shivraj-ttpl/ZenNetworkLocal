@@ -1,7 +1,11 @@
-import { useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-toastify";
-import { removeNotification, TOASTER_VARIANT } from "@/core/store/notificationSlice";
+import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import {
+  removeNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
 
 const variantToToastFn = {
   [TOASTER_VARIANT.SUCCESS]: toast.success,
@@ -53,7 +57,7 @@ const ToastListener = () => {
             dispatch(removeNotification(notification.id));
             shownIds.current.delete(notification.id);
           },
-        }
+        },
       );
     });
   }, [notifications, dispatch]);

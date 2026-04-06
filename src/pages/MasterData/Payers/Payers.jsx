@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
@@ -6,11 +6,11 @@ import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import { Table, buildColumns } from '@/components/commonComponents/table';
-import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import StatusBadge from '@/components/commonComponents/statusBadge/StatusBadge';
-import RoleGuard from '@/components/RoleGuard/RoleGuard';
+import { buildColumns, Table } from '@/components/commonComponents/table';
+import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import Icon from '@/components/icons/Icon';
+import RoleGuard from '@/components/RoleGuard/RoleGuard';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -18,27 +18,26 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
 import { useTableHeight } from '@/hooks/useTableHeight';
+import { toPascalCaseWithSpaces } from '@/utils/GeneralUtils';
 
 import AddPayerDrawer from './Components/AddPayerDrawer';
 import AddPayersDropdown from './Components/AddPayersDropdown';
 import ImportPayersDrawer from './Components/ImportPayersDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
 import { PAYER_TYPE_OPTIONS } from './constant';
-import { toPascalCaseWithSpaces } from '@/utils/GeneralUtils';
-
 import { payersActions, registerSaga } from './payersSaga';
 import {
   componentKey,
   registerReducer,
-  setPage,
   setLimit,
-  setSearch,
-  setShowArchived,
-  setPayerType,
-  setSortKey,
-  setSortOrder,
   setOpenEditDrawer,
   setOpenStatusModal,
+  setPage,
+  setPayerType,
+  setSearch,
+  setShowArchived,
+  setSortKey,
+  setSortOrder,
 } from './payersSlice';
 
 const { fetchPayers, togglePayerFavorite, archivePayer } = payersActions;
@@ -154,7 +153,13 @@ export default function Payers() {
     () =>
       buildColumns([
         { id: 'srNo', header: 'Sr. No', accessorKey: 'srNo', width: 70 },
-        { id: 'name', header: 'Name', accessorKey: 'name', sortable: true,  width: 200, },
+        {
+          id: 'name',
+          header: 'Name',
+          accessorKey: 'name',
+          sortable: true,
+          width: 200,
+        },
         {
           id: 'type',
           header: 'Type',
@@ -193,8 +198,7 @@ export default function Payers() {
           align: 'center',
           render: (row) => (
             <span
-              className={`${ row.isFavorite ? 'text-primary-700 ' : 'text-neutral-400'} flex items-center justify-center`
-               }
+              className={`${row.isFavorite ? 'text-primary-700 ' : 'text-neutral-400'} flex items-center justify-center`}
             >
               {row.isFavorite ? <Icon name="check" size={18} /> : '-'}
             </span>

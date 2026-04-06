@@ -27,9 +27,7 @@ export default function ImportCodes() {
     importModalFor = '',
     importSuccess = false,
     importSuccessLabel = '',
-  } = useSelector(
-    (state) => state[componentKey] ?? EMPTY_STATE,
-  );
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
   const isOpen = Boolean(importModalFor);
   const isImporting = useLoadingKey(LOADING_KEYS.CODES_POST_IMPORT);
 
@@ -48,14 +46,17 @@ export default function ImportCodes() {
   }, []);
 
   const handleDownloadTemplate = () => {
-    if(CODE_TYPE_MAP[importModalFor] === 'medications') {
+    if (CODE_TYPE_MAP[importModalFor] === 'medications') {
       const link = document.createElement('a');
       link.href = '/templates/medications.csv';
       link.download = 'medications_import_template.csv';
       link.click();
       return;
     }
-    if(CODE_TYPE_MAP[importModalFor] === 'allergies' || CODE_TYPE_MAP[importModalFor] === 'symptoms') {
+    if (
+      CODE_TYPE_MAP[importModalFor] === 'allergies' ||
+      CODE_TYPE_MAP[importModalFor] === 'symptoms'
+    ) {
       const link = document.createElement('a');
       link.href = '/templates/allergiesSymptoms.csv';
       link.download = 'allergies_symptoms_import_template.csv';

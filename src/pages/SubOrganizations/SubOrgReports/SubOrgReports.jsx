@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
@@ -19,7 +19,6 @@ const TABS = [
 ];
 
 export default function SubOrgReports() {
-  const { subOrgId } = useParams();
   const { setToolbar } = useOutletContext();
   const [activeTab, setActiveTab] = useState('demographics');
   const [providerGroup, setProviderGroup] = useState(null);

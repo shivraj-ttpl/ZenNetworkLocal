@@ -1,13 +1,17 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import Drawer from "@/components/commonComponents/drawer/Drawer";
-import Button from "@/components/commonComponents/button/Button";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import Icon from "@/components/icons/Icon";
+import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import Icon from '@/components/icons/Icon';
 
-import { STATUS_OPTIONS, SUB_ORGANIZATION_OPTIONS } from "../constant";
-import { setCloseFilterDrawer, setFilters, clearFilters } from "../settingsUsersSlice";
+import { STATUS_OPTIONS, SUB_ORGANIZATION_OPTIONS } from '../constant';
+import {
+  clearFilters,
+  setCloseFilterDrawer,
+  setFilters,
+} from '../settingsUsersSlice';
 
 const EMPTY_FILTERS = { subOrganization: null, status: null };
 
@@ -66,7 +70,10 @@ export default function FilterDrawer({ open, filters }) {
             options={SUB_ORGANIZATION_OPTIONS}
             value={localFilters.subOrganization}
             onChange={(selected) =>
-              setLocalFilters((prev) => ({ ...prev, subOrganization: selected }))
+              setLocalFilters((prev) => ({
+                ...prev,
+                subOrganization: selected,
+              }))
             }
           />
           <SelectDropdown
