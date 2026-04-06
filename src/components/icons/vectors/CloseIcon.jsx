@@ -1,4 +1,9 @@
-const CloseIcon = ({ color = "currentColor", width = 20, height = 20, ...props }) => (
+const CloseIcon = ({
+  color = 'currentColor',
+  width = 20,
+  height = 20,
+  ...props
+}) => (
   <svg
     width={width}
     height={height}

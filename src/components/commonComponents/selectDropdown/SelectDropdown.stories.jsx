@@ -1,37 +1,39 @@
-import { useState } from "react";
-import SelectDropdown from "./SelectDropdown";
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useState } from 'react';
+
+import SelectDropdown from './SelectDropdown';
 
 const FRUIT_OPTIONS = [
-  { label: "Apple", value: "apple" },
-  { label: "Banana", value: "banana" },
-  { label: "Cherry", value: "cherry" },
-  { label: "Grape", value: "grape" },
-  { label: "Mango", value: "mango" },
-  { label: "Orange", value: "orange" },
-  { label: "Strawberry", value: "strawberry" },
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Cherry', value: 'cherry' },
+  { label: 'Grape', value: 'grape' },
+  { label: 'Mango', value: 'mango' },
+  { label: 'Orange', value: 'orange' },
+  { label: 'Strawberry', value: 'strawberry' },
 ];
 
 const STATUS_OPTIONS = [
-  { label: "Active", value: "active" },
-  { label: "Inactive", value: "inactive" },
-  { label: "Pending", value: "pending" },
-  { label: "Suspended", value: "suspended" },
+  { label: 'Active', value: 'active' },
+  { label: 'Inactive', value: 'inactive' },
+  { label: 'Pending', value: 'pending' },
+  { label: 'Suspended', value: 'suspended' },
 ];
 
 export default {
-  title: "Components/SelectDropdown",
+  title: 'Components/SelectDropdown',
   component: SelectDropdown,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
-    isMulti: { control: "boolean" },
-    isSearchable: { control: "boolean" },
-    required: { control: "boolean" },
-    disabled: { control: "boolean" },
-    selectAll: { control: "boolean" },
-    label: { control: "text" },
-    placeholder: { control: "text" },
-    error: { control: "text" },
-    touched: { control: "boolean" },
+    isMulti: { control: 'boolean' },
+    isSearchable: { control: 'boolean' },
+    required: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+    selectAll: { control: 'boolean' },
+    label: { control: 'text' },
+    placeholder: { control: 'text' },
+    error: { control: 'text' },
+    touched: { control: 'boolean' },
   },
 };
 
@@ -55,7 +57,7 @@ export const Default = {
 
 export const WithPreselectedValue = {
   render: () => {
-    const [value, setValue] = useState({ label: "Mango", value: "mango" });
+    const [value, setValue] = useState({ label: 'Mango', value: 'mango' });
     return (
       <div className="w-72">
         <SelectDropdown
@@ -175,7 +177,7 @@ export const Disabled = {
         label="Status"
         name="status"
         options={STATUS_OPTIONS}
-        value={{ label: "Active", value: "active" }}
+        value={{ label: 'Active', value: 'active' }}
         onChange={() => {}}
         disabled
       />
@@ -191,7 +193,7 @@ export const StringOptions = {
         <SelectDropdown
           label="Priority"
           name="priority"
-          options={["Low", "Medium", "High", "Critical"]}
+          options={['Low', 'Medium', 'High', 'Critical']}
           value={value}
           onChange={setValue}
           placeholder="Select priority..."

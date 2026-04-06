@@ -8,15 +8,13 @@ import { LOADING_KEYS } from '@/constants/loadingKeys';
 import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
+import EditSubOrganizationProfileDrawer from './Components/EditSubOrganizationProfileDrawer';
+import { userProfileActions } from './userProfileSaga';
 import {
   componentKey,
   setCloseDrawer,
   setOpenEditDrawer,
 } from './userProfileSlice';
-import './userProfileSaga';
-import { userProfileActions } from './userProfileSaga';
-import EditSubOrganizationProfileDrawer from './Components/EditSubOrganizationProfileDrawer';
-import EditOrganizationUserProfileDrawer from './Components/EditOrganizationUserProfileDrawer';
 
 function formatAddress(val) {
   if (!val || typeof val !== 'object') return val;
@@ -48,111 +46,6 @@ function LabelValue({ label, value, isLink }) {
       ) : (
         <span className="text-text-primary">{display}</span>
       )}
-    </div>
-  );
-}
-
-function OrgAdminProfile({ profile }) {
-  const fullName =
-    [profile?.firstName, profile?.lastName].filter(Boolean).join(' ') || '—';
-
-  return (
-    <div className="space-y-5">
-      <div className="border border-border-light rounded-lg p-5">
-        <div className="flex items-start gap-4">
-          <Avatar name={fullName} size="xl" variant="square" />
-          <div className="flex-1 grid grid-cols-2 gap-x-8 gap-y-2">
-            <div className="space-y-2">
-              <LabelValue label="Name" value={fullName} />
-              <LabelValue label="Email Address" value={profile?.email} isLink />
-              <LabelValue label="Address" value={profile?.address} />
-            </div>
-            <div className="space-y-2">
-              <LabelValue label="Role Name" value={profile?.userType} />
-              <LabelValue
-                label="Contact Number"
-                value={profile?.contactNumber}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-5 gap-4">
-        {[
-          {
-            icon: 'Building2',
-            label: 'Sub-Organizations',
-            value: profile?.analytics?.subOrganizations,
-          },
-          {
-            icon: 'users-round',
-            label: 'Provider Group',
-            value: profile?.analytics?.providerGroups,
-          },
-          {
-            icon: 'Stethoscope',
-            label: 'Total Providers',
-            value: profile?.analytics?.providers,
-          },
-          {
-            icon: 'user-round-check',
-            label: 'Total Patient',
-            value: profile?.analytics?.patients,
-          },
-          {
-            icon: 'users-round',
-            label: 'System Users',
-            value: profile?.analytics?.users,
-          },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className="border border-border-light rounded-lg p-4 flex items-center gap-3"
-          >
-            <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center shrink-0">
-              <Icon name={stat.icon} size={20} className="text-primary-600" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs text-neutral-500 truncate">{stat.label}</p>
-              <p className="text-xl font-bold text-text-primary leading-tight">
-                {stat.value ?? '—'}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-2 gap-6">
-        <div>
-          <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
-            Contact Information
-          </h3>
-          <div className="space-y-3">
-            <LabelValue label="Email Address" value={profile?.email} isLink />
-            <LabelValue label="Contact Number" value={profile?.contactNumber} />
-            <LabelValue label="Fax" value={profile?.fax} />
-            <LabelValue label="Website" value={profile?.website} isLink />
-            <LabelValue label="Address" value={profile?.address} />
-          </div>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
-            Sub-Organizations
-          </h3>
-          <div className="space-y-1">
-            {(profile?.assignedSubOrgs ?? []).map((org, i) => (
-              <p key={i} className="text-sm text-text-primary">
-                {org}
-              </p>
-            ))}
-            {!profile?.assignedSubOrgs?.length && (
-              <p className="text-sm text-neutral-500">—</p>
-            )}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -221,7 +114,9 @@ export function SubOrgAdminProfile({ profile, isOrgAdmin }) {
             />
             <div className="flex-1 w-full space-y-2">
               <div className="flex flex-wrap items-start gap-2 text-sm">
-                <span className="text-neutral-500 min-w-28 sm:min-w-36 shrink-0">Name</span>
+                <span className="text-neutral-500 min-w-28 sm:min-w-36 shrink-0">
+                  Name
+                </span>
                 <span className="text-neutral-500">:</span>
                 <div className="flex flex-1 items-center justify-between gap-2">
                   <span className="text-text-primary">{fullName}</span>
@@ -305,7 +200,10 @@ export default function UserProfile() {
           <div className="space-y-5 animate-pulse">
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
               {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="border border-border-light rounded-lg p-4 h-16 bg-neutral-100" />
+                <div
+                  key={i}
+                  className="border border-border-light rounded-lg p-4 h-16 bg-neutral-100"
+                />
               ))}
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">

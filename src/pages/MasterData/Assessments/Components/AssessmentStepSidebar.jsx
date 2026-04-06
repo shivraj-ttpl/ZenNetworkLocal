@@ -1,6 +1,11 @@
-import { Icon } from "@/components/icons";
+import { Icon } from '@/components/icons';
 
-export default function AssessmentStepSidebar({ steps, activeStep, completedSteps = new Set(), onStepClick }) {
+export default function AssessmentStepSidebar({
+  steps,
+  activeStep,
+  completedSteps = new Set(),
+  onStepClick,
+}) {
   const totalSteps = steps.length;
 
   return (
@@ -22,11 +27,12 @@ export default function AssessmentStepSidebar({ steps, activeStep, completedStep
                   className={`
                     w-7 h-7 rounded-full flex items-center justify-center shrink-0
                     text-xs font-semibold transition-colors
-                    ${isCompleted
-                      ? "bg-green-500 text-white"
-                      : isActive
-                        ? "bg-primary text-white"
-                        : "bg-neutral-200 text-text-secondary"
+                    ${
+                      isCompleted
+                        ? 'bg-green-500 text-white'
+                        : isActive
+                          ? 'bg-primary text-white'
+                          : 'bg-neutral-200 text-text-secondary'
                     }
                   `}
                 >
@@ -35,10 +41,10 @@ export default function AssessmentStepSidebar({ steps, activeStep, completedStep
                 <span
                   className={`text-sm transition-colors ${
                     isActive
-                      ? "text-text-primary font-medium"
+                      ? 'text-text-primary font-medium'
                       : isCompleted
-                        ? "text-text-primary"
-                        : "text-text-secondary"
+                        ? 'text-text-primary'
+                        : 'text-text-secondary'
                   }`}
                 >
                   {step.label}
@@ -49,7 +55,7 @@ export default function AssessmentStepSidebar({ steps, activeStep, completedStep
                 <div className="flex justify-center w-7 py-1">
                   <div
                     className={`w-0.5 h-5 ${
-                      isCompleted ? "bg-green-500" : "bg-neutral-200"
+                      isCompleted ? 'bg-green-500' : 'bg-neutral-200'
                     }`}
                   />
                 </div>

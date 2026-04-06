@@ -2,16 +2,19 @@ import { all, put, takeLatest } from 'redux-saga/effects';
 
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { toastMessages } from '@/constants/toastMessages';
-import { addNotification, TOASTER_VARIANT } from '@/core/store/notificationSlice';
+import {
+  addNotification,
+  TOASTER_VARIANT,
+} from '@/core/store/notificationSlice';
 import { apiCall, createSagaActions } from '@/core/store/sagaHelpers';
 import store from '@/core/store/store';
 import SettingsRolesDataService from '@/services/appDataService/SettingsRolesDataService';
 
 import {
   componentKey,
-  setRolesData,
-  setRoleDetail,
   setRefreshRoles,
+  setRoleDetail,
+  setRolesData,
 } from './subOrgRolesPermissionsSlice';
 
 export const subOrgRolesActions = createSagaActions(componentKey, [
@@ -65,7 +68,8 @@ function* updateRolePermissionsSaga(action) {
   const { roleId, payload, onSuccess } = action.payload;
   yield* apiCall({
     loadingKey: LOADING_KEYS.SUB_ORG_ROLES_PATCH_UPDATE,
-    apiFunc: () => SettingsRolesDataService.updateRolePermissions(roleId, payload),
+    apiFunc: () =>
+      SettingsRolesDataService.updateRolePermissions(roleId, payload),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -123,8 +127,14 @@ function* rootSaga() {
     takeLatest(subOrgRolesActions.fetchRoles().type, fetchRolesSaga),
     takeLatest(subOrgRolesActions.fetchRoleById().type, fetchRoleByIdSaga),
     takeLatest(subOrgRolesActions.createRole().type, createRoleSaga),
-    takeLatest(subOrgRolesActions.updateRolePermissions().type, updateRolePermissionsSaga),
-    takeLatest(subOrgRolesActions.updateRoleStatus().type, updateRoleStatusSaga),
+    takeLatest(
+      subOrgRolesActions.updateRolePermissions().type,
+      updateRolePermissionsSaga,
+    ),
+    takeLatest(
+      subOrgRolesActions.updateRoleStatus().type,
+      updateRoleStatusSaga,
+    ),
     takeLatest(subOrgRolesActions.archiveRole().type, archiveRoleSaga),
   ]);
 }

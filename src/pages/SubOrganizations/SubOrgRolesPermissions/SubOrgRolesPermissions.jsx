@@ -21,7 +21,7 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatDate } from '@/utils/GeneralUtils';
 
 import CreateRoleModal from './Components/CreateRoleModal';
-import { subOrgRolesActions, registerSaga } from './subOrgRolesPermissionsSaga';
+import { registerSaga, subOrgRolesActions } from './subOrgRolesPermissionsSaga';
 import {
   componentKey,
   registerReducer,
@@ -38,7 +38,12 @@ export default function SubOrgRolesPermissions() {
   const qs = nameParam ? `?name=${encodeURIComponent(nameParam)}` : '';
 
   const state = useSelector((s) => s[componentKey]);
-  const { createRoleModalOpen, rolesData, totalRecords, refreshFlag = 0 } = state || {};
+  const {
+    createRoleModalOpen,
+    rolesData,
+    totalRecords,
+    refreshFlag = 0,
+  } = state || {};
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -69,7 +74,17 @@ export default function SubOrgRolesPermissions() {
         subOrgId,
       }),
     );
-  }, [dispatch, page, limit, debouncedSearch, showArchive, sortKey, sortOrder, refreshFlag, subOrgId]);
+  }, [
+    dispatch,
+    page,
+    limit,
+    debouncedSearch,
+    showArchive,
+    sortKey,
+    sortOrder,
+    refreshFlag,
+    subOrgId,
+  ]);
 
   useEffect(() => {
     setToolbar(
@@ -221,7 +236,10 @@ export default function SubOrgRolesPermissions() {
                 value: 'unarchive',
                 onClickCb: () =>
                   dispatch(
-                    subOrgRolesActions.archiveRole({ roleId: row.id, isArchived: true }),
+                    subOrgRolesActions.archiveRole({
+                      roleId: row.id,
+                      isArchived: true,
+                    }),
                   ),
               });
             } else {
@@ -230,7 +248,10 @@ export default function SubOrgRolesPermissions() {
                 value: 'archive',
                 onClickCb: () =>
                   dispatch(
-                    subOrgRolesActions.archiveRole({ roleId: row.id, isArchived: false }),
+                    subOrgRolesActions.archiveRole({
+                      roleId: row.id,
+                      isArchived: false,
+                    }),
                   ),
               });
             }

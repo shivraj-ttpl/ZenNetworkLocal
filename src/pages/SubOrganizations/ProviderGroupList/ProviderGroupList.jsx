@@ -1,25 +1,25 @@
-import { useEffect, useMemo, useCallback } from 'react';
-import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import { Table, buildColumns } from '@/components/commonComponents/table';
+import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { ROLES } from '@/constants/roles';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
-import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
-import { STATUS_OPTIONS } from './constant';
 import AddProviderGroupDrawer from './Components/AddProviderGroupDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
+import { STATUS_OPTIONS } from './constant';
 import {
   providerGroupListActions,
   registerSaga,
@@ -27,18 +27,19 @@ import {
 import {
   componentKey,
   registerReducer,
-  setPage,
+  setDrawerOpen,
   setLimit,
+  setPage,
   setSearch,
   setShowArchived,
-  setStatusFilter,
   setSortKey,
   setSortOrder,
-  setDrawerOpen,
+  setStatusFilter,
   setStatusModal,
 } from './providerGroupListSlice';
 
-const { fetchProviderGroups, fetchProviderGroupById, archiveProviderGroup } = providerGroupListActions;
+const { fetchProviderGroups, fetchProviderGroupById, archiveProviderGroup } =
+  providerGroupListActions;
 const EMPTY_STATE = {};
 
 export default function ProviderGroupList() {
@@ -134,6 +135,7 @@ export default function ProviderGroupList() {
       </>,
     );
     return () => setToolbar(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setToolbar, showArchived, search, statusFilter, dispatch]);
 
   const handleSortChange = useCallback(
@@ -332,7 +334,11 @@ export default function ProviderGroupList() {
       />
       {isSubOrgAdmin && (
         <>
-          <AddProviderGroupDrawer subOrgId={subOrgId} drawerMode={drawerMode} editData={editData} />
+          <AddProviderGroupDrawer
+            subOrgId={subOrgId}
+            drawerMode={drawerMode}
+            editData={editData}
+          />
           <StatusChangeModal />
         </>
       )}

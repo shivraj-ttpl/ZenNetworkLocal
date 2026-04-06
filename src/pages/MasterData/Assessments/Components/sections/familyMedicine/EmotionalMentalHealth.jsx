@@ -11,15 +11,24 @@ const YES_NO = [
 ];
 
 const PHQ9_QUESTIONS = [
-  { key: 'littleInterest', text: '1. Little interest or pleasure in doing things you used to enjoy' },
+  {
+    key: 'littleInterest',
+    text: '1. Little interest or pleasure in doing things you used to enjoy',
+  },
   { key: 'feelingDown', text: '2. Feeling down, depressed, or hopeless' },
   { key: 'troubleSleeping', text: '3. Trouble sleeping or sleeping too much' },
   { key: 'feelingTired', text: '4. Feeling tired or having little energy' },
   { key: 'poorAppetite', text: '5. Poor appetite or overeating' },
-  { key: 'feelingBad', text: '6. Feeling bad about yourself or that you are a failure' },
+  {
+    key: 'feelingBad',
+    text: '6. Feeling bad about yourself or that you are a failure',
+  },
   { key: 'troubleConcentrating', text: '7. Trouble concentrating on things' },
   { key: 'movingSlow', text: '8. Moving/speaking slowly or being fidgety' },
-  { key: 'selfHarm', text: '9. Thoughts of being better off dead or self-harm' },
+  {
+    key: 'selfHarm',
+    text: '9. Thoughts of being better off dead or self-harm',
+  },
 ];
 
 const GAD7_QUESTIONS = [
@@ -29,22 +38,34 @@ const GAD7_QUESTIONS = [
   { key: 'troubleRelaxing', text: '4. Trouble relaxing' },
   { key: 'beingRestless', text: '5. Being restless' },
   { key: 'easilyAnnoyed', text: '6. Easily annoyed or irritable' },
-  { key: 'feelingAfraid', text: '7. Feeling afraid something awful might happen' },
+  {
+    key: 'feelingAfraid',
+    text: '7. Feeling afraid something awful might happen',
+  },
 ];
 
 const SUICIDE_QUESTIONS = [
-  { key: 'wishedDead', text: '1. Wished you were dead or could go to sleep and not wake up?' },
+  {
+    key: 'wishedDead',
+    text: '1. Wished you were dead or could go to sleep and not wake up?',
+  },
   { key: 'thoughtsKilling', text: '2. Had thoughts of killing yourself?' },
   { key: 'thoughtHow', text: '3. Thought about how you might do this?' },
   { key: 'intentionToAct', text: '4. Had intention to act on these thoughts?' },
-  { key: 'startedToPrepare', text: '5. Started to prepare or take steps to end your life?' },
+  {
+    key: 'startedToPrepare',
+    text: '5. Started to prepare or take steps to end your life?',
+  },
 ];
 
 function RadioScale({ name, value, options, onChange }) {
   return (
     <div className="grid grid-cols-4 gap-4">
       {options.map((opt) => (
-        <label key={opt.value} className="flex items-center gap-2 cursor-pointer select-none">
+        <label
+          key={opt.value}
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
           <input
             type="radio"
             name={name}
@@ -60,10 +81,20 @@ function RadioScale({ name, value, options, onChange }) {
   );
 }
 
-function ScoreBar({ label, scoreKey, severityKey, scaleText, values, handleChange, handleBlur }) {
+function ScoreBar({
+  label,
+  scoreKey,
+  severityKey,
+  scaleText,
+  values,
+  handleChange,
+  handleBlur,
+}) {
   return (
     <div className="bg-neutral-50 rounded-lg px-4 py-3 flex flex-wrap items-center gap-3 mt-2">
-      <span className="text-sm text-text-primary font-medium whitespace-nowrap">{label}</span>
+      <span className="text-sm text-text-primary font-medium whitespace-nowrap">
+        {label}
+      </span>
       <input
         name={scoreKey}
         placeholder="00"
@@ -92,7 +123,11 @@ function ScoreBar({ label, scoreKey, severityKey, scaleText, values, handleChang
   );
 }
 
-export default function EmotionalMentalHealth({ values, handleBlur, setFieldValue }) {
+export default function EmotionalMentalHealth({
+  values,
+  handleBlur,
+  setFieldValue,
+}) {
   const emh = values?.emotionalMentalHealth || {};
 
   return (
@@ -103,7 +138,8 @@ export default function EmotionalMentalHealth({ values, handleBlur, setFieldValu
 
       {/* ─── PHQ-9 ─── */}
       <p className="text-sm text-blue-500 font-medium">
-        PHQ-9 – Depression Scale (0 = Not at all, 1 = Several days, 2 = &gt;Half the days, 3 = Nearly every day)
+        PHQ-9 – Depression Scale (0 = Not at all, 1 = Several days, 2 = &gt;Half
+        the days, 3 = Nearly every day)
       </p>
 
       {PHQ9_QUESTIONS.map((q) => (
@@ -113,7 +149,9 @@ export default function EmotionalMentalHealth({ values, handleBlur, setFieldValu
             name={`emotionalMentalHealth.${q.key}`}
             value={emh[q.key] || ''}
             options={SCALE_0_3}
-            onChange={(val) => setFieldValue(`emotionalMentalHealth.${q.key}`, val)}
+            onChange={(val) =>
+              setFieldValue(`emotionalMentalHealth.${q.key}`, val)
+            }
           />
         </div>
       ))}
@@ -125,14 +163,18 @@ export default function EmotionalMentalHealth({ values, handleBlur, setFieldValu
         scaleText="(0-4=Minimal  5-9=Mild  10-14=Moderate  15-19=Mod Severe  20-27=Severe)"
         values={emh}
         handleChange={(e) =>
-          setFieldValue(`emotionalMentalHealth.${e.target.name}`, e.target.value)
+          setFieldValue(
+            `emotionalMentalHealth.${e.target.name}`,
+            e.target.value,
+          )
         }
         handleBlur={handleBlur}
       />
 
       {/* ─── GAD-7 ─── */}
       <p className="text-sm text-blue-500 font-medium mt-2">
-        GAD-7 – Anxiety Scale (0 = Not at all, 1 = Several days, 2 = &gt;Half the days, 3 = Nearly every day)
+        GAD-7 – Anxiety Scale (0 = Not at all, 1 = Several days, 2 = &gt;Half
+        the days, 3 = Nearly every day)
       </p>
 
       {GAD7_QUESTIONS.map((q) => (
@@ -142,7 +184,9 @@ export default function EmotionalMentalHealth({ values, handleBlur, setFieldValu
             name={`emotionalMentalHealth.${q.key}`}
             value={emh[q.key] || ''}
             options={SCALE_0_3}
-            onChange={(val) => setFieldValue(`emotionalMentalHealth.${q.key}`, val)}
+            onChange={(val) =>
+              setFieldValue(`emotionalMentalHealth.${q.key}`, val)
+            }
           />
         </div>
       ))}
@@ -154,14 +198,18 @@ export default function EmotionalMentalHealth({ values, handleBlur, setFieldValu
         scaleText="(0-4=Minimal  5-9=Mild  10-14=Moderate  15-21=Severe)"
         values={emh}
         handleChange={(e) =>
-          setFieldValue(`emotionalMentalHealth.${e.target.name}`, e.target.value)
+          setFieldValue(
+            `emotionalMentalHealth.${e.target.name}`,
+            e.target.value,
+          )
         }
         handleBlur={handleBlur}
       />
 
       {/* ─── C-SSRS ─── */}
       <p className="text-sm text-blue-500 font-medium mt-2">
-        Columbia Suicide Severity Rating Scale (C-SSRS – Brief Screener) (Past Month)
+        Columbia Suicide Severity Rating Scale (C-SSRS – Brief Screener) (Past
+        Month)
       </p>
 
       {SUICIDE_QUESTIONS.map((q) => (
@@ -178,7 +226,9 @@ export default function EmotionalMentalHealth({ values, handleBlur, setFieldValu
                   name={`emotionalMentalHealth.${q.key}`}
                   value={opt.value}
                   checked={emh[q.key] === opt.value}
-                  onChange={() => setFieldValue(`emotionalMentalHealth.${q.key}`, opt.value)}
+                  onChange={() =>
+                    setFieldValue(`emotionalMentalHealth.${q.key}`, opt.value)
+                  }
                   className="accent-primary w-4 h-4"
                 />
                 <span className="text-sm text-text-primary">{opt.label}</span>

@@ -1,35 +1,46 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { Table, buildColumns } from "@/components/commonComponents/table";
-import Pagination from "@/components/commonComponents/pagination/Pagination";
-import Icon from "@/components/icons/Icon";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import Button from "@/components/commonComponents/button/Button";
-import SelectDropdown from "@/components/commonComponents/selectDropdown/SelectDropdown";
-import ActionDropdown from "@/components/commonComponents/actionDropdown";
-import { patientsData, SELECT_ACTION_OPTIONS } from "@/data/subOrganizationsData";
-import { componentKey, setOpenEditDrawer, setOpenUploadModal } from "./providerGroupPatientsSlice";
-import EditPatientDrawer from "./Components/EditPatientDrawer";
-import UploadCsvDrawer from "./Components/UploadCsvDrawer";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useOutletContext } from 'react-router-dom';
+
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
+import Button from '@/components/commonComponents/button/Button';
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import Pagination from '@/components/commonComponents/pagination/Pagination';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import { buildColumns, Table } from '@/components/commonComponents/table';
+import Icon from '@/components/icons/Icon';
+import {
+  patientsData,
+  SELECT_ACTION_OPTIONS,
+} from '@/data/subOrganizationsData';
+
+import EditPatientDrawer from './Components/EditPatientDrawer';
+import UploadCsvDrawer from './Components/UploadCsvDrawer';
+import {
+  componentKey,
+  setOpenEditDrawer,
+  setOpenUploadModal,
+} from './providerGroupPatientsSlice';
 
 export default function ProviderGroupPatients() {
   const { setToolbar } = useOutletContext();
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [showInactivePatients, setShowInactivePatients] = useState(false);
   const [selectAction, setSelectAction] = useState(null);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
-  const { drawerOpen, editData, uploadModalOpen } = useSelector((state) => state[componentKey] ?? {});
+  const { drawerOpen, editData, uploadModalOpen } = useSelector(
+    (state) => state[componentKey] ?? {},
+  );
 
   useEffect(() => {
     setToolbar(
       <>
-         <Checkbox
+        <Checkbox
           label="Show Inactive Patients"
           checked={showInactivePatients}
           onChange={() => setShowInactivePatients((p) => !p)}
@@ -42,7 +53,10 @@ export default function ProviderGroupPatients() {
             type="text"
             placeholder="Search by Patient ID or First name"
             value={search}
-            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
@@ -56,11 +70,15 @@ export default function ProviderGroupPatients() {
             onChange={(val) => setSelectAction(val)}
           />
         </div>
-        <Button variant="primaryBlue" size="sm" onClick={() => dispatch(setOpenUploadModal())}>
+        <Button
+          variant="primaryBlue"
+          size="sm"
+          onClick={() => dispatch(setOpenUploadModal())}
+        >
           <Icon name="Upload" size={14} />
           Upload CSV File
         </Button>
-      </>
+      </>,
     );
     return () => setToolbar(null);
   }, [setToolbar, showInactivePatients, search, selectAction, dispatch]);
@@ -80,7 +98,7 @@ export default function ProviderGroupPatients() {
       data = data.filter(
         (item) =>
           item.patientId.toLowerCase().includes(term) ||
-          item.firstName.toLowerCase().includes(term)
+          item.firstName.toLowerCase().includes(term),
       );
     }
     return data;
@@ -89,67 +107,94 @@ export default function ProviderGroupPatients() {
   const totalPages = Math.ceil(filteredData.length / limit) || 1;
 
   const paginatedData = useMemo(
-    () =>
-      filteredData.slice((page - 1) * limit, page * limit),
-    [filteredData, page, limit]
+    () => filteredData.slice((page - 1) * limit, page * limit),
+    [filteredData, page, limit],
   );
 
   const columns = useMemo(
     () =>
       buildColumns([
         {
-          id: "patientId",
-          header: "Patients ID",
-          accessorKey: "patientId",
-          render: (row) => <span className="text-primary-700 font-medium">{row.patientId}</span>,
-        },
-        { id: "firstName", header: "First Name", accessorKey: "firstName" },
-        { id: "lastName", header: "Last Name", accessorKey: "lastName" },
-        { id: "dob", header: "Date of Birth", accessorKey: "dob" },
-        { id: "primaryCareManager", header: "Primary Care Manager", accessorKey: "primaryCareManager" },
-        { id: "secondaryCareManager", header: "Secondary Care Manager", accessorKey: "secondaryCareManager" },
-        {
-          id: "enrollmentStatus",
-          header: "Enrollment Status",
-          accessorKey: "enrollmentStatus",
+          id: 'patientId',
+          header: 'Patients ID',
+          accessorKey: 'patientId',
           render: (row) => (
-            <span className={row.enrollmentStatus === "Enrolled" ? "text-success-700 font-medium" : "text-neutral-500"}>
+            <span className="text-primary-700 font-medium">
+              {row.patientId}
+            </span>
+          ),
+        },
+        { id: 'firstName', header: 'First Name', accessorKey: 'firstName' },
+        { id: 'lastName', header: 'Last Name', accessorKey: 'lastName' },
+        { id: 'dob', header: 'Date of Birth', accessorKey: 'dob' },
+        {
+          id: 'primaryCareManager',
+          header: 'Primary Care Manager',
+          accessorKey: 'primaryCareManager',
+        },
+        {
+          id: 'secondaryCareManager',
+          header: 'Secondary Care Manager',
+          accessorKey: 'secondaryCareManager',
+        },
+        {
+          id: 'enrollmentStatus',
+          header: 'Enrollment Status',
+          accessorKey: 'enrollmentStatus',
+          render: (row) => (
+            <span
+              className={
+                row.enrollmentStatus === 'Enrolled'
+                  ? 'text-success-700 font-medium'
+                  : 'text-neutral-500'
+              }
+            >
               {row.enrollmentStatus}
             </span>
           ),
         },
         {
-          id: "enrolledPrograms",
-          header: "Enrolled Programs",
-          accessorKey: "enrolledPrograms",
+          id: 'enrolledPrograms',
+          header: 'Enrolled Programs',
+          accessorKey: 'enrolledPrograms',
           render: (row) => {
-            if (!row.enrolledPrograms?.length) return <span className="text-neutral-400">-</span>;
+            if (!row.enrolledPrograms?.length)
+              return <span className="text-neutral-400">-</span>;
             return (
               <div className="flex items-center gap-1">
                 {row.enrolledPrograms.map((p) => (
-                  <span key={p} className="px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700">{p}</span>
+                  <span
+                    key={p}
+                    className="px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-700"
+                  >
+                    {p}
+                  </span>
                 ))}
               </div>
             );
           },
         },
         {
-          id: "actions",
-          header: "Action",
+          id: 'actions',
+          header: 'Action',
           width: 70,
-          align: "center",
+          align: 'center',
           render: (row) => (
             <ActionDropdown
               options={[
-                { label: "View", value: "view", onClickCb: () => {} },
-                { label: "Edit", value: "edit", onClickCb: () => dispatch(setOpenEditDrawer(row)) },
-                { label: "Archive", value: "archive", onClickCb: () => {} },
+                { label: 'View', value: 'view', onClickCb: () => {} },
+                {
+                  label: 'Edit',
+                  value: 'edit',
+                  onClickCb: () => dispatch(setOpenEditDrawer(row)),
+                },
+                { label: 'Archive', value: 'archive', onClickCb: () => {} },
               ]}
             />
           ),
         },
       ]),
-    [dispatch]
+    [dispatch],
   );
 
   return (
@@ -171,7 +216,10 @@ export default function ProviderGroupPatients() {
         currentPage={page}
         currentLimit={limit}
         onPageChange={setPage}
-        onLimitChange={(val) => { setLimit(val); setPage(1); }}
+        onLimitChange={(val) => {
+          setLimit(val);
+          setPage(1);
+        }}
       />
       <EditPatientDrawer open={drawerOpen} editData={editData} />
       <UploadCsvDrawer open={uploadModalOpen} />

@@ -2,25 +2,23 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import { buildColumns, Table } from '@/components/commonComponents/table';
-import Icon from '@/components/icons/Icon';
-import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
+import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
+import CreateRoleModal from './Components/CreateRoleModal';
+import { settingsRolesActions } from './settingsRolesPermissionsSaga';
 import {
   componentKey,
   setOpenCreateRoleModal,
 } from './settingsRolesPermissionsSlice';
-import './settingsRolesPermissionsSaga';
-import { settingsRolesActions } from './settingsRolesPermissionsSaga';
-
-import CreateRoleModal from './Components/CreateRoleModal';
 
 export default function SettingsRolesPermissions() {
   const { setToolbar } = useOutletContext();
@@ -35,7 +33,12 @@ export default function SettingsRolesPermissions() {
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
-  const { createRoleModalOpen, rolesData, totalRecords, refreshFlag = 0 } = state || {};
+  const {
+    createRoleModalOpen,
+    rolesData,
+    totalRecords,
+    refreshFlag = 0,
+  } = state || {};
   const isLoading = useLoadingKey(LOADING_KEYS.SETTINGS_ROLES_GET_LIST);
   const debouncedSearch = useDebounce(search);
 
@@ -50,7 +53,16 @@ export default function SettingsRolesPermissions() {
         sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
       }),
     );
-  }, [dispatch, page, limit, debouncedSearch, showArchive, sortKey, sortOrder, refreshFlag]);
+  }, [
+    dispatch,
+    page,
+    limit,
+    debouncedSearch,
+    showArchive,
+    sortKey,
+    sortOrder,
+    refreshFlag,
+  ]);
 
   useEffect(() => {
     setToolbar(
@@ -83,7 +95,8 @@ export default function SettingsRolesPermissions() {
           size="sm"
           onClick={() => dispatch(setOpenCreateRoleModal())}
         >
-          <Icon name="Plus" size={14} />Create Roles
+          <Icon name="Plus" size={14} />
+          Create Roles
         </Button>
       </>,
     );
@@ -211,7 +224,10 @@ export default function SettingsRolesPermissions() {
                 value: 'unarchive',
                 onClickCb: () =>
                   dispatch(
-                    settingsRolesActions.archiveRole({ roleId: row.id, isArchived: true }),
+                    settingsRolesActions.archiveRole({
+                      roleId: row.id,
+                      isArchived: true,
+                    }),
                   ),
               });
             } else {
@@ -220,7 +236,10 @@ export default function SettingsRolesPermissions() {
                 value: 'archive',
                 onClickCb: () =>
                   dispatch(
-                    settingsRolesActions.archiveRole({ roleId: row.id, isArchived: false }),
+                    settingsRolesActions.archiveRole({
+                      roleId: row.id,
+                      isArchived: false,
+                    }),
                   ),
               });
             }

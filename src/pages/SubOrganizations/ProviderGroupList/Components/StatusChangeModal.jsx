@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Button from '@/components/commonComponents/button/Button';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
-import { componentKey, setStatusModal } from '../providerGroupListSlice';
 import { providerGroupListActions } from '../providerGroupListSaga';
+import { componentKey, setStatusModal } from '../providerGroupListSlice';
 
 const { changeStatus } = providerGroupListActions;
 
@@ -32,10 +32,11 @@ const CONTENT = {
 export default function StatusChangeModal() {
   const dispatch = useDispatch();
   const { open, row } = useSelector(
-    (state) =>
-      state[componentKey]?.statusModal ?? { open: false, row: null },
+    (state) => state[componentKey]?.statusModal ?? { open: false, row: null },
   );
-  const isLoading = useLoadingKey(LOADING_KEYS.PROVIDER_GROUP_LIST_PATCH_STATUS);
+  const isLoading = useLoadingKey(
+    LOADING_KEYS.PROVIDER_GROUP_LIST_PATCH_STATUS,
+  );
 
   const targetStatus = row?.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
   const content = CONTENT[targetStatus];

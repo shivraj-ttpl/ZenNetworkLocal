@@ -1,7 +1,12 @@
-import { Icon } from "@/components/icons";
+import { Icon } from '@/components/icons';
 
-export default function HorizontalStepBar({ steps, activeStep, completedSteps = new Set(), onStepClick }) {
-  const activeLabel = steps.find((s) => s.id === activeStep)?.label || "";
+export default function HorizontalStepBar({
+  steps,
+  activeStep,
+  completedSteps = new Set(),
+  onStepClick,
+}) {
+  const activeLabel = steps.find((s) => s.id === activeStep)?.label || '';
 
   return (
     <div className="w-full px-4 py-4 border-b border-border bg-surface shrink-0">
@@ -22,11 +27,12 @@ export default function HorizontalStepBar({ steps, activeStep, completedSteps = 
                   className={`
                     w-9 h-9 rounded-full flex items-center justify-center
                     text-sm font-semibold transition-colors
-                    ${isCompleted
-                      ? "bg-green-500 text-white"
-                      : isActive
-                        ? "bg-primary text-white"
-                        : "bg-neutral-200 text-text-secondary"
+                    ${
+                      isCompleted
+                        ? 'bg-green-500 text-white'
+                        : isActive
+                          ? 'bg-primary text-white'
+                          : 'bg-neutral-200 text-text-secondary'
                     }
                   `}
                 >
@@ -37,7 +43,7 @@ export default function HorizontalStepBar({ steps, activeStep, completedSteps = 
               {!isLast && (
                 <div
                   className={`w-10 h-0.5 ${
-                    isCompleted ? "bg-green-500" : "bg-neutral-300"
+                    isCompleted ? 'bg-green-500' : 'bg-neutral-300'
                   }`}
                 />
               )}
@@ -45,7 +51,9 @@ export default function HorizontalStepBar({ steps, activeStep, completedSteps = 
           );
         })}
       </div>
-      <p className="text-sm font-semibold text-text-primary mt-3">{activeLabel}</p>
+      <p className="text-sm font-semibold text-text-primary mt-3">
+        {activeLabel}
+      </p>
     </div>
   );
 }

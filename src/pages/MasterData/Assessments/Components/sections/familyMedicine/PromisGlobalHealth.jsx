@@ -3,8 +3,14 @@ const QUESTIONS = [
   { key: 'qualityOfLife', text: '2. Quality of life:' },
   { key: 'physicalHealth', text: '3. Physical health:' },
   { key: 'mentalHealth', text: '4. Mental health (mood/ability to think):' },
-  { key: 'socialActivities', text: '5. Satisfaction with social relationships:' },
-  { key: 'carryOutActivities', text: '6. Ability to carry out every day physical activities:' },
+  {
+    key: 'socialActivities',
+    text: '5. Satisfaction with social relationships:',
+  },
+  {
+    key: 'carryOutActivities',
+    text: '6. Ability to carry out every day physical activities:',
+  },
   { key: 'emotionalProblems', text: '7. Frequency of emotional problems:' },
   { key: 'fatigue', text: '8. Average fatigue:' },
   { key: 'averagePain', text: '9. Average pain:' },
@@ -19,9 +25,12 @@ export default function PromisGlobalHealth({ values, setFieldValue }) {
   return (
     <div className="flex flex-col gap-5">
       <div>
-        <h3 className="text-base font-semibold text-text-primary">PROMIS GLOBAL Health</h3>
+        <h3 className="text-base font-semibold text-text-primary">
+          PROMIS GLOBAL Health
+        </h3>
         <p className="text-sm text-blue-500 mt-1">
-          (1 = Poor , 5 = Excellent)&nbsp;&nbsp;Please rate how you feel about your health
+          (1 = Poor , 5 = Excellent)&nbsp;&nbsp;Please rate how you feel about
+          your health
         </p>
       </div>
 
@@ -39,7 +48,9 @@ export default function PromisGlobalHealth({ values, setFieldValue }) {
                   name={`promisGlobalHealth.${q.key}`}
                   value={val}
                   checked={p[q.key] === val}
-                  onChange={() => setFieldValue(`promisGlobalHealth.${q.key}`, val)}
+                  onChange={() =>
+                    setFieldValue(`promisGlobalHealth.${q.key}`, val)
+                  }
                   className="accent-primary w-4 h-4"
                 />
                 <span className="text-sm text-text-primary">{val}</span>

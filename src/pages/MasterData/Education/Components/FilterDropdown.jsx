@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Button from '@/components/commonComponents/button/Button';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import Icon from '@/components/icons/Icon';
 
-import { SPECIALTY_OPTIONS, FILE_TYPE_OPTIONS } from '../constant';
+import { FILE_TYPE_OPTIONS, SPECIALTY_OPTIONS } from '../constant';
 
 export default function FilterDropdown({ onApply }) {
   const [open, setOpen] = useState(false);

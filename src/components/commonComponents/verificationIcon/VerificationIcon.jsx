@@ -9,7 +9,14 @@ export default function VerificationIcon({ verified, size = 18 }) {
         xmlns="http://www.w3.org/2000/svg"
         className="shrink-0"
       >
-        <circle cx="12" cy="12" r="10" stroke="#598016" strokeWidth="2" fill="none" />
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="#598016"
+          strokeWidth="2"
+          fill="none"
+        />
         <path
           d="M8 12.5L10.5 15L16 9.5"
           stroke="#598016"
@@ -30,7 +37,14 @@ export default function VerificationIcon({ verified, size = 18 }) {
       xmlns="http://www.w3.org/2000/svg"
       className="shrink-0"
     >
-      <circle cx="12" cy="12" r="10" stroke="#F18A3F" strokeWidth="2" fill="none" />
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="#F18A3F"
+        strokeWidth="2"
+        fill="none"
+      />
       <text
         x="12"
         y="16.5"

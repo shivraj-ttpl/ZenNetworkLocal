@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
@@ -6,9 +6,9 @@ import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
-import { Table, buildColumns } from '@/components/commonComponents/table';
-import RoleGuard from '@/components/RoleGuard/RoleGuard';
+import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
+import RoleGuard from '@/components/RoleGuard/RoleGuard';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { MASTER_DATA_EDIT_ROLES } from '@/constants/roles';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -16,25 +16,24 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
 import { useTableHeight } from '@/hooks/useTableHeight';
+import { formatDate } from '@/utils/GeneralUtils';
 
 import AddMaterialDrawer from './Components/AddMaterialDrawer';
 import FilterDropdown from './Components/FilterDropdown';
 import ViewEducationModal from './Components/ViewEducationModal';
-import { formatDate } from '@/utils/GeneralUtils';
-
 import { educationActions, registerSaga } from './educationSaga';
 import {
   componentKey,
   registerReducer,
-  setPage,
-  setLimit,
-  setSearch,
-  setShowArchived,
-  setFilterSpecialty,
   setFilterFileType,
+  setFilterSpecialty,
+  setLimit,
   setOpenAddDrawer,
   setOpenEditDrawer,
   setOpenViewModal,
+  setPage,
+  setSearch,
+  setShowArchived,
 } from './educationSlice';
 
 const { fetchEducation, toggleFavorite, archiveEducation, downloadEducation } =
@@ -137,10 +136,7 @@ export default function Education() {
     [educationList, page, limit],
   );
 
-  const handlePageChange = useCallback(
-    (p) => dispatch(setPage(p)),
-    [dispatch],
-  );
+  const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
 
   const handleLimitChange = useCallback(
     (l) => dispatch(setLimit(l)),
@@ -231,8 +227,7 @@ export default function Education() {
                       ? 'Remove from Favorites'
                       : 'Add to Favorites',
                     value: 'toggleFavorite',
-                    onClickCb: () =>
-                      dispatch(toggleFavorite({ id: row.id })),
+                    onClickCb: () => dispatch(toggleFavorite({ id: row.id })),
                   },
                   {
                     label: row.isArchived ? 'Unarchive' : 'Archive',

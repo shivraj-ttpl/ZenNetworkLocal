@@ -1,20 +1,22 @@
-import ReactDatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { ErrorMessage } from "formik";
-import { Icon } from "@/components/icons";
+import 'react-datepicker/dist/react-datepicker.css';
 
-const   DatePicker = ({
-  label = "",
-  name = "",
+import { ErrorMessage } from 'formik';
+import ReactDatePicker from 'react-datepicker';
+
+import { Icon } from '@/components/icons';
+
+const DatePicker = ({
+  label = '',
+  name = '',
   isRequired = false,
   value = null,
   onChangeCb = () => {},
-  placeholder = "Select",
+  placeholder = 'Select',
   showTimeSelect = false,
   showTimeSelectOnly = false,
   timeIntervals = 1,
   disabled = false,
-  className = "",
+  className = '',
   minDate,
   maxDate,
   minTime,
@@ -30,6 +32,7 @@ const   DatePicker = ({
 }) => {
   const showError = touched && error;
 
+  // eslint-disable-next-line consistent-return
   const handleChange = (selectedDate) => {
     if (!selectedDate) {
       return onChangeCb(selectedDate);
@@ -38,17 +41,17 @@ const   DatePicker = ({
       onChangeCb(selectedDate);
     } else {
       const year = selectedDate.getFullYear();
-      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-      const day = String(selectedDate.getDate()).padStart(2, "0");
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
       onChangeCb(`${year}-${month}-${day}`);
     }
   };
 
   const getDateFormat = () => {
-    if (showTimeSelectOnly) return "h:mm aa";
-    if (showTimeSelect) return "MM/dd/yyyy hh:mm:ss aa";
-    if (showMonthYearPicker) return "MM/yyyy";
-    return "MM/dd/yyyy";
+    if (showTimeSelectOnly) return 'h:mm aa';
+    if (showTimeSelect) return 'MM/dd/yyyy hh:mm:ss aa';
+    if (showMonthYearPicker) return 'MM/yyyy';
+    return 'MM/dd/yyyy';
   };
 
   const parsedValue = value ? new Date(value) : null;
@@ -93,9 +96,9 @@ const   DatePicker = ({
             w-full h-10 px-4 pr-11 rounded-lg border bg-surface
             text-sm text-neutral-800 placeholder-text-placeholder
             outline-none transition-colors
-            focus:border-primary focus:ring-[0.5] focus:ring-primary
+            focus:border-primary focus:ring-[0.5]
             disabled:bg-neutral-50 disabled:cursor-not-allowed
-            ${showError ? "border-error-400" : "border-border"}
+            ${showError ? 'border-error-400' : 'border-border'}
           `}
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-400 z-10">
@@ -107,7 +110,7 @@ const   DatePicker = ({
         <ErrorMessage name={name}>
           {(msg) => (
             <p className="text-xs text-error-500">
-              {typeof msg === "string" ? msg : msg?.label}
+              {typeof msg === 'string' ? msg : msg?.label}
             </p>
           )}
         </ErrorMessage>

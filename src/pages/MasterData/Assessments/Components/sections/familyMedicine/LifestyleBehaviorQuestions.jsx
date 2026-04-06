@@ -9,7 +9,10 @@ function RadioYesNo({ name, value, onChange }) {
   return (
     <div className="flex items-center gap-6 mt-1">
       {YES_NO.map((opt) => (
-        <label key={opt.value} className="flex items-center gap-2 cursor-pointer select-none">
+        <label
+          key={opt.value}
+          className="flex items-center gap-2 cursor-pointer select-none"
+        >
           <input
             type="radio"
             name={name}
@@ -25,12 +28,19 @@ function RadioYesNo({ name, value, onChange }) {
   );
 }
 
-export default function LifestyleBehaviorQuestions({ values, handleChange, handleBlur, setFieldValue }) {
+export default function LifestyleBehaviorQuestions({
+  values,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+}) {
   const l = values?.lifestyleBehaviorQuestions || {};
 
   return (
     <div className="flex flex-col gap-5">
-      <h3 className="text-base font-semibold text-text-primary">Lifestyle Behavior Questions</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        Lifestyle Behavior Questions
+      </h3>
 
       {/* Row 1: Height, Weight, BMI, Ideal Weight */}
       <div className="grid grid-cols-4 gap-4">
@@ -176,11 +186,15 @@ export default function LifestyleBehaviorQuestions({ values, handleChange, handl
           onBlur={handleBlur}
         />
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-normal text-text-primary">Do you weigh your food ?</label>
+          <label className="text-sm font-normal text-text-primary">
+            Do you weigh your food ?
+          </label>
           <RadioYesNo
             name="lifestyleBehaviorQuestions.weighFood"
             value={l.weighFood || ''}
-            onChange={(val) => setFieldValue('lifestyleBehaviorQuestions.weighFood', val)}
+            onChange={(val) =>
+              setFieldValue('lifestyleBehaviorQuestions.weighFood', val)
+            }
           />
         </div>
       </div>
@@ -188,11 +202,15 @@ export default function LifestyleBehaviorQuestions({ values, handleChange, handl
       {/* Row 7: Log food | Cardio */}
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-normal text-text-primary">Do you log your food?</label>
+          <label className="text-sm font-normal text-text-primary">
+            Do you log your food?
+          </label>
           <RadioYesNo
             name="lifestyleBehaviorQuestions.logFood"
             value={l.logFood || ''}
-            onChange={(val) => setFieldValue('lifestyleBehaviorQuestions.logFood', val)}
+            onChange={(val) =>
+              setFieldValue('lifestyleBehaviorQuestions.logFood', val)
+            }
           />
         </div>
         <Input
@@ -257,12 +275,18 @@ export default function LifestyleBehaviorQuestions({ values, handleChange, handl
         />
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-normal text-text-primary">
-            Interested in Lifestyle/wellness coaching/nutrition/exercise program?
+            Interested in Lifestyle/wellness coaching/nutrition/exercise
+            program?
           </label>
           <RadioYesNo
             name="lifestyleBehaviorQuestions.interestedCoaching"
             value={l.interestedCoaching || ''}
-            onChange={(val) => setFieldValue('lifestyleBehaviorQuestions.interestedCoaching', val)}
+            onChange={(val) =>
+              setFieldValue(
+                'lifestyleBehaviorQuestions.interestedCoaching',
+                val,
+              )
+            }
           />
         </div>
       </div>
@@ -275,7 +299,12 @@ export default function LifestyleBehaviorQuestions({ values, handleChange, handl
         <RadioYesNo
           name="lifestyleBehaviorQuestions.interestedCounseling"
           value={l.interestedCounseling || ''}
-          onChange={(val) => setFieldValue('lifestyleBehaviorQuestions.interestedCounseling', val)}
+          onChange={(val) =>
+            setFieldValue(
+              'lifestyleBehaviorQuestions.interestedCounseling',
+              val,
+            )
+          }
         />
       </div>
     </div>

@@ -12,13 +12,13 @@ import SubOrganizationDataService from '@/services/appDataService/SubOrganizatio
 
 import {
   componentKey,
-  setSubOrgList,
-  setTotalRecords,
-  setTotalPages,
   setDrawerOpen,
   setEditDrawer,
   setRefreshList,
   setStatusModal,
+  setSubOrgList,
+  setTotalPages,
+  setTotalRecords,
 } from './subOrgListSlice';
 
 export const subOrgListActions = createSagaActions(componentKey, [
@@ -32,7 +32,15 @@ export const subOrgListActions = createSagaActions(componentKey, [
 
 function* fetchSubOrganizationsSaga() {
   const state = yield select((s) => s[componentKey]);
-  const { page, limit, search, showArchived, statusFilter, sortKey, sortOrder } = state;
+  const {
+    page,
+    limit,
+    search,
+    showArchived,
+    statusFilter,
+    sortKey,
+    sortOrder,
+  } = state;
 
   const params = { page, limit };
   if (search) params.search = search;
@@ -151,12 +159,27 @@ function* changeSubOrgStatusSaga(action) {
 
 function* rootSaga() {
   yield all([
-    takeLatest(subOrgListActions.fetchSubOrganizations().type, fetchSubOrganizationsSaga),
+    takeLatest(
+      subOrgListActions.fetchSubOrganizations().type,
+      fetchSubOrganizationsSaga,
+    ),
     takeLatest(subOrgListActions.fetchSubOrgById().type, fetchSubOrgByIdSaga),
-    takeLatest(subOrgListActions.createSubOrganization().type, createSubOrganizationSaga),
-    takeLatest(subOrgListActions.updateSubOrganization().type, updateSubOrganizationSaga),
-    takeLatest(subOrgListActions.changeSubOrgStatus().type, changeSubOrgStatusSaga),
-    takeLatest(subOrgListActions.archiveSubOrganization().type, archiveSubOrganizationSaga),
+    takeLatest(
+      subOrgListActions.createSubOrganization().type,
+      createSubOrganizationSaga,
+    ),
+    takeLatest(
+      subOrgListActions.updateSubOrganization().type,
+      updateSubOrganizationSaga,
+    ),
+    takeLatest(
+      subOrgListActions.changeSubOrgStatus().type,
+      changeSubOrgStatusSaga,
+    ),
+    takeLatest(
+      subOrgListActions.archiveSubOrganization().type,
+      archiveSubOrganizationSaga,
+    ),
   ]);
 }
 

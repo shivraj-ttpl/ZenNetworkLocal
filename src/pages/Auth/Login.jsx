@@ -1,27 +1,32 @@
+import { Form, Formik } from 'formik';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { useNavigate, Link } from "react-router-dom";
-import { Formik, Form } from "formik";
-import {useDispatch} from "react-redux"
-import AuthLayout from "./AuthLayout";
-import Input from "@/components/commonComponents/input/Input";
-import Button from "@/components/commonComponents/button/Button";
-import Checkbox from "@/components/commonComponents/checkbox/Checkbox";
-import { getValidationSchema } from "@/utils/formUtils";
-import { FORM_FIELDS_NAMES, VALIDATION_REGEX } from "./constant";
-import { authActions } from "./authSaga";
-import { useLoadingKey } from "../../hooks/useLoadingKey";
-import {LOADING_KEYS} from "../../constants/loadingKeys"
-import { setLoggedInUser, setIsAuthenticated, setCurrentUserRole } from "./authSlice";
-import { showToast } from "../../utils/toastUtils";
-import {TOASTER_VARIANT} from "../../core/store/notificationSlice"
-import { toastMessages } from "../../constants/toastMessages";
+import Button from '@/components/commonComponents/button/Button';
+import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import Input from '@/components/commonComponents/input/Input';
+import { getValidationSchema } from '@/utils/formUtils';
+
+import { LOADING_KEYS } from '../../constants/loadingKeys';
+import { toastMessages } from '../../constants/toastMessages';
+import { TOASTER_VARIANT } from '../../core/store/notificationSlice';
+import { useLoadingKey } from '../../hooks/useLoadingKey';
+import { showToast } from '../../utils/toastUtils';
+import AuthLayout from './AuthLayout';
+import { authActions } from './authSaga';
+import {
+  setCurrentUserRole,
+  setIsAuthenticated,
+  setLoggedInUser,
+} from './authSlice';
+import { FORM_FIELDS_NAMES, VALIDATION_REGEX } from './constant';
 
 const fields = [
   {
     fieldName: FORM_FIELDS_NAMES.EMAIL,
     isRequired: true,
     isEmail: true,
-    customFieldName: "Email Address",
+    customFieldName: 'Email Address',
   },
   {
     fieldName: FORM_FIELDS_NAMES.PASSWORD,
@@ -36,20 +41,26 @@ const validationSchema = getValidationSchema(fields);
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {postLogin} = authActions
-  const isLoginLoading = useLoadingKey(LOADING_KEYS.AUTH_POST_LOGIN)
+  const { postLogin } = authActions;
+  const isLoginLoading = useLoadingKey(LOADING_KEYS.AUTH_POST_LOGIN);
   const handleLogin = (values) => {
-
-    dispatch(postLogin({payload:values, onSuccessCb:(res)=>{
-      showToast(toastMessages?.loginSuccessMessage, TOASTER_VARIANT.SUCCESS)
-      localStorage.setItem("token", res?.data?.data?.accessToken);
-      localStorage.setItem("user", JSON.stringify(res?.data?.data?.user));
-      dispatch(setLoggedInUser(res?.data?.data?.user));
-      dispatch(setIsAuthenticated(true));
-      dispatch(setCurrentUserRole(res?.data?.data?.user?.userType));
-      navigate("/master-data")
-    }}))
-
+    dispatch(
+      postLogin({
+        payload: values,
+        onSuccessCb: (res) => {
+          showToast(
+            toastMessages?.loginSuccessMessage,
+            TOASTER_VARIANT.SUCCESS,
+          );
+          localStorage.setItem('token', res?.data?.data?.accessToken);
+          localStorage.setItem('user', JSON.stringify(res?.data?.data?.user));
+          dispatch(setLoggedInUser(res?.data?.data?.user));
+          dispatch(setIsAuthenticated(true));
+          dispatch(setCurrentUserRole(res?.data?.data?.user?.userType));
+          navigate('/master-data');
+        },
+      }),
+    );
   };
 
   return (
@@ -76,14 +87,22 @@ export default function Login() {
       {/* Form */}
       <Formik
         initialValues={{
-          [FORM_FIELDS_NAMES.EMAIL]: "",
-          [FORM_FIELDS_NAMES.PASSWORD]: "",
+          [FORM_FIELDS_NAMES.EMAIL]: '',
+          [FORM_FIELDS_NAMES.PASSWORD]: '',
           [FORM_FIELDS_NAMES.REMEMBER_ME]: false,
         }}
         validationSchema={validationSchema}
         onSubmit={handleLogin}
       >
-        {({ values, errors, touched, handleChange, handleBlur, setFieldValue , handleSubmit}) => (
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          setFieldValue,
+          handleSubmit,
+        }) => (
           <Form className="flex flex-col gap-5">
             <Input
               label="Email Address"
@@ -116,7 +135,7 @@ export default function Login() {
               <Checkbox
                 label="Remember this device"
                 name={FORM_FIELDS_NAMES.REMEMBER_ME}
-                variant={"primary"}
+                variant={'primary'}
                 checked={values[FORM_FIELDS_NAMES.REMEMBER_ME]}
                 onChange={(e) =>
                   setFieldValue(FORM_FIELDS_NAMES.REMEMBER_ME, e.target.checked)

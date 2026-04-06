@@ -13,13 +13,13 @@ import { downloadBlobFile } from '@/utils/GeneralUtils';
 
 import {
   componentKey,
-  setPayersList,
-  setTotalRecords,
-  setTotalPages,
   setCloseDrawer,
   setCloseImportModal,
   setCloseStatusModal,
+  setPayersList,
   setRefreshPayers,
+  setTotalPages,
+  setTotalRecords,
 } from './payersSlice';
 
 export const payersActions = createSagaActions(componentKey, [
@@ -35,7 +35,8 @@ export const payersActions = createSagaActions(componentKey, [
 
 function* fetchPayersSaga() {
   const state = yield select((s) => s[componentKey]);
-  const { page, limit, search, showArchived, payerType, sortKey, sortOrder } = state;
+  const { page, limit, search, showArchived, payerType, sortKey, sortOrder } =
+    state;
 
   const params = { page, limit };
   if (search) params.search = search;
@@ -192,7 +193,10 @@ function* rootSaga() {
     takeLatest(payersActions.createPayer().type, createPayerSaga),
     takeLatest(payersActions.updatePayer().type, updatePayerSaga),
     takeLatest(payersActions.togglePayerStatus().type, togglePayerStatusSaga),
-    takeLatest(payersActions.togglePayerFavorite().type, togglePayerFavoriteSaga),
+    takeLatest(
+      payersActions.togglePayerFavorite().type,
+      togglePayerFavoriteSaga,
+    ),
     takeLatest(payersActions.archivePayer().type, archivePayerSaga),
     takeLatest(payersActions.downloadTemplate().type, downloadTemplateSaga),
     takeLatest(payersActions.importPayers().type, importPayersSaga),

@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useCallback, useState, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
-import { Table, buildColumns } from '@/components/commonComponents/table';
+import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
@@ -15,21 +15,20 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useRoleAccess from '@/hooks/useRoleAccess';
 import { useTableHeight } from '@/hooks/useTableHeight';
-
 import { formatDate, truncateText } from '@/utils/GeneralUtils';
 
 import { assessmentsActions, registerSaga } from './assessmentsSaga';
 import {
   componentKey,
   registerReducer,
-  setPage,
   setLimit,
+  setOpenViewDrawer,
+  setPage,
   setSearch,
   setShowArchived,
-  setOpenViewDrawer,
 } from './assessmentsSlice';
-import ViewAssessmentDrawer from './Components/ViewAssessmentDrawer';
 import StandardDepressionScreeningDrawer from './Components/StandardDepressionScreeningDrawer';
+import ViewAssessmentDrawer from './Components/ViewAssessmentDrawer';
 
 const { fetchAssessments, toggleFavorite, archiveAssessment } =
   assessmentsActions;
@@ -102,10 +101,7 @@ export default function Assessments() {
     [assessmentsList, page, limit],
   );
 
-  const handlePageChange = useCallback(
-    (p) => dispatch(setPage(p)),
-    [dispatch],
-  );
+  const handlePageChange = useCallback((p) => dispatch(setPage(p)), [dispatch]);
 
   const handleLimitChange = useCallback(
     (l) => dispatch(setLimit(l)),
@@ -127,7 +123,11 @@ export default function Assessments() {
             if (truncated === row.description) return row.description;
             return (
               <ToolTip
-                content={<p className="p-2 text-sm max-w-80 wrap-break-word">{row.description}</p>}
+                content={
+                  <p className="p-2 text-sm max-w-80 wrap-break-word">
+                    {row.description}
+                  </p>
+                }
                 position="bottom"
                 usePortal
               >
@@ -177,17 +177,17 @@ export default function Assessments() {
                   {
                     label: 'View',
                     value: 'view',
-                    onClickCb: () => row.name === 'Standard Depression Screening'
-                      ? setPhq9DrawerOpen(true)
-                      : dispatch(setOpenViewDrawer(row)),
+                    onClickCb: () =>
+                      row.name === 'Standard Depression Screening'
+                        ? setPhq9DrawerOpen(true)
+                        : dispatch(setOpenViewDrawer(row)),
                   },
                   {
                     label: row.isFavorite
                       ? 'Remove from Favorites'
                       : 'Add to Favorites',
                     value: 'toggleFavorite',
-                    onClickCb: () =>
-                      dispatch(toggleFavorite({ id: row.id })),
+                    onClickCb: () => dispatch(toggleFavorite({ id: row.id })),
                   },
                   {
                     label: row.isArchived ? 'Unarchive' : 'Archive',

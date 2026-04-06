@@ -12,8 +12,8 @@ import SubOrganizationDataService from '@/services/appDataService/SubOrganizatio
 
 import {
   componentKey,
-  setProfile,
   setCloseDrawer,
+  setProfile,
   setRefreshProfile,
 } from './subOrgProfileSlice';
 

@@ -24,7 +24,9 @@ export default function FamilyHistory({ values, setFieldValue }) {
 
   return (
     <div className="flex flex-col gap-0">
-      <h3 className="text-base font-semibold text-text-primary mb-4">Family History</h3>
+      <h3 className="text-base font-semibold text-text-primary mb-4">
+        Family History
+      </h3>
 
       <div className="overflow-auto">
         <table className="w-full text-sm">
@@ -34,11 +36,16 @@ export default function FamilyHistory({ values, setFieldValue }) {
                 Condition
               </th>
               {CHECKBOX_MEMBERS.map((m) => (
-                <th key={m} className="py-2 px-3 text-center font-medium text-text-secondary">
+                <th
+                  key={m}
+                  className="py-2 px-3 text-center font-medium text-text-secondary"
+                >
                   {m}
                 </th>
               ))}
-              <th className="py-2 px-3 text-left font-medium text-text-secondary">Other</th>
+              <th className="py-2 px-3 text-left font-medium text-text-secondary">
+                Other
+              </th>
             </tr>
           </thead>
           <tbody>

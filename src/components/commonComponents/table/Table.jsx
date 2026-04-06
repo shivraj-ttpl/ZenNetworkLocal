@@ -105,6 +105,7 @@ export default function Table({
 
     return {
       id: '_select',
+      // eslint-disable-next-line react/no-unstable-nested-components
       header: ({ table }) => {
         if (!selectAll) return null;
 
@@ -142,6 +143,7 @@ export default function Table({
           />
         );
       },
+      // eslint-disable-next-line react/no-unstable-nested-components
       cell: ({ row }) => {
         const disabled = isRowDisabled?.(row.original) ?? false;
         const id = row.original[selectId];
@@ -187,6 +189,7 @@ export default function Table({
   );
 
   // ─── TanStack Table instance ──────────────────────────────
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns: allColumns,

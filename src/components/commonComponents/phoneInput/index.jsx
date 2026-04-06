@@ -1,46 +1,80 @@
-import { useState, useEffect } from "react";
-import PhoneInputLib from "react-phone-number-input";
-import "react-phone-number-input/style.css";
+import 'react-phone-number-input/style.css';
+
+import { useEffect, useState } from 'react';
+import PhoneInputLib from 'react-phone-number-input';
 
 export default function PhoneInput({
-  name = "phone",
+  name = 'phone',
   label,
-  placeholder = "Enter phone number",
+  placeholder = 'Enter phone number',
   value,
   onChange,
   onBlur,
-  defaultCountry = "AE",
+  defaultCountry = 'AE',
   disabled = false,
   error,
   touched,
   required = false,
-  className = "",
+  className = '',
 }) {
   const [selectedCountry, setSelectedCountry] = useState(defaultCountry);
   const showError = touched && error;
 
   useEffect(() => {
-    if (value && typeof value === "string" && value.startsWith("+")) {
+    if (value && typeof value === 'string' && value.startsWith('+')) {
       const countryCodeMap = {
-        "+971": "AE", "+966": "SA", "+1": "US", "+44": "GB", "+91": "IN",
-        "+86": "CN", "+33": "FR", "+49": "DE", "+81": "JP", "+82": "KR",
-        "+61": "AU", "+55": "BR", "+52": "MX", "+39": "IT", "+34": "ES",
-        "+31": "NL", "+46": "SE", "+47": "NO", "+45": "DK", "+41": "CH",
-        "+90": "TR", "+20": "EG", "+27": "ZA", "+234": "NG", "+254": "KE",
-        "+880": "BD", "+92": "PK", "+62": "ID", "+60": "MY", "+63": "PH",
-        "+65": "SG", "+66": "TH", "+84": "VN", "+98": "IR", "+972": "IL",
-        "+962": "JO", "+961": "LB", "+965": "KW", "+973": "BH", "+974": "QA",
-        "+968": "OM",
+        '+971': 'AE',
+        '+966': 'SA',
+        '+1': 'US',
+        '+44': 'GB',
+        '+91': 'IN',
+        '+86': 'CN',
+        '+33': 'FR',
+        '+49': 'DE',
+        '+81': 'JP',
+        '+82': 'KR',
+        '+61': 'AU',
+        '+55': 'BR',
+        '+52': 'MX',
+        '+39': 'IT',
+        '+34': 'ES',
+        '+31': 'NL',
+        '+46': 'SE',
+        '+47': 'NO',
+        '+45': 'DK',
+        '+41': 'CH',
+        '+90': 'TR',
+        '+20': 'EG',
+        '+27': 'ZA',
+        '+234': 'NG',
+        '+254': 'KE',
+        '+880': 'BD',
+        '+92': 'PK',
+        '+62': 'ID',
+        '+60': 'MY',
+        '+63': 'PH',
+        '+65': 'SG',
+        '+66': 'TH',
+        '+84': 'VN',
+        '+98': 'IR',
+        '+972': 'IL',
+        '+962': 'JO',
+        '+961': 'LB',
+        '+965': 'KW',
+        '+973': 'BH',
+        '+974': 'QA',
+        '+968': 'OM',
       };
 
       let matched = null;
-      let longest = "";
+      let longest = '';
       for (const code in countryCodeMap) {
         if (value.startsWith(code) && code.length > longest.length) {
           longest = code;
           matched = countryCodeMap[code];
         }
       }
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (matched) setSelectedCountry(matched);
     }
   }, [value]);
@@ -59,9 +93,9 @@ export default function PhoneInput({
           phone-input-wrapper
           w-full h-12 rounded-lg border bg-surface overflow-hidden
           transition-colors
-          focus-within:border-primary focus-within:ring-[0.5] focus-within:ring-primary
-          ${disabled ? "bg-neutral-50 cursor-not-allowed opacity-60" : ""}
-          ${showError ? "border-error-400" : "border-border"}
+          focus-within:border-primary focus-within:ring-[0.5]
+          ${disabled ? 'bg-neutral-50 cursor-not-allowed opacity-60' : ''}
+          ${showError ? 'border-error-400' : 'border-border'}
         `}
       >
         <PhoneInputLib

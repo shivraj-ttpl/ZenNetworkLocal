@@ -1,4 +1,4 @@
-const FREQUENCY_OPTIONS = ["Often true", "Sometimes true", "Never true"];
+const FREQUENCY_OPTIONS = ['Often true', 'Sometimes true', 'Never true'];
 
 export default function Food({ values, handleChange }) {
   const food = values?.food || {};
@@ -9,8 +9,8 @@ export default function Food({ values, handleChange }) {
 
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-text-primary">
-          1. Within the past 12 months, you worried that your food would run out before you
-          got money to buy more.
+          1. Within the past 12 months, you worried that your food would run out
+          before you got money to buy more.
         </p>
         {FREQUENCY_OPTIONS.map((opt) => (
           <label key={opt} className="flex items-center gap-2 cursor-pointer">
@@ -29,8 +29,8 @@ export default function Food({ values, handleChange }) {
 
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-text-primary">
-          2. Within the past 12 months, the food you bought just didn&apos;t last and you didn&apos;t
-          have money to get more.
+          2. Within the past 12 months, the food you bought just didn&apos;t
+          last and you didn&apos;t have money to get more.
         </p>
         {FREQUENCY_OPTIONS.map((opt) => (
           <label key={opt} className="flex items-center gap-2 cursor-pointer">

@@ -1,5 +1,5 @@
-import Input from '@/components/commonComponents/input/Input';
 import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
+import Input from '@/components/commonComponents/input/Input';
 
 const REFERRALS = [
   { key: 'primaryCareVisit', label: 'Primary Care Visit' },
@@ -55,9 +55,7 @@ export default function CareFollowUpGoals({
             <DatePicker
               name={`${prefix}.dateReferred`}
               value={data.dateReferred || null}
-              onChangeCb={(val) =>
-                setFieldValue(`${prefix}.dateReferred`, val)
-              }
+              onChangeCb={(val) => setFieldValue(`${prefix}.dateReferred`, val)}
               placeholder="Select Date"
             />
 

@@ -1,17 +1,19 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { Formik } from "formik";
-import { useDispatch } from "react-redux";
-import AuthLayout from "./AuthLayout";
-import Input from "@/components/commonComponents/input/Input";
-import Button from "@/components/commonComponents/button/Button";
-import PasswordRules from "./PasswordRules";
-import { getValidationSchema } from "@/utils/formUtils";
-import { FORM_FIELDS_NAMES, VALIDATION_REGEX } from "./constant";
-import { authActions } from "./authSaga";
-import { useLoadingKey } from "@/hooks/useLoadingKey";
-import { LOADING_KEYS } from "@/constants/loadingKeys";
-import { showToast } from "@/utils/toastUtils";
-import { TOASTER_VARIANT } from "@/core/store/notificationSlice";
+import { Formik } from 'formik';
+import { useDispatch } from 'react-redux';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import Button from '@/components/commonComponents/button/Button';
+import Input from '@/components/commonComponents/input/Input';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { TOASTER_VARIANT } from '@/core/store/notificationSlice';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import { getValidationSchema } from '@/utils/formUtils';
+import { showToast } from '@/utils/toastUtils';
+
+import AuthLayout from './AuthLayout';
+import { authActions } from './authSaga';
+import { FORM_FIELDS_NAMES, VALIDATION_REGEX } from './constant';
+import PasswordRules from './PasswordRules';
 
 const fields = [
   {
@@ -23,10 +25,10 @@ const fields = [
   {
     fieldName: FORM_FIELDS_NAMES.CONFIRM_PASSWORD,
     isRequired: true,
-    customFieldName: "Confirm Password",
+    customFieldName: 'Confirm Password',
     customValidation: (value, parent) => {
       if (value && value !== parent[FORM_FIELDS_NAMES.PASSWORD]) {
-        return "Passwords do not match";
+        return 'Passwords do not match';
       }
       return null;
     },
@@ -39,7 +41,7 @@ export default function SetPassword() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams.get('token');
   const { postSetPassword } = authActions;
   const isLoading = useLoadingKey(LOADING_KEYS.AUTH_POST_SET_PASSWORD);
 
@@ -53,7 +55,7 @@ export default function SetPassword() {
         },
         onSuccessCb: (res) => {
           showToast(res?.data?.data?.message, TOASTER_VARIANT.SUCCESS);
-          navigate("/login");
+          navigate('/login');
         },
       }),
     );
@@ -70,15 +72,29 @@ export default function SetPassword() {
 
       <Formik
         initialValues={{
-          [FORM_FIELDS_NAMES.PASSWORD]: "",
-          [FORM_FIELDS_NAMES.CONFIRM_PASSWORD]: "",
+          [FORM_FIELDS_NAMES.PASSWORD]: '',
+          [FORM_FIELDS_NAMES.CONFIRM_PASSWORD]: '',
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ values, errors, touched, handleChange, handleBlur, handleSubmit: formikSubmit }) => (
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit: formikSubmit,
+        }) => (
           <form onSubmit={formikSubmit} className="flex flex-col gap-5">
-            <input type="text" name="username" autoComplete="username" className="hidden" aria-hidden="true" tabIndex={-1} />
+            <input
+              type="text"
+              name="username"
+              autoComplete="username"
+              className="hidden"
+              aria-hidden="true"
+              tabIndex={-1}
+            />
             <Input
               label="Password"
               name={FORM_FIELDS_NAMES.PASSWORD}

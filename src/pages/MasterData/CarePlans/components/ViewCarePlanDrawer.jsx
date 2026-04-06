@@ -1,22 +1,24 @@
-import { useState, useCallback } from 'react';
-import { Formik, Form } from 'formik';
-import Drawer from '@/components/commonComponents/drawer/Drawer';
-import Button from '@/components/commonComponents/button/Button';
-import StepSidebar from './StepSidebar';
-import { CARE_PLAN_STEPS } from './carePlanConstants';
-import CurrentStateQuestions from './steps/CurrentStateQuestions';
-import CareGapGoals from './steps/CareGapGoals';
-import EducationGoal from './steps/EducationGoal';
-import NutritionGoals from './steps/NutritionGoals';
-import ExerciseGoals from './steps/ExerciseGoals';
-import SelfCareStressGoals from './steps/SelfCareStressGoals';
-import MedicationAdherenceGoals from './steps/MedicationAdherenceGoals';
-import HomeTrackingGoals from './steps/HomeTrackingGoals';
-import CareFollowUpGoals from './steps/CareFollowUpGoals';
-import PlanForSuccess from './steps/PlanForSuccess';
-import StepPlaceholder from './steps/StepPlaceholder';
-import { setCloseDrawer } from '../carePlansSlice';
+import { Form, Formik } from 'formik';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+
+import Button from '@/components/commonComponents/button/Button';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+
+import { setCloseDrawer } from '../carePlansSlice';
+import { CARE_PLAN_STEPS } from './carePlanConstants';
+import CareFollowUpGoals from './steps/CareFollowUpGoals';
+import CareGapGoals from './steps/CareGapGoals';
+import CurrentStateQuestions from './steps/CurrentStateQuestions';
+import EducationGoal from './steps/EducationGoal';
+import ExerciseGoals from './steps/ExerciseGoals';
+import HomeTrackingGoals from './steps/HomeTrackingGoals';
+import MedicationAdherenceGoals from './steps/MedicationAdherenceGoals';
+import NutritionGoals from './steps/NutritionGoals';
+import PlanForSuccess from './steps/PlanForSuccess';
+import SelfCareStressGoals from './steps/SelfCareStressGoals';
+import StepPlaceholder from './steps/StepPlaceholder';
+import StepSidebar from './StepSidebar';
 
 const INITIAL_VALUES = {
   lifeGoals: {
@@ -261,13 +263,37 @@ const INITIAL_VALUES = {
       otherSpecify: '',
     },
     questions: {
-      forgetMedicine: { lastValue: 'Some of the time', currentValue: '', strategy: '' },
-      decideNotTake: { lastValue: 'Most of the time', currentValue: '', strategy: '' },
+      forgetMedicine: {
+        lastValue: 'Some of the time',
+        currentValue: '',
+        strategy: '',
+      },
+      decideNotTake: {
+        lastValue: 'Most of the time',
+        currentValue: '',
+        strategy: '',
+      },
       runOut: { lastValue: 'Most of the time', currentValue: '', strategy: '' },
-      forgetPrescriptions: { lastValue: 'Some of the time', currentValue: '', strategy: '' },
-      missBeforeDoctor: { lastValue: 'Most of the time', currentValue: '', strategy: '' },
-      stopFeelBetter: { lastValue: 'Some of the time', currentValue: '', strategy: '' },
-      stopFeelWorse: { lastValue: 'Some of the time', currentValue: '', strategy: '' },
+      forgetPrescriptions: {
+        lastValue: 'Some of the time',
+        currentValue: '',
+        strategy: '',
+      },
+      missBeforeDoctor: {
+        lastValue: 'Most of the time',
+        currentValue: '',
+        strategy: '',
+      },
+      stopFeelBetter: {
+        lastValue: 'Some of the time',
+        currentValue: '',
+        strategy: '',
+      },
+      stopFeelWorse: {
+        lastValue: 'Some of the time',
+        currentValue: '',
+        strategy: '',
+      },
     },
   },
   homeTrackingGoals: {
@@ -330,11 +356,31 @@ const INITIAL_VALUES = {
     },
   },
   careFollowUpGoals: {
-    primaryCareVisit: { dateReferred: null, placeReferred: '', dateCompleted: null },
-    clinicalPharmacists: { dateReferred: null, placeReferred: '', dateCompleted: null },
-    diabetesNutritionist: { dateReferred: null, placeReferred: '', dateCompleted: null },
-    physicalTherapist: { dateReferred: null, placeReferred: '', dateCompleted: null },
-    socialServiceVisit: { dateReferred: null, placeReferred: '', dateCompleted: null },
+    primaryCareVisit: {
+      dateReferred: null,
+      placeReferred: '',
+      dateCompleted: null,
+    },
+    clinicalPharmacists: {
+      dateReferred: null,
+      placeReferred: '',
+      dateCompleted: null,
+    },
+    diabetesNutritionist: {
+      dateReferred: null,
+      placeReferred: '',
+      dateCompleted: null,
+    },
+    physicalTherapist: {
+      dateReferred: null,
+      placeReferred: '',
+      dateCompleted: null,
+    },
+    socialServiceVisit: {
+      dateReferred: null,
+      placeReferred: '',
+      dateCompleted: null,
+    },
     eyeExam: { dateReferred: null, placeReferred: '', dateCompleted: null },
     footExam: { dateReferred: null, placeReferred: '', dateCompleted: null },
     counseling: { dateReferred: null, placeReferred: '', dateCompleted: null },
@@ -406,13 +452,11 @@ function StepContent({ stepId, formikProps }) {
   }
 }
 
-export default function ViewCarePlanDrawer({ open, onClose }) {
+export default function ViewCarePlanDrawer({ open, onClose: _onClose }) {
   const [activeStep, setActiveStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState(new Set());
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const totalSteps = CARE_PLAN_STEPS.length;
-  const currentStepLabel =
-    CARE_PLAN_STEPS.find((s) => s.id === activeStep)?.label || '';
 
   const handleClose = useCallback(() => {
     setActiveStep(1);
@@ -458,7 +502,7 @@ export default function ViewCarePlanDrawer({ open, onClose }) {
     [totalSteps],
   );
 
-  const handleFormSubmit = (values) => {
+  const handleFormSubmit = (_values) => {
     // TODO: dispatch saga action for save
     handleClose();
   };

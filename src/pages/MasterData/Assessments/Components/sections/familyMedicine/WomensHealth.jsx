@@ -11,12 +11,19 @@ const PREGNANT_OPTIONS = [
   { label: "I don't know", value: 'unknown' },
 ];
 
-export default function WomensHealth({ values, handleChange, handleBlur, setFieldValue }) {
+export default function WomensHealth({
+  values,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+}) {
   const w = values?.womensHealth || {};
 
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="text-base font-semibold text-text-primary">{"Women's Health"}</h3>
+      <h3 className="text-base font-semibold text-text-primary">
+        {"Women's Health"}
+      </h3>
 
       {/* Q1 */}
       <div className="flex flex-col gap-3">
@@ -64,7 +71,9 @@ export default function WomensHealth({ values, handleChange, handleBlur, setFiel
 
       {/* Q2 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">2. When was your last menstrual period?</p>
+        <p className="text-sm text-text-primary">
+          2. When was your last menstrual period?
+        </p>
         <Input
           name="womensHealth.lastMenstrualPeriod"
           placeholder="Enter"
@@ -76,16 +85,23 @@ export default function WomensHealth({ values, handleChange, handleBlur, setFiel
 
       {/* Q3 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">3. Are you using contraception?</p>
+        <p className="text-sm text-text-primary">
+          3. Are you using contraception?
+        </p>
         <div className="flex items-center gap-6">
           {YES_NO.map((opt) => (
-            <label key={opt.value} className="flex items-center gap-2 cursor-pointer select-none">
+            <label
+              key={opt.value}
+              className="flex items-center gap-2 cursor-pointer select-none"
+            >
               <input
                 type="radio"
                 name="womensHealth.usingContraception"
                 value={opt.value}
                 checked={w.usingContraception === opt.value}
-                onChange={() => setFieldValue('womensHealth.usingContraception', opt.value)}
+                onChange={() =>
+                  setFieldValue('womensHealth.usingContraception', opt.value)
+                }
                 className="accent-primary w-4 h-4"
               />
               <span className="text-sm text-text-primary">{opt.label}</span>
@@ -96,16 +112,23 @@ export default function WomensHealth({ values, handleChange, handleBlur, setFiel
 
       {/* Q4 */}
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-text-primary">4. Are you currently pregnant?</p>
+        <p className="text-sm text-text-primary">
+          4. Are you currently pregnant?
+        </p>
         <div className="flex items-center gap-6">
           {PREGNANT_OPTIONS.map((opt) => (
-            <label key={opt.value} className="flex items-center gap-2 cursor-pointer select-none">
+            <label
+              key={opt.value}
+              className="flex items-center gap-2 cursor-pointer select-none"
+            >
               <input
                 type="radio"
                 name="womensHealth.currentlyPregnant"
                 value={opt.value}
                 checked={w.currentlyPregnant === opt.value}
-                onChange={() => setFieldValue('womensHealth.currentlyPregnant', opt.value)}
+                onChange={() =>
+                  setFieldValue('womensHealth.currentlyPregnant', opt.value)
+                }
                 className="accent-primary w-4 h-4"
               />
               <span className="text-sm text-text-primary">{opt.label}</span>

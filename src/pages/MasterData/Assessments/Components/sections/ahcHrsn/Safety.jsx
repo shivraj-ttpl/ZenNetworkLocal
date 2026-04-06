@@ -1,10 +1,32 @@
-const FREQUENCY_OPTIONS = ["Never", "Rarely", "Sometimes", "Fairly often", "Frequently"];
+const FREQUENCY_OPTIONS = [
+  'Never',
+  'Rarely',
+  'Sometimes',
+  'Fairly often',
+  'Frequently',
+];
 
 const QUESTIONS = [
-  { key: "physicallyHurt", label: "1. How often does anyone, including family and friends, physically hurt you?" },
-  { key: "insult", label: "2. How often does anyone, including family and friends, insult or talk down to you?" },
-  { key: "threaten", label: "3. How often does anyone, including family and friends, threaten you with harm?" },
-  { key: "screamCurse", label: "4. How often does anyone, including family and friends, scream or curse at you?" },
+  {
+    key: 'physicallyHurt',
+    label:
+      '1. How often does anyone, including family and friends, physically hurt you?',
+  },
+  {
+    key: 'insult',
+    label:
+      '2. How often does anyone, including family and friends, insult or talk down to you?',
+  },
+  {
+    key: 'threaten',
+    label:
+      '3. How often does anyone, including family and friends, threaten you with harm?',
+  },
+  {
+    key: 'screamCurse',
+    label:
+      '4. How often does anyone, including family and friends, scream or curse at you?',
+  },
 ];
 
 export default function Safety({ values, handleChange }) {

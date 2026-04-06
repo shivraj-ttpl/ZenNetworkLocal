@@ -1,20 +1,21 @@
-import { useState } from "react";
-import { Icon } from "@/components/icons";
+import { useState } from 'react';
+
+import { Icon } from '@/components/icons';
 
 const AUTO_COMPLETE_MAP = {
-  email: "email",
-  password: "current-password",
-  newPassword: "new-password",
-  confirmPassword: "new-password",
-  username: "username",
-  tel: "tel",
+  email: 'email',
+  password: 'current-password',
+  newPassword: 'new-password',
+  confirmPassword: 'new-password',
+  username: 'username',
+  tel: 'tel',
 };
 
 export default function Input({
   label,
   name,
-  type = "text",
-  placeholder = "",
+  type = 'text',
+  placeholder = '',
   value,
   onChange,
   onBlur,
@@ -23,21 +24,18 @@ export default function Input({
   required = false,
   disabled = false,
   autoComplete,
-  className = "",
+  className = '',
   ...props
 }) {
   const [showPassword, setShowPassword] = useState(false);
-  const isPassword = type === "password";
-  const inputType = isPassword ? (showPassword ? "text" : "password") : type;
+  const isPassword = type === 'password';
+  const inputType = isPassword ? (showPassword ? 'text' : 'password') : type;
   const showError = touched && error;
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
       {label && (
-        <label
-          htmlFor={name}
-          className="text-sm font-normal text-text-primary"
-        >
+        <label htmlFor={name} className="text-sm font-normal text-text-primary">
           {label}
           {required && <span className="text-error-500 ml-0.5">*</span>}
         </label>
@@ -51,7 +49,12 @@ export default function Input({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          autoComplete={autoComplete || AUTO_COMPLETE_MAP[name] || AUTO_COMPLETE_MAP[type] || "off"}
+          autoComplete={
+            autoComplete ||
+            AUTO_COMPLETE_MAP[name] ||
+            AUTO_COMPLETE_MAP[type] ||
+            'off'
+          }
           disabled={disabled}
           className={`
             w-full h-10 px-4 rounded-lg border bg-surface
@@ -59,8 +62,8 @@ export default function Input({
             outline-none transition-colors
             focus:border-primary focus:ring-[0.5]
             disabled:bg-neutral-50 disabled:cursor-not-allowed
-            ${showError ? "border-error-400" : "border-border"}
-            ${isPassword ? "pr-11" : ""}
+            ${showError ? 'border-error-400' : 'border-border'}
+            ${isPassword ? 'pr-11' : ''}
           `}
           {...props}
         />
@@ -71,7 +74,7 @@ export default function Input({
             onClick={() => setShowPassword((prev) => !prev)}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 cursor-pointer"
           >
-            <Icon name={showPassword ? "EyeOff" : "Eye"} size={18} />
+            <Icon name={showPassword ? 'EyeOff' : 'Eye'} size={18} />
           </button>
         )}
       </div>

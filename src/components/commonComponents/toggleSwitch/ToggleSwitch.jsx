@@ -3,8 +3,8 @@ const ToggleSwitch = ({
   checked,
   onChangeCb = () => {},
   title,
-  activeLabel = "Active",
-  inactiveLabel = "Inactive",
+  activeLabel = 'Active',
+  inactiveLabel = 'Inactive',
   showLabel = true,
   disabled = false,
 }) => {
@@ -23,20 +23,20 @@ const ToggleSwitch = ({
             bg-neutral-300 transition-colors duration-300
             checked:bg-primary
             relative
-            before:absolute before:top-[2px] before:left-[2px]
+            before:absolute before:top-0.5 before:left-0.5
             before:h-4 before:w-4 before:rounded-full before:bg-white
             before:transition-transform before:duration-300
             before:shadow-[0_0_3px_rgba(0,0,0,0.2)]
-            checked:before:translate-x-[16px]
+            checked:before:translate-x-4
             checked:before:shadow-[0_0_3px_theme(--color-primary)]
             disabled:opacity-50
-            ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
+            ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
           `}
           checked={checked}
           type="checkbox"
           role="switch"
           id={name}
-          onChange={handleCheckboxChange}
+          onChange={handleCheckboxChange} // eslint-disable-line react/jsx-no-bind
           title={title}
           disabled={disabled}
           aria-checked={checked}
@@ -44,7 +44,7 @@ const ToggleSwitch = ({
         />
       </span>
       {showLabel && (
-        <p className="text-neutral-500 text-sm w-[50px] mb-1">
+        <p className="text-neutral-500 text-sm w-12.5 mb-1">
           {checked ? activeLabel : inactiveLabel}
         </p>
       )}

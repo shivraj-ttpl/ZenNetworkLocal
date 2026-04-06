@@ -6,13 +6,31 @@ const ARMS_SCALE = [
 ];
 
 const QUESTIONS = [
-  { key: 'forgetMedicine', text: '1. How often do you forget to take your medicine?' },
-  { key: 'decidedNotToTake', text: '2. How often do you decide not to take your medicine?' },
+  {
+    key: 'forgetMedicine',
+    text: '1. How often do you forget to take your medicine?',
+  },
+  {
+    key: 'decidedNotToTake',
+    text: '2. How often do you decide not to take your medicine?',
+  },
   { key: 'runOutOfMedicine', text: '3. How often do you run out of medicine?' },
-  { key: 'forgetToGetPrescription', text: '4. How often do you forget to get your prescriptions filled?' },
-  { key: 'skipBeforeDoctor', text: '5. How often do you miss taking your medicine before you go to the doctor?' },
-  { key: 'stopWhenFeelBetter', text: '6. How often do you stop taking your medicine when you feel better?' },
-  { key: 'stopWhenFeelWorse', text: '7. How often do you stop taking your medicine when you feel worse after taking it?' },
+  {
+    key: 'forgetToGetPrescription',
+    text: '4. How often do you forget to get your prescriptions filled?',
+  },
+  {
+    key: 'skipBeforeDoctor',
+    text: '5. How often do you miss taking your medicine before you go to the doctor?',
+  },
+  {
+    key: 'stopWhenFeelBetter',
+    text: '6. How often do you stop taking your medicine when you feel better?',
+  },
+  {
+    key: 'stopWhenFeelWorse',
+    text: '7. How often do you stop taking your medicine when you feel worse after taking it?',
+  },
 ];
 
 export default function MedicationAdherence({ values, setFieldValue }) {
@@ -38,7 +56,9 @@ export default function MedicationAdherence({ values, setFieldValue }) {
                   name={`medicationAdherence.${q.key}`}
                   value={opt.value}
                   checked={ma[q.key] === opt.value}
-                  onChange={() => setFieldValue(`medicationAdherence.${q.key}`, opt.value)}
+                  onChange={() =>
+                    setFieldValue(`medicationAdherence.${q.key}`, opt.value)
+                  }
                   className="accent-primary w-4 h-4 shrink-0"
                 />
                 <span className="text-sm text-text-primary">{opt.label}</span>

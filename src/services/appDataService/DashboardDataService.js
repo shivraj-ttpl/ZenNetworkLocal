@@ -1,5 +1,5 @@
-import AppDataService from "./AppDataService";
-const BASE_URL = "/dashboard";
+import AppDataService from './AppDataService';
+const BASE_URL = '/dashboard';
 // Example service — one static method per API endpoint
 export default class DashboardDataService {
   static async getStats(params) {

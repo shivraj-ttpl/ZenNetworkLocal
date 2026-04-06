@@ -1,10 +1,10 @@
-import { lazy, Suspense, useMemo } from "react";
+import { lazy, Suspense, useMemo } from 'react';
 
 // ── Local SVG registry ──
 // Add your custom SVG icons here. These take priority over lucide.
-import CloseIcon from "./vectors/CloseIcon";
-import SearchIcon from "./vectors/SearchIcon";
-import SubOrgIcon from "./vectors/SubOrgIcon";
+import CloseIcon from './vectors/CloseIcon';
+import SearchIcon from './vectors/SearchIcon';
+import SubOrgIcon from './vectors/SubOrgIcon';
 
 const localIcons = {
   close: CloseIcon,
@@ -28,16 +28,17 @@ function getLucideIcon(name) {
 
   if (!lucideCache[pascalName]) {
     lucideCache[pascalName] = lazy(() =>
-      import("lucide-react").then((mod) => {
+      import('lucide-react').then((mod) => {
         const Icon = mod[pascalName];
         if (!Icon) {
+          // eslint-disable-next-line no-console
           console.warn(
-            `[Icon] "${name}" not found in local icons or lucide-react`
+            `[Icon] "${name}" not found in local icons or lucide-react`,
           );
           return { default: () => null };
         }
         return { default: Icon };
-      })
+      }),
     );
   }
 
@@ -59,11 +60,11 @@ function getLucideIcon(name) {
  */
 const Icon = ({
   name,
-  color = "currentColor",
+  color = 'currentColor',
   size = 20,
   width,
   height,
-  className = "",
+  className = '',
   style,
   onClick,
   ...props
@@ -76,19 +77,19 @@ const Icon = ({
     width: w,
     height: h,
     className,
-    style: { ...style, cursor: onClick ? "pointer" : undefined },
+    style: { ...style, cursor: onClick ? 'pointer' : undefined },
     onClick,
     ...props,
   };
 
   // 1. Check local registry (case-insensitive)
-  const localKey = name.toLowerCase().replace(/[-_]/g, "");
+  const localKey = name.toLowerCase().replace(/[-_]/g, '');
   const LocalIcon = useMemo(
     () =>
       Object.entries(localIcons).find(
-        ([key]) => key.toLowerCase() === localKey
+        ([key]) => key.toLowerCase() === localKey,
       )?.[1],
-    [localKey]
+    [localKey],
   );
 
   if (LocalIcon) {
@@ -99,7 +100,12 @@ const Icon = ({
   const LucideIcon = getLucideIcon(name);
 
   return (
-    <Suspense fallback={<span style={{ width: w, height: h, display: "inline-block" }} />}>
+    <Suspense
+      fallback={
+        <span style={{ width: w, height: h, display: 'inline-block' }} />
+      }
+    >
+      {/* eslint-disable-next-line react-hooks/static-components */}
       <LucideIcon {...iconProps} />
     </Suspense>
   );

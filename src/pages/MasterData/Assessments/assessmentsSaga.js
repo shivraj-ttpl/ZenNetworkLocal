@@ -13,9 +13,9 @@ import MasterDataService from '@/services/appDataService/MasterDataService';
 import {
   componentKey,
   setAssessmentsList,
-  setTotalRecords,
-  setTotalPages,
   setRefreshAssessments,
+  setTotalPages,
+  setTotalRecords,
 } from './assessmentsSlice';
 
 export const assessmentsActions = createSagaActions(componentKey, [
@@ -85,7 +85,10 @@ function* archiveAssessmentSaga(action) {
 
 function* rootSaga() {
   yield all([
-    takeLatest(assessmentsActions.fetchAssessments().type, fetchAssessmentsSaga),
+    takeLatest(
+      assessmentsActions.fetchAssessments().type,
+      fetchAssessmentsSaga,
+    ),
     takeLatest(assessmentsActions.toggleFavorite().type, toggleFavoriteSaga),
     takeLatest(
       assessmentsActions.archiveAssessment().type,

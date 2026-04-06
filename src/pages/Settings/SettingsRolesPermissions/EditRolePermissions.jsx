@@ -8,20 +8,19 @@ import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
 
-
+import ConfirmUpdatePermissionsModal from './Components/ConfirmUpdatePermissionsModal';
+import CreateRoleModal from './Components/CreateRoleModal';
+import { settingsRolesActions } from './settingsRolesPermissionsSaga';
 import {
   componentKey,
   setOpenCreateRoleModal,
 } from './settingsRolesPermissionsSlice';
-import './settingsRolesPermissionsSaga';
-import { settingsRolesActions } from './settingsRolesPermissionsSaga';
-
-import ConfirmUpdatePermissionsModal from './Components/ConfirmUpdatePermissionsModal';
-import CreateRoleModal from './Components/CreateRoleModal';
 
 const renderChangeCell = (value) => {
-  if (value === 'No Change') return <span className="text-neutral-400">No Change</span>;
-  if (value) return <Icon name="Check" size={16} className="text-primary-700" />;
+  if (value === 'No Change')
+    return <span className="text-neutral-400">No Change</span>;
+  if (value)
+    return <Icon name="Check" size={16} className="text-primary-700" />;
   return <Icon name="X" size={16} className="text-error-500" />;
 };
 
@@ -56,7 +55,11 @@ function ChangesTooltip({ changes, roleName }) {
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -176,12 +179,14 @@ export default function EditRolePermissions() {
         size="sm"
         onClick={() => dispatch(setOpenCreateRoleModal())}
       >
-        <Icon name="Plus" size={14} />Create Role
+        <Icon name="Plus" size={14} />
+        Create Role
       </Button>,
     );
     return () => setToolbar(null);
   }, [setToolbar, dispatch]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const originalPermissions = roleDetail?.permissions ?? [];
 
   const changes = useMemo(() => {
@@ -311,7 +316,11 @@ export default function EditRolePermissions() {
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -337,7 +346,11 @@ export default function EditRolePermissions() {
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -366,11 +379,16 @@ export default function EditRolePermissions() {
                 usePortal
                 content={
                   <p className="text-sm text-text-secondary p-3 w-72">
-                    Allows users to add new entries and make changes within this module or feature.
+                    Allows users to add new entries and make changes within this
+                    module or feature.
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -399,11 +417,16 @@ export default function EditRolePermissions() {
                 usePortal
                 content={
                   <p className="text-sm text-text-secondary p-3 w-72">
-                    Restricts users from viewing or interacting with this module or feature.
+                    Restricts users from viewing or interacting with this module
+                    or feature.
                   </p>
                 }
               >
-                <Icon name="CircleHelp" size={14} className="text-neutral-400 cursor-pointer" />
+                <Icon
+                  name="CircleHelp"
+                  size={14}
+                  className="text-neutral-400 cursor-pointer"
+                />
               </ToolTip>
             </span>
           ),
@@ -430,7 +453,7 @@ export default function EditRolePermissions() {
           Edit Permissions
         </button>
         <div className="flex items-center gap-3">
-             <div className="inline-flex items-center bg-[#EBEBEB] border border-border-light rounded-lg px-4 py-2 text-sm gap-3">
+          <div className="inline-flex items-center bg-[#EBEBEB] border border-border-light rounded-lg px-4 py-2 text-sm gap-3">
             <div className="flex items-center gap-1">
               <span className="text-text-secondary">Role Name:</span>
               <span className="text-text-primary font-medium">
@@ -446,7 +469,10 @@ export default function EditRolePermissions() {
               </span>
             </div>
           </div>
-          <ChangesTooltip changes={changes} roleName={roleDetail?.name || '—'} />
+          <ChangesTooltip
+            changes={changes}
+            roleName={roleDetail?.name || '—'}
+          />
           <Button
             variant="outlineBlue"
             size="sm"

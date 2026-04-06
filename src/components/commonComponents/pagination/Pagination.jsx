@@ -1,5 +1,6 @@
-import { useMemo } from "react";
-import Icon from "@/components/icons/Icon";
+import { useMemo } from 'react';
+
+import Icon from '@/components/icons/Icon';
 
 const LIMIT_OPTIONS = [10, 20, 25, 50, 100];
 
@@ -23,16 +24,18 @@ export default function Pagination({
   onPageChange,
   onLimitChange,
   limitOptions = LIMIT_OPTIONS,
-  className = "",
+  className = '',
 }) {
   // ─── Range text: "1-10 of 52" ─────────────────────────────
-  const rangeStart = totalRecords === 0 ? 0 : (currentPage - 1) * currentLimit + 1;
+  const rangeStart =
+    totalRecords === 0 ? 0 : (currentPage - 1) * currentLimit + 1;
   const rangeEnd = Math.min(currentPage * currentLimit, totalRecords);
 
   // ─── Page numbers to display ──────────────────────────────
   const pages = useMemo(
+    // eslint-disable-next-line no-use-before-define
     () => getVisiblePages(currentPage, totalPages),
-    [currentPage, totalPages]
+    [currentPage, totalPages],
   );
 
   const isFirst = currentPage <= 1;
@@ -67,8 +70,6 @@ export default function Pagination({
 
       {/* Right: Page navigation */}
       <div className="flex items-center gap-1">
-        
-
         {/* Previous */}
         <NavButton
           onClick={() => onPageChange?.(currentPage - 1)}
@@ -80,7 +81,7 @@ export default function Pagination({
 
         {/* Page numbers */}
         {pages.map((page, i) =>
-          page === "..." ? (
+          page === '...' ? (
             <span
               key={`ellipsis-${i}`}
               className="w-8 h-8 flex items-center justify-center text-neutral-400"
@@ -94,14 +95,14 @@ export default function Pagination({
               className={`w-8 h-8 rounded flex items-center justify-center text-sm font-medium transition-colors cursor-pointer
                 ${
                   page === currentPage
-                    ? "bg-primary text-text-inverse"
-                    : "text-neutral-600 hover:bg-neutral-100"
+                    ? 'bg-primary text-text-inverse'
+                    : 'text-neutral-600 hover:bg-neutral-100'
                 }
               `}
             >
               {page}
             </button>
-          )
+          ),
         )}
 
         {/* Next */}
@@ -112,8 +113,6 @@ export default function Pagination({
         >
           <Icon name="chevron-last" size={16} />
         </NavButton>
-
-      
       </div>
     </div>
   );
@@ -126,7 +125,7 @@ function NavButton({ children, disabled, onClick, ...props }) {
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
       className={`w-8 h-8 rounded flex items-center justify-center transition-colors cursor-pointer
-        ${disabled ? "text-neutral-300 cursor-not-allowed" : "text-neutral-600 hover:bg-neutral-100"}
+        ${disabled ? 'text-neutral-300 cursor-not-allowed' : 'text-neutral-600 hover:bg-neutral-100'}
       `}
       {...props}
     >
@@ -145,13 +144,15 @@ function getVisiblePages(current, total) {
   const pages = new Set([1, total, current, current - 1, current + 1]);
 
   // Remove out-of-range
-  const sorted = [...pages].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b);
+  const sorted = [...pages]
+    .filter((p) => p >= 1 && p <= total)
+    .sort((a, b) => a - b);
 
   // Insert ellipsis where gaps exist
   const result = [];
   for (let i = 0; i < sorted.length; i++) {
     if (i > 0 && sorted[i] - sorted[i - 1] > 1) {
-      result.push("...");
+      result.push('...');
     }
     result.push(sorted[i]);
   }

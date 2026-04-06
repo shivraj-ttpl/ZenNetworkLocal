@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
-import Icon from "../../icons/Icon";
+import React, { useEffect, useState } from 'react';
+
+import Icon from '../../icons/Icon';
 
 function Drawer({
   title,
   showIcon = true,
   icon = <Icon name="close" size={18} />,
   children,
-  customClasses = "",
+  customClasses = '',
   close,
   open,
-  customBodyClasses = "",
+  customBodyClasses = '',
   subtitle,
   footerButton,
-  cutomFooterBtnClass = "",
+  cutomFooterBtnClass = '',
   showEditIcon = false,
   editIcon,
   edit,
@@ -21,14 +22,15 @@ function Drawer({
   deleteIcon,
   deleteClick,
   hideHeaderBorder = false,
-  backdropColor = "bg-[#3535357e]",
-  position = "right",
-  width = "w-[400px]",
+  backdropColor = 'bg-[#3535357e]',
+  position = 'right',
+  width = 'w-[400px]',
 }) {
-  const isRight = position === "right";
+  const isRight = position === 'right';
   const [visible, setVisible] = useState(false);
   const [animating, setAnimating] = useState(false);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (open) {
       setVisible(true);
@@ -47,13 +49,13 @@ function Drawer({
   return (
     <div
       className={`fixed inset-0 z-50 flex ${
-        isRight ? "justify-end" : "justify-start"
+        isRight ? 'justify-end' : 'justify-start'
       }`}
     >
       {/* Backdrop */}
       <div
         className={`absolute inset-0 ${backdropColor} transition-opacity duration-200 ${
-          animating ? "opacity-100" : "opacity-0"
+          animating ? 'opacity-100' : 'opacity-0'
         }`}
         onClick={close}
       />
@@ -62,23 +64,21 @@ function Drawer({
       <div
         className={`${width} h-full bg-white shadow-md flex flex-col relative transition-transform duration-300 ease-in-out ${
           animating
-            ? "translate-x-0"
+            ? 'translate-x-0'
             : isRight
-            ? "translate-x-full"
-            : "-translate-x-full"
+              ? 'translate-x-full'
+              : '-translate-x-full'
         } ${customClasses}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div
           className={`flex justify-between items-center bg-neutral-250 p-3 ${
-            !hideHeaderBorder ? "border-b border-[#E9E9E9]" : ""
+            !hideHeaderBorder ? 'border-b border-[#E9E9E9]' : ''
           }`}
         >
           <div className="flex flex-col">
             <div className="fs-20 font-semibold">{title}</div>
-            {subtitle && (
-              <div className="text-gray-500 fs-14">{subtitle}</div>
-            )}
+            {subtitle && <div className="text-gray-500 fs-14">{subtitle}</div>}
           </div>
           <div className="flex items-center gap-3">
             {showEditIcon && editIcon && (
@@ -100,10 +100,7 @@ function Drawer({
               </div>
             )}
             {showIcon && (
-              <div
-                className="cursor-pointer print-hidden"
-                onClick={close}
-              >
+              <div className="cursor-pointer print-hidden" onClick={close}>
                 {icon}
               </div>
             )}
@@ -111,8 +108,8 @@ function Drawer({
         </div>
 
         <div
-          className={`${!hideHeaderBorder && "p-4"} flex-1 overflow-${
-            hideOverflow ? "visible" : "auto"
+          className={`${!hideHeaderBorder && 'p-4'} flex-1 overflow-${
+            hideOverflow ? 'visible' : 'auto'
           }  ${customBodyClasses}`}
         >
           {children}

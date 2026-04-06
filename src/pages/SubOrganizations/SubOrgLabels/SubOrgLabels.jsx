@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import Input from '@/components/commonComponents/input/Input';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
@@ -8,8 +8,8 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { DEFAULT_LABEL_FIELDS } from '@/pages/Settings/SettingsLabels/constant';
 
+import { registerSaga, subOrgLabelsActions } from './subOrgLabelsSaga';
 import { componentKey, registerReducer } from './subOrgLabelsSlice';
-import { subOrgLabelsActions, registerSaga } from './subOrgLabelsSaga';
 
 const { fetchLabels } = subOrgLabelsActions;
 const EMPTY_STATE = {};

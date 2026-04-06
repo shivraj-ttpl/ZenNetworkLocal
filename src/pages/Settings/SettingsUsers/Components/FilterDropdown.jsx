@@ -1,10 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Button from '@/components/commonComponents/button/Button';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import Icon from '@/components/icons/Icon';
 
-import { ROLE_NAME_OPTIONS, SUB_ORGANIZATION_OPTIONS, PROVIDER_GROUP_OPTIONS } from '../constant';
+import {
+  PROVIDER_GROUP_OPTIONS,
+  ROLE_NAME_OPTIONS,
+  SUB_ORGANIZATION_OPTIONS,
+} from '../constant';
 
 export default function FilterDropdown({ onApply }) {
   const [open, setOpen] = useState(false);
@@ -53,7 +57,9 @@ export default function FilterDropdown({ onApply }) {
       {open && (
         <div className="absolute right-0 top-full mt-1 z-50 bg-surface rounded-lg border border-border shadow-lg w-80">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <span className="text-sm font-semibold text-text-primary">Filter</span>
+            <span className="text-sm font-semibold text-text-primary">
+              Filter
+            </span>
             <div className="flex items-center gap-2">
               <button
                 className="text-neutral-400 hover:text-neutral-600 cursor-pointer"

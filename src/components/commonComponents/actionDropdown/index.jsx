@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from "react";
-import ReactDOM from "react-dom";
-import Icon from "../../icons/Icon";
+import { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
+
+import Icon from '../../icons/Icon';
 
 const ActionDropdown = ({
   options,
-  triggerIcon = "ellipsis-vertical",
+  triggerIcon = 'ellipsis-vertical',
   triggerElement,
   styleprops,
   id,
@@ -28,8 +29,8 @@ const ActionDropdown = ({
         setOpenNestedDropdowns({});
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -60,12 +61,12 @@ const ActionDropdown = ({
 
     calculatePosition();
 
-    window.addEventListener("scroll", calculatePosition);
-    window.addEventListener("resize", calculatePosition);
+    window.addEventListener('scroll', calculatePosition);
+    window.addEventListener('resize', calculatePosition);
 
     return () => {
-      window.removeEventListener("scroll", calculatePosition);
-      window.removeEventListener("resize", calculatePosition);
+      window.removeEventListener('scroll', calculatePosition);
+      window.removeEventListener('resize', calculatePosition);
     };
   }, [open, options?.length]);
 
@@ -79,7 +80,7 @@ const ActionDropdown = ({
   const renderOptions = (opts, level = 0) => (
     <ul
       className="bg-white shadow-md rounded text-sm font-normal text-neutral-800 z-[10001] min-w-[180px]"
-      id={`dropdown-list-level-${level}${id ? `-${id}` : ""}`}
+      id={`dropdown-list-level-${level}${id ? `-${id}` : ''}`}
       style={{ zIndex: 10001 }}
     >
       {opts.map((opt, index) => {
@@ -88,7 +89,7 @@ const ActionDropdown = ({
         const endIconElement = opt.isDropdown ? (
           <div
             className={`transform transition-transform duration-200 flex items-center ${
-              openNestedDropdowns[key] ? "rotate-180" : ""
+              openNestedDropdowns[key] ? 'rotate-180' : ''
             }`}
             id={`dropdown-arrow-${key}`}
           >
@@ -98,7 +99,9 @@ const ActionDropdown = ({
           <span
             className="flex items-center"
             title={opt.popoverContent || undefined}
-            onClick={opt.popoverOnEndIcon ? (e) => e.stopPropagation() : undefined}
+            onClick={
+              opt.popoverOnEndIcon ? (e) => e.stopPropagation() : undefined
+            }
           >
             {opt.endIcon}
           </span>
@@ -111,8 +114,8 @@ const ActionDropdown = ({
               disabled={opt?.disabled}
               className={`w-full text-left px-4 py-2 hover:bg-neutral-100 flex items-center justify-between ${
                 opt?.disabled
-                  ? "cursor-not-allowed bg-neutral-100 text-neutral-400"
-                  : "cursor-pointer"
+                  ? 'cursor-not-allowed bg-neutral-100 text-neutral-400'
+                  : 'cursor-pointer'
               }`}
               onClick={(e) => {
                 e.stopPropagation();
@@ -153,8 +156,8 @@ const ActionDropdown = ({
     <div className="relative inline-block" id="dropdown-container">
       <button
         id="dropdown-trigger"
-        className={`p-2 ${styleprops || ""} rounded ${
-          disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+        className={`p-2 ${styleprops || ''} rounded ${
+          disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
         }`}
         onClick={() => {
           if (!disabled) {
@@ -183,7 +186,7 @@ const ActionDropdown = ({
           >
             {renderOptions(options)}
           </div>,
-          document.body
+          document.body,
         )}
     </div>
   );

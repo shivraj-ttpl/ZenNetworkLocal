@@ -1,5 +1,5 @@
-import store from "@/core/store/store";
-import { COMPONENT_KEYS } from "@/constants/componentKeys";
+import { COMPONENT_KEYS } from '@/constants/componentKeys';
+import store from '@/core/store/store';
 
 export const componentKey = COMPONENT_KEYS.AUTH;
 
@@ -18,9 +18,10 @@ const { actions } = store.reducerManager.add({
   },
   initialReducerState: {
     loggedInUser: null,
-    isAuthenticated:false,
-    currentUserRole:null
+    isAuthenticated: false,
+    currentUserRole: null,
   },
 });
 
-export const { setLoggedInUser, setIsAuthenticated, setCurrentUserRole} = actions;
+export const { setLoggedInUser, setIsAuthenticated, setCurrentUserRole } =
+  actions;

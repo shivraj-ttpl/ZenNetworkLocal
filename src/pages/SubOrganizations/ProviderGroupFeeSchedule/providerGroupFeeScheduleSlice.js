@@ -1,5 +1,5 @@
-import store from '@/core/store/store';
 import { COMPONENT_KEYS } from '@/constants/componentKeys';
+import store from '@/core/store/store';
 
 export const componentKey = COMPONENT_KEYS.PROVIDER_GROUP_FEE_SCHEDULE;
 

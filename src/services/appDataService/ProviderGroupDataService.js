@@ -34,14 +34,6 @@ export default class ProviderGroupDataService {
     return AppDataService.patch(`${PG_URL}/${id}/unarchive`);
   }
 
-  static async getProviderGroupById(id) {
-    return AppDataService.get(`${PG_URL}/${id}`);
-  }
-
-  static async updateProviderGroup(id, data) {
-    return AppDataService.patch(`${PG_URL}/${id}`, data);
-  }
-
   // ─── Provider Group Users ────────────────────────
 
   static async getProviderGroupUsers(providerGroupId, params = {}) {

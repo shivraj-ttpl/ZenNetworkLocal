@@ -1,17 +1,17 @@
-import { ErrorMessage } from "formik";
+import { ErrorMessage } from 'formik';
 
 function TextArea({
   label,
-  placeholder = "Type here",
-  rows = "4",
-  customClasses = "",
+  placeholder = 'Type here',
+  rows = '4',
+  customClasses = '',
   shadow = false,
-  value = "",
+  value = '',
   onChangeCb = () => {},
   disabled = false,
   isRequired = false,
-  name = "",
-  errorContainerClasses = "text-xs max-w-[350px]",
+  name = '',
+  errorContainerClasses = 'text-xs max-w-[350px]',
   enforceMaxRows = false,
 }) {
   const calculatedMaxHeight = `${Number(rows) * 24}px`;
@@ -19,10 +19,7 @@ function TextArea({
   return (
     <div className="flex flex-col gap-2">
       {label && (
-        <label
-          htmlFor={name}
-          className="text-xs font-medium text-neutral-600"
-        >
+        <label htmlFor={name} className="text-xs font-medium text-neutral-600">
           {label}
           {isRequired && <span className="text-error-500 ml-0.5">*</span>}
         </label>
@@ -35,12 +32,12 @@ function TextArea({
           border border-neutral-300 bg-white
           p-2 w-full rounded-md text-sm
           disabled:bg-neutral-100 disabled:cursor-not-allowed
-          ${shadow ? "shadow-sm" : ""}
+          ${shadow ? 'shadow-sm' : ''}
           ${customClasses}
         `}
         style={
           enforceMaxRows
-            ? { maxHeight: calculatedMaxHeight, overflowY: "auto" }
+            ? { maxHeight: calculatedMaxHeight, overflowY: 'auto' }
             : undefined
         }
         value={value}
@@ -54,7 +51,7 @@ function TextArea({
           <ErrorMessage name={name}>
             {(msg) => (
               <div className="text-error-500 text-xs">
-                {typeof msg === "string" ? msg : msg.label}
+                {typeof msg === 'string' ? msg : msg.label}
               </div>
             )}
           </ErrorMessage>

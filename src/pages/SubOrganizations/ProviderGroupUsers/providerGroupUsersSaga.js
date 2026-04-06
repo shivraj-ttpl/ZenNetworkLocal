@@ -13,11 +13,11 @@ import UsersDataService from '@/services/appDataService/UsersDataService';
 
 import {
   componentKey,
-  setUsersList,
-  setTotalRecords,
-  setUserDetail,
   setCloseDrawer,
   setRefreshUsers,
+  setTotalRecords,
+  setUserDetail,
+  setUsersList,
 } from './providerGroupUsersSlice';
 
 export const providerGroupUsersActions = createSagaActions(componentKey, [
@@ -58,7 +58,15 @@ function* fetchUserByIdSaga(action) {
 
 function* createUserSaga(action) {
   const { providerGroupId, data } = action.payload;
-  const { firstName, lastName, email, providerGroupRoleTitle, countryCode, contactNumber, address } = data;
+  const {
+    firstName,
+    lastName,
+    email,
+    providerGroupRoleTitle,
+    countryCode,
+    contactNumber,
+    address,
+  } = data;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_USERS_POST_CREATE,
@@ -149,10 +157,16 @@ function* archiveUserSaga(action) {
 function* rootSaga() {
   yield all([
     takeLatest(providerGroupUsersActions.fetchUsers().type, fetchUsersSaga),
-    takeLatest(providerGroupUsersActions.fetchUserById().type, fetchUserByIdSaga),
+    takeLatest(
+      providerGroupUsersActions.fetchUserById().type,
+      fetchUserByIdSaga,
+    ),
     takeLatest(providerGroupUsersActions.createUser().type, createUserSaga),
     takeLatest(providerGroupUsersActions.updateUser().type, updateUserSaga),
-    takeLatest(providerGroupUsersActions.updateUserStatus().type, updateUserStatusSaga),
+    takeLatest(
+      providerGroupUsersActions.updateUserStatus().type,
+      updateUserStatusSaga,
+    ),
     takeLatest(providerGroupUsersActions.archiveUser().type, archiveUserSaga),
   ]);
 }

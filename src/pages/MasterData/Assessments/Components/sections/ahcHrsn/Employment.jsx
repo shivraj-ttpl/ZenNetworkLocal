@@ -1,7 +1,7 @@
 const OPTIONS = [
-  "Yes, help finding work",
-  "Yes, help keeping work",
-  "I do not need or want help",
+  'Yes, help finding work',
+  'Yes, help keeping work',
+  'I do not need or want help',
 ];
 
 export default function Employment({ values, handleChange }) {

@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext, useParams } from 'react-router-dom';
 
@@ -7,7 +7,7 @@ import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import { Table, buildColumns } from '@/components/commonComponents/table';
+import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -16,7 +16,10 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import AddUserDrawer from './Components/AddUserDrawer';
 import ViewUserModal from './Components/ViewUserModal';
-import { providerGroupUsersActions, registerSaga } from './providerGroupUsersSaga';
+import {
+  providerGroupUsersActions,
+  registerSaga,
+} from './providerGroupUsersSaga';
 import {
   componentKey,
   registerReducer,
@@ -77,7 +80,18 @@ export default function ProviderGroupUsers() {
         }),
       );
     }
-  }, [dispatch, providerGroupId, page, limit, debouncedSearch, showArchive, statusFilter, sortKey, sortOrder, refreshFlag]);
+  }, [
+    dispatch,
+    providerGroupId,
+    page,
+    limit,
+    debouncedSearch,
+    showArchive,
+    statusFilter,
+    sortKey,
+    sortOrder,
+    refreshFlag,
+  ]);
 
   useEffect(() => {
     setToolbar(

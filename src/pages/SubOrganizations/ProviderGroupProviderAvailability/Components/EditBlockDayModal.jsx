@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import ModalComponent from "@/components/commonComponents/modal/ModalComponent";
-import Button from "@/components/commonComponents/button/Button";
-import RadioButton from "@/components/commonComponents/radioButton";
+import Button from '@/components/commonComponents/button/Button';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+import RadioButton from '@/components/commonComponents/radioButton';
 
-import { setCloseBlockDayModal } from "../providerGroupProviderAvailabilitySlice";
+import { setCloseBlockDayModal } from '../providerGroupProviderAvailabilitySlice';
 
 export default function EditBlockDayModal({ open, blockDayDate }) {
   const dispatch = useDispatch();
-  const [selected, setSelected] = useState("block");
+  const [selected, setSelected] = useState('block');
 
   const handleClose = () => dispatch(setCloseBlockDayModal());
 
@@ -19,8 +19,8 @@ export default function EditBlockDayModal({ open, blockDayDate }) {
   };
 
   const formattedDate = blockDayDate
-    ? dayjs(blockDayDate).format("D MMMM YYYY")
-    : "";
+    ? dayjs(blockDayDate).format('D MMMM YYYY')
+    : '';
 
   return (
     <ModalComponent
@@ -54,15 +54,15 @@ export default function EditBlockDayModal({ open, blockDayDate }) {
           label="Block Day"
           name="blockDayOption"
           value="block"
-          checked={selected === "block"}
-          onChangeCb={() => setSelected("block")}
+          checked={selected === 'block'}
+          onChangeCb={() => setSelected('block')}
         />
         <RadioButton
           label="Available Day"
           name="blockDayOption"
           value="available"
-          checked={selected === "available"}
-          onChangeCb={() => setSelected("available")}
+          checked={selected === 'available'}
+          onChangeCb={() => setSelected('available')}
         />
       </div>
     </ModalComponent>

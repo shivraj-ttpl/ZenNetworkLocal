@@ -1,17 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SignaturePad from 'signature_pad';
+
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
-import FileUpload from '@/components/commonComponents/upload/FileUpload';
 import Input from '@/components/commonComponents/input/Input';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import TextArea from '@/components/commonComponents/textArea/index';
+import FileUpload from '@/components/commonComponents/upload/FileUpload';
 
-export default function Signatures({ values, handleChange, handleBlur, setFieldValue }) {
+export default function Signatures({
+  values,
+  handleChange,
+  handleBlur,
+  setFieldValue,
+}) {
   const s = values?.signatures || {};
   const [activeTab, setActiveTab] = useState('upload');
   const canvasRef = useRef(null);
   const signaturePadRef = useRef(null);
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (activeTab === 'draw' && canvasRef.current) {
       signaturePadRef.current = new SignaturePad(canvasRef.current, {
@@ -57,12 +64,16 @@ export default function Signatures({ values, handleChange, handleBlur, setFieldV
 
       {/* ── Patient Signature ── */}
       <div className="flex flex-col gap-4">
-        <h4 className="text-sm font-semibold text-text-primary">Patient Signature</h4>
+        <h4 className="text-sm font-semibold text-text-primary">
+          Patient Signature
+        </h4>
 
         <Checkbox
           label="Patient signatures gathered manually"
           checked={!!s.gatheredManually}
-          onChange={(checked) => setFieldValue('signatures.gatheredManually', checked)}
+          onChange={(checked) =>
+            setFieldValue('signatures.gatheredManually', checked)
+          }
           variant="blue"
         />
 
@@ -87,12 +98,16 @@ export default function Signatures({ values, handleChange, handleBlur, setFieldV
         {/* Upload tab */}
         {activeTab === 'upload' && (
           <div className="flex flex-col gap-2">
-            <p className="text-sm font-medium text-text-primary">Upload Signature</p>
+            <p className="text-sm font-medium text-text-primary">
+              Upload Signature
+            </p>
             <FileUpload
               name="signatures.patientSignature"
               allowedFileTypes={['.png', '.jpg']}
               maxFileSize={5}
-              onFileSelect={(file) => setFieldValue('signatures.patientSignature', file)}
+              onFileSelect={(file) =>
+                setFieldValue('signatures.patientSignature', file)
+              }
             />
           </div>
         )}
@@ -101,7 +116,9 @@ export default function Signatures({ values, handleChange, handleBlur, setFieldV
         {activeTab === 'draw' && (
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-text-primary">Draw Signature</p>
+              <p className="text-sm font-medium text-text-primary">
+                Draw Signature
+              </p>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -143,10 +160,14 @@ export default function Signatures({ values, handleChange, handleBlur, setFieldV
 
       {/* ── Provider Review ── */}
       <div className="flex flex-col gap-4">
-        <h4 className="text-sm font-semibold text-text-primary">Provider Review</h4>
+        <h4 className="text-sm font-semibold text-text-primary">
+          Provider Review
+        </h4>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-normal text-text-primary">Provider</label>
+          <label className="text-sm font-normal text-text-primary">
+            Provider
+          </label>
           <SelectDropdown
             options={[]}
             value={s.provider || null}
@@ -160,7 +181,9 @@ export default function Signatures({ values, handleChange, handleBlur, setFieldV
           name="signatures.providerReview"
           placeholder="Enter note..."
           value={s.providerReview || ''}
-          onChangeCb={(e) => setFieldValue('signatures.providerReview', e.target.value)}
+          onChangeCb={(e) =>
+            setFieldValue('signatures.providerReview', e.target.value)
+          }
           rows={5}
         />
 

@@ -1,5 +1,5 @@
-import { Icon } from '@/components/icons';
 import successIcon from '@/assets/success.svg';
+import { Icon } from '@/components/icons';
 
 export default function SuccessModal({ open, close, message }) {
   if (!open) return null;

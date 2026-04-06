@@ -1,5 +1,5 @@
-import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Button from '@/components/commonComponents/button/Button';
+import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Icon from '@/components/icons/Icon';
 
 export default function ConfirmUpdatePermissionsModal({

@@ -10,7 +10,7 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatDateTime } from '@/utils/GeneralUtils';
 
 import FilterDropdown from './Components/FilterDropdown';
-import { settingsAuditLogActions, registerSaga } from './settingsAuditLogSaga';
+import { registerSaga, settingsAuditLogActions } from './settingsAuditLogSaga';
 import { componentKey, registerReducer } from './settingsAuditLogSlice';
 
 export default function SettingsAuditLog() {
@@ -31,7 +31,12 @@ export default function SettingsAuditLog() {
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
-  const { auditLogs, total, totalPages: totalPagesFromState, filters } = state || {};
+  const {
+    auditLogs,
+    total,
+    totalPages: totalPagesFromState,
+    filters,
+  } = state || {};
 
   useEffect(() => {
     dispatch(
@@ -45,7 +50,16 @@ export default function SettingsAuditLog() {
         endDate: filters?.endDate || undefined,
       }),
     );
-  }, [dispatch, page, limit, sortKey, sortOrder, filters?.action?.value, filters?.startDate, filters?.endDate]);
+  }, [
+    dispatch,
+    page,
+    limit,
+    sortKey,
+    sortOrder,
+    filters?.action?.value,
+    filters?.startDate,
+    filters?.endDate,
+  ]);
 
   useEffect(() => {
     setToolbar(<FilterDropdown filters={filters} />);
@@ -57,7 +71,8 @@ export default function SettingsAuditLog() {
     setSortOrder(order);
   }, []);
 
-  const totalPages = totalPagesFromState ?? (Math.ceil((total ?? 0) / limit) || 1);
+  const totalPages =
+    totalPagesFromState ?? (Math.ceil((total ?? 0) / limit) || 1);
 
   const tableData = useMemo(
     () =>
@@ -78,7 +93,9 @@ export default function SettingsAuditLog() {
           accessorKey: 'user',
           render: (row) =>
             row?.user
-              ? [row.user.firstName, row.user.lastName].filter(Boolean).join(' ')
+              ? [row.user.firstName, row.user.lastName]
+                  .filter(Boolean)
+                  .join(' ')
               : '—',
         },
         {
@@ -87,13 +104,13 @@ export default function SettingsAuditLog() {
           accessorKey: 'entity',
           render: (row) => row?.entity ?? '—',
         },
-         {
+        {
           id: 'action',
           header: 'Action',
           accessorKey: 'action',
           render: (row) => row?.action ?? '—',
         },
-       
+
         {
           id: 'resource',
           header: 'Description',

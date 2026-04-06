@@ -1,9 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
-import createSagaMiddleware from "redux-saga";
-import { createReducerManager } from "./reducerManager";
-import { createSagaManager } from "./sagaManager";
-import loadingReducer from "./loadingSlice";
-import notificationReducer from "./notificationSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import createSagaMiddleware from 'redux-saga';
+
+import loadingReducer from './loadingSlice';
+import notificationReducer from './notificationSlice';
+import { createReducerManager } from './reducerManager';
+import { createSagaManager } from './sagaManager';
 
 // Static reducers — always present
 const staticReducers = {

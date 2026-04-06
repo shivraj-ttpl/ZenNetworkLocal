@@ -1,21 +1,21 @@
-import { useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { Formik, Form } from 'formik';
 import dayjs from 'dayjs';
+import { Form, Formik } from 'formik';
+import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Button from '@/components/commonComponents/button/Button';
-import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
-import TimePicker from '@/components/commonComponents/timePicker/TimePicker';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
+import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
+import Drawer from '@/components/commonComponents/drawer/Drawer';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
+import TimePicker from '@/components/commonComponents/timePicker/TimePicker';
 import Icon from '@/components/icons/Icon';
 
 import {
-  TIME_ZONE_OPTIONS,
-  BOOKING_WINDOW_OPTIONS,
   APPOINTMENT_MODE_OPTIONS,
+  BOOKING_WINDOW_OPTIONS,
   DAYS_OF_WEEK,
+  TIME_ZONE_OPTIONS,
 } from '../constant';
 import { setCloseConfigureDrawer } from '../providerGroupProviderAvailabilitySlice';
 

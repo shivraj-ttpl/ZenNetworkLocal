@@ -1,5 +1,5 @@
-import store from "@/core/store/store";
-import { COMPONENT_KEYS } from "@/constants/componentKeys";
+import { COMPONENT_KEYS } from '@/constants/componentKeys';
+import store from '@/core/store/store';
 
 export const componentKey = COMPONENT_KEYS.SETTINGS_USERS;
 
@@ -8,17 +8,17 @@ const sliceConfig = {
   addedReducers: {
     setOpenAddDrawer: (state) => {
       state.drawerOpen = true;
-      state.drawerMode = "add";
+      state.drawerMode = 'add';
       state.editData = null;
     },
     setOpenEditDrawer: (state, action) => {
       state.drawerOpen = true;
-      state.drawerMode = "edit";
+      state.drawerMode = 'edit';
       state.editData = action.payload;
     },
     setCloseDrawer: (state) => {
       state.drawerOpen = false;
-      state.drawerMode = "";
+      state.drawerMode = '';
       state.editData = null;
     },
     setOpenViewModal: (state, action) => {
@@ -43,7 +43,8 @@ const sliceConfig = {
     },
     setUsersData: (state, action) => {
       state.usersData = action.payload.data ?? action.payload ?? [];
-      state.totalRecords = action.payload.meta?.total ?? action.payload.totalRecords ?? 0;
+      state.totalRecords =
+        action.payload.meta?.total ?? action.payload.totalRecords ?? 0;
       state.totalPages = action.payload.meta?.totalPages ?? 0;
     },
     setUserDetail: (state, action) => {
@@ -63,7 +64,7 @@ const sliceConfig = {
   },
   initialReducerState: {
     drawerOpen: false,
-    drawerMode: "",
+    drawerMode: '',
     editData: null,
     viewModalOpen: false,
     viewData: null,

@@ -12,11 +12,11 @@ import MasterDataService from '@/services/appDataService/MasterDataService';
 
 import {
   componentKey,
-  setConditionsList,
-  setTotalRecords,
-  setTotalPages,
   setCloseDrawer,
+  setConditionsList,
   setRefreshConditions,
+  setTotalPages,
+  setTotalRecords,
 } from './conditionsSlice';
 
 export const conditionsActions = createSagaActions(componentKey, [

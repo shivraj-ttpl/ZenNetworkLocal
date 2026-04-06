@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useParams, useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useOutletContext, useParams } from 'react-router-dom';
 
 import Avatar from '@/components/commonComponents/avatar/Avatar';
 import Button from '@/components/commonComponents/button/Button';
@@ -12,7 +12,7 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatDate } from '@/utils/GeneralUtils';
 
 import EditProfileDrawer from './Components/EditProfileDrawer';
-import { subOrgProfileActions, registerSaga } from './subOrgProfileSaga';
+import { registerSaga, subOrgProfileActions } from './subOrgProfileSaga';
 import {
   componentKey,
   registerReducer,
@@ -136,11 +136,7 @@ export default function SubOrgProfile() {
                   </p>
                 )}
                 <div className="flex items-center gap-1 mt-1 text-sm text-neutral-500">
-                  <Icon
-                    name="MapPin"
-                    size={14}
-                    className="text-neutral-400"
-                  />
+                  <Icon name="MapPin" size={14} className="text-neutral-400" />
                   {buildAddress(profile.address)}
                 </div>
               </div>
@@ -177,11 +173,7 @@ export default function SubOrgProfile() {
               className="border border-border-light rounded-lg p-4 flex items-center gap-3"
             >
               <div className="w-10 h-10 rounded-full bg-primary-50 flex items-center justify-center">
-                <Icon
-                  name={stat.icon}
-                  size={18}
-                  className="text-primary-600"
-                />
+                <Icon name={stat.icon} size={18} className="text-primary-600" />
               </div>
               <div>
                 <p className="text-xs text-neutral-500">{stat.label}</p>

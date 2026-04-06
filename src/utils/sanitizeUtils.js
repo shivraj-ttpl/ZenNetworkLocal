@@ -3,7 +3,7 @@
  * Skips File, Blob, and FormData instances.
  */
 export const deepTrimStrings = (input) => {
-  if (typeof input === "string") {
+  if (typeof input === 'string') {
     return input.trim();
   }
 
@@ -11,13 +11,20 @@ export const deepTrimStrings = (input) => {
     return input.map(deepTrimStrings);
   }
 
-  if (input !== null && typeof input === "object") {
-    if (input instanceof File || input instanceof Blob || input instanceof FormData) {
+  if (input !== null && typeof input === 'object') {
+    if (
+      input instanceof File ||
+      input instanceof Blob ||
+      input instanceof FormData
+    ) {
       return input;
     }
 
     return Object.fromEntries(
-      Object.entries(input).map(([key, value]) => [key, deepTrimStrings(value)])
+      Object.entries(input).map(([key, value]) => [
+        key,
+        deepTrimStrings(value),
+      ]),
     );
   }
 
@@ -34,7 +41,7 @@ export const isMultipartOrBinary = (config) => {
     config.data instanceof Blob ||
     config.data instanceof File ||
     (config.headers &&
-      typeof config.headers["Content-Type"] === "string" &&
-      config.headers["Content-Type"].includes("multipart/form-data"))
+      typeof config.headers['Content-Type'] === 'string' &&
+      config.headers['Content-Type'].includes('multipart/form-data'))
   );
 };

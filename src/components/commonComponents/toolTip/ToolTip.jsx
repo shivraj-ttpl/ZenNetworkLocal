@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 const POSITIONS = {
@@ -68,6 +68,7 @@ function ToolTip({
     if (visible) {
       document.addEventListener('mousedown', handleClickOutside);
     }
+    // eslint-disable-next-line consistent-return
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [visible, trigger]);
 
@@ -76,9 +77,17 @@ function ToolTip({
     const rect = wrapperRef.current.getBoundingClientRect();
     const style = {};
 
-    if (position === 'bottom' || position === 'bottom-start' || position === 'bottom-end') {
+    if (
+      position === 'bottom' ||
+      position === 'bottom-start' ||
+      position === 'bottom-end'
+    ) {
       style.top = rect.bottom + 8;
-    } else if (position === 'top' || position === 'top-start' || position === 'top-end') {
+    } else if (
+      position === 'top' ||
+      position === 'top-start' ||
+      position === 'top-end'
+    ) {
       style.bottom = window.innerHeight - rect.top + 8;
     } else if (position === 'right') {
       style.top = rect.top + rect.height / 2;
@@ -90,8 +99,14 @@ function ToolTip({
       style.transform = 'translateY(-50%)';
     }
 
-    if (position.endsWith('-start') || position === 'bottom' || position === 'top') {
-      style.left = position.endsWith('-start') ? rect.left : rect.left + rect.width / 2;
+    if (
+      position.endsWith('-start') ||
+      position === 'bottom' ||
+      position === 'top'
+    ) {
+      style.left = position.endsWith('-start')
+        ? rect.left
+        : rect.left + rect.width / 2;
       if (position === 'bottom' || position === 'top') {
         style.transform = 'translateX(-50%)';
       }
@@ -100,20 +115,17 @@ function ToolTip({
       style.right = window.innerWidth - rect.right;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPortalStyle(style);
   }, [usePortal, visible, position]);
 
   const posConfig = POSITIONS[position] || POSITIONS.bottom;
 
   const hoverProps =
-    trigger === 'hover'
-      ? { onMouseEnter: show, onMouseLeave: hide }
-      : {};
+    trigger === 'hover' ? { onMouseEnter: show, onMouseLeave: hide } : {};
 
   const clickProps =
-    trigger === 'click'
-      ? { onClick: () => (visible ? hide() : show()) }
-      : {};
+    trigger === 'click' ? { onClick: () => (visible ? hide() : show()) } : {};
 
   const tooltipContent = (
     <div
@@ -138,14 +150,13 @@ function ToolTip({
       {children}
 
       {visible && !usePortal && (
-        <div
-          className={`absolute z-50 ${posConfig.container} ${offset || ''}`}
-        >
+        <div className={`absolute z-50 ${posConfig.container} ${offset || ''}`}>
           {tooltipContent}
         </div>
       )}
 
-      {visible && usePortal &&
+      {visible &&
+        usePortal &&
         createPortal(
           <div
             className="fixed z-9999"

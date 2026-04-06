@@ -1,6 +1,6 @@
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
-import Input from '@/components/commonComponents/input/Input';
 import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
+import Input from '@/components/commonComponents/input/Input';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 
 const GOAL_OPTIONS = [
@@ -36,8 +36,8 @@ export default function SelfCareStressGoals({
       {/* Activity type selection */}
       <div className="flex flex-col gap-3">
         <p className="text-sm font-semibold text-text-primary">
-          What kind of activities do you like best for stress management and self
-          care?
+          What kind of activities do you like best for stress management and
+          self care?
         </p>
 
         <div className="grid grid-cols-3 gap-3">

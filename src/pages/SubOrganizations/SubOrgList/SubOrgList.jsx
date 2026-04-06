@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,7 +7,7 @@ import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
-import { Table, buildColumns } from '@/components/commonComponents/table';
+import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
@@ -16,24 +16,24 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatDate } from '@/utils/GeneralUtils';
 
-import { STATUS_OPTIONS } from './constant';
+import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
 import AddSubOrgDrawer from './Components/AddSubOrgDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
-import { subOrgListActions, registerSaga } from './subOrgListSaga';
+import { STATUS_OPTIONS } from './constant';
+import { registerSaga, subOrgListActions } from './subOrgListSaga';
 import {
   componentKey,
   registerReducer,
-  setPage,
+  setDrawerOpen,
   setLimit,
+  setPage,
   setSearch,
   setShowArchived,
-  setStatusFilter,
   setSortKey,
   setSortOrder,
-  setDrawerOpen,
+  setStatusFilter,
   setStatusModal,
 } from './subOrgListSlice';
-import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
 
 const { fetchSubOrganizations, fetchSubOrgById, archiveSubOrganization } =
   subOrgListActions;
