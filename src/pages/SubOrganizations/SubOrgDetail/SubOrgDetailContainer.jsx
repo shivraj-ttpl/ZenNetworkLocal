@@ -15,9 +15,6 @@ import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 const BASE_TABS = [
   { key: 'profile', label: 'Profile', end: true, buildPath: (id, name) => `/sub-organizations/${id}?name=${encodeURIComponent(name)}` },
   { key: 'provider-groups', label: 'Provider Group', end: false, buildPath: (id, name) => `/sub-organizations/${id}/provider-groups?name=${encodeURIComponent(name)}` },
-  { key: 'roles-permissions', label: 'Roles & Permissions', end: false, buildPath: (id, name) => `/sub-organizations/${id}/roles-permissions?name=${encodeURIComponent(name)}` },
-  { key: 'reports', label: 'Reports', end: false, buildPath: (id, name) => `/sub-organizations/${id}/reports?name=${encodeURIComponent(name)}` },
-  { key: 'labels', label: 'Labels', end: false, buildPath: (id, name) => `/sub-organizations/${id}/labels?name=${encodeURIComponent(name)}` },
 ];
 
 const SUB_ORG_ADMIN_TABS = [
