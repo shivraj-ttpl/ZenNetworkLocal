@@ -1,5 +1,7 @@
 import { lazy } from 'react';
 
+import { ROLES } from '@/constants/roles';
+
 // Lazy-loaded pages
 
 // Container layouts (render <Outlet />)
@@ -210,30 +212,36 @@ export const routeConfig = [
             path: 'roles-permissions',
             element: SubOrgRolesPermissions,
             label: 'Roles & Permissions',
+            allowedRoles: [ROLES.SUB_ORG_ADMIN],
           },
           {
             path: 'roles-permissions/:roleId/view',
             element: SubOrgViewRolePermissions,
             label: 'View Permissions',
+            allowedRoles: [ROLES.SUB_ORG_ADMIN],
           },
           {
             path: 'roles-permissions/:roleId/edit',
             element: SubOrgEditRolePermissions,
             label: 'Edit Permissions',
+            allowedRoles: [ROLES.SUB_ORG_ADMIN],
           },
           {
             path: 'reports',
             element: SubOrgReports,
             label: 'Reports',
+            allowedRoles: [ROLES.SUB_ORG_ADMIN],
           },
           {
             path: 'labels',
             element: SubOrgLabels,
             label: 'Labels',
+            allowedRoles: [ROLES.SUB_ORG_ADMIN],
           },
           {
             path: 'provider-groups/:providerGroupId',
             element: ProviderGroupDetailContainer,
+            allowedRoles: [ROLES.SUB_ORG_ADMIN],
             children: [
               { index: true, element: ProviderGroupProfile, label: 'Profile' },
               {
@@ -281,19 +289,32 @@ export const routeConfig = [
         path: 'roles-permissions',
         element: SettingsRolesPermissions,
         label: 'Roles & Permissions',
+        allowedRoles: [ROLES.ORG_ADMIN],
       },
       {
         path: 'roles-permissions/:roleId/view',
         element: ViewRolePermissions,
         label: 'View Permissions',
+        allowedRoles: [ROLES.ORG_ADMIN],
       },
       {
         path: 'roles-permissions/:roleId/edit',
         element: EditRolePermissions,
         label: 'Edit Permissions',
+        allowedRoles: [ROLES.ORG_ADMIN],
       },
-      { path: 'reports', element: SettingsReports, label: 'Reports' },
-      { path: 'labels', element: SettingsLabels, label: 'Labels' },
+      {
+        path: 'reports',
+        element: SettingsReports,
+        label: 'Reports',
+        allowedRoles: [ROLES.ORG_ADMIN],
+      },
+      {
+        path: 'labels',
+        element: SettingsLabels,
+        label: 'Labels',
+        allowedRoles: [ROLES.ORG_ADMIN],
+      },
       { path: 'audit-log', element: SettingsAuditLog, label: 'Audit Log' },
     ],
   },

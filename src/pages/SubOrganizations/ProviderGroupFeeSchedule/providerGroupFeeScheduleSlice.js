@@ -30,6 +30,12 @@ const sliceConfig = {
       state.drawerMode = '';
       state.editData = null;
     },
+    setOpenDeleteModal: (state, action) => {
+      state.deleteModal = { open: true, row: action.payload };
+    },
+    setCloseDeleteModal: (state) => {
+      state.deleteModal = { open: false, row: null };
+    },
   },
   initialReducerState: {
     feeScheduleList: [],
@@ -38,6 +44,7 @@ const sliceConfig = {
     drawerOpen: false,
     drawerMode: '',
     editData: null,
+    deleteModal: { open: false, row: null },
   },
 };
 
@@ -54,4 +61,6 @@ export const {
   setOpenAddDrawer,
   setOpenEditDrawer,
   setCloseDrawer,
+  setOpenDeleteModal,
+  setCloseDeleteModal,
 } = slice.actions;
