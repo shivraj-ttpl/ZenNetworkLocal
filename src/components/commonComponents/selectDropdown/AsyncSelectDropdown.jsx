@@ -249,6 +249,7 @@ export default function AsyncSelectDropdown({
     document.addEventListener('mousedown', handleClick);
     // eslint-disable-next-line consistent-return
     return () => document.removeEventListener('mousedown', handleClick);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // ── Focus search on open ──

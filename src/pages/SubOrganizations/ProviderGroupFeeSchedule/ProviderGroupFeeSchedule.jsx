@@ -13,7 +13,9 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatDate } from '@/utils/GeneralUtils';
 
+import useSubOrgTenantName from '../../../hooks/useSubOrgTenantName';
 import AddFeeScheduleDrawer from './Components/AddFeeScheduleDrawer';
+import DeleteFeeScheduleModal from './Components/DeleteFeeScheduleModal';
 import {
   feeScheduleActions,
   registerSaga,
@@ -22,16 +24,18 @@ import {
   componentKey,
   registerReducer,
   setOpenAddDrawer,
+  setOpenDeleteModal,
   setOpenEditDrawer,
 } from './providerGroupFeeScheduleSlice';
 
-const { fetchFeeSchedules, deleteFeeSchedule } = feeScheduleActions;
+const { fetchFeeSchedules } = feeScheduleActions;
 const EMPTY_STATE = {};
 
 export default function ProviderGroupFeeSchedule() {
   const { providerGroupId } = useParams();
   const { setToolbar } = useOutletContext();
   const dispatch = useDispatch();
+  const tenantName = useSubOrgTenantName();
 
   const {
     feeScheduleList = [],
@@ -60,6 +64,7 @@ export default function ProviderGroupFeeSchedule() {
       dispatch(
         fetchFeeSchedules({
           providerGroupId,
+          tenantName,
           page,
           limit,
           search: debouncedSearch.trim() || undefined,
@@ -77,6 +82,7 @@ export default function ProviderGroupFeeSchedule() {
     sortKey,
     sortOrder,
     refreshFlag,
+    tenantName,
   ]);
 
   useEffect(() => {
@@ -167,7 +173,7 @@ export default function ProviderGroupFeeSchedule() {
                 {
                   label: 'Delete',
                   value: 'delete',
-                  onClickCb: () => dispatch(deleteFeeSchedule({ id: row.id })),
+                  onClickCb: () => dispatch(setOpenDeleteModal(row)),
                 },
               ]}
             />
@@ -201,6 +207,7 @@ export default function ProviderGroupFeeSchedule() {
         }}
       />
       <AddFeeScheduleDrawer />
+      <DeleteFeeScheduleModal />
     </div>
   );
 }

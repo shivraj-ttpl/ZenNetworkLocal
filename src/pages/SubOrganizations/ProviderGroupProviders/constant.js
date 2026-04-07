@@ -46,32 +46,12 @@ export const PROVIDER_TYPE_OPTIONS = [
   { label: 'Therapist', value: 'therapist' },
 ];
 
-export const SPECIALTIES_OPTIONS = [
-  { label: 'Family Medicine', value: 'familyMedicine' },
-  { label: 'Internal Medicine', value: 'internalMedicine' },
-  { label: 'Pediatrics', value: 'pediatrics' },
-  { label: 'Cardiology', value: 'cardiology' },
-  { label: 'Orthopedics', value: 'orthopedics' },
-  { label: 'Dermatology', value: 'dermatology' },
-  { label: 'Neurology', value: 'neurology' },
-  { label: 'Oncology', value: 'oncology' },
-];
-
 export const ROLE_OPTIONS = [
   { label: 'Primary Care Physician', value: 'primaryCarePhysician' },
   { label: 'Specialist', value: 'specialist' },
   { label: 'Surgeon', value: 'surgeon' },
   { label: 'Consultant', value: 'consultant' },
   { label: 'Attending Physician', value: 'attendingPhysician' },
-];
-
-export const TIMEZONE_OPTIONS = [
-  { label: 'Eastern (ET)', value: 'America/New_York' },
-  { label: 'Central (CT)', value: 'America/Chicago' },
-  { label: 'Mountain (MT)', value: 'America/Denver' },
-  { label: 'Pacific (PT)', value: 'America/Los_Angeles' },
-  { label: 'Alaska (AKT)', value: 'America/Anchorage' },
-  { label: 'Hawaii (HT)', value: 'America/Honolulu' },
 ];
 
 export const STATE_OPTIONS = [

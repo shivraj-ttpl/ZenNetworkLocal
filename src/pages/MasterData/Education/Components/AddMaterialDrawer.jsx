@@ -6,8 +6,9 @@ import * as Yup from 'yup';
 import Button from '@/components/commonComponents/button/Button';
 import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
-import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import FileUpload from '@/components/commonComponents/upload/FileUpload';
+import { spcialitityOptions } from '@/constants/commonDropdownOptions';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
@@ -114,11 +115,11 @@ export default function AddMaterialDrawer() {
                 required
               />
 
-              <AsyncSelectDropdown
+              <SelectDropdown
                 label="Specialty"
                 name={FORM_FIELDS_NAMES.SPECIALTY}
                 placeholder="Select Specialty"
-                url="dropdown-apis/specialties"
+                options={spcialitityOptions}
                 value={values[FORM_FIELDS_NAMES.SPECIALTY]}
                 onChange={(selected) =>
                   setFieldValue(FORM_FIELDS_NAMES.SPECIALTY, selected)

@@ -10,9 +10,14 @@ import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
+import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import TextArea from '@/components/commonComponents/textArea';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 import Icon from '@/components/icons/Icon';
+import {
+  spcialitityOptions,
+  timezoneOptions,
+} from '@/constants/commonDropdownOptions';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatZipCode } from '@/utils/GeneralUtils';
@@ -71,7 +76,9 @@ const getInitialValues = (editData) => ({
       : (editData?.contactNumber ?? ''),
   [FORM_FIELDS_NAMES.SPECIALTIES]: editData?.specialties
     ? editData.specialties.map((s) =>
-        typeof s === 'string' ? { id: s.id, name: s.name } : s,
+        typeof s === 'string'
+          ? { label: s, value: s }
+          : { label: s.name ?? s.label, value: s.id ?? s.value },
       )
     : null,
   [FORM_FIELDS_NAMES.WEBSITE]: editData?.website ?? '',
@@ -157,7 +164,7 @@ function buildPayload(values, showAdminSection) {
     payload.notes = values[FORM_FIELDS_NAMES.NOTES];
   if (values[FORM_FIELDS_NAMES.SPECIALTIES]) {
     payload.specialties = Array.isArray(values[FORM_FIELDS_NAMES.SPECIALTIES])
-      ? values[FORM_FIELDS_NAMES.SPECIALTIES].map((s) => s.id)
+      ? values[FORM_FIELDS_NAMES.SPECIALTIES].map((s) => s.value)
       : [];
   }
 
@@ -364,18 +371,16 @@ export default function AddProviderGroupDrawer({
                     onBlur={handleBlur}
                     defaultCountry="US"
                   />
-                  <AsyncSelectDropdown
+                  <SelectDropdown
                     label="Specialties"
                     name={FORM_FIELDS_NAMES.SPECIALTIES}
                     placeholder="Select Specialties"
-                    url="dropdown-apis/specialties"
+                    options={spcialitityOptions}
                     value={values[FORM_FIELDS_NAMES.SPECIALTIES]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.SPECIALTIES, selected)
                     }
                     isMulti
-                    valueKey="id"
-                    labelKey="name"
                   />
                 </div>
 
@@ -388,13 +393,11 @@ export default function AddProviderGroupDrawer({
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <AsyncSelectDropdown
+                  <SelectDropdown
                     label="Timezone"
                     name={FORM_FIELDS_NAMES.TIMEZONE}
                     placeholder="Select Timezone"
-                    url="dropdown-apis/timezones"
-                    valueKey="value"
-                    labelKey="label"
+                    options={timezoneOptions}
                     value={values[FORM_FIELDS_NAMES.TIMEZONE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.TIMEZONE, selected)
