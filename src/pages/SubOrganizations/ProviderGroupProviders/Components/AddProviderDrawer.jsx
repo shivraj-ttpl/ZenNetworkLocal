@@ -10,6 +10,8 @@ import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectD
 import TextArea from '@/components/commonComponents/textArea';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 
+import { spcialitityOptions } from '@/constants/commonDropdownOptions';
+
 import {
   COUNTRY_OPTIONS,
   FORM_FIELDS_NAMES,
@@ -17,7 +19,6 @@ import {
   LANGUAGE_OPTIONS,
   PROVIDER_TYPE_OPTIONS,
   ROLE_OPTIONS,
-  SPECIALTIES_OPTIONS,
   STATE_OPTIONS,
   TIMEZONE_OPTIONS,
 } from '../constant';
@@ -199,7 +200,7 @@ export default function AddProviderDrawer({ open, drawerMode, editData }) {
                     label="Specialties"
                     name={FORM_FIELDS_NAMES.SPECIALTIES}
                     placeholder="Enter Specialty"
-                    options={SPECIALTIES_OPTIONS}
+                    options={spcialitityOptions}
                     value={values[FORM_FIELDS_NAMES.SPECIALTIES]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.SPECIALTIES, selected)

@@ -26,13 +26,13 @@ export const feeScheduleActions = createSagaActions(componentKey, [
 ]);
 
 function* fetchFeeSchedulesSaga(action) {
-  const { providerGroupId, ...params } = action.payload;
+  const { providerGroupId, tenantName, ...params } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.FEE_SCHEDULE_GET_LIST,
     apiFunc: () =>
-      ProviderGroupDataService.getFeeSchedules(providerGroupId, params),
-    onSuccess: function* (response) {
+      ProviderGroupDataService.getFeeSchedules(providerGroupId, tenantName, { ...params }),
+      onSuccess: function* (response) {
       const { data, meta } = response.data.data;
       yield put(setFeeScheduleList(data));
       yield put(setTotalRecords(meta.total));

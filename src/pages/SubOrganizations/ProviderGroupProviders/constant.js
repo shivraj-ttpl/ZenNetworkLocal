@@ -46,17 +46,6 @@ export const PROVIDER_TYPE_OPTIONS = [
   { label: 'Therapist', value: 'therapist' },
 ];
 
-export const SPECIALTIES_OPTIONS = [
-  { label: 'Family Medicine', value: 'familyMedicine' },
-  { label: 'Internal Medicine', value: 'internalMedicine' },
-  { label: 'Pediatrics', value: 'pediatrics' },
-  { label: 'Cardiology', value: 'cardiology' },
-  { label: 'Orthopedics', value: 'orthopedics' },
-  { label: 'Dermatology', value: 'dermatology' },
-  { label: 'Neurology', value: 'neurology' },
-  { label: 'Oncology', value: 'oncology' },
-];
-
 export const ROLE_OPTIONS = [
   { label: 'Primary Care Physician', value: 'primaryCarePhysician' },
   { label: 'Specialist', value: 'specialist' },

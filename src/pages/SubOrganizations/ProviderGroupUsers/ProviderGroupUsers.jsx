@@ -13,6 +13,7 @@ import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 import AddUserDrawer from './Components/AddUserDrawer';
 import ViewUserModal from './Components/ViewUserModal';
@@ -40,6 +41,7 @@ export default function ProviderGroupUsers() {
   const { providerGroupId } = useParams();
   const { setToolbar } = useOutletContext();
   const dispatch = useDispatch();
+  const tenantName = useSubOrgTenantName();
 
   const {
     usersList = [],
@@ -70,6 +72,7 @@ export default function ProviderGroupUsers() {
       dispatch(
         fetchUsers({
           providerGroupId,
+          tenantName,
           page,
           limit,
           search: debouncedSearch.trim() || undefined,
@@ -83,6 +86,7 @@ export default function ProviderGroupUsers() {
   }, [
     dispatch,
     providerGroupId,
+    tenantName,
     page,
     limit,
     debouncedSearch,
