@@ -36,10 +36,10 @@ export default class ProviderGroupDataService {
 
   // ─── Provider Group Users ────────────────────────
 
-  static async getProviderGroupUsers(providerGroupId, params = {}) {
-    return AppDataService.get('provider-groups/users', {
+  static async getProviderGroupUsers(providerGroupId, tenantName, params = {}) {
+    return AppDataService.get('provider-group/user', {
       params,
-      headers: { 'x-provider-group': providerGroupId },
+      headers: { 'x-provider-group': providerGroupId, 'tenant-name': tenantName },
     });
   }
 
@@ -67,15 +67,15 @@ export default class ProviderGroupDataService {
 
   // ─── Fee Schedule ────────────────────────────────
 
-  static async getFeeSchedules(providerGroupId, params = {}) {
-    return AppDataService.get('provider-groups/fee-schedules', {
+  static async getFeeSchedules(providerGroupId, tenantName, params = {}) {
+    return AppDataService.get('provider-groups/fee/schedules', {
       params,
-      headers: { 'x-provider-group': providerGroupId },
+      headers: { 'x-provider-group': providerGroupId, 'tenant-name': tenantName},
     });
   }
 
   static async createFeeSchedule(providerGroupId, data) {
-    return AppDataService.post('provider-groups/fee-schedules', data, {
+    return AppDataService.post('provider-groups/fee/schedules', data, {
       headers: { 'x-provider-group': providerGroupId },
     });
   }

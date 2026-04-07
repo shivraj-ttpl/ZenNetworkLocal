@@ -3,8 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import Button from '@/components/commonComponents/button/Button';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import Icon from '@/components/icons/Icon';
+import { spcialitityOptions } from '@/constants/commonDropdownOptions';
 
-import { FILE_TYPE_OPTIONS, SPECIALTY_OPTIONS } from '../constant';
+import { FILE_TYPE_OPTIONS } from '../constant';
 
 export default function FilterDropdown({ onApply }) {
   const [open, setOpen] = useState(false);
@@ -74,7 +75,7 @@ export default function FilterDropdown({ onApply }) {
               label="Specialty"
               name="filterSpecialty"
               placeholder="Select Specialty"
-              options={SPECIALTY_OPTIONS}
+              options={spcialitityOptions}
               value={specialty}
               onChange={(selected) => setSpecialty(selected)}
             />

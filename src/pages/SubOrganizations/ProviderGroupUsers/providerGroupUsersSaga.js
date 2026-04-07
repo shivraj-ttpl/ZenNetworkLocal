@@ -30,12 +30,16 @@ export const providerGroupUsersActions = createSagaActions(componentKey, [
 ]);
 
 function* fetchUsersSaga(action) {
-  const { providerGroupId, ...params } = action.payload;
+  const { providerGroupId, tenantName, ...params } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_USERS_GET_LIST,
     apiFunc: () =>
-      ProviderGroupDataService.getProviderGroupUsers(providerGroupId, params),
+      ProviderGroupDataService.getProviderGroupUsers(
+        providerGroupId,
+        tenantName,
+        params,
+      ),
     onSuccess: function* (response) {
       const { data, meta } = response.data.data;
       yield put(setUsersList(data));

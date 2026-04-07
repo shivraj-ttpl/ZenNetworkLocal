@@ -24,6 +24,7 @@ import {
   setOpenAddDrawer,
   setOpenEditDrawer,
 } from './providerGroupFeeScheduleSlice';
+import useSubOrgTenantName from '../../../hooks/useSubOrgTenantName';
 
 const { fetchFeeSchedules, deleteFeeSchedule } = feeScheduleActions;
 const EMPTY_STATE = {};
@@ -32,6 +33,7 @@ export default function ProviderGroupFeeSchedule() {
   const { providerGroupId } = useParams();
   const { setToolbar } = useOutletContext();
   const dispatch = useDispatch();
+  const tenantName  = useSubOrgTenantName();
 
   const {
     feeScheduleList = [],
@@ -60,6 +62,7 @@ export default function ProviderGroupFeeSchedule() {
       dispatch(
         fetchFeeSchedules({
           providerGroupId,
+          tenantName,
           page,
           limit,
           search: debouncedSearch.trim() || undefined,
