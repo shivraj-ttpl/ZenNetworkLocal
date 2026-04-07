@@ -142,6 +142,7 @@ export default function AddConditionDrawer() {
                 error={errors[FORM_FIELDS_NAMES.ICD_CODE]}
                 touched={touched[FORM_FIELDS_NAMES.ICD_CODE]}
                 required
+                onBlur={handleBlur}
               />
 
               <TextArea
@@ -166,6 +167,7 @@ export default function AddConditionDrawer() {
                 error={errors[FORM_FIELDS_NAMES.CARE_PLAN]}
                 touched={touched[FORM_FIELDS_NAMES.CARE_PLAN]}
                 required
+                onBlur={handleBlur}
               />
 
               <TextArea

@@ -92,6 +92,7 @@ export default function AsyncSelectDropdown({
   touched,
   renderOption,
   className = '',
+  onBlur,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -243,6 +244,7 @@ export default function AsyncSelectDropdown({
         return;
       setIsOpen(false);
       setSearch('');
+      setTimeout(() => onBlur?.({ target: { name } }), 0);
     }
     document.addEventListener('mousedown', handleClick);
     // eslint-disable-next-line consistent-return
@@ -298,17 +300,19 @@ export default function AsyncSelectDropdown({
       } else {
         onChange?.(option);
         handleClose();
+        setTimeout(() => onBlur?.({ target: { name } }), 0);
       }
     },
-    [isMulti, value, valueKey, onChange, handleClose],
+    [isMulti, value, valueKey, onChange, handleClose, onBlur, name],
   );
 
   const handleClear = useCallback(
     (e) => {
       e.stopPropagation();
       onChange?.(isMulti ? [] : null);
+      setTimeout(() => onBlur?.({ target: { name } }), 0);
     },
-    [isMulti, onChange],
+    [isMulti, onChange, onBlur, name],
   );
 
   const hasValue = isMulti ? Array.isArray(value) && value.length > 0 : !!value;

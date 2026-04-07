@@ -1,6 +1,6 @@
 import { FieldArray, Form, Formik } from 'formik';
 import { useEffect, useMemo, useState } from 'react';
-import { parsePhoneNumber } from 'react-phone-number-input';
+import { parsePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
@@ -47,6 +47,11 @@ const baseValidationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string()
     .required('ZIP Code is required')
     .matches(/^\d{5}(-\d{4})?$/, 'Enter valid ZIP (12345 or 12345-6789)'),
+  [FORM_FIELDS_NAMES.CONTACT_NUMBER]: Yup.string()
+    .nullable()
+    .test('phone', 'Invalid phone number', (val) =>
+      !val ? true : isValidPhoneNumber(val),
+    ),
 });
 
 const fullValidationSchema = baseValidationSchema.shape({
@@ -61,6 +66,11 @@ const fullValidationSchema = baseValidationSchema.shape({
       [FORM_FIELDS_NAMES.ADMIN_EMAIL]: Yup.string()
         .email('Invalid email')
         .required('Email is required'),
+      [FORM_FIELDS_NAMES.ADMIN_PHONE]: Yup.string()
+        .nullable()
+        .test('phone', 'Invalid phone number', (val) =>
+          !val ? true : isValidPhoneNumber(val),
+        ),
     }),
   ),
 });
@@ -299,6 +309,8 @@ export default function AddSubOrgDrawer() {
                     }
                     onBlur={handleBlur}
                     defaultCountry="US"
+                    error={errors[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
+                    touched={touched[FORM_FIELDS_NAMES.CONTACT_NUMBER]}
                   />
                 </div>
 
@@ -365,6 +377,7 @@ export default function AddSubOrgDrawer() {
                     required
                     valueKey="name"
                     labelKey="name"
+                    onBlur={handleBlur}
                   />
                   <AsyncSelectDropdown
                     label="Country"
@@ -417,7 +430,7 @@ export default function AddSubOrgDrawer() {
                     Import from Another Sub-Organization
                   </h4>
 
-                  <div className="flex flex-col sm:flex-row sm:items-end gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-3">
                     <div className="flex-1">
                       <AsyncSelectDropdown
                         label="Sub-Organization"
@@ -438,6 +451,9 @@ export default function AddSubOrgDrawer() {
                         valueKey="id"
                         labelKey="name"
                         required
+                        onBlur={handleBlur}
+                        touched={touched[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]}
+                        error={errors[FORM_FIELDS_NAMES.IMPORT_SUB_ORG]}
                       />
                     </div>
                     <div className="flex-1">
@@ -463,6 +479,11 @@ export default function AddSubOrgDrawer() {
                         labelKey="firstName"
                         labelKey2="lastName"
                         required
+                        onBlur={handleBlur}
+                        touched={
+                          touched[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]
+                        }
+                        error={errors[FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]}
                       />
                     </div>
                   </div>
@@ -656,6 +677,16 @@ export default function AddSubOrgDrawer() {
                                       }
                                       onBlur={handleBlur}
                                       defaultCountry="US"
+                                      error={
+                                        contactErrors[
+                                          FORM_FIELDS_NAMES.ADMIN_PHONE
+                                        ]
+                                      }
+                                      touched={
+                                        contactTouched[
+                                          FORM_FIELDS_NAMES.ADMIN_PHONE
+                                        ]
+                                      }
                                     />
                                     <Input
                                       label="Email Address"

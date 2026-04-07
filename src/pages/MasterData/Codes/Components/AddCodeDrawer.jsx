@@ -116,6 +116,7 @@ export default function AddCodeDrawer() {
                 placeholder="Write Description..."
                 value={values[FORM_FIELDS_NAMES.DESCRIPTION]}
                 onChangeCb={handleChange}
+                onBlur={handleBlur}
                 isRequired
               />
             </div>

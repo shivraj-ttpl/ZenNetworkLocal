@@ -13,6 +13,7 @@ function TextArea({
   name = '',
   errorContainerClasses = 'text-xs max-w-[350px]',
   enforceMaxRows = false,
+  onBlur = () => {},
 }) {
   const calculatedMaxHeight = `${Number(rows) * 24}px`;
 
@@ -45,6 +46,7 @@ function TextArea({
         onChange={onChangeCb}
         disabled={disabled}
         name={name}
+        onBlur={onBlur}
       />
       {name && (
         <div className={`mt-1 ${errorContainerClasses}`}>

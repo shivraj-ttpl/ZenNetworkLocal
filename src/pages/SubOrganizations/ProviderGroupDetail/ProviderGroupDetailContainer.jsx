@@ -6,6 +6,7 @@ import {
   useNavigate,
   useOutletContext,
   useParams,
+  useSearchParams,
 } from 'react-router-dom';
 
 import Icon from '@/components/icons/Icon';
@@ -20,6 +21,9 @@ export default function ProviderGroupDetailContainer() {
   const { subOrgId, providerGroupId } = useParams();
   const navigate = useNavigate();
   const { subOrgName: subOrgNameFromOutlet } = useOutletContext() ?? {};
+  const [searchParams] = useSearchParams();
+  const subOrgNameFromUrl = searchParams.get('name');
+  const pgName = searchParams.get('pgName');
   const [toolbar, setToolbar] = useState(null);
   const { currentUserRole } = useCurrentUserRole();
 
@@ -32,29 +36,42 @@ export default function ProviderGroupDetailContainer() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const orgName = useMemo(
     () =>
+      subOrgNameFromUrl ??
       subOrgNameFromOutlet ??
       subOrganizationsData.find((o) => o.id === subOrgId)?.name,
-    [subOrgNameFromOutlet, subOrgId],
+    [subOrgNameFromUrl, subOrgNameFromOutlet, subOrgId],
   );
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const pg = useMemo(
-    () => providerGroupsData.find((p) => p.id === providerGroupId),
-    [providerGroupId],
+  const providerGroupName = useMemo(
+    () =>
+      pgName ?? providerGroupsData.find((p) => p.id === providerGroupId)?.name,
+    [pgName, providerGroupId],
   );
 
   const basePath = `/sub-organizations/${subOrgId}/provider-groups/${providerGroupId}`;
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const queryString = useMemo(() => {
+    const params = new URLSearchParams();
+    if (orgName) params.set('name', orgName);
+    if (providerGroupName) params.set('pgName', providerGroupName);
+    return params.toString();
+  }, [orgName, providerGroupName]);
+
+  const buildTabPath = (path) => `${path}?${queryString}`;
+
   const TABS = [
-    { label: 'Profile', path: basePath, end: true },
-    { label: 'Providers', path: `${basePath}/providers` },
-    { label: 'Patients', path: `${basePath}/patients` },
-    { label: 'Users', path: `${basePath}/users` },
-    { label: 'Configuration', path: `${basePath}/configuration` },
+    { label: 'Profile', path: buildTabPath(basePath), end: true },
+    { label: 'Providers', path: buildTabPath(`${basePath}/providers`) },
+    { label: 'Patients', path: buildTabPath(`${basePath}/patients`) },
+    { label: 'Users', path: buildTabPath(`${basePath}/users`) },
+    { label: 'Configuration', path: buildTabPath(`${basePath}/configuration`) },
     {
       label: 'Provider Availability',
-      path: `${basePath}/provider-availability`,
+      path: buildTabPath(`${basePath}/provider-availability`),
     },
-    { label: 'Fee Schedule', path: `${basePath}/fee-schedule` },
+    { label: 'Fee Schedule', path: buildTabPath(`${basePath}/fee-schedule`) },
   ];
 
   return (
@@ -64,7 +81,9 @@ export default function ProviderGroupDetailContainer() {
         <div className="flex items-center gap-2">
           <button
             onClick={() =>
-              navigate(`/sub-organizations/${subOrgId}/provider-groups`)
+              navigate(
+                `/sub-organizations/${subOrgId}/provider-groups${orgName ? `?name=${encodeURIComponent(orgName)}` : ''}`,
+              )
             }
             className="flex items-center gap-2 text-text-primary hover:text-primary-700 transition-colors cursor-pointer shrink-0"
           >
@@ -73,7 +92,7 @@ export default function ProviderGroupDetailContainer() {
           </button>
           <span className="text-neutral-300 shrink-0">|</span>
           <span className="text-base font-medium text-text-primary truncate">
-            {pg?.name || 'Provider Group'}
+            {providerGroupName || 'Provider Group'}
           </span>
         </div>
 
@@ -109,7 +128,7 @@ export default function ProviderGroupDetailContainer() {
         context={{
           setToolbar,
           subOrgName: orgName,
-          providerGroupName: pg?.name,
+          providerGroupName,
         }}
       />
     </div>
