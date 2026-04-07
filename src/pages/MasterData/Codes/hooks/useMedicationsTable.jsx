@@ -54,7 +54,9 @@ function buildActionOptions(dispatch, row, codeLabel, codeType) {
 
 function renderFavorite(row) {
   return (
-    <span className={row.isFavorite ? 'text-primary-700' : 'text-neutral-400'}>
+    <span
+      className={`flex items-center justify-center ${row.isFavorite ? 'text-primary-700' : 'text-neutral-400'}`}
+    >
       {row.isFavorite ? <Icon name="check" size={18} /> : '-'}
     </span>
   );

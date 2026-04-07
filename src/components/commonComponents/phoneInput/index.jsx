@@ -91,7 +91,7 @@ export default function PhoneInput({
       <div
         className={`
           phone-input-wrapper
-          w-full h-12 rounded-lg border bg-surface overflow-hidden
+          w-full h-10 rounded-lg border bg-surface overflow-hidden
           transition-colors
           focus-within:border-primary focus-within:ring-[0.5]
           ${disabled ? 'bg-neutral-50 cursor-not-allowed opacity-60' : ''}
@@ -105,7 +105,7 @@ export default function PhoneInput({
           onChange={onChange}
           placeholder={placeholder}
           disabled={disabled}
-          onBlur={onBlur}
+          onBlur={() => onBlur?.({ target: { name } })}
           className="h-full"
         />
       </div>
