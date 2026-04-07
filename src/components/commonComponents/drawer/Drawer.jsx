@@ -44,6 +44,14 @@ function Drawer({
     }
   }, [open]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') close?.();
+    };
+    if (open) document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [open, close]);
+
   if (!visible) return null;
 
   return (

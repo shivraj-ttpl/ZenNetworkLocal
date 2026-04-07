@@ -130,6 +130,7 @@ export default function AddAllergySymptomDrawer() {
                 isRequired
                 error={errors[SIMPLE_NAME_FORM_FIELDS.DESCRIPTION]}
                 touched={touched[SIMPLE_NAME_FORM_FIELDS.DESCRIPTION]}
+                onBlur={handleBlur}
               />
             </div>
 

@@ -30,7 +30,7 @@ const STATS = [
 ];
 
 const CONTACT_FIELDS = [
-  { label: 'Email Address', key: 'email', isLink: true },
+  { label: 'Email Address', key: 'email', isLink: true, linkType: 'email' },
   { label: 'Contact Number', key: 'primaryContact' },
   { label: 'Fax', key: 'fax' },
   { label: 'Website', key: 'website', isLink: true },
@@ -77,17 +77,27 @@ const ADMIN_FIELDS = [
     format: (v, contact) =>
       [contact?.firstName, contact?.lastName].filter(Boolean).join(' ') || null,
   },
-  { label: 'Email Address', key: 'email', isLink: true },
+  { label: 'Email Address', key: 'email', isLink: true, linkType: 'email' },
   { label: 'Contact Number', key: 'contactNumber' },
 ];
 
-function LabelValue({ label, value, isLink }) {
+function LabelValue({ label, value, isLink, linkType }) {
+  const getHref = () => {
+    if (linkType === 'email') return `mailto:${value}`;
+    return value;
+  };
+
   return (
     <div className="flex items-start gap-2 text-sm">
       <span className="text-neutral-500 min-w-32">{label}</span>
       <span className="text-neutral-500">:</span>
-      {isLink ? (
-        <a href="#" className="text-primary-700 hover:underline">
+      {isLink && value ? (
+        <a
+          href={getHref()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary-700 hover:underline"
+        >
           {value}
         </a>
       ) : (
@@ -245,6 +255,7 @@ export default function SettingsProfile() {
                         : profileData?.[item.key]
                     }
                     isLink={item.isLink}
+                    linkType={item.linkType}
                   />
                 ))}
               </div>
@@ -290,6 +301,7 @@ export default function SettingsProfile() {
                                   : contact[item.key]
                               }
                               isLink={item.isLink}
+                              linkType={item.linkType}
                             />
                           </>
                         );

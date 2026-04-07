@@ -149,6 +149,11 @@ export default function Assessments() {
           header: 'Total Questions',
           accessorKey: 'totalQuestions',
           width: 130,
+          render: (row) => (
+            <span className="flex items-center justify-center">
+              {row.totalQuestions}
+            </span>
+          ),
         },
         {
           id: 'favorites',
@@ -157,9 +162,7 @@ export default function Assessments() {
           align: 'center',
           render: (row) => (
             <span
-              className={
-                row.isFavorite ? 'text-primary-700' : 'text-neutral-400'
-              }
+              className={`flex items-center justify-center ${row.isFavorite ? 'text-primary-700' : 'text-neutral-400'}`}
             >
               {row.isFavorite ? <Icon name="check" size={18} /> : '-'}
             </span>
