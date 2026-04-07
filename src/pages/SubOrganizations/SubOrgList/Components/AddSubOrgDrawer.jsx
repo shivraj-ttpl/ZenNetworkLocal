@@ -47,12 +47,6 @@ const baseValidationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string()
     .required('ZIP Code is required')
     .matches(/^\d{5}(-\d{4})?$/, 'Enter valid ZIP (12345 or 12345-6789)'),
-  [FORM_FIELDS_NAMES.IMPORT_SUB_ORG]: Yup.mixed()
-    .nullable()
-    .required('Select a Sub-Organization to import from'),
-  [FORM_FIELDS_NAMES.IMPORT_SUB_ORG_ADMIN]: Yup.mixed()
-    .nullable()
-    .required('Select an admin to import from'),
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]: Yup.string()
     .nullable()
     .test('phone', 'Invalid phone number', (val) =>
