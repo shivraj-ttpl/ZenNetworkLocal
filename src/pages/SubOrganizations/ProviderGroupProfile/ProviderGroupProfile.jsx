@@ -46,6 +46,31 @@ function buildPhone(obj) {
   return `${code} ${obj.contactNumber}`.trim();
 }
 
+function InfoRow({
+  label,
+  value,
+  isLink = false,
+  labelClassName = 'sm:min-w-36',
+}) {
+  return (
+    <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-start sm:gap-2">
+      <span className={`text-neutral-500 ${labelClassName} sm:shrink-0`}>
+        {label}
+      </span>
+      <span className="hidden text-neutral-500 sm:inline">:</span>
+      <div className="min-w-0 flex-1">
+        {isLink ? (
+          <a href="#" className="text-primary-700 hover:underline break-all">
+            {value}
+          </a>
+        ) : (
+          <span className="text-text-primary break-words">{value}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function ProviderGroupProfile() {
   const { providerGroupId } = useParams();
   const { setToolbar } = useOutletContext();
@@ -88,17 +113,17 @@ export default function ProviderGroupProfile() {
 
   if (isLoading && !profile) {
     return (
-      <div className="px-5 pb-5">
-        <div className="border border-border-light rounded-lg p-5 animate-pulse">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="flex items-start gap-4">
+      <div className="px-3 sm:px-5 pb-5">
+        <div className="border border-border-light rounded-lg p-4 sm:p-5 animate-pulse">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            <div className="flex flex-col sm:flex-row items-start gap-4">
               <div className="w-16 h-16 bg-neutral-200 rounded-lg" />
-              <div className="flex-1 space-y-2">
+              <div className="flex-1 w-full space-y-2">
                 <div className="h-4 bg-neutral-200 rounded w-48" />
                 <div className="h-4 bg-neutral-200 rounded w-32" />
-                <div className="h-4 bg-neutral-200 rounded w-64" />
+                <div className="h-4 bg-neutral-200 rounded w-full sm:w-64" />
                 <div className="h-4 bg-neutral-200 rounded w-40" />
-                <div className="h-4 bg-neutral-200 rounded w-56" />
+                <div className="h-4 bg-neutral-200 rounded w-full sm:w-56" />
               </div>
             </div>
             <div className="space-y-3">
@@ -115,17 +140,17 @@ export default function ProviderGroupProfile() {
   if (!profile) return null;
 
   return (
-    <div className="px-5 pb-5">
-      <div className="border border-border-light rounded-lg p-5">
-        <div className="grid grid-cols-2 gap-6">
-          <div className="flex items-start gap-4">
+    <div className="px-3 sm:px-5 pb-5">
+      <div className="border border-border-light rounded-lg p-4 sm:p-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div className="flex flex-col sm:flex-row items-start gap-4">
             <Avatar
               name={profile.name}
               src={profile.logoUrl}
               size="xl"
               variant="square"
             />
-            <div className="space-y-2.5">
+            <div className="flex-1 w-full min-w-0 space-y-2.5">
               {[
                 { label: 'Provider Group Name', value: profile.name },
                 {
@@ -154,28 +179,20 @@ export default function ProviderGroupProfile() {
                 { label: 'Timezone', value: profile.timezone || '-' },
                 { label: 'Note', value: profile.notes || '-' },
               ].map((item) => (
-                <div
+                <InfoRow
                   key={item.label}
-                  className="flex items-start gap-2 text-sm"
-                >
-                  <span className="text-neutral-500 min-w-36">
-                    {item.label}
-                  </span>
-                  <span className="text-neutral-500">:</span>
-                  {item.isLink ? (
-                    <a href="#" className="text-primary-700 hover:underline">
-                      {item.value}
-                    </a>
-                  ) : (
-                    <span className="text-text-primary">{item.value}</span>
-                  )}
-                </div>
+                  label={item.label}
+                  value={item.value}
+                  isLink={item.isLink}
+                />
               ))}
             </div>
-            <StatusBadge status={profile.status} />
+            <div className="sm:shrink-0">
+              <StatusBadge status={profile.status} />
+            </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
               <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
                 Address Information
@@ -191,16 +208,12 @@ export default function ProviderGroupProfile() {
                     value: formatAddress(profile.billingAddress),
                   },
                 ].map((item) => (
-                  <div
+                  <InfoRow
                     key={item.label}
-                    className="flex items-start gap-2 text-sm"
-                  >
-                    <span className="text-neutral-500 min-w-32">
-                      {item.label}
-                    </span>
-                    <span className="text-neutral-500">:</span>
-                    <span className="text-text-primary">{item.value}</span>
-                  </div>
+                    label={item.label}
+                    value={item.value}
+                    labelClassName="sm:min-w-32"
+                  />
                 ))}
               </div>
             </div>
@@ -209,8 +222,8 @@ export default function ProviderGroupProfile() {
               <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
                 Administrative Contact
               </h3>
-              <div className="max-h-[calc(100vh-460px)] overflow-y-auto pr-2">
-                <div className="space-y-6  bg-surface p-3 rounded-md border border-border-light">
+              <div className="lg:max-h-[calc(100vh-460px)] lg:overflow-y-auto lg:pr-2">
+                <div className="space-y-6 bg-surface p-3 sm:p-4 rounded-md border border-border-light">
                   {(profile.userProviderGroups ?? []).length > 0 ? (
                     profile.userProviderGroups.map((admin, idx) => (
                       <div
@@ -235,27 +248,12 @@ export default function ProviderGroupProfile() {
                             isLink: !!admin.email,
                           },
                         ].map((item) => (
-                          <div
+                          <InfoRow
                             key={item.label}
-                            className="flex items-start gap-2 text-sm"
-                          >
-                            <span className="text-neutral-500 min-w-36">
-                              {item.label}
-                            </span>
-                            <span className="text-neutral-500">:</span>
-                            {item.isLink ? (
-                              <a
-                                href="#"
-                                className="text-primary-700 hover:underline"
-                              >
-                                {item.value}
-                              </a>
-                            ) : (
-                              <span className="text-text-primary">
-                                {item.value}
-                              </span>
-                            )}
-                          </div>
+                            label={item.label}
+                            value={item.value}
+                            isLink={item.isLink}
+                          />
                         ))}
                       </div>
                     ))

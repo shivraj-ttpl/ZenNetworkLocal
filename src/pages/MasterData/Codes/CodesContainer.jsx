@@ -188,7 +188,7 @@ export default function CodesContainer() {
               type="text"
               value={search}
               onChange={(e) => dispatch(setSearch(e.target.value))}
-              placeholder={`Search by ${codeLabel} or Description`}
+              placeholder={`Search by ${codeLabel}${codeLabel !== 'Medication' ? ' or Description' : ''}`}
               className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
             />
           </div>
