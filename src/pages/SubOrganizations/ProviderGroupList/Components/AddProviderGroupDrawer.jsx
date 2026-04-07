@@ -14,7 +14,10 @@ import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectD
 import TextArea from '@/components/commonComponents/textArea';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 import Icon from '@/components/icons/Icon';
-import { spcialitityOptions } from '@/constants/commonDropdownOptions';
+import {
+  spcialitityOptions,
+  timezoneOptions,
+} from '@/constants/commonDropdownOptions';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatZipCode } from '@/utils/GeneralUtils';
@@ -390,13 +393,11 @@ export default function AddProviderGroupDrawer({
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <AsyncSelectDropdown
+                  <SelectDropdown
                     label="Timezone"
                     name={FORM_FIELDS_NAMES.TIMEZONE}
                     placeholder="Select Timezone"
-                    url="dropdown-apis/timezones"
-                    valueKey="value"
-                    labelKey="label"
+                    options={timezoneOptions}
                     value={values[FORM_FIELDS_NAMES.TIMEZONE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.TIMEZONE, selected)

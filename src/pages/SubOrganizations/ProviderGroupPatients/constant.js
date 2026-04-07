@@ -194,13 +194,6 @@ export const STATE_OPTIONS = [
   { label: 'Ohio', value: 'OH' },
 ];
 
-export const TIMEZONE_OPTIONS = [
-  { label: 'Eastern (ET)', value: 'America/New_York' },
-  { label: 'Central (CT)', value: 'America/Chicago' },
-  { label: 'Mountain (MT)', value: 'America/Denver' },
-  { label: 'Pacific (PT)', value: 'America/Los_Angeles' },
-];
-
 export const COUNTY_OPTIONS = [
   { label: 'Dallas County', value: 'dallas' },
   { label: 'Harris County', value: 'harris' },
