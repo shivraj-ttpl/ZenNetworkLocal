@@ -12,6 +12,7 @@ import ProviderGroupDataService from '@/services/appDataService/ProviderGroupDat
 
 import {
   componentKey,
+  setCloseDeleteModal,
   setCloseDrawer,
   setFeeScheduleList,
   setRefreshFeeSchedule,
@@ -43,12 +44,16 @@ function* fetchFeeSchedulesSaga(action) {
 }
 
 function* createFeeScheduleSaga(action) {
-  const { providerGroupId, data } = action.payload;
+  const { providerGroupId, tenantName, data } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.FEE_SCHEDULE_POST_CREATE,
     apiFunc: () =>
-      ProviderGroupDataService.createFeeSchedule(providerGroupId, data),
+      ProviderGroupDataService.createFeeSchedule(
+        providerGroupId,
+        tenantName,
+        data,
+      ),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -63,11 +68,17 @@ function* createFeeScheduleSaga(action) {
 }
 
 function* updateFeeScheduleSaga(action) {
-  const { id, data } = action.payload;
+  const { id, providerGroupId, tenantName, data } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.FEE_SCHEDULE_PATCH_UPDATE,
-    apiFunc: () => ProviderGroupDataService.updateFeeSchedule(id, data),
+    apiFunc: () =>
+      ProviderGroupDataService.updateFeeSchedule(
+        id,
+        providerGroupId,
+        tenantName,
+        data,
+      ),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -82,11 +93,12 @@ function* updateFeeScheduleSaga(action) {
 }
 
 function* deleteFeeScheduleSaga(action) {
-  const { id } = action.payload;
+  const { id, providerGroupId, tenantName } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.FEE_SCHEDULE_DELETE,
-    apiFunc: () => ProviderGroupDataService.deleteFeeSchedule(id),
+    apiFunc: () =>
+      ProviderGroupDataService.deleteFeeSchedule(id, providerGroupId, tenantName),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -94,6 +106,7 @@ function* deleteFeeScheduleSaga(action) {
           variant: TOASTER_VARIANT.SUCCESS,
         }),
       );
+      yield put(setCloseDeleteModal());
       yield put(setRefreshFeeSchedule());
     },
   });

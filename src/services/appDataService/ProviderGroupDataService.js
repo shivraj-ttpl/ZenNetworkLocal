@@ -80,17 +80,30 @@ export default class ProviderGroupDataService {
     });
   }
 
-  static async createFeeSchedule(providerGroupId, data) {
+  static async createFeeSchedule(providerGroupId, tenantName, data) {
     return AppDataService.post('provider-groups/fee/schedules', data, {
-      headers: { 'x-provider-group': providerGroupId },
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
     });
   }
 
-  static async updateFeeSchedule(id, data) {
-    return AppDataService.patch(`fee-schedules/${id}`, data);
+  static async updateFeeSchedule(id, providerGroupId, tenantName, data) {
+    return AppDataService.patch(`fee/schedules/${id}`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
   }
 
-  static async deleteFeeSchedule(id) {
-    return AppDataService.delete(`fee-schedules/${id}`);
+  static async deleteFeeSchedule(id, providerGroupId, tenantName) {
+    return AppDataService.delete(`fee/schedules/${id}`, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
   }
 }
