@@ -6,6 +6,7 @@ import PhoneInput from '@/components/commonComponents/phoneInput';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 import Icon from '@/components/icons/Icon';
+import { timezoneOptions } from '@/constants/commonDropdownOptions';
 
 import {
   CARE_MANAGER_OPTIONS,
@@ -22,7 +23,6 @@ import {
   RELATIONSHIP_OPTIONS,
   SEX_AT_BIRTH_OPTIONS,
   STATE_OPTIONS,
-  TIMEZONE_OPTIONS,
 } from '../../constant';
 
 const emptyFamilyContact = {
@@ -265,7 +265,7 @@ export default function PatientDetails({
             label="Time Zone"
             name={FORM_FIELDS_NAMES.TIMEZONE}
             placeholder="Select Time Zone"
-            options={TIMEZONE_OPTIONS}
+            options={timezoneOptions}
             value={values[FORM_FIELDS_NAMES.TIMEZONE]}
             onChange={(selected) =>
               setFieldValue(FORM_FIELDS_NAMES.TIMEZONE, selected)

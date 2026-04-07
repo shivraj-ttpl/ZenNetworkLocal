@@ -1,3 +1,12 @@
+export const timezoneOptions = [
+  { label: 'EST', value: 'EST' },
+  { label: 'PST', value: 'PST' },
+  { label: 'CST', value: 'CST' },
+  { label: 'MST', value: 'MST' },
+  { label: 'AST', value: 'AST' },
+  { label: 'HST', value: 'HST' },
+];
+
 export const spcialitityOptions = [
   { label: 'Multi-Speciality', value: 'Multi-Speciality' },
   { label: 'Primary Care', value: 'Primary Care' },

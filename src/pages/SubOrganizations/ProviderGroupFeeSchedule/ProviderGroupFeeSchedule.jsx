@@ -13,6 +13,7 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatDate } from '@/utils/GeneralUtils';
 
+import useSubOrgTenantName from '../../../hooks/useSubOrgTenantName';
 import AddFeeScheduleDrawer from './Components/AddFeeScheduleDrawer';
 import {
   feeScheduleActions,
@@ -24,7 +25,6 @@ import {
   setOpenAddDrawer,
   setOpenEditDrawer,
 } from './providerGroupFeeScheduleSlice';
-import useSubOrgTenantName from '../../../hooks/useSubOrgTenantName';
 
 const { fetchFeeSchedules, deleteFeeSchedule } = feeScheduleActions;
 const EMPTY_STATE = {};
@@ -33,7 +33,7 @@ export default function ProviderGroupFeeSchedule() {
   const { providerGroupId } = useParams();
   const { setToolbar } = useOutletContext();
   const dispatch = useDispatch();
-  const tenantName  = useSubOrgTenantName();
+  const tenantName = useSubOrgTenantName();
 
   const {
     feeScheduleList = [],
@@ -80,6 +80,7 @@ export default function ProviderGroupFeeSchedule() {
     sortKey,
     sortOrder,
     refreshFlag,
+    tenantName,
   ]);
 
   useEffect(() => {

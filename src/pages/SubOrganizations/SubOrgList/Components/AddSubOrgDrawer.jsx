@@ -1,6 +1,6 @@
 import { FieldArray, Form, Formik } from 'formik';
 import { useEffect, useMemo, useState } from 'react';
-import { parsePhoneNumber, isValidPhoneNumber } from 'react-phone-number-input';
+import { isValidPhoneNumber, parsePhoneNumber } from 'react-phone-number-input';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 

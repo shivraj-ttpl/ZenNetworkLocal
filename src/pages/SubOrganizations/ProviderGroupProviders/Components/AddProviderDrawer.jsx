@@ -9,8 +9,10 @@ import PhoneInput from '@/components/commonComponents/phoneInput';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import TextArea from '@/components/commonComponents/textArea';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
-
-import { spcialitityOptions } from '@/constants/commonDropdownOptions';
+import {
+  spcialitityOptions,
+  timezoneOptions,
+} from '@/constants/commonDropdownOptions';
 
 import {
   COUNTRY_OPTIONS,
@@ -20,7 +22,6 @@ import {
   PROVIDER_TYPE_OPTIONS,
   ROLE_OPTIONS,
   STATE_OPTIONS,
-  TIMEZONE_OPTIONS,
 } from '../constant';
 import { setCloseDrawer } from '../providerGroupProvidersSlice';
 
@@ -264,7 +265,7 @@ export default function AddProviderDrawer({ open, drawerMode, editData }) {
                     label="Timezone"
                     name={FORM_FIELDS_NAMES.TIMEZONE}
                     placeholder="Select Time zone"
-                    options={TIMEZONE_OPTIONS}
+                    options={timezoneOptions}
                     value={values[FORM_FIELDS_NAMES.TIMEZONE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.TIMEZONE, selected)

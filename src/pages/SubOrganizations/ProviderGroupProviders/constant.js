@@ -54,15 +54,6 @@ export const ROLE_OPTIONS = [
   { label: 'Attending Physician', value: 'attendingPhysician' },
 ];
 
-export const TIMEZONE_OPTIONS = [
-  { label: 'Eastern (ET)', value: 'America/New_York' },
-  { label: 'Central (CT)', value: 'America/Chicago' },
-  { label: 'Mountain (MT)', value: 'America/Denver' },
-  { label: 'Pacific (PT)', value: 'America/Los_Angeles' },
-  { label: 'Alaska (AKT)', value: 'America/Anchorage' },
-  { label: 'Hawaii (HT)', value: 'America/Honolulu' },
-];
-
 export const STATE_OPTIONS = [
   { label: 'California', value: 'CA' },
   { label: 'Texas', value: 'TX' },

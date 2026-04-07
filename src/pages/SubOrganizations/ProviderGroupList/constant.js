@@ -62,12 +62,3 @@ export const SPECIALTIES_OPTIONS = [
   { label: 'Neurology', value: 'neurology' },
   { label: 'Oncology', value: 'oncology' },
 ];
-
-export const TIMEZONE_OPTIONS = [
-  { label: 'Eastern (ET)', value: 'America/New_York' },
-  { label: 'Central (CT)', value: 'America/Chicago' },
-  { label: 'Mountain (MT)', value: 'America/Denver' },
-  { label: 'Pacific (PT)', value: 'America/Los_Angeles' },
-  { label: 'Alaska (AKT)', value: 'America/Anchorage' },
-  { label: 'Hawaii (HT)', value: 'America/Honolulu' },
-];
