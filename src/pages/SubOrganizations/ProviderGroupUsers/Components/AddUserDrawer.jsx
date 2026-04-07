@@ -7,16 +7,17 @@ import Button from '@/components/commonComponents/button/Button';
 import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
 import PhoneInput from '@/components/commonComponents/phoneInput';
+import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-import { parsePhoneValue } from '@/utils/GeneralUtils';
+import { formatZipCode, parsePhoneValue, toPascalCase } from '@/utils/GeneralUtils';
 
 import {
   COUNTRY_OPTIONS,
   FORM_FIELDS_NAMES,
-  ROLE_OPTIONS,
   STATE_OPTIONS,
 } from '../constant';
 import { providerGroupUsersActions } from '../providerGroupUsersSaga';
@@ -43,7 +44,9 @@ const validationSchema = Yup.object().shape({
     .nullable()
     .required('Country is required'),
   [FORM_FIELDS_NAMES.CITY]: Yup.string().required('City is required'),
-  [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string().required('ZIP Code is required'),
+  [FORM_FIELDS_NAMES.ZIP_CODE]: Yup.string()
+    .required('ZIP Code is required')
+    .matches(/^\d{5}(-\d{4})?$/, 'Enter valid ZIP (12345 or 12345-6789)'),
 });
 
 const getInitialValues = (editData) => ({
@@ -53,12 +56,7 @@ const getInitialValues = (editData) => ({
     : '',
   [FORM_FIELDS_NAMES.EMAIL]: editData?.email || '',
   [FORM_FIELDS_NAMES.ROLE]: editData?.providerGroups?.[0]?.roleTitle
-    ? ROLE_OPTIONS.find(
-        (o) => o.value === editData.providerGroups[0].roleTitle,
-      ) || {
-        label: editData.providerGroups[0].roleTitle,
-        value: editData.providerGroups[0].roleTitle,
-      }
+    ? { title: editData.providerGroups[0].roleTitle }
     : null,
   [FORM_FIELDS_NAMES.CONTACT_NUMBER]: editData?.contactNumber
     ? `${editData.countryCode || ''}${editData.contactNumber}`
@@ -78,12 +76,13 @@ const getInitialValues = (editData) => ({
       }
     : null,
   [FORM_FIELDS_NAMES.CITY]: editData?.address?.city || '',
-  [FORM_FIELDS_NAMES.ZIP_CODE]: editData?.address?.zipCode || '',
+  [FORM_FIELDS_NAMES.ZIP_CODE]: formatZipCode(editData?.address?.zipCode),
 });
 
 export default function AddUserDrawer() {
   const dispatch = useDispatch();
-  const { providerGroupId } = useParams();
+  const { providerGroupId, subOrgId } = useParams();
+  const tenantName = useSubOrgTenantName();
 
   const {
     drawerOpen = false,
@@ -118,7 +117,7 @@ export default function AddUserDrawer() {
       firstName,
       lastName,
       email: values[FORM_FIELDS_NAMES.EMAIL],
-      providerGroupRoleTitle: values[FORM_FIELDS_NAMES.ROLE]?.value || '',
+      providerGroupRoleTitle: values[FORM_FIELDS_NAMES.ROLE]?.title || '',
       countryCode: countryCode || '',
       contactNumber: contactNumber || '',
       address: {
@@ -126,7 +125,7 @@ export default function AddUserDrawer() {
         addressLine2: values[FORM_FIELDS_NAMES.ADDRESS_LINE_2] || '',
         city: values[FORM_FIELDS_NAMES.CITY] || '',
         state: values[FORM_FIELDS_NAMES.STATE]?.value || '',
-        zipCode: values[FORM_FIELDS_NAMES.ZIP_CODE] || '',
+        zipCode: toPascalCase(values[FORM_FIELDS_NAMES.ZIP_CODE]) || '',
         country: values[FORM_FIELDS_NAMES.COUNTRY]?.value || '',
       },
     };
@@ -134,7 +133,7 @@ export default function AddUserDrawer() {
     if (isEdit) {
       dispatch(updateUser({ id: editData?.id, data }));
     } else {
-      dispatch(createUser({ providerGroupId, data }));
+      dispatch(createUser({ providerGroupId, tenantName, data }));
     }
   };
 
@@ -205,18 +204,20 @@ export default function AddUserDrawer() {
                     required
                   />
 
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="Role"
                     name={FORM_FIELDS_NAMES.ROLE}
                     placeholder="Select Role"
-                    options={ROLE_OPTIONS}
+                    url={`dropdown-apis/roles/non-clinical?subOrgId=${subOrgId}`}
+                    labelKey="title"
+                    valueKey="id"
                     value={values[FORM_FIELDS_NAMES.ROLE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.ROLE, selected)
                     }
                     error={errors[FORM_FIELDS_NAMES.ROLE]}
                     touched={touched[FORM_FIELDS_NAMES.ROLE]}
-                    isRequired
+                    required
                   />
 
                   <PhoneInput
@@ -298,11 +299,16 @@ export default function AddUserDrawer() {
                     required
                   />
                   <Input
-                    label="ZIP CODE"
+                    label="Zip Code"
                     name={FORM_FIELDS_NAMES.ZIP_CODE}
                     placeholder="Enter Zip Code"
                     value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      let val = e.target.value.replace(/\D/g, '');
+                      if (val.length > 5)
+                        val = `${val.slice(0, 5)}-${val.slice(5, 9)}`;
+                      setFieldValue(FORM_FIELDS_NAMES.ZIP_CODE, val);
+                    }}
                     onBlur={handleBlur}
                     error={errors[FORM_FIELDS_NAMES.ZIP_CODE]}
                     touched={touched[FORM_FIELDS_NAMES.ZIP_CODE]}

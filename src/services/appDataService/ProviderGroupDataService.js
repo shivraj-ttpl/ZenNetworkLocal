@@ -46,9 +46,12 @@ export default class ProviderGroupDataService {
     });
   }
 
-  static async createProviderGroupUser(providerGroupId, data) {
+  static async createProviderGroupUser(providerGroupId, tenantName, data) {
     return AppDataService.post('provider-groups/users', data, {
-      headers: { 'x-provider-group': providerGroupId },
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
     });
   }
 
@@ -105,5 +108,76 @@ export default class ProviderGroupDataService {
         'tenant-name': tenantName,
       },
     });
+  }
+
+  // ─── Provider Availability ─────────────────────────
+
+  static async getAvailabilityCalendar(
+    providerGroupId,
+    tenantName,
+    params = {},
+  ) {
+    return AppDataService.get(`${PG_URL}/availability`, {
+      params,
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async getAvailabilitySlotsForDate(
+    providerGroupId,
+    tenantName,
+    date,
+    params = {},
+  ) {
+    return AppDataService.get(`${PG_URL}/availability/${date}`, {
+      params,
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async bulkConfigureAvailability(providerGroupId, tenantName, data) {
+    return AppDataService.post(`${PG_URL}/availability/bulk`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async addBlockDay(providerGroupId, tenantName, data) {
+    return AppDataService.post(`${PG_URL}/availability/block-days`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async removeBlockDay(providerGroupId, tenantName, date) {
+    return AppDataService.delete(`${PG_URL}/availability/block-days/${date}`, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async convertBlockDay(providerGroupId, tenantName, date, data) {
+    return AppDataService.patch(
+      `${PG_URL}/availability/block-days/${date}`,
+      data,
+      {
+        headers: {
+          'x-provider-group': providerGroupId,
+          'tenant-name': tenantName,
+        },
+      },
+    );
   }
 }

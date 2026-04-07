@@ -1,37 +1,22 @@
 import dayjs from 'dayjs';
-import { useDispatch } from 'react-redux';
+import { useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Icon from '@/components/icons/Icon';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
+import { availabilityActions } from '../providerGroupProviderAvailabilitySaga';
 import {
+  componentKey,
   setCloseAvailableSlotsModal,
   setOpenConfigureDrawer,
 } from '../providerGroupProviderAvailabilitySlice';
 
-const MOCK_SLOTS = {
-  'in-person': [
-    '12:30 PM - 02:30 PM',
-    '03:30 PM - 06:30 PM',
-    '07:30 PM - 09:30 PM',
-    '07:30 PM - 09:30 PM',
-    '07:30 PM - 09:30 PM',
-  ],
-  virtual: [
-    '12:30 PM - 02:30 PM',
-    '03:30 PM - 06:30 PM',
-    '07:30 PM - 09:30 PM',
-  ],
-};
-
-function SlotGroup({
-  mode: _mode,
-  icon,
-  label,
-  slots,
-  borderColor,
-  badgeColor,
-}) {
+function SlotGroup({ icon, label, slots, borderColor, badgeColor }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
@@ -54,8 +39,30 @@ function SlotGroup({
   );
 }
 
+const EMPTY_STATE = {};
+
 export default function AvailableSlotsModal({ open, availableSlotsData }) {
   const dispatch = useDispatch();
+  const { providerGroupId } = useParams();
+  const tenantName = useSubOrgTenantName();
+  const state = useSelector((s) => s[componentKey] ?? EMPTY_STATE);
+  const isLoading = useLoadingKey(LOADING_KEYS.AVAILABILITY_GET_SLOTS_FOR_DATE);
+
+  const { dateSlotsData } = state;
+
+  useEffect(() => {
+    if (!open || !availableSlotsData?.date || !providerGroupId || !tenantName)
+      return;
+
+    dispatch(
+      availabilityActions.fetchSlotsForDate({
+        providerGroupId,
+        tenantName,
+        date: availableSlotsData.date,
+        month: dayjs(availableSlotsData.date).format('YYYY-MM'),
+      }),
+    );
+  }, [open, availableSlotsData, providerGroupId, tenantName, dispatch]);
 
   const handleClose = () => dispatch(setCloseAvailableSlotsModal());
 
@@ -69,8 +76,20 @@ export default function AvailableSlotsModal({ open, availableSlotsData }) {
     ? dayjs(availableSlotsData.date).format('D MMMM YYYY')
     : '';
 
-  const inPersonSlots = MOCK_SLOTS['in-person'];
-  const virtualSlots = MOCK_SLOTS['virtual'];
+  const { inPersonSlots, virtualSlots } = useMemo(() => {
+    const slots = dateSlotsData?.slots || dateSlotsData || [];
+    const slotsArray = Array.isArray(slots) ? slots : [];
+
+    const inPerson = slotsArray
+      .filter((s) => s.mode === 'IN_PERSON')
+      .map((s) => `${s.startTime} - ${s.endTime}`);
+
+    const virtual = slotsArray
+      .filter((s) => s.mode === 'VIRTUAL')
+      .map((s) => `${s.startTime} - ${s.endTime}`);
+
+    return { inPersonSlots: inPerson, virtualSlots: virtual };
+  }, [dateSlotsData]);
 
   return (
     <ModalComponent
@@ -80,7 +99,6 @@ export default function AvailableSlotsModal({ open, availableSlotsData }) {
       customClasses="w-[95%] sm:w-[550px]"
     >
       <div className="space-y-5">
-        {/* Availability Header */}
         <div className="flex items-center justify-between">
           <h4 className="text-base font-semibold text-text-primary">
             Availability
@@ -94,25 +112,39 @@ export default function AvailableSlotsModal({ open, availableSlotsData }) {
           </button>
         </div>
 
-        {/* In Person Slots */}
-        <SlotGroup
-          mode="in-person"
-          icon="User"
-          label="In Person"
-          slots={inPersonSlots}
-          borderColor="bg-primary-700"
-          badgeColor="bg-primary-700"
-        />
+        {isLoading ? (
+          <div className="text-sm text-neutral-400 py-4 text-center">
+            Loading slots...
+          </div>
+        ) : (
+          <>
+            {inPersonSlots.length > 0 && (
+              <SlotGroup
+                icon="User"
+                label="In Person"
+                slots={inPersonSlots}
+                borderColor="bg-primary-700"
+                badgeColor="bg-primary-700"
+              />
+            )}
 
-        {/* Virtual Slots */}
-        <SlotGroup
-          mode="virtual"
-          icon="Monitor"
-          label="Virtual"
-          slots={virtualSlots}
-          borderColor="bg-purple-500"
-          badgeColor="bg-purple-500"
-        />
+            {virtualSlots.length > 0 && (
+              <SlotGroup
+                icon="Monitor"
+                label="Virtual"
+                slots={virtualSlots}
+                borderColor="bg-purple-500"
+                badgeColor="bg-purple-500"
+              />
+            )}
+
+            {inPersonSlots.length === 0 && virtualSlots.length === 0 && (
+              <div className="text-sm text-neutral-400 py-4 text-center">
+                No slots available for this date.
+              </div>
+            )}
+          </>
+        )}
       </div>
     </ModalComponent>
   );

@@ -11,14 +11,6 @@ export const FORM_FIELDS_NAMES = {
   ZIP_CODE: 'zipCode',
 };
 
-export const ROLE_OPTIONS = [
-  { label: 'Admin', value: 'admin' },
-  { label: 'Care Manager', value: 'careManager' },
-  { label: 'Provider', value: 'provider' },
-  { label: 'Billing Specialist', value: 'billingSpecialist' },
-  { label: 'Support Staff', value: 'supportStaff' },
-];
-
 export const STATE_OPTIONS = [
   { label: 'California', value: 'CA' },
   { label: 'Texas', value: 'TX' },
