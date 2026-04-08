@@ -8,7 +8,7 @@ import { setCloseStatusModal } from '../providerGroupProvidersSlice';
 export default function StatusChangeModal({ open, statusChangeRow }) {
   const dispatch = useDispatch();
   const isActive = statusChangeRow?.status === 'Active';
-  const name = statusChangeRow?.name || '';
+  const name = `${statusChangeRow?.firstName}  ${statusChangeRow?.lastName}`;
 
   const handleClose = () => {
     dispatch(setCloseStatusModal());

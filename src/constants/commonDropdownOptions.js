@@ -31,3 +31,33 @@ export const spcialitityOptions = [
   { label: 'Podiatry', value: 'Podiatry' },
   { label: 'Urology', value: 'Urology' },
 ];
+
+export const PROVIDER_TYPE_OPTIONS = [
+  { label: 'MD', value: 'MD' },
+  { label: 'RN', value: 'RN' },
+  { label: 'DO', value: 'DO' },
+  { label: 'LPN', value: 'LPN' },
+  { label: 'APRN', value: 'APRN' },
+  { label: 'NP', value: 'NP' },
+  { label: 'PA', value: 'PA' },
+  { label: 'PT', value: 'PT' },
+  { label: 'OT', value: 'OT' },
+  { label: 'PSYD', value: 'PSYD' },
+  { label: 'LCSW', value: 'LCSW' },
+  { label: 'FNP', value: 'FNP' },
+  { label: 'RD', value: 'RD' },
+  { label: 'LMFT', value: 'LMFT' },
+  { label: 'LPC', value: 'LPC' },
+  { label: 'Ph.D.', value: 'Ph.D.' },
+  { label: 'Psy.D.', value: 'Psy.D.' },
+  { label: 'LMHC', value: 'LMHC' },
+  { label: 'LCPC', value: 'LCPC' },
+  { label: 'LICSW', value: 'LICSW' },
+  { label: 'LPCC', value: 'LPCC' },
+  { label: 'None', value: 'None' },
+];
+export const GENDER_OPTIONS = [
+  { label: 'Male', value: 'MALE' },
+  { label: 'Female', value: 'FEMALE' },
+  { label: 'Other', value: 'OTHER' },
+];

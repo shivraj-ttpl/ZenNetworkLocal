@@ -22,13 +22,6 @@ export const FORM_FIELDS_NAMES = {
   ZIP_CODE: 'zipCode',
 };
 
-export const GENDER_OPTIONS = [
-  { label: 'Male', value: 'male' },
-  { label: 'Female', value: 'female' },
-  { label: 'Non-Binary', value: 'nonBinary' },
-  { label: 'Prefer not to say', value: 'preferNotToSay' },
-];
-
 export const LANGUAGE_OPTIONS = [
   { label: 'English', value: 'english' },
   { label: 'Spanish', value: 'spanish' },
@@ -36,14 +29,6 @@ export const LANGUAGE_OPTIONS = [
   { label: 'Mandarin', value: 'mandarin' },
   { label: 'Hindi', value: 'hindi' },
   { label: 'Arabic', value: 'arabic' },
-];
-
-export const PROVIDER_TYPE_OPTIONS = [
-  { label: 'Physician', value: 'physician' },
-  { label: 'Nurse Practitioner', value: 'nursePractitioner' },
-  { label: 'Physician Assistant', value: 'physicianAssistant' },
-  { label: 'Registered Nurse', value: 'registeredNurse' },
-  { label: 'Therapist', value: 'therapist' },
 ];
 
 export const ROLE_OPTIONS = [

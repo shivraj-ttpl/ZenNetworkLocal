@@ -20,6 +20,7 @@ import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import { formatDate } from '@/utils/GeneralUtils';
 
+import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
 import CreateRoleModal from './Components/CreateRoleModal';
 import { registerSaga, subOrgRolesActions } from './subOrgRolesPermissionsSaga';
 import {
@@ -31,6 +32,7 @@ import {
 export default function SubOrgRolesPermissions() {
   const { subOrgId } = useParams();
   const { setToolbar } = useOutletContext();
+  const { isOrgAdmin } = useCurrentUserRole();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
@@ -112,18 +114,20 @@ export default function SubOrgRolesPermissions() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <Button
-          variant="primaryBlue"
-          size="sm"
-          onClick={() => dispatch(setOpenCreateRoleModal())}
-        >
-          <Icon name="Plus" size={14} />
-          Create Roles
-        </Button>
+        {isOrgAdmin && (
+          <Button
+            variant="primaryBlue"
+            size="sm"
+            onClick={() => dispatch(setOpenCreateRoleModal())}
+          >
+            <Icon name="Plus" size={14} />
+            Create Roles
+          </Button>
+        )}
       </>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchive, search, dispatch]);
+  }, [setToolbar, showArchive, search, dispatch, isOrgAdmin]);
 
   const handleSortChange = useCallback((key, order) => {
     setSortKey(key);
@@ -199,6 +203,7 @@ export default function SubOrgRolesPermissions() {
                   subOrgRolesActions.updateRoleStatus({
                     roleId: row.id,
                     status: row.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+                    subOrgId: subOrgId,
                   }),
                 )
               }
@@ -239,6 +244,7 @@ export default function SubOrgRolesPermissions() {
                     subOrgRolesActions.archiveRole({
                       roleId: row.id,
                       isArchived: true,
+                      subOrgId: subOrgId,
                     }),
                   ),
               });
@@ -251,6 +257,7 @@ export default function SubOrgRolesPermissions() {
                     subOrgRolesActions.archiveRole({
                       roleId: row.id,
                       isArchived: false,
+                      subOrgId: subOrgId,
                     }),
                   ),
               });

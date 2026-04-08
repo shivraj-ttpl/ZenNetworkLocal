@@ -6,6 +6,18 @@ export const componentKey = COMPONENT_KEYS.PROVIDER_GROUP_PROVIDERS;
 const sliceConfig = {
   key: componentKey,
   addedReducers: {
+    setProvidersList: (state, action) => {
+      state.providersList = action.payload;
+    },
+    setTotalRecords: (state, action) => {
+      state.totalRecords = action.payload;
+    },
+    setProviderDetail: (state, action) => {
+      state.providerDetail = action.payload;
+    },
+    setRefreshProviders: (state) => {
+      state.refreshFlag = Date.now();
+    },
     setOpenAddDrawer: (state) => {
       state.drawerOpen = true;
       state.drawerMode = 'add';
@@ -20,6 +32,7 @@ const sliceConfig = {
       state.drawerOpen = false;
       state.drawerMode = '';
       state.editData = null;
+      state.providerDetail = null;
     },
     setOpenViewModal: (state, action) => {
       state.viewModalOpen = true;
@@ -28,6 +41,7 @@ const sliceConfig = {
     setCloseViewModal: (state) => {
       state.viewModalOpen = false;
       state.viewData = null;
+      state.providerDetail = null;
     },
     setOpenStatusModal: (state, action) => {
       state.statusModalOpen = true;
@@ -39,6 +53,10 @@ const sliceConfig = {
     },
   },
   initialReducerState: {
+    providersList: [],
+    totalRecords: 0,
+    refreshFlag: 0,
+    providerDetail: null,
     drawerOpen: false,
     drawerMode: '',
     editData: null,
@@ -56,6 +74,10 @@ export function registerReducer() {
 }
 
 export const {
+  setProvidersList,
+  setTotalRecords,
+  setProviderDetail,
+  setRefreshProviders,
   setOpenAddDrawer,
   setOpenEditDrawer,
   setCloseDrawer,

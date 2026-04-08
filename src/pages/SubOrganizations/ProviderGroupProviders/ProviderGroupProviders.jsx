@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
@@ -10,22 +10,43 @@ import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectD
 import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
 import Icon from '@/components/icons/Icon';
-import { providersData, STATUS_OPTIONS } from '@/data/subOrganizationsData';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 import AddProviderDrawer from './Components/AddProviderDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
 import ViewProviderModal from './Components/ViewProviderModal';
 import {
+  providerGroupProvidersActions,
+  registerSaga,
+} from './providerGroupProvidersSaga';
+import {
   componentKey,
+  registerReducer,
   setOpenAddDrawer,
   setOpenEditDrawer,
   setOpenStatusModal,
   setOpenViewModal,
 } from './providerGroupProvidersSlice';
 
+const STATUS_OPTIONS = [
+  { label: 'Active', value: 'ACTIVE' },
+  { label: 'Inactive', value: 'INACTIVE' },
+];
+
+const { fetchProviders, fetchProviderById, archiveProvider } =
+  providerGroupProvidersActions;
+const EMPTY_STATE = {};
+
 export default function ProviderGroupProviders() {
   const { setToolbar } = useOutletContext();
+  const { providerGroupId } = useParams();
   const dispatch = useDispatch();
+  const tenantName = useSubOrgTenantName();
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
@@ -35,14 +56,54 @@ export default function ProviderGroupProviders() {
   const [sortOrder, setSortOrder] = useState(null);
 
   const {
-    drawerOpen,
-    drawerMode,
-    editData,
-    viewModalOpen,
-    viewData,
+    providersList = [],
+    totalRecords = 0,
+    refreshFlag = 0,
     statusModalOpen,
     statusChangeRow,
-  } = useSelector((state) => state[componentKey] ?? {});
+  } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
+
+  const isLoading = useLoadingKey(
+    LOADING_KEYS.PROVIDER_GROUP_PROVIDERS_GET_LIST,
+  );
+  const debouncedSearch = useDebounce(search);
+
+  useEffect(() => {
+    registerReducer();
+    registerSaga();
+  }, []);
+
+  useFlexCleanup(componentKey);
+
+  useEffect(() => {
+    if (providerGroupId) {
+      dispatch(
+        fetchProviders({
+          providerGroupId,
+          tenantName,
+          page,
+          limit,
+          search: debouncedSearch.trim() || undefined,
+          showArchived: showArchive || undefined,
+          status: statusFilter?.value || undefined,
+          sortBy: sortKey || undefined,
+          sortOrder: sortKey ? (sortOrder ?? 'desc') : undefined,
+        }),
+      );
+    }
+  }, [
+    dispatch,
+    providerGroupId,
+    tenantName,
+    page,
+    limit,
+    debouncedSearch,
+    showArchive,
+    statusFilter,
+    sortKey,
+    sortOrder,
+    refreshFlag,
+  ]);
 
   useEffect(() => {
     setToolbar(
@@ -50,7 +111,10 @@ export default function ProviderGroupProviders() {
         <Checkbox
           label="Show Archive"
           checked={showArchive}
-          onChange={() => setShowArchive((p) => !p)}
+          onChange={() => {
+            setShowArchive((p) => !p);
+            setPage(1);
+          }}
           variant="blue"
           size="sm"
         />
@@ -97,34 +161,15 @@ export default function ProviderGroupProviders() {
     setSortOrder(order);
   }, []);
 
-  const filteredData = useMemo(() => {
-    let data = providersData;
-    if (!showArchive) {
-      data = data.filter((row) => row.status === 'Active');
-    }
-    if (search.trim()) {
-      const term = search.toLowerCase();
-      data = data.filter(
-        (item) =>
-          item.name.toLowerCase().includes(term) ||
-          item.specialties.some((s) => s.toLowerCase().includes(term)),
-      );
-    }
-    if (statusFilter) {
-      data = data.filter((item) => item.status === statusFilter.value);
-    }
-    return data;
-  }, [search, showArchive, statusFilter]);
+  const totalPages = Math.ceil((totalRecords ?? 0) / limit) || 1;
 
-  const totalPages = Math.ceil(filteredData.length / limit) || 1;
-
-  const paginatedData = useMemo(
+  const tableData = useMemo(
     () =>
-      filteredData.slice((page - 1) * limit, page * limit).map((item, i) => ({
+      providersList.map((item, i) => ({
         ...item,
         srNo: String((page - 1) * limit + i + 1).padStart(2, '0'),
       })),
-    [filteredData, page, limit],
+    [providersList, page, limit],
   );
 
   const columns = useMemo(
@@ -135,9 +180,10 @@ export default function ProviderGroupProviders() {
           id: 'name',
           header: 'Provider Name',
           accessorKey: 'name',
-          render: (row) => (
-            <span className="text-primary-700 font-medium">{row.name}</span>
-          ),
+          render: (row) => {
+            const name = `${row?.firstName}  ${row?.lastName}`;
+            return <span className="text-primary-700 font-medium">{name}</span>;
+          },
         },
         {
           id: 'multiProviderAccess',
@@ -149,7 +195,7 @@ export default function ProviderGroupProviders() {
                 row.multiProvider ? 'text-text-primary' : 'text-neutral-400'
               }
             >
-              {row.multiProvider ? '✓' : '-'}
+              {row.multiProvider ? '\u2713' : '-'}
             </span>
           ),
         },
@@ -159,10 +205,12 @@ export default function ProviderGroupProviders() {
           accessorKey: 'specialties',
           maxWidth: '650px',
           render: (row) => {
-            const visible = row.specialties.slice(0, 2);
-            const remaining = row.specialties.length - 2;
+            const specs = row.specialties || [];
+            if (!specs.length) return '-';
+            const visible = specs.slice(0, 2);
+            const remaining = specs.length - 2;
             return (
-              <div className="flex items-center gap-1 ">
+              <div className="flex items-center gap-1">
                 {visible.map((s) => (
                   <span
                     key={s}
@@ -180,7 +228,12 @@ export default function ProviderGroupProviders() {
             );
           },
         },
-        { id: 'role', header: 'Role', accessorKey: 'role' },
+        {
+          id: 'role',
+          header: 'Role',
+          accessorKey: 'role',
+          render: (row) => row?.primaryRoleTitle,
+        },
         {
           id: 'email',
           header: 'Email Address',
@@ -211,7 +264,7 @@ export default function ProviderGroupProviders() {
           render: (row) => (
             <ToggleSwitch
               name={`status-${row.id}`}
-              checked={row.status === 'Active'}
+              checked={row.status === 'ACTIVE'}
               onChangeCb={() => dispatch(setOpenStatusModal(row))}
               showLabel={false}
             />
@@ -229,35 +282,64 @@ export default function ProviderGroupProviders() {
                 {
                   label: 'View',
                   value: 'view',
-                  onClickCb: () => dispatch(setOpenViewModal(row)),
+                  onClickCb: () => {
+                    dispatch(setOpenViewModal(row));
+                    dispatch(
+                      fetchProviderById({
+                        providerId: row.id,
+                        providerGroupId,
+                        tenantName,
+                      }),
+                    );
+                  },
                 },
                 {
                   label: 'Edit',
                   value: 'edit',
-                  onClickCb: () => dispatch(setOpenEditDrawer(row)),
+                  onClickCb: () => {
+                    dispatch(setOpenEditDrawer(row));
+                    dispatch(
+                      fetchProviderById({
+                        providerId: row.id,
+                        providerGroupId,
+                        tenantName,
+                      }),
+                    );
+                  },
                 },
-                { label: 'Archive', value: 'archive', onClickCb: () => {} },
+                {
+                  label: row.isArchived ? 'Unarchive' : 'Archive',
+                  value: 'archive',
+                  onClickCb: () =>
+                    dispatch(
+                      archiveProvider({
+                        providerId: row.id,
+                        isArchived: row.isArchived,
+                      }),
+                    ),
+                },
               ]}
             />
           ),
         },
       ]),
-    [dispatch],
+    [dispatch, providerGroupId, tenantName],
   );
 
   return (
     <div className="px-5 pb-4">
       <Table
         columns={columns}
-        data={paginatedData}
+        data={tableData}
         size="sm"
         maxHeight="475px"
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
+        loading={isLoading}
       />
       <Pagination
-        totalRecords={filteredData.length}
+        totalRecords={totalRecords}
         totalPages={totalPages}
         currentPage={page}
         currentLimit={limit}
@@ -267,12 +349,8 @@ export default function ProviderGroupProviders() {
           setPage(1);
         }}
       />
-      <AddProviderDrawer
-        open={drawerOpen}
-        drawerMode={drawerMode}
-        editData={editData}
-      />
-      <ViewProviderModal open={viewModalOpen} viewData={viewData} />
+      <AddProviderDrawer />
+      <ViewProviderModal />
       <StatusChangeModal
         open={statusModalOpen}
         statusChangeRow={statusChangeRow}

@@ -15,9 +15,10 @@ import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import CreateRoleModal from './Components/CreateRoleModal';
-import { subOrgRolesActions } from './subOrgRolesPermissionsSaga';
+import { registerSaga, subOrgRolesActions } from './subOrgRolesPermissionsSaga';
 import {
   componentKey,
+  registerReducer,
   setOpenCreateRoleModal,
 } from './subOrgRolesPermissionsSlice';
 
@@ -36,10 +37,15 @@ export default function SubOrgViewRolePermissions() {
   const isLoading = useLoadingKey(LOADING_KEYS.SUB_ORG_ROLES_GET_BY_ID);
 
   useEffect(() => {
+    registerReducer();
+    registerSaga();
+  }, []);
+
+  useEffect(() => {
     if (roleId) {
-      dispatch(subOrgRolesActions.fetchRoleById({ roleId }));
+      dispatch(subOrgRolesActions.fetchRoleById({ roleId, subOrgId }));
     }
-  }, [dispatch, roleId]);
+  }, [dispatch, roleId, subOrgId]);
 
   useEffect(() => {
     setToolbar(

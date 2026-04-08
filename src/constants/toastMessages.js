@@ -91,6 +91,13 @@ export const toastMessages = {
 
   labelsUpdatedSuccess: 'Labels updated successfully',
 
+  providerGroupProviderCreatedSuccess: 'Provider added successfully',
+  providerGroupProviderUpdatedSuccess: 'Provider updated successfully',
+  providerGroupProviderStatusUpdatedSuccess:
+    'Provider status updated successfully',
+  providerGroupProviderArchivedSuccess: 'Provider archived successfully',
+  providerGroupProviderUnarchivedSuccess: 'Provider unarchived successfully',
+
   providerGroupUserCreatedSuccess: 'User added successfully',
   providerGroupUserUpdatedSuccess: 'User updated successfully',
   providerGroupUserStatusUpdatedSuccess: 'User status updated successfully',

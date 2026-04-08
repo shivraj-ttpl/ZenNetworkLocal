@@ -34,10 +34,50 @@ export default class ProviderGroupDataService {
     return AppDataService.patch(`${PG_URL}/${id}/unarchive`);
   }
 
+  // ─── Provider Group Providers ─────────────────────
+
+  static async getProviderById(providerId, providerGroupId, tenantName) {
+    return AppDataService.get(`providers/${providerId}`, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async createProvider(providerGroupId, tenantName, data) {
+    return AppDataService.post('provider-groups/providers', data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async updateProvider(providerId, tenantName, data) {
+    return AppDataService.patch(`providers/${providerId}`, data, {
+      headers: { 'tenant-name': tenantName },
+    });
+  }
+
   // ─── Provider Group Users ────────────────────────
 
   static async getProviderGroupUsers(providerGroupId, tenantName, params = {}) {
     return AppDataService.get('provider-group/user', {
+      params,
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async getProviderGroupProviders(
+    providerGroupId,
+    tenantName,
+    params = {},
+  ) {
+    return AppDataService.get('provider-group/provider', {
       params,
       headers: {
         'x-provider-group': providerGroupId,

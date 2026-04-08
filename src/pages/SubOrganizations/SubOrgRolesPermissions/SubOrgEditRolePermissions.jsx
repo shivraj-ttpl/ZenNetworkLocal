@@ -15,9 +15,10 @@ import Icon from '@/components/icons/Icon';
 
 import ConfirmUpdatePermissionsModal from './Components/ConfirmUpdatePermissionsModal';
 import CreateRoleModal from './Components/CreateRoleModal';
-import { subOrgRolesActions } from './subOrgRolesPermissionsSaga';
+import { registerSaga, subOrgRolesActions } from './subOrgRolesPermissionsSaga';
 import {
   componentKey,
+  registerReducer,
   setOpenCreateRoleModal,
 } from './subOrgRolesPermissionsSlice';
 
@@ -141,10 +142,15 @@ export default function SubOrgEditRolePermissions() {
   const { createRoleModalOpen, roleDetail } = state || {};
 
   useEffect(() => {
+    registerReducer();
+    registerSaga();
+  }, []);
+
+  useEffect(() => {
     if (roleId) {
-      dispatch(subOrgRolesActions.fetchRoleById({ roleId }));
+      dispatch(subOrgRolesActions.fetchRoleById({ roleId, subOrgId }));
     }
-  }, [dispatch, roleId]);
+  }, [dispatch, roleId, subOrgId]);
 
   const [permissions, setPermissions] = useState([]);
 

@@ -37,10 +37,10 @@ function* fetchRolesSaga(action) {
 }
 
 function* fetchRoleByIdSaga(action) {
-  const { roleId } = action.payload;
+  const { roleId, subOrgId } = action.payload;
   yield* apiCall({
     loadingKey: LOADING_KEYS.SUB_ORG_ROLES_GET_BY_ID,
-    apiFunc: () => SettingsRolesDataService.getRoleById(roleId),
+    apiFunc: () => SettingsRolesDataService.getRoleById(roleId, subOrgId),
     onSuccess: function* (response) {
       yield put(setRoleDetail(response?.data?.data));
     },
@@ -84,10 +84,11 @@ function* updateRolePermissionsSaga(action) {
 }
 
 function* updateRoleStatusSaga(action) {
-  const { roleId, status } = action.payload;
+  const { roleId, status, subOrgId } = action.payload;
   yield* apiCall({
     loadingKey: LOADING_KEYS.SUB_ORG_ROLES_PATCH_STATUS,
-    apiFunc: () => SettingsRolesDataService.updateRoleStatus(roleId, status),
+    apiFunc: () =>
+      SettingsRolesDataService.updateRoleStatus(roleId, status, subOrgId),
     onSuccess: function* () {
       yield put(
         addNotification({
@@ -101,13 +102,13 @@ function* updateRoleStatusSaga(action) {
 }
 
 function* archiveRoleSaga(action) {
-  const { roleId, isArchived } = action.payload;
+  const { roleId, isArchived, subOrgId } = action.payload;
   yield* apiCall({
     loadingKey: LOADING_KEYS.SUB_ORG_ROLES_PATCH_ARCHIVE,
     apiFunc: () =>
       isArchived
-        ? SettingsRolesDataService.unarchiveRole(roleId)
-        : SettingsRolesDataService.archiveRole(roleId),
+        ? SettingsRolesDataService.unarchiveRole(roleId, subOrgId)
+        : SettingsRolesDataService.archiveRole(roleId, subOrgId),
     onSuccess: function* () {
       yield put(
         addNotification({
