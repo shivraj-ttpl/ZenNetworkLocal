@@ -112,7 +112,7 @@ export default function ProviderGroupProviders() {
     setToolbar(
       <>
         <Checkbox
-          label="Show Archive"
+          label="Show Archived"
           checked={showArchive}
           onChange={() => {
             setShowArchive((p) => !p);

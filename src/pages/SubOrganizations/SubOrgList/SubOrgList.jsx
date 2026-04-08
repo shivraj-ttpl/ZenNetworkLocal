@@ -237,7 +237,7 @@ export default function SubOrgList() {
       <div className="flex items-center justify-end px-5 pt-4 pb-3 gap-4 flex-wrap">
         <div className="flex items-center gap-4 flex-wrap">
           <Checkbox
-            label="Show Archive"
+            label="Show Archived"
             checked={showArchived}
             onChange={() => dispatch(setShowArchived(!showArchived))}
             variant="blue"

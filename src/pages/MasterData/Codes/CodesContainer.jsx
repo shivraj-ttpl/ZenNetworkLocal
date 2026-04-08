@@ -176,7 +176,7 @@ export default function CodesContainer() {
 
         <div className="flex items-center gap-4 max-[1149px]:w-full">
           <Checkbox
-            label="Show Archive"
+            label="Show Archived"
             checked={showArchived}
             onChange={() => dispatch(setShowArchived(!showArchived))}
             variant="blue"

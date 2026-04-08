@@ -95,7 +95,7 @@ export default function SubOrgRolesPermissions() {
     setToolbar(
       <>
         <Checkbox
-          label="Show Archive"
+          label="Show Archived"
           checked={showArchive}
           onChange={() => {
             setShowArchive((p) => !p);
