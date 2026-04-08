@@ -180,4 +180,84 @@ export default class ProviderGroupDataService {
       },
     );
   }
+
+  // ─── Provider Group Patients ───────────────────────
+
+  static async getPatients(providerGroupId, tenantName, params = {}) {
+    return AppDataService.get(`${PG_URL}/patients`, {
+      params,
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async getPatientById(id, providerGroupId, tenantName) {
+    return AppDataService.get(`patients/${id}`, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async updatePatient(id, providerGroupId, tenantName, data) {
+    return AppDataService.patch(`patients/${id}`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async enrollPatient(id, providerGroupId, tenantName, data) {
+    return AppDataService.post(`patients/${id}/enroll`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async unenrollPatient(id, providerGroupId, tenantName) {
+    return AppDataService.post(
+      `patients/${id}/unenroll`,
+      {},
+      {
+        headers: {
+          'x-provider-group': providerGroupId,
+          'tenant-name': tenantName,
+        },
+      },
+    );
+  }
+
+  static async inactivatePatient(id, providerGroupId, tenantName, data) {
+    return AppDataService.post(`patients/${id}/inactive`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async recoverPatient(id, providerGroupId, tenantName, data) {
+    return AppDataService.post(`patients/${id}/recover`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async importPatientsCsv(providerGroupId, tenantName, formData) {
+    return AppDataService.post(`${PG_URL}/patients/import`, formData, {
+      isFormData: true,
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
 }

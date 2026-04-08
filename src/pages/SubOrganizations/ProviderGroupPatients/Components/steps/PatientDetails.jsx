@@ -286,9 +286,9 @@ export default function PatientDetails({
             isRequired
           />
           <Input
-            label="ZIP CODE"
+            label="Zip Code"
             name={FORM_FIELDS_NAMES.ZIP_CODE}
-            placeholder="Enter ZIP CODE"
+            placeholder="Enter Zip Code"
             value={values[FORM_FIELDS_NAMES.ZIP_CODE]}
             onChange={handleChange}
             onBlur={handleBlur}

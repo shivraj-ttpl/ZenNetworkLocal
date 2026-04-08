@@ -8,6 +8,8 @@ import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import { buildColumns, Table } from '@/components/commonComponents/table';
+import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
+import VerificationIcon from '@/components/commonComponents/verificationIcon/VerificationIcon';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -184,11 +186,10 @@ export default function ProviderGroupUsers() {
           render: (row) => (
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-text-primary">{row.email}</span>
-              <span
-                className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${row.emailVerified ? 'bg-success-500' : 'bg-warning-500'}`}
-              >
-                <Icon name="Check" size={10} className="text-white" />
-              </span>
+              <VerificationIcon
+                verified={row.emailVerified === 'VERIFIED'}
+                size={18}
+              />
             </div>
           ),
         },
@@ -207,15 +208,18 @@ export default function ProviderGroupUsers() {
           accessorKey: 'status',
           width: 120,
           render: (row) => (
-            <span
-              className={
-                row.status === 'ACTIVE'
-                  ? 'text-text-primary'
-                  : 'text-neutral-400'
+            <ToggleSwitch
+              checked={row?.status === 'ACTIVE'}
+              showLabel={false}
+              onChangeCb={() =>
+                dispatch(
+                  providerGroupUsersActions.updateUserStatus({
+                    userId: row.id,
+                    status: row.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+                  }),
+                )
               }
-            >
-              {row.status === 'ACTIVE' ? 'Active' : 'Inactive'}
-            </span>
+            />
           ),
         },
         {
