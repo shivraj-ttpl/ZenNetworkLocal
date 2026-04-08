@@ -95,7 +95,7 @@ export default function Education() {
     setToolbar(
       <>
         <Checkbox
-          label="Show Archive"
+          label="Show Archived"
           checked={showArchived}
           onChange={() => dispatch(setShowArchived(!showArchived))}
           variant="blue"

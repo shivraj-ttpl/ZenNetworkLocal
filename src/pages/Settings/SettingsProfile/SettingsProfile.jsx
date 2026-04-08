@@ -197,7 +197,7 @@ export default function SettingsProfile() {
 
   return (
     <>
-      <div className="px-3 sm:px-5 pb-5">
+      <div className="px-3 sm:px-5 pb-5 h-full overflow-hidden flex flex-col">
         <div className="border bg-surface border-border-light rounded-lg p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
             <Avatar name={profileData?.name} size="xl" variant="square" />
@@ -238,8 +238,8 @@ export default function SettingsProfile() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 ">
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 flex-1 min-h-0">
+          <div className="space-y-6 overflow-y-auto pr-1">
             <div>
               <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
                 Contact Information
@@ -280,11 +280,11 @@ export default function SettingsProfile() {
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-col min-h-0">
             <h3 className="text-sm font-semibold text-text-primary mb-4 border-b border-border-light pb-2">
               Administrative Contact
             </h3>
-            <div className="max-h-[calc(100vh-460px)] overflow-y-auto pr-2">
+            <div className="flex-1 overflow-y-auto pr-2">
               <div className="space-y-6  bg-surface p-3 rounded-md border border-border-light">
                 {(profileData?.orgUsers ?? []).map((contact, idx) => (
                   <>

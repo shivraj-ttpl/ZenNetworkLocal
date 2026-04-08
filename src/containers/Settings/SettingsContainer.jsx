@@ -43,8 +43,8 @@ export default function SettingsContainer() {
   }
 
   return (
-    <div className="bg-neutral-50 h-[calc(100vh-120px)] rounded-xl border border-border-light overflow-y-auto">
-      <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 flex-wrap">
+    <div className="bg-neutral-50 h-[calc(100vh-120px)] rounded-xl border border-border-light overflow-hidden flex flex-col">
+      <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 flex-wrap shrink-0">
         <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200 w-fit shrink-0">
           {TABS.map((tab) => (
             <NavLink
@@ -68,7 +68,9 @@ export default function SettingsContainer() {
           <div className="flex items-center gap-3 shrink-0">{toolbar}</div>
         )}
       </div>
-      <Outlet context={{ setToolbar }} />
+      <div className="flex-1 overflow-hidden">
+        <Outlet context={{ setToolbar }} />
+      </div>
     </div>
   );
 }

@@ -153,7 +153,7 @@ export default function SettingsLabels() {
               Existing Labels
             </div>
             <div className="px-4 py-3 text-sm font-semibold text-text-primary">
-              Labels
+              New Labels
             </div>
           </div>
 

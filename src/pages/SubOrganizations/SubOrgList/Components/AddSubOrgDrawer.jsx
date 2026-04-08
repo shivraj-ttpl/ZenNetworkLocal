@@ -427,7 +427,7 @@ export default function AddSubOrgDrawer() {
                 <div className="flex flex-col gap-4 border border-border rounded-lg p-4">
                   {/* Import from Another Sub-Organization */}
                   <h4 className="text-sm font-semibold text-text-primary">
-                    Import from Another Sub-Organization
+                    Import Admin Users from Another Sub-Organization
                   </h4>
 
                   <div className="flex flex-col sm:flex-row sm:items-start gap-3">

@@ -80,7 +80,7 @@ export default function SettingsUsers() {
     setToolbar(
       <>
         <Checkbox
-          label="Show Archive"
+          label="Show Archived"
           checked={showArchive}
           onChange={() => setShowArchive((p) => !p)}
           variant="blue"
@@ -135,7 +135,17 @@ export default function SettingsUsers() {
           header: 'Name',
           accessorKey: 'firstName',
           render: (row) => (
-            <span className="text-primary-700 font-medium">
+            <span
+              className="text-primary-700 font-medium hover:underline cursor-pointer"
+              onClick={() => {
+                dispatch(
+                  settingsUsersActions.fetchUserById({
+                    userId: row.id,
+                    mode: 'view',
+                  }),
+                );
+              }}
+            >
               {[row?.firstName, row?.lastName].filter(Boolean).join(' ')}
             </span>
           ),
