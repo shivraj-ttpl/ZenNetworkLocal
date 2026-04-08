@@ -5,8 +5,8 @@ import Button from '@/components/commonComponents/button/Button';
 import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
-import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 import { feeScheduleActions } from '../providerGroupFeeScheduleSaga';
 import {

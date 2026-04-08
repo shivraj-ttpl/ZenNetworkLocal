@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useNavigate,
@@ -12,6 +12,7 @@ import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import { buildColumns, Table } from '@/components/commonComponents/table';
 import ToolTip from '@/components/commonComponents/toolTip/ToolTip';
 import Icon from '@/components/icons/Icon';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import ConfirmUpdatePermissionsModal from './Components/ConfirmUpdatePermissionsModal';
 import CreateRoleModal from './Components/CreateRoleModal';
@@ -136,6 +137,8 @@ export default function SubOrgEditRolePermissions() {
   const nameParam = searchParams.get('name') || '';
   const qs = nameParam ? `?name=${encodeURIComponent(nameParam)}` : '';
 
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
   const basePath = `/sub-organizations/${subOrgId}`;
   const state = useSelector((s) => s[componentKey]);
   const { createRoleModalOpen, roleDetail } = state || {};
@@ -453,8 +456,8 @@ export default function SubOrgEditRolePermissions() {
   );
 
   return (
-    <div className="px-5 pb-4">
-      <div className="flex items-center justify-between mb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
+      <div className="flex items-center justify-between mb-4 max-[1149px]:flex-wrap max-[1149px]:gap-3">
         <button
           onClick={() =>
             navigate(`${basePath}/roles-permissions/${roleId}/view${qs}`)
@@ -464,7 +467,7 @@ export default function SubOrgEditRolePermissions() {
           <Icon name="ArrowLeft" size={16} />
           Edit Permissions
         </button>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 max-[1149px]:flex-wrap">
           <div className="inline-flex items-center bg-[#EBEBEB] border border-border-light rounded-lg px-4 py-2 text-sm gap-3">
             <div className="flex items-center gap-1">
               <span className="text-text-secondary">Role Name:</span>
@@ -507,7 +510,7 @@ export default function SubOrgEditRolePermissions() {
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 280px)"
+        maxHeight={tableMaxHeight}
       />
 
       <CreateRoleModal open={createRoleModalOpen} subOrgId={subOrgId} />

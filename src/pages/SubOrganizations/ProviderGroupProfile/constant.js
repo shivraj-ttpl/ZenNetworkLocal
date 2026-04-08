@@ -46,4 +46,3 @@ export const COUNTRY_OPTIONS = [
   { label: 'Canada', value: 'CA' },
   { label: 'Mexico', value: 'MX' },
 ];
-

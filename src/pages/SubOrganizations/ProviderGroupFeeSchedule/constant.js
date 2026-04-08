@@ -5,6 +5,4 @@ export const FORM_FIELDS_NAMES = {
   RATE: 'rate',
 };
 
-export const PROGRAM_OPTIONS = [
-  { label: 'CCM', value: 'CCM' },
-];
+export const PROGRAM_OPTIONS = [{ label: 'CCM', value: 'CCM' }];

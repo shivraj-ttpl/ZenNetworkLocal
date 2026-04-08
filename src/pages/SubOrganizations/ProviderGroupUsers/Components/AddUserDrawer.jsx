@@ -11,15 +11,15 @@ import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/As
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import UploadPhoto from '@/components/commonComponents/upload/UploadPhoto';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
-import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
-import { formatZipCode, parsePhoneValue, toPascalCase } from '@/utils/GeneralUtils';
-
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 import {
-  COUNTRY_OPTIONS,
-  FORM_FIELDS_NAMES,
-  STATE_OPTIONS,
-} from '../constant';
+  formatZipCode,
+  parsePhoneValue,
+  toPascalCase,
+} from '@/utils/GeneralUtils';
+
+import { COUNTRY_OPTIONS, FORM_FIELDS_NAMES, STATE_OPTIONS } from '../constant';
 import { providerGroupUsersActions } from '../providerGroupUsersSaga';
 import { componentKey, setCloseDrawer } from '../providerGroupUsersSlice';
 

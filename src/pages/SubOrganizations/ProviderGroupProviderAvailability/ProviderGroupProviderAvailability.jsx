@@ -65,7 +65,8 @@ function CalendarSkeleton() {
           style={{ minHeight: 110 }}
         >
           {Array.from({ length: 7 }, (_, colIdx) => {
-            const pattern = SLOT_PATTERNS[(rowIdx * 7 + colIdx) % SLOT_PATTERNS.length];
+            const pattern =
+              SLOT_PATTERNS[(rowIdx * 7 + colIdx) % SLOT_PATTERNS.length];
             return (
               <div
                 key={colIdx}
@@ -199,7 +200,7 @@ export default function ProviderGroupProviderAvailability() {
             <Icon name="ChevronRight" size={16} className="text-neutral-500" />
           </button>
         </div>
-        <div className="w-44">
+        <div className="w-44 max-[1149px]:w-auto max-[1149px]:max-w-57.5 max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             name="appointmentMode"
             placeholder="Select Mode"

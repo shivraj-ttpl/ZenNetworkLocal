@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext, useParams } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import EditPatientDrawer from './Components/EditPatientDrawer';
 import InactivatePatientModal from './Components/InactivatePatientModal';
@@ -38,6 +39,8 @@ export default function ProviderGroupPatients() {
   const dispatch = useDispatch();
   const { providerGroupId } = useParams();
   const tenantName = useSubOrgTenantName();
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
   const state = useSelector((s) => s[componentKey] ?? EMPTY_STATE);
   const isLoading = useLoadingKey(LOADING_KEYS.PG_PATIENTS_GET_LIST);
 
@@ -106,7 +109,7 @@ export default function ProviderGroupPatients() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface w-40">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-40 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -120,7 +123,7 @@ export default function ProviderGroupPatients() {
           />
         </div>
 
-        <div className="w-34">
+        <div className="w-34 max-[1149px]:w-auto max-[1149px]:max-w-57.5 max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             name="selectAction"
             placeholder="Select Action"
@@ -270,12 +273,12 @@ export default function ProviderGroupPatients() {
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
         data={patientList}
         size="sm"
-        maxHeight="475px"
+        maxHeight={tableMaxHeight}
         selectable={true}
         selectId="id"
         sortKey={sortKey}

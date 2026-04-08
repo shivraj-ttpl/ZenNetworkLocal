@@ -98,7 +98,11 @@ function* deleteFeeScheduleSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.FEE_SCHEDULE_DELETE,
     apiFunc: () =>
-      ProviderGroupDataService.deleteFeeSchedule(id, providerGroupId, tenantName),
+      ProviderGroupDataService.deleteFeeSchedule(
+        id,
+        providerGroupId,
+        tenantName,
+      ),
     onSuccess: function* () {
       yield put(
         addNotification({
