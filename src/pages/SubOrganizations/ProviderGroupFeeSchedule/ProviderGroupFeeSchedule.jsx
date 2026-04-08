@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext, useParams } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import { useTableHeight } from '@/hooks/useTableHeight';
 import { formatDate } from '@/utils/GeneralUtils';
 
 import useSubOrgTenantName from '../../../hooks/useSubOrgTenantName';
@@ -43,6 +44,8 @@ export default function ProviderGroupFeeSchedule() {
     refreshFlag = 0,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
@@ -88,7 +91,7 @@ export default function ProviderGroupFeeSchedule() {
   useEffect(() => {
     setToolbar(
       <>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-52">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-52 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -184,12 +187,12 @@ export default function ProviderGroupFeeSchedule() {
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="475px"
+        maxHeight={tableMaxHeight}
         loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}

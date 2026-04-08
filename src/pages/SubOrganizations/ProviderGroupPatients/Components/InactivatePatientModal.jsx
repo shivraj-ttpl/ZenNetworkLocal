@@ -1,43 +1,49 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
 import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+import TextArea from '@/components/commonComponents/textArea';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
-import { feeScheduleActions } from '../providerGroupFeeScheduleSaga';
-import {
-  componentKey,
-  setCloseDeleteModal,
-} from '../providerGroupFeeScheduleSlice';
+import { patientActions } from '../providerGroupPatientsSaga';
+import { setCloseInactiveModal } from '../providerGroupPatientsSlice';
 
-const { deleteFeeSchedule } = feeScheduleActions;
-
-export default function DeleteFeeScheduleModal() {
+export default function InactivatePatientModal({ open, patient }) {
   const dispatch = useDispatch();
   const { providerGroupId } = useParams();
   const tenantName = useSubOrgTenantName();
-
-  const { open, row } = useSelector(
-    (state) => state[componentKey]?.deleteModal ?? { open: false, row: null },
-  );
-
-  const isDeleting = useLoadingKey(LOADING_KEYS.FEE_SCHEDULE_DELETE);
+  const isSaving = useLoadingKey(LOADING_KEYS.PG_PATIENTS_POST_INACTIVE);
+  const [reason, setReason] = useState('');
 
   const handleClose = () => {
-    dispatch(setCloseDeleteModal());
+    setReason('');
+    dispatch(setCloseInactiveModal());
   };
 
   const handleConfirm = () => {
-    dispatch(deleteFeeSchedule({ id: row.id, providerGroupId, tenantName }));
+    if (!patient?.id || !reason.trim()) return;
+    dispatch(
+      patientActions.inactivatePatient({
+        id: patient.id,
+        providerGroupId,
+        tenantName,
+        data: { reason: reason.trim() },
+      }),
+    );
   };
+
+  const patientName = [patient?.firstName, patient?.lastName]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <ModalComponent
-      title="Delete Fee Schedule"
+      title="Inactivate Patient"
       open={open}
       close={handleClose}
       customClasses="w-[95%] sm:w-[480px]"
@@ -46,16 +52,29 @@ export default function DeleteFeeScheduleModal() {
     >
       <div className="flex flex-col items-center gap-4">
         <div className="flex items-center justify-center w-12 h-12 rounded-full bg-error-50">
-          <Icon name="Trash2" size={24} className="text-error-500" />
+          <Icon name="UserX" size={24} className="text-error-500" />
         </div>
 
         <div className="text-center">
           <p className="text-sm font-semibold text-text-primary mb-1">
-            Are you sure you want to delete this fee schedule?
+            Are you sure you want to inactivate{' '}
+            {patientName ? `"${patientName}"` : 'this patient'}?
           </p>
           <p className="text-sm text-text-secondary">
-            This action cannot be undone.
+            Please provide a reason for inactivation.
           </p>
+        </div>
+
+        <div className="w-full">
+          <TextArea
+            label="Reason"
+            name="inactivateReason"
+            placeholder="Enter reason for inactivation"
+            value={reason}
+            onChangeCb={(e) => setReason(e.target.value)}
+            isRequired
+            rows={3}
+          />
         </div>
 
         <div className="flex items-center justify-between gap-3 w-full pt-3 border-t border-border">
@@ -65,7 +84,7 @@ export default function DeleteFeeScheduleModal() {
             type="button"
             onClick={handleClose}
             customClasses="flex-1"
-            disabled={isDeleting}
+            disabled={isSaving}
           >
             Cancel
           </Button>
@@ -75,9 +94,9 @@ export default function DeleteFeeScheduleModal() {
             type="button"
             onClick={handleConfirm}
             customClasses="flex-1 !bg-error-500 hover:!bg-error-600 !border-error-500"
-            disabled={isDeleting}
+            disabled={isSaving || !reason.trim()}
           >
-            {isDeleting ? 'Deleting...' : 'Yes, Delete'}
+            {isSaving ? 'Processing...' : 'Yes, Inactivate'}
           </Button>
         </div>
       </div>

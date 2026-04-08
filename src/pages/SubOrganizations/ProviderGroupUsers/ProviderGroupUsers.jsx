@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext, useParams } from 'react-router-dom';
 
@@ -8,12 +8,15 @@ import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
 import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import { buildColumns, Table } from '@/components/commonComponents/table';
+import ToggleSwitch from '@/components/commonComponents/toggleSwitch/ToggleSwitch';
+import VerificationIcon from '@/components/commonComponents/verificationIcon/VerificationIcon';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import AddUserDrawer from './Components/AddUserDrawer';
 import ViewUserModal from './Components/ViewUserModal';
@@ -49,6 +52,8 @@ export default function ProviderGroupUsers() {
     refreshFlag = 0,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
@@ -110,7 +115,7 @@ export default function ProviderGroupUsers() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -123,7 +128,7 @@ export default function ProviderGroupUsers() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <div className="w-32">
+        <div className="w-32 max-[1149px]:w-auto max-[1149px]:max-w-57.5 max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             name="status"
             placeholder="Status"
@@ -184,11 +189,10 @@ export default function ProviderGroupUsers() {
           render: (row) => (
             <div className="flex items-center gap-1.5">
               <span className="text-sm text-text-primary">{row.email}</span>
-              <span
-                className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${row.emailVerified ? 'bg-success-500' : 'bg-warning-500'}`}
-              >
-                <Icon name="Check" size={10} className="text-white" />
-              </span>
+              <VerificationIcon
+                verified={row.emailVerified === 'VERIFIED'}
+                size={18}
+              />
             </div>
           ),
         },
@@ -207,15 +211,18 @@ export default function ProviderGroupUsers() {
           accessorKey: 'status',
           width: 120,
           render: (row) => (
-            <span
-              className={
-                row.status === 'ACTIVE'
-                  ? 'text-text-primary'
-                  : 'text-neutral-400'
+            <ToggleSwitch
+              checked={row?.status === 'ACTIVE'}
+              showLabel={false}
+              onChangeCb={() =>
+                dispatch(
+                  providerGroupUsersActions.updateUserStatus({
+                    userId: row.id,
+                    status: row.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+                  }),
+                )
               }
-            >
-              {row.status === 'ACTIVE' ? 'Active' : 'Inactive'}
-            </span>
+            />
           ),
         },
         {
@@ -261,12 +268,12 @@ export default function ProviderGroupUsers() {
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="475px"
+        maxHeight={tableMaxHeight}
         loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}

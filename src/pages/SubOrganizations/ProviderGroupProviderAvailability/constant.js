@@ -7,30 +7,35 @@ export const FORM_FIELDS_NAMES = {
 };
 
 export const TIME_ZONE_OPTIONS = [
-  { label: 'Mountain Standard Time (MST)', value: 'MST' },
-  { label: 'Eastern Standard Time (EST)', value: 'EST' },
-  { label: 'Central Standard Time (CST)', value: 'CST' },
-  { label: 'Pacific Standard Time (PST)', value: 'PST' },
+  { label: 'Eastern Standard Time (EST)', value: 'America/New_York' },
+  { label: 'Central Standard Time (CST)', value: 'America/Chicago' },
+  { label: 'Mountain Standard Time (MST)', value: 'America/Denver' },
+  { label: 'Pacific Standard Time (PST)', value: 'America/Los_Angeles' },
+  { label: 'Alaska Standard Time (AKST)', value: 'America/Anchorage' },
+  { label: 'Hawaii Standard Time (HST)', value: 'Pacific/Honolulu' },
 ];
 
 export const BOOKING_WINDOW_OPTIONS = [
-  { label: '1 Week', value: '1_week' },
-  { label: '2 Weeks', value: '2_weeks' },
-  { label: '1 Month', value: '1_month' },
-  { label: '3 Months', value: '3_months' },
+  { label: '1 Week', value: 1 },
+  { label: '2 Weeks', value: 2 },
+  { label: '4 Weeks', value: 4 },
+  { label: '8 Weeks', value: 8 },
+  { label: '12 Weeks', value: 12 },
 ];
 
 export const APPOINTMENT_MODE_OPTIONS = [
-  { label: 'In Person', value: 'in-person' },
-  { label: 'Virtual', value: 'virtual' },
+  { label: 'In Person', value: 'IN_PERSON' },
+  { label: 'Virtual', value: 'VIRTUAL' },
 ];
 
 export const DAYS_OF_WEEK = [
-  { label: 'Mon', value: 'mon' },
-  { label: 'Tue', value: 'tue' },
-  { label: 'Wed', value: 'wed' },
-  { label: 'Thu', value: 'thu' },
-  { label: 'Fri', value: 'fri' },
-  { label: 'Sat', value: 'sat' },
-  { label: 'Sun', value: 'sun' },
+  { label: 'Mon', value: 'MON' },
+  { label: 'Tue', value: 'TUE' },
+  { label: 'Wed', value: 'WED' },
+  { label: 'Thu', value: 'THU' },
+  { label: 'Fri', value: 'FRI' },
+  { label: 'Sat', value: 'SAT' },
+  { label: 'Sun', value: 'SUN' },
 ];
+
+export const WEEKDAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI'];

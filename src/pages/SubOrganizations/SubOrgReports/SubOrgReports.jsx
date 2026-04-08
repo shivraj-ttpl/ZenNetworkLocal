@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
@@ -10,6 +10,7 @@ import {
   REPORT_PROVIDER_GROUP_OPTIONS,
   reportsDemographicsData,
 } from '@/data/settingsData';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 const TABS = [
   { key: 'demographics', label: 'Demographics' },
@@ -20,6 +21,8 @@ const TABS = [
 
 export default function SubOrgReports() {
   const { setToolbar } = useOutletContext();
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
   const [activeTab, setActiveTab] = useState('demographics');
   const [providerGroup, setProviderGroup] = useState(null);
   const [selectedRows, setSelectedRows] = useState({});
@@ -105,8 +108,8 @@ export default function SubOrgReports() {
   );
 
   return (
-    <div className="px-5 pb-4">
-      <div className="flex gap-4 border-b border-border-light mb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
+      <div className="flex gap-4 border-b border-border-light mb-4 max-[1149px]:overflow-x-auto max-[1149px]:gap-3">
         {TABS.map((tab) => (
           <button
             key={tab.key}
@@ -123,8 +126,8 @@ export default function SubOrgReports() {
         ))}
       </div>
 
-      <div className="flex items-end gap-4 mb-4">
-        <div className="w-48">
+      <div className="flex items-end gap-4 mb-4 max-[1149px]:flex-wrap">
+        <div className="w-48 max-[1149px]:w-auto max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             label="Select Provider Group *"
             name="providerGroup"
@@ -140,7 +143,7 @@ export default function SubOrgReports() {
         columns={columns}
         data={paginatedData}
         size="sm"
-        maxHeight="calc(100vh - 380px)"
+        maxHeight={tableMaxHeight}
         selectable
         selectedRows={selectedRows}
         onSelectionChange={setSelectedRows}

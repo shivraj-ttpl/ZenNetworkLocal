@@ -10,8 +10,8 @@ import Input from '@/components/commonComponents/input/Input';
 import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
-import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 import { FORM_FIELDS_NAMES, PROGRAM_OPTIONS } from '../constant';
 import { feeScheduleActions } from '../providerGroupFeeScheduleSaga';
@@ -37,14 +37,10 @@ const validationSchema = Yup.object().shape({
     .typeError('Rate must be a valid number')
     .required('Rate is required')
     .moreThan(0, 'Rate must be greater than 0.00')
-    .test(
-      'max-two-decimals',
-      'Rate allows up to 2 decimal places',
-      (value) => {
-        if (value === undefined || value === null) return true;
-        return /^\d+(\.\d{1,2})?$/.test(String(value));
-      },
-    ),
+    .test('max-two-decimals', 'Rate allows up to 2 decimal places', (value) => {
+      if (value === undefined || value === null) return true;
+      return /^\d+(\.\d{1,2})?$/.test(String(value));
+    }),
 });
 
 const getInitialValues = (editData) => ({
@@ -56,7 +52,10 @@ const getInitialValues = (editData) => ({
     : null,
   [FORM_FIELDS_NAMES.DATE_RANGE]:
     editData?.startDate || editData?.endDate
-      ? { startDate: editData.startDate || null, endDate: editData.endDate || null }
+      ? {
+          startDate: editData.startDate || null,
+          endDate: editData.endDate || null,
+        }
       : null,
   [FORM_FIELDS_NAMES.RATE]: editData?.rate ?? '',
 });
@@ -92,7 +91,12 @@ export default function AddFeeScheduleDrawer() {
 
     if (isEdit) {
       dispatch(
-        updateFeeSchedule({ id: editData?.id, providerGroupId, tenantName, data }),
+        updateFeeSchedule({
+          id: editData?.id,
+          providerGroupId,
+          tenantName,
+          data,
+        }),
       );
     } else {
       dispatch(createFeeSchedule({ providerGroupId, tenantName, data }));

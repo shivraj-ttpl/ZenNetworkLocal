@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { Form, Formik } from 'formik';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
 import Checkbox from '@/components/commonComponents/checkbox/Checkbox';
@@ -10,31 +11,37 @@ import Drawer from '@/components/commonComponents/drawer/Drawer';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import TimePicker from '@/components/commonComponents/timePicker/TimePicker';
 import Icon from '@/components/icons/Icon';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 import {
   APPOINTMENT_MODE_OPTIONS,
   BOOKING_WINDOW_OPTIONS,
   DAYS_OF_WEEK,
   TIME_ZONE_OPTIONS,
+  WEEKDAYS,
 } from '../constant';
+import { availabilityActions } from '../providerGroupProviderAvailabilitySaga';
 import { setCloseConfigureDrawer } from '../providerGroupProviderAvailabilitySlice';
 
 const EMPTY_SLOT = { startTime: null, endTime: null, appointmentMode: null };
 const EMPTY_BLOCK_DAY = { date: null };
 
-const WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri'];
-
 export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
   const dispatch = useDispatch();
+  const { providerGroupId } = useParams();
+  const tenantName = useSubOrgTenantName();
+  const isSaving = useLoadingKey(LOADING_KEYS.AVAILABILITY_POST_BULK_CONFIGURE);
 
   const [timeZone, setTimeZone] = useState(
-    TIME_ZONE_OPTIONS.find((o) => o.value === 'MST') ?? null,
+    TIME_ZONE_OPTIONS.find((o) => o.value === 'America/New_York') ?? null,
   );
   const [bookingWindow, setBookingWindow] = useState(null);
   const [startDate, setStartDate] = useState(
     configureDate ? dayjs(configureDate).format('YYYY-MM-DD') : '',
   );
-  const [selectedDays, setSelectedDays] = useState(['mon']);
+  const [selectedDays, setSelectedDays] = useState(['MON']);
   const [applyToAllDays, setApplyToAllDays] = useState(false);
   const [applyToWeekdays, setApplyToWeekdays] = useState(false);
   const [timeSlots, setTimeSlots] = useState([{ ...EMPTY_SLOT }]);
@@ -103,7 +110,36 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
   }, []);
 
   const handleSave = () => {
-    handleClose();
+    const daySlots = selectedDays.map((day) => ({
+      day,
+      slots: timeSlots
+        .filter((s) => s.startTime && s.endTime && s.appointmentMode)
+        .map((s) => ({
+          startTime: dayjs(s.startTime).format('HH:mm'),
+          endTime: dayjs(s.endTime).format('HH:mm'),
+          appointmentMode: s.appointmentMode.value,
+        })),
+    }));
+
+    const validBlockDays = blockDays
+      .filter((b) => b.date)
+      .map((b) => dayjs(b.date).format('YYYY-MM-DD'));
+
+    const payload = {
+      timeZone: timeZone?.value,
+      bookingWindow: bookingWindow?.value,
+      startDate: startDate ? dayjs(startDate).format('YYYY-MM-DD') : undefined,
+      daySlots,
+      ...(validBlockDays.length > 0 ? { blockDays: validBlockDays } : {}),
+    };
+
+    dispatch(
+      availabilityActions.bulkConfigure({
+        providerGroupId,
+        tenantName,
+        data: payload,
+      }),
+    );
   };
 
   const drawerTitle = configureDate
@@ -121,7 +157,6 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
       <Formik initialValues={{}} onSubmit={handleSave}>
         <Form className="flex flex-col h-full">
           <div className="flex-1 overflow-y-auto  space-y-6">
-            {/* Top Row: Time Zone, Booking Window, Start Date */}
             <div className="grid grid-cols-3 gap-4">
               <SelectDropdown
                 label="Time Zone"
@@ -153,15 +188,12 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
               />
             </div>
 
-            {/* Day Slot Creation */}
             <div className="space-y-4">
               <h4 className="text-base font-semibold text-text-primary">
                 Day Slot Creation
               </h4>
 
-              {/* Time Slots Card */}
               <div className="border border-border rounded-lg p-4 space-y-4">
-                {/* Day Buttons + Checkboxes */}
                 <div className="flex items-center justify-between flex-wrap">
                   <div className="flex gap-2">
                     {DAYS_OF_WEEK.map((day) => (
@@ -202,7 +234,6 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
 
                 <div className="border-t border-gray-200 -mx-4 my-2" />
 
-                {/* Time Slots */}
                 {timeSlots.map((slot, index) => (
                   <div key={index} className="flex items-end gap-3">
                     <TimePicker
@@ -251,7 +282,6 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
                   </div>
                 ))}
 
-                {/* Add Time Slot */}
                 <button
                   type="button"
                   onClick={addTimeSlot}
@@ -263,7 +293,6 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
               </div>
             </div>
 
-            {/* Block Days */}
             <div className="space-y-4">
               <h4 className="text-base font-semibold text-text-primary">
                 Block Days
@@ -303,7 +332,6 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
             </div>
           </div>
 
-          {/* Footer */}
           <div className="flex justify-between gap-2 mt-auto pt-4 border-t border-[#E9E9E9]">
             <Button
               variant="outlineBlue"
@@ -318,8 +346,9 @@ export default function ConfigureAvailabilityDrawer({ open, configureDate }) {
               size="sm"
               type="button"
               onClick={handleSave}
+              disabled={isSaving}
             >
-              Save
+              {isSaving ? 'Saving...' : 'Save'}
             </Button>
           </div>
         </Form>

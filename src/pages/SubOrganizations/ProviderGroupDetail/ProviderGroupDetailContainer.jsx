@@ -97,8 +97,8 @@ export default function ProviderGroupDetailContainer() {
         </div>
 
         {/* Row 2: Tabs + Toolbar */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200 shrink-0">
+        <div className="flex items-center justify-between gap-3 max-[1149px]:flex-wrap">
+          <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200 shrink-0 max-[1149px]:shrink max-[1149px]:min-w-0 max-[1149px]:overflow-x-auto">
             {TABS.map((tab) => (
               <NavLink
                 key={tab.path}
@@ -118,7 +118,7 @@ export default function ProviderGroupDetailContainer() {
             ))}
           </div>
           {toolbar && (
-            <div className="flex items-center gap-3 flex-wrap min-w-0">
+            <div className="flex items-center gap-3 max-[1149px]:w-full max-[1149px]:flex-wrap">
               {toolbar}
             </div>
           )}

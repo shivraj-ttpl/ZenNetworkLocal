@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useNavigate,
@@ -21,6 +21,7 @@ import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import ToolTip from '../../../components/commonComponents/toolTip/ToolTip';
 import AddProviderGroupDrawer from './Components/AddProviderGroupDrawer';
@@ -74,6 +75,8 @@ export default function ProviderGroupList() {
     editData = null,
   } = useSelector((state) => state[componentKey] ?? EMPTY_STATE);
 
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
   const isLoading = useLoadingKey(LOADING_KEYS.PROVIDER_GROUP_LIST_GET_LIST);
   const debouncedSearch = useDebounce(search);
 
@@ -111,7 +114,7 @@ export default function ProviderGroupList() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -121,7 +124,7 @@ export default function ProviderGroupList() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <div className="w-32">
+        <div className="w-32 max-[1149px]:w-auto max-[1149px]:max-w-57.5 max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             name="status"
             placeholder="Status"
@@ -344,12 +347,12 @@ export default function ProviderGroupList() {
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="calc(100vh - 280px)"
+        maxHeight={tableMaxHeight}
         loading={isLoading}
         sortKey={sortKey}
         sortOrder={sortOrder}
