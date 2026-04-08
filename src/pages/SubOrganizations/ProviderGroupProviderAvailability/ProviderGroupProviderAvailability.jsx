@@ -64,7 +64,7 @@ function CalendarSkeleton() {
           className="grid grid-cols-7 border-b border-border-light last:border-b-0"
           style={{ minHeight: 110 }}
         >
-          {Array.from({ length: 7 }, (_, colIdx) => {
+          {Array.from({ length: 7 }, (_col, colIdx) => {
             const pattern =
               SLOT_PATTERNS[(rowIdx * 7 + colIdx) % SLOT_PATTERNS.length];
             return (
