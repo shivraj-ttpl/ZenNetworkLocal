@@ -3,6 +3,7 @@ import importX from 'eslint-plugin-import-x';
 import prettier from 'eslint-plugin-prettier/recommended';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+// eslint-disable-next-line import-x/no-named-as-default
 import reactRefresh from 'eslint-plugin-react-refresh';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import unusedImports from 'eslint-plugin-unused-imports';
@@ -18,15 +19,6 @@ export default [
       globals: {
         ...globals.node,
       },
-    },
-  },
-
-  // Disable import-x resolver rules for DatePicker (react-datepicker CSS subpath not exported)
-  {
-    files: ['**/datePicker/DatePicker.jsx'],
-    rules: {
-      'import-x/no-unresolved': ['error', { ignore: ['react-datepicker'] }],
-      'import-x/no-duplicates': 'off',
     },
   },
 
@@ -108,6 +100,18 @@ export default [
 
       // Prettier
       'prettier/prettier': 'error',
+    },
+  },
+
+  // Disable import-x resolver rules for DatePicker/DateRangePicker (react-datepicker CSS subpath not in package exports)
+  {
+    files: [
+      '**/datePicker/DatePicker.jsx',
+      '**/datePicker/DateRangePicker.jsx',
+    ],
+    rules: {
+      'import-x/no-unresolved': ['error', { ignore: ['react-datepicker'] }],
+      'import-x/no-duplicates': 'off',
     },
   },
 
