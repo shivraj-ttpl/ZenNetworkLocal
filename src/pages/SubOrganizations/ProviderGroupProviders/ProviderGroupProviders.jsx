@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOutletContext, useParams } from 'react-router-dom';
 
@@ -15,6 +15,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useFlexCleanup } from '@/hooks/useFlexCleanup';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
 import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import AddProviderDrawer from './Components/AddProviderDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
@@ -47,6 +48,8 @@ export default function ProviderGroupProviders() {
   const dispatch = useDispatch();
   const tenantName = useSubOrgTenantName();
 
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
@@ -118,7 +121,7 @@ export default function ProviderGroupProviders() {
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-56 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -131,7 +134,7 @@ export default function ProviderGroupProviders() {
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
         </div>
-        <div className="w-32">
+        <div className="w-32 max-[1149px]:w-auto max-[1149px]:max-w-57.5 max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             name="status"
             placeholder="Status"
@@ -327,12 +330,12 @@ export default function ProviderGroupProviders() {
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
         data={tableData}
         size="sm"
-        maxHeight="475px"
+        maxHeight={tableMaxHeight}
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}

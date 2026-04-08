@@ -87,8 +87,8 @@ export default function SubOrgDetailContainer() {
 
   return (
     <div className="bg-surface rounded-xl border border-border-light overflow-hidden">
-      <div className="flex items-center justify-between gap-3 px-5 pt-4 pb-3">
-        <div className="flex items-center gap-4 shrink-0">
+      <div className="flex items-center justify-between gap-3 px-5 pt-4 pb-3 max-[1149px]:flex-wrap">
+        <div className="flex items-center gap-4 shrink-0 max-[1149px]:shrink max-[1149px]:min-w-0">
           <button
             onClick={() => navigate('/sub-organizations')}
             className="flex items-center gap-2 text-text-primary hover:text-primary-700 transition-colors cursor-pointer"
@@ -96,7 +96,7 @@ export default function SubOrgDetailContainer() {
             <Icon name="ArrowLeft" size={18} />
             <span className="text-base font-medium">{subOrgName}</span>
           </button>
-          <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200">
+          <div className="flex rounded-lg overflow-hidden items-center border border-neutral-200 max-[1149px]:overflow-x-auto">
             {TABS.map((tab) => (
               <NavLink
                 key={tab.key}
@@ -117,7 +117,7 @@ export default function SubOrgDetailContainer() {
           </div>
         </div>
         {toolbar && (
-          <div className="flex items-center gap-3 flex-wrap min-w-0">
+          <div className="flex items-center gap-3 max-[1149px]:w-full max-[1149px]:flex-wrap">
             {toolbar}
           </div>
         )}

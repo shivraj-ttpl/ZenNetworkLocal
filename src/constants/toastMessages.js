@@ -108,6 +108,18 @@ export const toastMessages = {
   feeScheduleUpdatedSuccess: 'Fee schedule updated successfully',
   feeScheduleDeletedSuccess: 'Fee schedule deleted successfully',
 
+  patientUpdatedSuccess: 'Patient updated successfully',
+  patientEnrolledSuccess: 'Patient enrolled successfully',
+  patientUnenrolledSuccess: 'Patient unenrolled successfully',
+  patientInactivatedSuccess: 'Patient inactivated successfully',
+  patientRecoveredSuccess: 'Patient recovered successfully',
+  patientCsvImportSuccess: 'Patients imported successfully',
+
+  availabilityConfiguredSuccess: 'Availability configured successfully',
+  blockDayAddedSuccess: 'Block day added successfully',
+  blockDayRemovedSuccess: 'Block day removed successfully',
+  blockDayConvertedSuccess: 'Block day converted to available day',
+
   subOrgRoleCreatedSuccess: 'Role created successfully',
   subOrgRoleStatusUpdatedSuccess: 'Role status updated successfully',
   subOrgRoleArchivedSuccess: 'Role archived successfully',

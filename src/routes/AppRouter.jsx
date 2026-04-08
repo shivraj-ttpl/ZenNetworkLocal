@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 
 import MainAppLayout from '@/app/MainAppLayout';
+import RoleGuard from '@/components/RoleGuard/RoleGuard';
 import { setNavigateRef } from '@/utils/navigationService';
 
 import {
@@ -48,15 +49,26 @@ function SharedRoute({ children, useLayout = false }) {
 }
 
 function renderChildren(children) {
-  return children?.map((child) =>
-    child.index ? (
-      <Route key="index" index element={<child.element />} />
+  return children?.map((child) => {
+    const pageElement = child.allowedRoles ? (
+      <RoleGuard
+        allowedRoles={child.allowedRoles}
+        fallback={<Navigate to="/sub-organizations" replace />}
+      >
+        <child.element />
+      </RoleGuard>
     ) : (
-      <Route key={child.path} path={child.path} element={<child.element />}>
+      <child.element />
+    );
+
+    return child.index ? (
+      <Route key="index" index element={pageElement} />
+    ) : (
+      <Route key={child.path} path={child.path} element={pageElement}>
         {renderChildren(child.children)}
       </Route>
-    ),
-  );
+    );
+  });
 }
 
 function PageLoader() {

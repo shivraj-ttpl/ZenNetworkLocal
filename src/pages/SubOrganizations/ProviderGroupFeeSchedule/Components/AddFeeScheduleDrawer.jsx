@@ -4,18 +4,16 @@ import { useParams } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import Button from '@/components/commonComponents/button/Button';
-import DatePicker from '@/components/commonComponents/datePicker/DatePicker';
+import DateRangePicker from '@/components/commonComponents/datePicker/DateRangePicker';
 import Drawer from '@/components/commonComponents/drawer/Drawer';
 import Input from '@/components/commonComponents/input/Input';
+import AsyncSelectDropdown from '@/components/commonComponents/selectDropdown/AsyncSelectDropdown';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
-import {
-  CPT_CODE_OPTIONS,
-  FORM_FIELDS_NAMES,
-  PROGRAM_OPTIONS,
-} from '../constant';
+import { FORM_FIELDS_NAMES, PROGRAM_OPTIONS } from '../constant';
 import { feeScheduleActions } from '../providerGroupFeeScheduleSaga';
 import { componentKey, setCloseDrawer } from '../providerGroupFeeScheduleSlice';
 
@@ -29,10 +27,20 @@ const validationSchema = Yup.object().shape({
   [FORM_FIELDS_NAMES.CPT_CODE]: Yup.object()
     .nullable()
     .required('CPT Code is required'),
-  [FORM_FIELDS_NAMES.DATE_RANGE]: Yup.string()
+  [FORM_FIELDS_NAMES.DATE_RANGE]: Yup.object()
     .nullable()
-    .required('Date Range is required'),
-  [FORM_FIELDS_NAMES.RATE]: Yup.string().required('Rate is required'),
+    .required('Date Range is required')
+    .test('both-dates', 'Both start and end dates are required', (val) => {
+      return !!(val?.startDate && val?.endDate);
+    }),
+  [FORM_FIELDS_NAMES.RATE]: Yup.number()
+    .typeError('Rate must be a valid number')
+    .required('Rate is required')
+    .moreThan(0, 'Rate must be greater than 0.00')
+    .test('max-two-decimals', 'Rate allows up to 2 decimal places', (value) => {
+      if (value === undefined || value === null) return true;
+      return /^\d+(\.\d{1,2})?$/.test(String(value));
+    }),
 });
 
 const getInitialValues = (editData) => ({
@@ -40,15 +48,22 @@ const getInitialValues = (editData) => ({
     ? PROGRAM_OPTIONS.find((o) => o.value === editData.program) || null
     : null,
   [FORM_FIELDS_NAMES.CPT_CODE]: editData?.cptCodeId
-    ? { label: editData.cptCode, value: editData.cptCodeId }
+    ? { id: editData.cptCodeId, code: editData.cptCode }
     : null,
-  [FORM_FIELDS_NAMES.DATE_RANGE]: editData?.startDate || null,
+  [FORM_FIELDS_NAMES.DATE_RANGE]:
+    editData?.startDate || editData?.endDate
+      ? {
+          startDate: editData.startDate || null,
+          endDate: editData.endDate || null,
+        }
+      : null,
   [FORM_FIELDS_NAMES.RATE]: editData?.rate ?? '',
 });
 
 export default function AddFeeScheduleDrawer() {
   const dispatch = useDispatch();
   const { providerGroupId } = useParams();
+  const tenantName = useSubOrgTenantName();
 
   const {
     drawerOpen = false,
@@ -68,16 +83,23 @@ export default function AddFeeScheduleDrawer() {
   const handleFormSubmit = (values) => {
     const data = {
       program: values[FORM_FIELDS_NAMES.PROGRAM]?.value || '',
-      cptCodeId: values[FORM_FIELDS_NAMES.CPT_CODE]?.value || '',
-      startDate: values[FORM_FIELDS_NAMES.DATE_RANGE] || '',
-      endDate: values[FORM_FIELDS_NAMES.DATE_RANGE] || '',
+      cptCodeId: Number(values[FORM_FIELDS_NAMES.CPT_CODE]?.id) || 0,
+      startDate: values[FORM_FIELDS_NAMES.DATE_RANGE]?.startDate || '',
+      endDate: values[FORM_FIELDS_NAMES.DATE_RANGE]?.endDate || '',
       rate: Number(values[FORM_FIELDS_NAMES.RATE]) || 0,
     };
 
     if (isEdit) {
-      dispatch(updateFeeSchedule({ id: editData?.id, data }));
+      dispatch(
+        updateFeeSchedule({
+          id: editData?.id,
+          providerGroupId,
+          tenantName,
+          data,
+        }),
+      );
     } else {
-      dispatch(createFeeSchedule({ providerGroupId, data }));
+      dispatch(createFeeSchedule({ providerGroupId, tenantName, data }));
     }
   };
 
@@ -127,37 +149,43 @@ export default function AddFeeScheduleDrawer() {
                     touched={touched[FORM_FIELDS_NAMES.PROGRAM]}
                     isRequired
                   />
-                  <SelectDropdown
+                  <AsyncSelectDropdown
                     label="CPT Code"
                     name={FORM_FIELDS_NAMES.CPT_CODE}
-                    placeholder="Enter CPT Code"
-                    options={CPT_CODE_OPTIONS}
+                    placeholder="Search CPT Code"
+                    url="dropdown-apis/codes/CPT"
+                    valueKey="id"
+                    labelKey="code"
                     value={values[FORM_FIELDS_NAMES.CPT_CODE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.CPT_CODE, selected)
                     }
                     error={errors[FORM_FIELDS_NAMES.CPT_CODE]}
                     touched={touched[FORM_FIELDS_NAMES.CPT_CODE]}
-                    isRequired
+                    required
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mt-4">
-                  <DatePicker
-                    label="Select Date Range"
+                  <DateRangePicker
+                    label="Date Range"
                     name={FORM_FIELDS_NAMES.DATE_RANGE}
-                    placeholder="Select Date"
+                    placeholder="Select date range"
                     value={values[FORM_FIELDS_NAMES.DATE_RANGE]}
-                    onChangeCb={(date) =>
-                      setFieldValue(FORM_FIELDS_NAMES.DATE_RANGE, date)
+                    onChangeCb={(range) =>
+                      setFieldValue(FORM_FIELDS_NAMES.DATE_RANGE, range)
                     }
                     error={errors[FORM_FIELDS_NAMES.DATE_RANGE]}
                     touched={touched[FORM_FIELDS_NAMES.DATE_RANGE]}
+                    isRequired
                   />
                   <Input
                     label="Rate ($)"
                     name={FORM_FIELDS_NAMES.RATE}
                     placeholder="Enter Rate"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
                     value={values[FORM_FIELDS_NAMES.RATE]}
                     onChange={handleChange}
                     onBlur={handleBlur}

@@ -1,15 +1,23 @@
 import { Formik } from 'formik';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
 import Drawer from '@/components/commonComponents/drawer/Drawer';
 import FileUpload from '@/components/commonComponents/upload/FileUpload';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
+import { patientActions } from '../providerGroupPatientsSaga';
 import { setCloseUploadModal } from '../providerGroupPatientsSlice';
 
 export default function UploadCsvDrawer({ open }) {
   const dispatch = useDispatch();
+  const { providerGroupId } = useParams();
+  const tenantName = useSubOrgTenantName();
+  const isImporting = useLoadingKey(LOADING_KEYS.PG_PATIENTS_POST_IMPORT_CSV);
   const [csvFile, setCsvFile] = useState(null);
 
   const handleClose = () => {
@@ -18,8 +26,21 @@ export default function UploadCsvDrawer({ open }) {
   };
 
   const handleImport = () => {
-    // TODO: dispatch saga action to upload CSV
-    handleClose();
+    if (!csvFile || !providerGroupId || !tenantName) return;
+    dispatch(
+      patientActions.importPatientsCsv({
+        providerGroupId,
+        tenantName,
+        file: csvFile,
+      }),
+    );
+  };
+
+  const handleDownloadTemplate = () => {
+    const link = document.createElement('a');
+    link.href = '/templates/patientImportTemplate.csv';
+    link.download = 'patient_import_template.csv';
+    link.click();
   };
 
   return (
@@ -39,7 +60,7 @@ export default function UploadCsvDrawer({ open }) {
               maxFileSize={5}
               onFileSelect={(file) => setCsvFile(file)}
               showDownloadTemplate
-              downloadTemplateLabel="Download Template"
+              onDownloadTemplate={handleDownloadTemplate}
               description=".csv, up to 5MB."
             />
             <p className="text-sm text-text-primary">
@@ -50,21 +71,22 @@ export default function UploadCsvDrawer({ open }) {
 
           <div className="flex justify-between gap-2 mt-auto pt-4 border-t border-[#E9E9E9]">
             <Button
-              variant="outlineTeal"
+              variant="outlineBlue"
               size="sm"
               type="button"
               onClick={handleClose}
+              disabled={isImporting}
             >
               Cancel
             </Button>
             <Button
-              variant="primaryTeal"
+              variant="primaryBlue"
               size="sm"
               type="button"
               onClick={handleImport}
-              disabled={!csvFile}
+              disabled={!csvFile || isImporting}
             >
-              Import
+              {isImporting ? 'Importing...' : 'Import'}
             </Button>
           </div>
         </div>

@@ -61,7 +61,7 @@ function* fetchUserByIdSaga(action) {
 }
 
 function* createUserSaga(action) {
-  const { providerGroupId, data } = action.payload;
+  const { providerGroupId, tenantName, data } = action.payload;
   const {
     firstName,
     lastName,
@@ -75,15 +75,19 @@ function* createUserSaga(action) {
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_USERS_POST_CREATE,
     apiFunc: () =>
-      ProviderGroupDataService.createProviderGroupUser(providerGroupId, {
-        firstName,
-        lastName,
-        email,
-        providerGroupRoleTitle,
-        countryCode,
-        contactNumber,
-        address,
-      }),
+      ProviderGroupDataService.createProviderGroupUser(
+        providerGroupId,
+        tenantName,
+        {
+          firstName,
+          lastName,
+          email,
+          providerGroupRoleTitle,
+          countryCode,
+          contactNumber,
+          address,
+        },
+      ),
     onSuccess: function* () {
       yield put(
         addNotification({

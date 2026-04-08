@@ -6,6 +6,15 @@ export const componentKey = COMPONENT_KEYS.PROVIDER_GROUP_PROVIDER_AVAILABILITY;
 const sliceConfig = {
   key: componentKey,
   addedReducers: {
+    setCalendarData: (state, action) => {
+      state.calendarData = action.payload ?? [];
+    },
+    setDateSlotsData: (state, action) => {
+      state.dateSlotsData = action.payload ?? null;
+    },
+    setRefreshCalendar: (state) => {
+      state.refreshCalendarFlag = Date.now();
+    },
     setOpenConfigureDrawer: (state, action) => {
       state.configureDrawerOpen = true;
       state.configureDate = action.payload ?? null;
@@ -40,6 +49,9 @@ const sliceConfig = {
     },
   },
   initialReducerState: {
+    calendarData: [],
+    dateSlotsData: null,
+    refreshCalendarFlag: 0,
     configureDrawerOpen: false,
     configureDate: null,
     blockDayModalOpen: false,
@@ -58,6 +70,9 @@ export function registerReducer() {
 }
 
 export const {
+  setCalendarData,
+  setDateSlotsData,
+  setRefreshCalendar,
   setOpenConfigureDrawer,
   setCloseConfigureDrawer,
   setOpenBlockDayModal,

@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 
 import ActionDropdown from '@/components/commonComponents/actionDropdown';
 import Button from '@/components/commonComponents/button/Button';
@@ -9,22 +9,48 @@ import Pagination from '@/components/commonComponents/pagination/Pagination';
 import SelectDropdown from '@/components/commonComponents/selectDropdown/SelectDropdown';
 import { buildColumns, Table } from '@/components/commonComponents/table';
 import Icon from '@/components/icons/Icon';
-import {
-  patientsData,
-  SELECT_ACTION_OPTIONS,
-} from '@/data/subOrganizationsData';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useFlexCleanup } from '@/hooks/useFlexCleanup';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
+import { useTableHeight } from '@/hooks/useTableHeight';
 
 import EditPatientDrawer from './Components/EditPatientDrawer';
+import InactivatePatientModal from './Components/InactivatePatientModal';
 import UploadCsvDrawer from './Components/UploadCsvDrawer';
+import { patientActions, registerSaga } from './providerGroupPatientsSaga';
 import {
   componentKey,
+  registerReducer,
   setOpenEditDrawer,
+  setOpenInactiveModal,
   setOpenUploadModal,
 } from './providerGroupPatientsSlice';
+
+const SELECT_ACTION_OPTIONS = [
+  { label: 'Enroll', value: 'Enroll' },
+  { label: 'Discharge', value: 'Discharge' },
+];
+
+const EMPTY_STATE = {};
 
 export default function ProviderGroupPatients() {
   const { setToolbar } = useOutletContext();
   const dispatch = useDispatch();
+  const { providerGroupId } = useParams();
+  const tenantName = useSubOrgTenantName();
+  const tableRef = useRef(null);
+  const tableMaxHeight = useTableHeight(tableRef);
+  const state = useSelector((s) => s[componentKey] ?? EMPTY_STATE);
+  const isLoading = useLoadingKey(LOADING_KEYS.PG_PATIENTS_GET_LIST);
+
+  useEffect(() => {
+    registerReducer();
+    registerSaga();
+  }, []);
+
+  useFlexCleanup(componentKey);
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
@@ -33,9 +59,42 @@ export default function ProviderGroupPatients() {
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
-  const { drawerOpen, editData, uploadModalOpen } = useSelector(
-    (state) => state[componentKey] ?? {},
-  );
+  const {
+    patientList = [],
+    totalRecords = 0,
+    refreshFlag = 0,
+    drawerOpen,
+    editData,
+    uploadModalOpen,
+    inactiveModalOpen,
+    inactivePatient,
+  } = state;
+
+  useEffect(() => {
+    if (!providerGroupId || !tenantName) return;
+    dispatch(
+      patientActions.fetchPatients({
+        providerGroupId,
+        tenantName,
+        page,
+        limit,
+        ...(search.trim() ? { search: search.trim() } : {}),
+        ...(showInactivePatients ? { showDeleted: true } : {}),
+        ...(sortKey ? { sortBy: sortKey, sortOrder: sortOrder || 'asc' } : {}),
+      }),
+    );
+  }, [
+    dispatch,
+    providerGroupId,
+    tenantName,
+    page,
+    limit,
+    search,
+    showInactivePatients,
+    sortKey,
+    sortOrder,
+    refreshFlag,
+  ]);
 
   useEffect(() => {
     setToolbar(
@@ -43,11 +102,14 @@ export default function ProviderGroupPatients() {
         <Checkbox
           label="Show Inactive Patients"
           checked={showInactivePatients}
-          onChange={() => setShowInactivePatients((p) => !p)}
+          onChange={() => {
+            setShowInactivePatients((p) => !p);
+            setPage(1);
+          }}
           variant="blue"
           size="sm"
         />
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface w-40">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-40 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
             type="text"
@@ -61,7 +123,7 @@ export default function ProviderGroupPatients() {
           />
         </div>
 
-        <div className="w-34">
+        <div className="w-34 max-[1149px]:w-auto max-[1149px]:max-w-57.5 max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
             name="selectAction"
             placeholder="Select Action"
@@ -88,45 +150,70 @@ export default function ProviderGroupPatients() {
     setSortOrder(order);
   }, []);
 
-  const filteredData = useMemo(() => {
-    let data = patientsData;
-    if (!showInactivePatients) {
-      data = data.filter((row) => !row.inactive);
-    }
-    if (search.trim()) {
-      const term = search.toLowerCase();
-      data = data.filter(
-        (item) =>
-          item.patientId.toLowerCase().includes(term) ||
-          item.firstName.toLowerCase().includes(term),
+  const handleUnenroll = useCallback(
+    (row) => {
+      dispatch(
+        patientActions.unenrollPatient({
+          id: row.id,
+          providerGroupId,
+          tenantName,
+        }),
       );
-    }
-    return data;
-  }, [search, showInactivePatients]);
+    },
+    [dispatch, providerGroupId, tenantName],
+  );
 
-  const totalPages = Math.ceil(filteredData.length / limit) || 1;
+  const totalPages = Math.ceil(totalRecords / limit) || 1;
 
-  const paginatedData = useMemo(
-    () => filteredData.slice((page - 1) * limit, page * limit),
-    [filteredData, page, limit],
+  const getActionOptions = useCallback(
+    (row) => {
+      const options = [
+        {
+          label: 'Edit',
+          value: 'edit',
+          onClickCb: () => dispatch(setOpenEditDrawer(row)),
+        },
+      ];
+
+      if (row.enrollmentStatus === 'Enrolled') {
+        options.push({
+          label: 'Unenrolled',
+          value: 'unenroll',
+          onClickCb: () => handleUnenroll(row),
+        });
+      }
+
+      options.push({
+        label: 'Inactive',
+        value: 'inactive',
+        onClickCb: () => dispatch(setOpenInactiveModal(row)),
+      });
+
+      return options;
+    },
+    [dispatch, handleUnenroll],
   );
 
   const columns = useMemo(
     () =>
       buildColumns([
         {
-          id: 'patientId',
+          id: 'patientDisplayId',
           header: 'Patients ID',
-          accessorKey: 'patientId',
+          accessorKey: 'patientDisplayId',
           render: (row) => (
             <span className="text-primary-700 font-medium">
-              {row.patientId}
+              {row.patientDisplayId || '-'}
             </span>
           ),
         },
         { id: 'firstName', header: 'First Name', accessorKey: 'firstName' },
         { id: 'lastName', header: 'Last Name', accessorKey: 'lastName' },
-        { id: 'dob', header: 'Date of Birth', accessorKey: 'dob' },
+        {
+          id: 'dateOfBirth',
+          header: 'Date of Birth',
+          accessorKey: 'dateOfBirth',
+        },
         {
           id: 'primaryCareManager',
           header: 'Primary Care Manager',
@@ -149,7 +236,7 @@ export default function ProviderGroupPatients() {
                   : 'text-neutral-500'
               }
             >
-              {row.enrollmentStatus}
+              {row.enrollmentStatus || '-'}
             </span>
           ),
         },
@@ -179,39 +266,28 @@ export default function ProviderGroupPatients() {
           header: 'Action',
           width: 70,
           align: 'center',
-          render: (row) => (
-            <ActionDropdown
-              options={[
-                { label: 'View', value: 'view', onClickCb: () => {} },
-                {
-                  label: 'Edit',
-                  value: 'edit',
-                  onClickCb: () => dispatch(setOpenEditDrawer(row)),
-                },
-                { label: 'Archive', value: 'archive', onClickCb: () => {} },
-              ]}
-            />
-          ),
+          render: (row) => <ActionDropdown options={getActionOptions(row)} />,
         },
       ]),
-    [dispatch],
+    [getActionOptions],
   );
 
   return (
-    <div className="px-5 pb-4">
+    <div className="px-5 pb-4" ref={tableRef}>
       <Table
         columns={columns}
-        data={paginatedData}
+        data={patientList}
         size="sm"
-        maxHeight="475px"
+        maxHeight={tableMaxHeight}
         selectable={true}
-        selectId="patientId"
+        selectId="id"
         sortKey={sortKey}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
+        isLoading={isLoading}
       />
       <Pagination
-        totalRecords={filteredData.length}
+        totalRecords={totalRecords}
         totalPages={totalPages}
         currentPage={page}
         currentLimit={limit}
@@ -223,6 +299,10 @@ export default function ProviderGroupPatients() {
       />
       <EditPatientDrawer open={drawerOpen} editData={editData} />
       <UploadCsvDrawer open={uploadModalOpen} />
+      <InactivatePatientModal
+        open={inactiveModalOpen}
+        patient={inactivePatient}
+      />
     </div>
   );
 }
