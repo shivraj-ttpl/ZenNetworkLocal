@@ -140,7 +140,7 @@ export default function ProviderGroupProfile() {
   if (!profile) return null;
 
   return (
-    <div className="px-3 sm:px-5 pb-5">
+    <div className="px-3 sm:px-5 pb-5 h-full overflow-y-auto">
       <div className="border border-border-light rounded-lg p-4 sm:p-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div className="flex flex-col sm:flex-row items-start gap-4">
