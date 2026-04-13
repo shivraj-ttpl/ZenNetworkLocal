@@ -25,6 +25,7 @@ import { formatZipCode } from '@/utils/GeneralUtils';
 import { FORM_FIELDS_NAMES } from '../constant';
 import { providerGroupListActions } from '../providerGroupListSaga';
 import { componentKey, setCloseDrawer } from '../providerGroupListSlice';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 const { createProviderGroup } = providerGroupListActions;
 
@@ -247,18 +248,21 @@ export default function AddProviderGroupDrawer({
     dispatch(setCloseDrawer());
   };
 
+  const tenantName = useSubOrgTenantName();
+
   const handleFormSubmit = (values) => {
     const data = buildPayload(values, showAdminSection);
     if (isEdit) {
       dispatch(
         providerGroupListActions.updateProviderGroup({
+          tenantName,
           id: editData?.id,
           subOrgId,
           data,
         }),
       );
     } else {
-      dispatch(createProviderGroup({ subOrgId, data }));
+      dispatch(createProviderGroup({ subOrgId, data, tenantName }));
     }
   };
 

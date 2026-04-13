@@ -74,11 +74,12 @@ function* fetchProviderGroupByIdSaga(action) {
 }
 
 function* createProviderGroupSaga(action) {
-  const { subOrgId, data } = action.payload;
+  const { subOrgId, data, tenantName } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_POST_CREATE,
-    apiFunc: () => ProviderGroupDataService.createProviderGroup(subOrgId, data),
+    apiFunc: () =>
+      ProviderGroupDataService.createProviderGroup(subOrgId, data, tenantName),
     onSuccess: function* () {
       yield put(
         addNotification({

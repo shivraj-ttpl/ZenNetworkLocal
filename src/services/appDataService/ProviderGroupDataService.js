@@ -14,8 +14,12 @@ export default class ProviderGroupDataService {
     return AppDataService.get(`${PG_URL}/${id}`);
   }
 
-  static async createProviderGroup(subOrgId, data) {
-    return AppDataService.post(`${SUB_ORG_URL}/${subOrgId}/${PG_URL}`, data);
+  static async createProviderGroup(subOrgId, data, tenantName) {
+    return AppDataService.post(`${SUB_ORG_URL}/${subOrgId}/${PG_URL}`, data, {
+      headers: {
+        'tenant-name': tenantName,
+      },
+    });
   }
 
   static async updateProviderGroup(id, data) {
