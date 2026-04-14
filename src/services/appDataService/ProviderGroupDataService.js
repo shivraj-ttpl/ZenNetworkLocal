@@ -82,7 +82,7 @@ export default class ProviderGroupDataService {
   // ─── Provider Group Users ────────────────────────
 
   static async getProviderGroupUsers(providerGroupId, tenantName, params = {}) {
-    return AppDataService.get('provider-group/user', {
+    return AppDataService.get('provider-groups/users', {
       params,
       headers: {
         'x-provider-group': providerGroupId,
@@ -313,6 +313,53 @@ export default class ProviderGroupDataService {
   static async importPatientsCsv(providerGroupId, tenantName, formData) {
     return AppDataService.post(`${PG_URL}/patients/import`, formData, {
       isFormData: true,
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  // ─── Configuration ────────────────────────────────
+
+  static async getConfiguration(providerGroupId, tenantName) {
+    return AppDataService.get(`${PG_URL}/configuration`, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async createCallerIdVerification(providerGroupId, tenantName, data) {
+    return AppDataService.post(`${PG_URL}/configuration/caller-id`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async deleteCallerIdVerification(providerGroupId, tenantName) {
+    return AppDataService.delete(`${PG_URL}/configuration/caller-id`, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async createSenderEmail(providerGroupId, tenantName, data) {
+    return AppDataService.post(`${PG_URL}/configuration/sender-email`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async deleteSenderEmail(providerGroupId, tenantName) {
+    return AppDataService.delete(`${PG_URL}/configuration/sender-email`, {
       headers: {
         'x-provider-group': providerGroupId,
         'tenant-name': tenantName,

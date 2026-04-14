@@ -209,7 +209,7 @@ export default function AddUserDrawer() {
                     name={FORM_FIELDS_NAMES.ROLE}
                     placeholder="Select Role"
                     url={`dropdown-apis/roles/non-clinical?subOrgId=${subOrgId}`}
-                    labelKey="title"
+                    labelKey="name"
                     valueKey="id"
                     value={values[FORM_FIELDS_NAMES.ROLE]}
                     onChange={(selected) =>
@@ -218,6 +218,7 @@ export default function AddUserDrawer() {
                     error={errors[FORM_FIELDS_NAMES.ROLE]}
                     touched={touched[FORM_FIELDS_NAMES.ROLE]}
                     required
+                    totalPath="meta.total"
                   />
 
                   <PhoneInput

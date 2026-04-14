@@ -206,7 +206,7 @@ export default function SubOrgRolesPermissions() {
                   subOrgRolesActions.updateRoleStatus({
                     roleId: row.id,
                     status: row.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
-                    subOrgId: subOrgId,
+                    // subOrgId: subOrgId,
                   }),
                 )
               }
