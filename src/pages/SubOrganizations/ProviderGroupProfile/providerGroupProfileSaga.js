@@ -23,11 +23,12 @@ export const providerGroupProfileActions = createSagaActions(componentKey, [
 ]);
 
 function* fetchProfileSaga(action) {
-  const { id } = action.payload;
+  const { id, tenantName } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_PROFILE_GET_BY_ID,
-    apiFunc: () => ProviderGroupDataService.getProviderGroupById(id),
+    apiFunc: () =>
+      ProviderGroupDataService.getProviderGroupById(id, tenantName),
     onSuccess: function* (response) {
       yield put(setProfile(response.data.data));
     },

@@ -20,6 +20,7 @@ import {
   registerReducer,
   setOpenEditDrawer,
 } from './providerGroupProfileSlice';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 const { fetchProfile } = providerGroupProfileActions;
 const EMPTY_STATE = {};
@@ -83,6 +84,8 @@ export default function ProviderGroupProfile() {
     LOADING_KEYS.PROVIDER_GROUP_PROFILE_GET_BY_ID,
   );
 
+  const tenantName = useSubOrgTenantName();
+
   useEffect(() => {
     registerReducer();
     registerSaga();
@@ -92,9 +95,9 @@ export default function ProviderGroupProfile() {
 
   useEffect(() => {
     if (providerGroupId) {
-      dispatch(fetchProfile({ id: providerGroupId }));
+      dispatch(fetchProfile({ id: providerGroupId, tenantName }));
     }
-  }, [dispatch, providerGroupId, refreshFlag]);
+  }, [dispatch, providerGroupId, refreshFlag, tenantName]);
 
   useEffect(() => {
     setToolbar(

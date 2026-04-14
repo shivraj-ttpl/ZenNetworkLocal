@@ -255,8 +255,12 @@ export default function ProviderGroupProviders() {
         {
           id: 'contact',
           header: 'Contact',
-          accessorKey: 'contact',
           width: 140,
+          render: (row) => {
+            if (!row.contactNumber) return '-';
+            const code = row.countryCode || '';
+            return `${code} ${row.contactNumber}`.trim();
+          },
         },
         { id: 'lastLogin', header: 'Last Login', accessorKey: 'lastLogin' },
         {

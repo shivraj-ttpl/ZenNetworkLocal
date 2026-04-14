@@ -4,14 +4,21 @@ const SUB_ORG_URL = 'sub-organizations';
 const PG_URL = 'provider-groups';
 
 export default class ProviderGroupDataService {
-  static async getProviderGroups(subOrgId, params = {}) {
+  static async getProviderGroups(subOrgId, tenantName, params = {}) {
     return AppDataService.get(`${SUB_ORG_URL}/${subOrgId}/${PG_URL}`, {
       params,
+      headers: {
+        'tenant-name': tenantName,
+      },
     });
   }
 
-  static async getProviderGroupById(id) {
-    return AppDataService.get(`${PG_URL}/${id}`);
+  static async getProviderGroupById(id, tenantName) {
+    return AppDataService.get(`${PG_URL}/${id}`, {
+      headers: {
+        'tenant-name': tenantName,
+      },
+    });
   }
 
   static async createProviderGroup(subOrgId, data, tenantName) {
@@ -22,8 +29,12 @@ export default class ProviderGroupDataService {
     });
   }
 
-  static async updateProviderGroup(id, data) {
-    return AppDataService.patch(`${PG_URL}/${id}`, data);
+  static async updateProviderGroup(id, tenantName, data) {
+    return AppDataService.patch(`${PG_URL}/${id}`, data, {
+      headers: {
+        'tenant-name': tenantName,
+      },
+    });
   }
 
   static async changeStatus(id, status) {
@@ -58,9 +69,13 @@ export default class ProviderGroupDataService {
     });
   }
 
-  static async updateProvider(providerId, tenantName, data) {
+  static async updateProvider(providerGroupId, providerId, tenantName, data) {
+    console.log(tenantName);
     return AppDataService.patch(`providers/${providerId}`, data, {
-      headers: { 'tenant-name': tenantName },
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
     });
   }
 
@@ -89,8 +104,6 @@ export default class ProviderGroupDataService {
       },
     });
   }
-
-
 
   static async createProviderGroupUser(providerGroupId, tenantName, data) {
     return AppDataService.post('provider-groups/users', data, {

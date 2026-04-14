@@ -44,6 +44,7 @@ import {
   setStatusFilter,
   setStatusModal,
 } from './providerGroupListSlice';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 const { fetchProviderGroups, fetchProviderGroupById, archiveProviderGroup } =
   providerGroupListActions;
@@ -58,6 +59,7 @@ export default function ProviderGroupList() {
   const { setToolbar } = useOutletContext();
   const { currentUserRole } = useCurrentUserRole();
   const isSubOrgAdmin = currentUserRole === ROLES.SUB_ORG_ADMIN;
+  const tenantName = useSubOrgTenantName();
 
   const {
     providerGroupList = [],
@@ -89,11 +91,18 @@ export default function ProviderGroupList() {
 
   useEffect(() => {
     if (subOrgId) {
-      dispatch(fetchProviderGroups({ subOrgId }));
+      dispatch(
+        fetchProviderGroups({
+          subOrgId,
+          tenantName,
+          ...(isSubOrgAdmin ? { tenantName } : {}),
+        }),
+      );
     }
   }, [
     dispatch,
     subOrgId,
+    tenantName,
     page,
     limit,
     debouncedSearch,
@@ -319,7 +328,9 @@ export default function ProviderGroupList() {
                       label: 'Edit',
                       value: 'edit',
                       onClickCb: () =>
-                        dispatch(fetchProviderGroupById({ id: row.id })),
+                        dispatch(
+                          fetchProviderGroupById({ id: row.id, tenantName }),
+                        ),
                     },
                   ];
 

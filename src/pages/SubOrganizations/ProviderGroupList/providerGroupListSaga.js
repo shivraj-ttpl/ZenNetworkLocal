@@ -31,7 +31,7 @@ export const providerGroupListActions = createSagaActions(componentKey, [
 ]);
 
 function* fetchProviderGroupsSaga(action) {
-  const { subOrgId } = action.payload;
+  const { subOrgId, tenantName } = action.payload;
   const state = yield select((s) => s[componentKey]);
   const {
     page,
@@ -52,7 +52,8 @@ function* fetchProviderGroupsSaga(action) {
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_GET_LIST,
-    apiFunc: () => ProviderGroupDataService.getProviderGroups(subOrgId, params),
+    apiFunc: () =>
+      ProviderGroupDataService.getProviderGroups(subOrgId, tenantName, params),
     onSuccess: function* (response) {
       const { data, meta } = response.data.data;
       yield put(setProviderGroupList(data));
@@ -63,10 +64,11 @@ function* fetchProviderGroupsSaga(action) {
 }
 
 function* fetchProviderGroupByIdSaga(action) {
-  const { id } = action.payload;
+  const { id, tenantName } = action.payload;
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_GET_BY_ID,
-    apiFunc: () => ProviderGroupDataService.getProviderGroupById(id),
+    apiFunc: () =>
+      ProviderGroupDataService.getProviderGroupById(id, tenantName),
     onSuccess: function* (response) {
       yield put(setEditDrawer(response?.data?.data));
     },
@@ -94,10 +96,11 @@ function* createProviderGroupSaga(action) {
 }
 
 function* updateProviderGroupSaga(action) {
-  const { id, data } = action.payload;
+  const { id, data, tenantName } = action.payload;
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_POST_CREATE,
-    apiFunc: () => ProviderGroupDataService.updateProviderGroup(id, data),
+    apiFunc: () =>
+      ProviderGroupDataService.updateProviderGroup(id, tenantName, data),
     onSuccess: function* () {
       yield put(
         addNotification({
