@@ -90,12 +90,17 @@ function* createProviderSaga(action) {
 }
 
 function* updateProviderSaga(action) {
-  const { providerId, tenantName, data } = action.payload;
+  const { providerGroupId, providerId, tenantName, data } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_PROVIDERS_PATCH_UPDATE,
     apiFunc: () =>
-      ProviderGroupDataService.updateProvider(providerId, tenantName, data),
+      ProviderGroupDataService.updateProvider(
+        providerGroupId,
+        providerId,
+        tenantName,
+        data,
+      ),
     onSuccess: function* () {
       yield put(
         addNotification({

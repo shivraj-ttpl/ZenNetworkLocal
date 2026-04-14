@@ -4,22 +4,37 @@ const SUB_ORG_URL = 'sub-organizations';
 const PG_URL = 'provider-groups';
 
 export default class ProviderGroupDataService {
-  static async getProviderGroups(subOrgId, params = {}) {
+  static async getProviderGroups(subOrgId, tenantName, params = {}) {
     return AppDataService.get(`${SUB_ORG_URL}/${subOrgId}/${PG_URL}`, {
       params,
+      headers: {
+        'tenant-name': tenantName,
+      },
     });
   }
 
-  static async getProviderGroupById(id) {
-    return AppDataService.get(`${PG_URL}/${id}`);
+  static async getProviderGroupById(id, tenantName) {
+    return AppDataService.get(`${PG_URL}/${id}`, {
+      headers: {
+        'tenant-name': tenantName,
+      },
+    });
   }
 
-  static async createProviderGroup(subOrgId, data) {
-    return AppDataService.post(`${SUB_ORG_URL}/${subOrgId}/${PG_URL}`, data);
+  static async createProviderGroup(subOrgId, data, tenantName) {
+    return AppDataService.post(`${SUB_ORG_URL}/${subOrgId}/${PG_URL}`, data, {
+      headers: {
+        'tenant-name': tenantName,
+      },
+    });
   }
 
-  static async updateProviderGroup(id, data) {
-    return AppDataService.patch(`${PG_URL}/${id}`, data);
+  static async updateProviderGroup(id, tenantName, data) {
+    return AppDataService.patch(`${PG_URL}/${id}`, data, {
+      headers: {
+        'tenant-name': tenantName,
+      },
+    });
   }
 
   static async changeStatus(id, status) {
@@ -54,16 +69,20 @@ export default class ProviderGroupDataService {
     });
   }
 
-  static async updateProvider(providerId, tenantName, data) {
+  static async updateProvider(providerGroupId, providerId, tenantName, data) {
+    console.log(tenantName);
     return AppDataService.patch(`providers/${providerId}`, data, {
-      headers: { 'tenant-name': tenantName },
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
     });
   }
 
   // ─── Provider Group Users ────────────────────────
 
   static async getProviderGroupUsers(providerGroupId, tenantName, params = {}) {
-    return AppDataService.get('provider-group/user', {
+    return AppDataService.get('provider-groups/users', {
       params,
       headers: {
         'x-provider-group': providerGroupId,
@@ -85,8 +104,6 @@ export default class ProviderGroupDataService {
       },
     });
   }
-
-
 
   static async createProviderGroupUser(providerGroupId, tenantName, data) {
     return AppDataService.post('provider-groups/users', data, {
@@ -296,6 +313,53 @@ export default class ProviderGroupDataService {
   static async importPatientsCsv(providerGroupId, tenantName, formData) {
     return AppDataService.post(`${PG_URL}/patients/import`, formData, {
       isFormData: true,
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  // ─── Configuration ────────────────────────────────
+
+  static async getConfiguration(providerGroupId, tenantName) {
+    return AppDataService.get(`${PG_URL}/configuration`, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async createCallerIdVerification(providerGroupId, tenantName, data) {
+    return AppDataService.post(`${PG_URL}/configuration/caller-id`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async deleteCallerIdVerification(providerGroupId, tenantName) {
+    return AppDataService.delete(`${PG_URL}/configuration/caller-id`, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async createSenderEmail(providerGroupId, tenantName, data) {
+    return AppDataService.post(`${PG_URL}/configuration/sender-email`, data, {
+      headers: {
+        'x-provider-group': providerGroupId,
+        'tenant-name': tenantName,
+      },
+    });
+  }
+
+  static async deleteSenderEmail(providerGroupId, tenantName) {
+    return AppDataService.delete(`${PG_URL}/configuration/sender-email`, {
       headers: {
         'x-provider-group': providerGroupId,
         'tenant-name': tenantName,

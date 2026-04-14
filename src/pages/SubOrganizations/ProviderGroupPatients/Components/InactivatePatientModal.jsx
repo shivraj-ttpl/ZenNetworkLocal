@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
 import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
-import TextArea from '@/components/commonComponents/textArea';
 import Icon from '@/components/icons/Icon';
 import { LOADING_KEYS } from '@/constants/loadingKeys';
 import { useLoadingKey } from '@/hooks/useLoadingKey';
@@ -65,15 +64,21 @@ export default function InactivatePatientModal({ open, patient }) {
           </p>
         </div>
 
-        <div className="w-full">
-          <TextArea
-            label="Reason"
+        <div className="w-full flex flex-col gap-2">
+          <label
+            htmlFor="inactivateReason"
+            className="text-xs font-medium text-neutral-600"
+          >
+            Reason<span className="text-error-500 ml-0.5">*</span>
+          </label>
+          <textarea
+            id="inactivateReason"
             name="inactivateReason"
+            rows={3}
+            className="focus:outline-none focus:border-primary border border-neutral-300 bg-white p-2 w-full rounded-md text-sm"
             placeholder="Enter reason for inactivation"
             value={reason}
-            onChangeCb={(e) => setReason(e.target.value)}
-            isRequired
-            rows={3}
+            onChange={(e) => setReason(e.target.value)}
           />
         </div>
 

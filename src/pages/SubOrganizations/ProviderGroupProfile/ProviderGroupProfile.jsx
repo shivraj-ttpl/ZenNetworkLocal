@@ -20,6 +20,7 @@ import {
   registerReducer,
   setOpenEditDrawer,
 } from './providerGroupProfileSlice';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 const { fetchProfile } = providerGroupProfileActions;
 const EMPTY_STATE = {};
@@ -83,6 +84,8 @@ export default function ProviderGroupProfile() {
     LOADING_KEYS.PROVIDER_GROUP_PROFILE_GET_BY_ID,
   );
 
+  const tenantName = useSubOrgTenantName();
+
   useEffect(() => {
     registerReducer();
     registerSaga();
@@ -92,9 +95,9 @@ export default function ProviderGroupProfile() {
 
   useEffect(() => {
     if (providerGroupId) {
-      dispatch(fetchProfile({ id: providerGroupId }));
+      dispatch(fetchProfile({ id: providerGroupId, tenantName }));
     }
-  }, [dispatch, providerGroupId, refreshFlag]);
+  }, [dispatch, providerGroupId, refreshFlag, tenantName]);
 
   useEffect(() => {
     setToolbar(
@@ -140,7 +143,7 @@ export default function ProviderGroupProfile() {
   if (!profile) return null;
 
   return (
-    <div className="px-3 sm:px-5 pb-5">
+    <div className="px-3 sm:px-5 pb-5 h-full overflow-y-auto">
       <div className="border border-border-light rounded-lg p-4 sm:p-5">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <div className="flex flex-col sm:flex-row items-start gap-4">

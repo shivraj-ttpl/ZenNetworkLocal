@@ -125,4 +125,9 @@ export const toastMessages = {
   subOrgRoleArchivedSuccess: 'Role archived successfully',
   subOrgRoleUpdatedSuccess: 'Role permissions updated successfully',
   subOrgRoleUnarchivedSuccess: 'Role unarchived successfully',
+
+  callerIdCreatedSuccess: 'Caller ID created successfully',
+  callerIdDeletedSuccess: 'Caller ID deleted successfully',
+  senderEmailCreatedSuccess: 'Sender email created successfully',
+  senderEmailDeletedSuccess: 'Sender email deleted successfully',
 };

@@ -75,8 +75,8 @@ export default function ProviderGroupDetailContainer() {
   ];
 
   return (
-    <div className="bg-surface rounded-xl border border-border-light overflow-hidden">
-      <div className="px-5 pt-4 pb-3 space-y-3">
+    <div className="bg-surface rounded-xl border border-border-light overflow-hidden h-full min-h-0 flex flex-col">
+      <div className="px-5 pt-4 pb-3 space-y-3 shrink-0">
         {/* Row 1: Back button + Org name | Provider Group name */}
         <div className="flex items-center gap-2">
           <button
@@ -124,13 +124,15 @@ export default function ProviderGroupDetailContainer() {
           )}
         </div>
       </div>
-      <Outlet
-        context={{
-          setToolbar,
-          subOrgName: orgName,
-          providerGroupName,
-        }}
-      />
+      <div className="flex-1 min-h-0">
+        <Outlet
+          context={{
+            setToolbar,
+            subOrgName: orgName,
+            providerGroupName,
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -155,7 +155,14 @@ export default function AddProviderDrawer() {
     };
 
     if (isEdit) {
-      dispatch(updateProvider({ providerId: editData?.id, tenantName, data }));
+      dispatch(
+        updateProvider({
+          providerGroupId,
+          providerId: editData?.id,
+          tenantName,
+          data,
+        }),
+      );
     } else {
       dispatch(createProvider({ providerGroupId, tenantName, data }));
     }
@@ -315,6 +322,7 @@ export default function AddProviderDrawer() {
                     url={`dropdown-apis/roles/clinical?subOrgId=${subOrgId}`}
                     valueKey="name"
                     labelKey="name"
+                    totalPath="meta.total"
                     value={values[FORM_FIELDS_NAMES.PRIMARY_ROLE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.PRIMARY_ROLE, selected)
@@ -327,6 +335,7 @@ export default function AddProviderDrawer() {
                     url={`dropdown-apis/roles/clinical?subOrgId=${subOrgId}`}
                     valueKey="name"
                     labelKey="name"
+                    totalPath="meta.total"
                     value={values[FORM_FIELDS_NAMES.SECONDARY_ROLE]}
                     onChange={(selected) =>
                       setFieldValue(FORM_FIELDS_NAMES.SECONDARY_ROLE, selected)
