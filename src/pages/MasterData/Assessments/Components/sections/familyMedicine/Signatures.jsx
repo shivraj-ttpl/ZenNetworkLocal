@@ -80,7 +80,7 @@ export default function Signatures({
         {/* Tabs */}
         <div className="flex border-b border-border gap-6">
           {['Upload', 'Draw'].map((tab) => (
-            <button
+            <div
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab.toLowerCase())}
@@ -91,7 +91,7 @@ export default function Signatures({
               }`}
             >
               {tab}
-            </button>
+            </div>
           ))}
         </div>
 
@@ -139,7 +139,7 @@ export default function Signatures({
             <canvas
               ref={canvasRef}
               className="w-full h-48 border border-neutral-300 rounded-lg bg-white cursor-crosshair"
-              style={{ touchAction: 'none' }}
+              style={{ touchAction: 'none', pointerEvents: 'none' }}
             />
             <p className="text-xs text-text-secondary">
               Sign above using your mouse on desktop and finger on touch devices

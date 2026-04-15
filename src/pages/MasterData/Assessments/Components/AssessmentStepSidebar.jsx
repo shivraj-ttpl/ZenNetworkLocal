@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { Icon } from '@/components/icons';
 
 export default function AssessmentStepSidebar({
@@ -6,6 +8,9 @@ export default function AssessmentStepSidebar({
   completedSteps = new Set(),
   onStepClick,
 }) {
+  const activeStepRef = useCallback((node) => {
+    node?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [activeStep]); // eslint-disable-line react-hooks/exhaustive-deps
   const totalSteps = steps.length;
 
   return (
@@ -19,6 +24,7 @@ export default function AssessmentStepSidebar({
           return (
             <div key={step.id}>
               <button
+                ref={isActive ? activeStepRef : undefined}
                 type="button"
                 onClick={() => onStepClick(step.id)}
                 className="flex items-center gap-3 w-full text-left cursor-pointer"
