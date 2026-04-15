@@ -33,6 +33,7 @@ import {
   setSortKey,
   setSortOrder,
 } from './conditionsSlice';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 
 const { fetchConditions, toggleFavorite, archiveCondition } = conditionsActions;
 const EMPTY_STATE = {};
@@ -41,6 +42,7 @@ export default function Conditions() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
+  const { isOrgAdmin } = useCurrentUserRole();
 
   const {
     conditionsList = [],
@@ -83,13 +85,15 @@ export default function Conditions() {
   useEffect(() => {
     setToolbar(
       <>
-        <Checkbox
-          label="Show Archived"
-          checked={showArchived}
-          onChange={() => dispatch(setShowArchived(!showArchived))}
-          variant="blue"
-          size="sm"
-        />
+        {isOrgAdmin && (
+          <Checkbox
+            label="Show Archived"
+            checked={showArchived}
+            onChange={() => dispatch(setShowArchived(!showArchived))}
+            variant="blue"
+            size="sm"
+          />
+        )}
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input

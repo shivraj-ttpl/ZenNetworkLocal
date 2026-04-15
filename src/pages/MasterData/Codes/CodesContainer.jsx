@@ -35,6 +35,7 @@ import {
   PATH_TO_LABEL,
   STANDALONE_CODE_TYPES,
 } from './constant';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 
 const { fetchCodes } = codesActions;
 
@@ -62,6 +63,7 @@ export default function CodesContainer() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
+  const { isOrgAdmin } = useCurrentUserRole();
 
   const {
     search = '',
@@ -175,13 +177,15 @@ export default function CodesContainer() {
         </nav>
 
         <div className="flex items-center gap-4 max-[1149px]:w-full">
-          <Checkbox
-            label="Show Archived"
-            checked={showArchived}
-            onChange={() => dispatch(setShowArchived(!showArchived))}
-            variant="blue"
-            size="sm"
-          />
+          {isOrgAdmin && (
+            <Checkbox
+              label="Show Archived"
+              checked={showArchived}
+              onChange={() => dispatch(setShowArchived(!showArchived))}
+              variant="blue"
+              size="sm"
+            />
+          )}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-65 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
             <Icon name="Search" size={14} className="text-neutral-400" />
             <input

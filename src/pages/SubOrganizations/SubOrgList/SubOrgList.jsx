@@ -236,13 +236,15 @@ export default function SubOrgList() {
     <div className="bg-surface h-full rounded-xl border border-border-light overflow-hidden">
       <div className="flex items-center justify-end px-5 pt-4 pb-3 gap-4 flex-wrap">
         <div className="flex items-center gap-4 flex-wrap">
-          <Checkbox
-            label="Show Archived"
-            checked={showArchived}
-            onChange={() => dispatch(setShowArchived(!showArchived))}
-            variant="blue"
-            size="sm"
-          />
+          {isOrgAdmin && (
+            <Checkbox
+              label="Show Archived"
+              checked={showArchived}
+              onChange={() => dispatch(setShowArchived(!showArchived))}
+              variant="blue"
+              size="sm"
+            />
+          )}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
             <Icon name="Search" size={14} className="text-neutral-400" />
             <input

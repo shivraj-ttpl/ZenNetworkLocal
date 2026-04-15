@@ -39,6 +39,7 @@ import {
   setSortKey,
   setSortOrder,
 } from './payersSlice';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 
 const { fetchPayers, togglePayerFavorite, archivePayer } = payersActions;
 const EMPTY_STATE = {};
@@ -47,6 +48,7 @@ export default function Payers() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
+  const { isOrgAdmin } = useCurrentUserRole();
 
   const {
     payersList = [],
@@ -91,13 +93,15 @@ export default function Payers() {
   useEffect(() => {
     setToolbar(
       <>
-        <Checkbox
-          label="Show Archived"
-          checked={showArchived}
-          onChange={() => dispatch(setShowArchived(!showArchived))}
-          variant="blue"
-          size="sm"
-        />
+        {isOrgAdmin && (
+          <Checkbox
+            label="Show Archived"
+            checked={showArchived}
+            onChange={() => dispatch(setShowArchived(!showArchived))}
+            variant="blue"
+            size="sm"
+          />
+        )}
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50 max-w-20 max-[1149px]:min-w-0 max-[1149px]:max-w-57.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input

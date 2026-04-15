@@ -29,6 +29,7 @@ import {
 } from './assessmentsSlice';
 import StandardDepressionScreeningDrawer from './Components/StandardDepressionScreeningDrawer';
 import ViewAssessmentDrawer from './Components/ViewAssessmentDrawer';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 
 const { fetchAssessments, toggleFavorite, archiveAssessment } =
   assessmentsActions;
@@ -39,6 +40,7 @@ export default function Assessments() {
   const { setToolbar } = useOutletContext();
   const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
   const [phq9DrawerOpen, setPhq9DrawerOpen] = useState(false);
+  const { isOrgAdmin } = useCurrentUserRole();
 
   const {
     assessmentsList = [],
@@ -70,13 +72,15 @@ export default function Assessments() {
   useEffect(() => {
     setToolbar(
       <>
-        <Checkbox
-          label="Show Archived"
-          checked={showArchived}
-          onChange={() => dispatch(setShowArchived(!showArchived))}
-          variant="blue"
-          size="sm"
-        />
+        {isOrgAdmin && (
+          <Checkbox
+            label="Show Archived"
+            checked={showArchived}
+            onChange={() => dispatch(setShowArchived(!showArchived))}
+            variant="blue"
+            size="sm"
+          />
+        )}
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-60 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-67.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
