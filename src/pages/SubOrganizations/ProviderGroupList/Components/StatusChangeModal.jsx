@@ -7,6 +7,7 @@ import { useLoadingKey } from '@/hooks/useLoadingKey';
 
 import { providerGroupListActions } from '../providerGroupListSaga';
 import { componentKey, setStatusModal } from '../providerGroupListSlice';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
 const { changeStatus } = providerGroupListActions;
 
@@ -40,13 +41,14 @@ export default function StatusChangeModal() {
 
   const targetStatus = row?.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
   const content = CONTENT[targetStatus];
+  const tenantName = useSubOrgTenantName();
 
   const handleClose = () => {
     dispatch(setStatusModal({ open: false, row: null }));
   };
 
   const handleConfirm = () => {
-    dispatch(changeStatus({ id: row.id, status: targetStatus }));
+    dispatch(changeStatus({ id: row.id, status: targetStatus, tenantName }));
   };
 
   return (

@@ -37,8 +37,16 @@ export default class ProviderGroupDataService {
     });
   }
 
-  static async changeStatus(id, status) {
-    return AppDataService.patch(`${PG_URL}/${id}/status`, { status });
+  static async changeStatus(id, status, tenantName) {
+    return AppDataService.patch(
+      `${PG_URL}/${id}/status`,
+      { status },
+      {
+        headers: {
+          'tenant-name': tenantName,
+        },
+      },
+    );
   }
 
   static async archiveProviderGroup(id) {

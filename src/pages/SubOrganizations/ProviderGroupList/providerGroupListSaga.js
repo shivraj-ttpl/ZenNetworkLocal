@@ -115,14 +115,15 @@ function* updateProviderGroupSaga(action) {
 }
 
 function* changeStatusSaga(action) {
-  const { id, status } = action.payload;
+  const { id, status, tenantName } = action.payload;
   const isActivating = status === 'ACTIVE';
 
   yield put(setStatusModal({ open: false, row: null }));
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_PATCH_STATUS,
-    apiFunc: () => ProviderGroupDataService.changeStatus(id, status),
+    apiFunc: () =>
+      ProviderGroupDataService.changeStatus(id, status, tenantName),
     onSuccess: function* () {
       yield put(
         addNotification({

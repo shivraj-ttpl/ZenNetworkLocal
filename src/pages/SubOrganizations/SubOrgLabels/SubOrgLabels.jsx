@@ -68,7 +68,7 @@ export default function SubOrgLabels() {
         </div>
 
         {isLoading
-          ? Array.from({ length: DEFAULT_LABEL_FIELDS.length }).map((_, i) => (
+          ? Array.from({ length: labelsMap.length }).map((_, i) => (
               <div
                 key={i}
                 className="grid grid-cols-2 border-t border-border animate-pulse"
@@ -81,7 +81,7 @@ export default function SubOrgLabels() {
                 </div>
               </div>
             ))
-          : DEFAULT_LABEL_FIELDS.map((fieldName) => {
+          : Object.keys(labelsMap).map((fieldName) => {
               const apiLabel = labelsMap[fieldName];
               return (
                 <div
