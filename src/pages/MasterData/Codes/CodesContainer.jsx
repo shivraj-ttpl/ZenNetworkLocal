@@ -191,6 +191,13 @@ export default function CodesContainer() {
               placeholder={`Search by ${codeLabel}${codeLabel !== 'Medication' ? ' or Description' : ''}`}
               className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
             />
+            <button
+              type="button"
+              onClick={() => dispatch(setSearch(''))}
+              className={`text-neutral-400 hover:text-neutral-600 shrink-0 ${search ? 'visible' : 'invisible'}`}
+            >
+              <Icon name="X" size={14} />
+            </button>
           </div>
         </div>
       </div>

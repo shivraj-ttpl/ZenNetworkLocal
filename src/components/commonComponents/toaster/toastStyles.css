@@ -35,13 +35,13 @@
   height: 0 !important;
 }
 
-/* ── Custom circle ring + dot icon via CSS ── */
+/* ── Custom meaningful icons via CSS ── */
 .Toastify__toast-icon {
   width: var(--toast-icon-size) !important;
   height: var(--toast-icon-size) !important;
   min-width: var(--toast-icon-size) !important;
   border-radius: 50%;
-  border: 2px solid var(--_toast-accent);
+  background: var(--_toast-accent);
   display: flex !important;
   align-items: center;
   justify-content: center;
@@ -51,9 +51,11 @@
 }
 
 .Toastify__toast-icon::after {
-  content: "";
-  border-radius: 50%;
-  background: var(--_toast-accent);
+  content: var(--_toast-icon, "");
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 /* ── Title + description text inside toast body ── */
@@ -82,6 +84,7 @@
 .Toastify__toast--info {
   --_toast-accent: var(--color-primary-500);
   --_toast-border: var(--color-primary-200);
+  --_toast-icon: "i";
   background: var(--color-primary-50) !important;
 }
 
@@ -89,6 +92,7 @@
 .Toastify__toast--error {
   --_toast-accent: #d66363;
   --_toast-border: #f5a3a3;
+  --_toast-icon: "✕";
   background: #fdecec !important;
 }
 
@@ -96,6 +100,7 @@
 .Toastify__toast--success {
   --_toast-accent: #2e8b57;
   --_toast-border: #8fd19e;
+  --_toast-icon: "✓";
   background: #eaf7ef !important;
 }
 
@@ -103,6 +108,7 @@
 .Toastify__toast--warning {
   --_toast-accent: #d9822b;
   --_toast-border: #f2b880;
+  --_toast-icon: "!";
   background: #fff4e6 !important;
 }
 

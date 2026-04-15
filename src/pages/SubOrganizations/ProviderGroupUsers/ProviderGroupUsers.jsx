@@ -127,6 +127,13 @@ export default function ProviderGroupUsers() {
             }}
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
+          <button
+            type="button"
+            onClick={() => dispatch(setSearch(''))}
+            className={`text-neutral-400 hover:text-neutral-600 shrink-0 ${search ? 'visible' : 'invisible'}`}
+          >
+            <Icon name="X" size={14} />
+          </button>
         </div>
         <div className="w-32 max-[1149px]:w-auto max-[1149px]:max-w-57.5 max-[1149px]:flex-1 max-[1149px]:min-w-30">
           <SelectDropdown
