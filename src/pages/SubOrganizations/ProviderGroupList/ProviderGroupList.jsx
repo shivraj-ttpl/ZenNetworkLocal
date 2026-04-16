@@ -26,7 +26,7 @@ import { useTableHeight } from '@/hooks/useTableHeight';
 import ToolTip from '../../../components/commonComponents/toolTip/ToolTip';
 import AddProviderGroupDrawer from './Components/AddProviderGroupDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
-import { STATUS_OPTIONS } from './constant';
+import { ALL_STATUS_OPTION, STATUS_OPTIONS } from './constant';
 import {
   providerGroupListActions,
   registerSaga,
@@ -144,8 +144,9 @@ export default function ProviderGroupList() {
           <SelectDropdown
             name="status"
             placeholder="Status"
-            options={STATUS_OPTIONS}
+            options={[ALL_STATUS_OPTION, ...STATUS_OPTIONS]}
             value={statusFilter}
+            isClearable={!!statusFilter?.value}
             onChange={(val) => dispatch(setStatusFilter(val))}
           />
         </div>

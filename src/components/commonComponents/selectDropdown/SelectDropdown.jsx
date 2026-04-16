@@ -62,6 +62,7 @@ export default function SelectDropdown({
   error,
   touched,
   selectAll = false,
+  isClearable = true,
   renderOption,
   className = '',
 }) {
@@ -206,7 +207,7 @@ export default function SelectDropdown({
             {displayText || placeholder}
           </span>
           <span className="flex items-center gap-1 shrink-0">
-            {hasValue && !disabled && (
+            {hasValue && !disabled && isClearable && (
               <span
                 role="button"
                 tabIndex={-1}

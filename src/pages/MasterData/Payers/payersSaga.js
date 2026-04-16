@@ -37,11 +37,13 @@ function* fetchPayersSaga() {
   const state = yield select((s) => s[componentKey]);
   const { page, limit, search, showArchived, payerType, sortKey, sortOrder } =
     state;
+  const selectedPayerType =
+    payerType && typeof payerType === 'object' ? payerType.value : null;
 
   const params = { page, limit };
   if (search) params.search = search;
   if (showArchived) params.showArchived = showArchived;
-  if (payerType) params.payerType = payerType.value;
+  if (selectedPayerType) params.payerType = selectedPayerType;
   if (sortKey) params.sortBy = sortKey;
   if (sortOrder) params.sortOrder = sortOrder;
 

@@ -1,6 +1,8 @@
 import { COMPONENT_KEYS } from '@/constants/componentKeys';
 import store from '@/core/store/store';
 
+import { ALL_PAYER_TYPE_OPTION } from './constant';
+
 export const componentKey = COMPONENT_KEYS.PAYERS;
 
 const sliceConfig = {
@@ -31,7 +33,7 @@ const sliceConfig = {
       state.page = 1;
     },
     setPayerType: (state, action) => {
-      state.payerType = action.payload;
+      state.payerType = action.payload ?? ALL_PAYER_TYPE_OPTION;
       state.page = 1;
     },
     setSortKey: (state, action) => {
@@ -81,7 +83,7 @@ const sliceConfig = {
     limit: 20,
     search: '',
     showArchived: false,
-    payerType: null,
+    payerType: ALL_PAYER_TYPE_OPTION,
     sortKey: null,
     sortOrder: null,
     refreshFlag: 0,

@@ -52,6 +52,8 @@ export const SUB_ORG_ADMIN_OPTIONS = [
   { label: 'Robert Wilson', value: 'robert' },
 ];
 
+export const ALL_STATUS_OPTION = { label: 'All', value: null };
+
 export const STATUS_OPTIONS = [
   { label: 'Active', value: 'ACTIVE' },
   { label: 'Inactive', value: 'INACTIVE' },

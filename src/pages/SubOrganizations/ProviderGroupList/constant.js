@@ -28,6 +28,8 @@ export const FORM_FIELDS_NAMES = {
   ADMIN_PHONE: 'adminPhone',
 };
 
+export const ALL_STATUS_OPTION = { label: 'All', value: null };
+
 export const STATUS_OPTIONS = [
   { label: 'Active', value: 'ACTIVE' },
   { label: 'Inactive', value: 'INACTIVE' },

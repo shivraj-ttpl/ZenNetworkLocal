@@ -20,7 +20,7 @@ import { formatDate } from '@/utils/GeneralUtils';
 import useCurrentUserRole from '../../../hooks/getCurrentUserRole';
 import AddSubOrgDrawer from './Components/AddSubOrgDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
-import { STATUS_OPTIONS } from './constant';
+import { ALL_STATUS_OPTION, STATUS_OPTIONS } from './constant';
 import { registerSaga, subOrgListActions } from './subOrgListSaga';
 import {
   componentKey,
@@ -266,8 +266,9 @@ export default function SubOrgList() {
             <SelectDropdown
               name="status"
               placeholder="Status"
-              options={STATUS_OPTIONS}
+              options={[ALL_STATUS_OPTION, ...STATUS_OPTIONS]}
               value={statusFilter}
+              isClearable={!!statusFilter?.value}
               onChange={(val) => dispatch(setStatusFilter(val))}
             />
           </div>

@@ -1,6 +1,8 @@
 import { COMPONENT_KEYS } from '@/constants/componentKeys';
 import store from '@/core/store/store';
 
+import { ALL_STATUS_OPTION } from './constant';
+
 export const componentKey = COMPONENT_KEYS.SUB_ORG_LIST;
 
 const sliceConfig = {
@@ -31,7 +33,7 @@ const sliceConfig = {
       state.page = 1;
     },
     setStatusFilter: (state, action) => {
-      state.statusFilter = action.payload;
+      state.statusFilter = action.payload ?? ALL_STATUS_OPTION;
       state.page = 1;
     },
     setSortKey: (state, action) => {
@@ -61,7 +63,7 @@ const sliceConfig = {
     limit: 20,
     search: '',
     showArchived: false,
-    statusFilter: null,
+    statusFilter: ALL_STATUS_OPTION,
     sortKey: null,
     sortOrder: null,
     refreshFlag: 0,

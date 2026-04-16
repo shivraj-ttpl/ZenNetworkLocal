@@ -248,14 +248,20 @@ export default function SettingsUsers() {
                       }),
                     ),
                 },
-                {
-                  label: 'Send Invitation',
-                  value: 'sendInvitation',
-                  onClickCb: () =>
-                    dispatch(
-                      settingsUsersActions.sendInvitation({ userId: row.id }),
-                    ),
-                },
+                ...(row.emailVerified !== 'VERIFIED'
+                  ? [
+                      {
+                        label: 'Send Invitation',
+                        value: 'sendInvitation',
+                        onClickCb: () =>
+                          dispatch(
+                            settingsUsersActions.sendInvitation({
+                              userId: row.id,
+                            }),
+                          ),
+                      },
+                    ]
+                  : []),
                 row.isArchived
                   ? {
                       label: 'Unarchive',

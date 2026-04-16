@@ -24,7 +24,10 @@ import AddPayerDrawer from './Components/AddPayerDrawer';
 import AddPayersDropdown from './Components/AddPayersDropdown';
 import ImportPayersDrawer from './Components/ImportPayersDrawer';
 import StatusChangeModal from './Components/StatusChangeModal';
-import { PAYER_TYPE_OPTIONS } from './constant';
+import {
+  ALL_PAYER_TYPE_OPTION,
+  PAYER_TYPE_OPTIONS,
+} from './constant';
 import { payersActions, registerSaga } from './payersSaga';
 import {
   componentKey,
@@ -58,7 +61,7 @@ export default function Payers() {
     limit = 20,
     search = '',
     showArchived = false,
-    payerType = null,
+    payerType = ALL_PAYER_TYPE_OPTION,
     sortKey = null,
     sortOrder = null,
     refreshFlag = 0,
@@ -68,6 +71,10 @@ export default function Payers() {
   const debouncedSearch = useDebounce(search);
   const tableRef = useRef(null);
   const tableMaxHeight = useTableHeight(tableRef);
+  const selectedPayerType =
+    payerType && typeof payerType === 'object'
+      ? payerType
+      : ALL_PAYER_TYPE_OPTION;
 
   useEffect(() => {
     registerReducer();
@@ -84,7 +91,7 @@ export default function Payers() {
     limit,
     debouncedSearch,
     showArchived,
-    payerType,
+    selectedPayerType,
     sortKey,
     sortOrder,
     refreshFlag,
@@ -123,8 +130,9 @@ export default function Payers() {
           <SelectDropdown
             name="payerType"
             placeholder="Payer Type"
-            options={PAYER_TYPE_OPTIONS}
-            value={payerType}
+            options={[ALL_PAYER_TYPE_OPTION, ...PAYER_TYPE_OPTIONS]}
+            value={selectedPayerType}
+            isClearable={!!selectedPayerType?.value}
             onChange={(val) => dispatch(setPayerType(val))}
           />
         </div>
@@ -134,7 +142,7 @@ export default function Payers() {
       </>,
     );
     return () => setToolbar(null);
-  }, [setToolbar, showArchived, search, payerType, dispatch]);
+  }, [setToolbar, showArchived, search, selectedPayerType, dispatch]);
 
   const tableData = useMemo(
     () =>
