@@ -119,9 +119,10 @@ export default function StandardDepressionScreeningDrawer({
                             type="radio"
                             name={q.key}
                             value={opt.value}
+                            disabled={true}
                             checked={values[q.key] === opt.value}
                             onChange={() => setFieldValue(q.key, opt.value)}
-                            className="accent-primary w-4 h-4 cursor-pointer"
+                            className="accent-primary w-4 h-4 cursor-not-allowed"
                           />
                         </td>
                       ))}

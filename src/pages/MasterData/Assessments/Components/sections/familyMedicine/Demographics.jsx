@@ -624,7 +624,7 @@ export default function Demographics({
           </div>
         ))}
 
-      {!d.noInsurance && (
+      {/* {!d.noInsurance && (
         <button
           type="button"
           onClick={addInsurance}
@@ -633,7 +633,7 @@ export default function Demographics({
           <span className="text-base leading-none font-bold">+</span> Add
           Another Insurance
         </button>
-      )}
+      )} */}
 
       {/* ─── Identifiers ─── */}
       <h3 className="text-base font-semibold text-text-primary">Identifiers</h3>

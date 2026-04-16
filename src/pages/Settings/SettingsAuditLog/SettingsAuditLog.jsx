@@ -27,7 +27,7 @@ export default function SettingsAuditLog() {
   useFlexCleanup(componentKey);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(50);
+  const [limit, setLimit] = useState(20);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 

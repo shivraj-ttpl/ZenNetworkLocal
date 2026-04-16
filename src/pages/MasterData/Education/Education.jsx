@@ -35,6 +35,7 @@ import {
   setSearch,
   setShowArchived,
 } from './educationSlice';
+import useCurrentUserRole from '@/hooks/getCurrentUserRole';
 
 const { fetchEducation, toggleFavorite, archiveEducation, downloadEducation } =
   educationActions;
@@ -44,6 +45,7 @@ export default function Education() {
   const dispatch = useDispatch();
   const { setToolbar } = useOutletContext();
   const canEdit = useRoleAccess(MASTER_DATA_EDIT_ROLES);
+  const { isOrgAdmin } = useCurrentUserRole();
 
   const {
     educationList = [],
@@ -94,13 +96,15 @@ export default function Education() {
   useEffect(() => {
     setToolbar(
       <>
-        <Checkbox
-          label="Show Archived"
-          checked={showArchived}
-          onChange={() => dispatch(setShowArchived(!showArchived))}
-          variant="blue"
-          size="sm"
-        />
+        {isOrgAdmin && (
+          <Checkbox
+            label="Show Archived"
+            checked={showArchived}
+            onChange={() => dispatch(setShowArchived(!showArchived))}
+            variant="blue"
+            size="sm"
+          />
+        )}
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface min-w-50 max-w-72 max-[1149px]:min-w-0 max-[1149px]:max-w-57.5 max-[1149px]:flex-1">
           <Icon name="Search" size={14} className="text-neutral-400" />
           <input
@@ -110,6 +114,13 @@ export default function Education() {
             onChange={(e) => dispatch(setSearch(e.target.value))}
             className="w-full bg-transparent text-sm outline-none text-neutral-800 placeholder-text-placeholder"
           />
+          <button
+            type="button"
+            onClick={() => dispatch(setSearch(''))}
+            className={`text-neutral-400 hover:text-neutral-600 shrink-0 ${search ? 'visible' : 'invisible'}`}
+          >
+            <Icon name="X" size={14} />
+          </button>
         </div>
         <FilterDropdown onApply={handleFilterApply} />
         <RoleGuard allowedRoles={MASTER_DATA_EDIT_ROLES}>

@@ -161,13 +161,13 @@ export default function Medications({ values, setFieldValue }) {
         </div>
       ))}
 
-      <button
+      {/* <button
         type="button"
         onClick={addMed}
         className="flex items-center gap-1 text-sm text-blue-500 font-medium w-fit hover:underline"
       >
         <span className="text-base leading-none font-bold">+</span> Add More
-      </button>
+      </button> */}
 
       <Checkbox
         label="Information in above section has been confirmed"

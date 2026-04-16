@@ -1,5 +1,5 @@
 import { Form, Formik } from 'formik';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '@/components/commonComponents/button/Button';
@@ -371,6 +371,11 @@ export default function ViewAssessmentDrawer() {
 
   const [activeStep, setActiveStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState(new Set());
+  const contentRef = useRef(null);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [activeStep]);
 
   const assessmentName = viewData?.name || '';
   const isFamilyMedicine =
@@ -458,13 +463,15 @@ export default function ViewAssessmentDrawer() {
             type="button"
             onClick={isLastStep ? handleClose : handleNext}
           >
-            {isLastStep
-              ? assessmentName === 'AHC HRSN Screening'
-                ? 'Assign to Patient'
-                : isFamilyMedicine
-                  ? 'Save & Finish'
-                  : 'Close'
-              : 'Next'}
+            {
+              isLastStep ? 'Close' : 'Next'
+              // ? assessmentName === 'AHC HRSN Screening'
+              //   ? 'Assign to Patient'
+              //   : isFamilyMedicine
+              //     ? 'Save & Finish'
+              //     : 'Close'
+              // : 'Next'
+            }
           </Button>
         </div>
       }
@@ -486,13 +493,21 @@ export default function ViewAssessmentDrawer() {
               />
             </div>
 
-            <div className="flex-1 h-full overflow-y-auto pl-6 pr-4 ">
-              {renderStepContent({
-                values,
-                handleChange,
-                handleBlur,
-                setFieldValue,
-              })}
+            <div
+              ref={contentRef}
+              className="flex-1 h-full overflow-y-auto pl-6 pr-4"
+            >
+              <fieldset
+                disabled
+                className="border-none p-0 m-0 min-w-0 [&_label:has(input[type='radio'])]:pointer-events-none [&_label:has(input[type='radio'])]:cursor-not-allowed [&_label:has(input[type='checkbox'])]:cursor-not-allowed! [&_label:has(input[type='checkbox'])>*]:pointer-events-none"
+              >
+                {renderStepContent({
+                  values,
+                  handleChange,
+                  handleBlur,
+                  setFieldValue,
+                })}
+              </fieldset>
             </div>
           </Form>
         )}

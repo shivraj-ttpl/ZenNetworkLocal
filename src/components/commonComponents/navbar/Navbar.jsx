@@ -39,7 +39,7 @@ function AvatarDropdown() {
             type="button"
             className="w-full cursor-pointer flex items-center gap-2 px-3 py-2 text-sm hover:bg-neutral-50 text-text-primary"
             onClick={() => {
-              navigate('/user-profile');
+              navigate('/settings/profile');
               setOpen(false);
             }}
           >

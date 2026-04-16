@@ -115,15 +115,17 @@ function* updateProviderSaga(action) {
 }
 
 function* updateProviderStatusSaga(action) {
-  const { providerId, status } = action.payload;
+  const { providerId, providerGroupId, tenantName, status } = action.payload;
 
   yield put(setCloseStatusModal());
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_PROVIDERS_PATCH_STATUS,
     apiFunc: () =>
-      ProviderGroupDataService.changeProviderGroupUserStatus(
+      ProviderGroupDataService.changeProviderStatus(
         providerId,
+        providerGroupId,
+        tenantName,
         status,
       ),
     onSuccess: function* () {

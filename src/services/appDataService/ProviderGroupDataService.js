@@ -37,8 +37,16 @@ export default class ProviderGroupDataService {
     });
   }
 
-  static async changeStatus(id, status) {
-    return AppDataService.patch(`${PG_URL}/${id}/status`, { status });
+  static async changeStatus(id, status, tenantName) {
+    return AppDataService.patch(
+      `${PG_URL}/${id}/status`,
+      { status },
+      {
+        headers: {
+          'tenant-name': tenantName,
+        },
+      },
+    );
   }
 
   static async archiveProviderGroup(id) {
@@ -70,7 +78,6 @@ export default class ProviderGroupDataService {
   }
 
   static async updateProvider(providerGroupId, providerId, tenantName, data) {
-    console.log(tenantName);
     return AppDataService.patch(`providers/${providerId}`, data, {
       headers: {
         'x-provider-group': providerGroupId,
@@ -120,6 +127,19 @@ export default class ProviderGroupDataService {
 
   static async changeProviderGroupUserStatus(id, status) {
     return AppDataService.patch(`users/${id}/status`, { status });
+  }
+
+  static async changeProviderStatus(id, providerGroupId, tenantName, status) {
+    return AppDataService.patch(
+      `providers/${id}/status`,
+      { status },
+      {
+        headers: {
+          'x-provider-group': providerGroupId,
+          'tenant-name': tenantName,
+        },
+      },
+    );
   }
 
   static async archiveProviderGroupUser(id) {
