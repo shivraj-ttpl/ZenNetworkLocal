@@ -1,13 +1,25 @@
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import Button from '@/components/commonComponents/button/Button';
 import ModalComponent from '@/components/commonComponents/modal/ModalComponent';
+import { LOADING_KEYS } from '@/constants/loadingKeys';
+import { useLoadingKey } from '@/hooks/useLoadingKey';
+import useSubOrgTenantName from '@/hooks/useSubOrgTenantName';
 
+import { providerGroupProvidersActions } from '../providerGroupProvidersSaga';
 import { setCloseStatusModal } from '../providerGroupProvidersSlice';
 
 export default function StatusChangeModal({ open, statusChangeRow }) {
   const dispatch = useDispatch();
-  const isActive = statusChangeRow?.status === 'Active';
+  const { providerGroupId } = useParams();
+  const tenantName = useSubOrgTenantName();
+  const isLoading = useLoadingKey(
+    LOADING_KEYS.PROVIDER_GROUP_PROVIDERS_PATCH_STATUS,
+  );
+
+  const isActive = statusChangeRow?.status === 'ACTIVE';
+  const targetStatus = isActive ? 'INACTIVE' : 'ACTIVE';
   const name = `${statusChangeRow?.firstName}  ${statusChangeRow?.lastName}`;
 
   const handleClose = () => {
@@ -15,8 +27,14 @@ export default function StatusChangeModal({ open, statusChangeRow }) {
   };
 
   const handleConfirm = () => {
-    // TODO: dispatch saga action to toggle status
-    handleClose();
+    dispatch(
+      providerGroupProvidersActions.updateProviderStatus({
+        providerId: statusChangeRow?.id,
+        providerGroupId,
+        tenantName,
+        status: targetStatus,
+      }),
+    );
   };
 
   return (
@@ -41,8 +59,13 @@ export default function StatusChangeModal({ open, statusChangeRow }) {
             size="sm"
             type="button"
             onClick={handleConfirm}
+            disabled={isLoading}
           >
-            {isActive ? 'Yes, Deactivate' : 'Yes, Activate'}
+            {isLoading
+              ? 'Processing...'
+              : isActive
+                ? 'Yes, Deactivate'
+                : 'Yes, Activate'}
           </Button>
         </div>
       }
