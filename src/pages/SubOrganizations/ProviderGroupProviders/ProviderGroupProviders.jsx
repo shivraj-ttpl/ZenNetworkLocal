@@ -33,6 +33,8 @@ import {
   setOpenViewModal,
 } from './providerGroupProvidersSlice';
 
+const ALL_STATUS_OPTION = { label: 'All', value: null };
+
 const STATUS_OPTIONS = [
   { label: 'Active', value: 'ACTIVE' },
   { label: 'Inactive', value: 'INACTIVE' },
@@ -54,7 +56,7 @@ export default function ProviderGroupProviders() {
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
   const [showArchive, setShowArchive] = useState(false);
-  const [statusFilter, setStatusFilter] = useState(null);
+  const [statusFilter, setStatusFilter] = useState(ALL_STATUS_OPTION);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
@@ -145,10 +147,11 @@ export default function ProviderGroupProviders() {
           <SelectDropdown
             name="status"
             placeholder="Status"
-            options={STATUS_OPTIONS}
+            options={[ALL_STATUS_OPTION, ...STATUS_OPTIONS]}
             value={statusFilter}
+            isClearable={!!statusFilter?.value}
             onChange={(val) => {
-              setStatusFilter(val);
+              setStatusFilter(val ?? ALL_STATUS_OPTION);
               setPage(1);
             }}
           />

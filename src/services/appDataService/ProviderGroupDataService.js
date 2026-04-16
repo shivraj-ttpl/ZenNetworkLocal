@@ -49,12 +49,28 @@ export default class ProviderGroupDataService {
     );
   }
 
-  static async archiveProviderGroup(id) {
-    return AppDataService.patch(`${PG_URL}/${id}/archive`);
+  static async archiveProviderGroup(id, tenantName) {
+    return AppDataService.patch(
+      `${PG_URL}/${id}/archive`,
+      {},
+      {
+        headers: {
+          'tenant-name': tenantName,
+        },
+      },
+    );
   }
 
-  static async unarchiveProviderGroup(id) {
-    return AppDataService.patch(`${PG_URL}/${id}/unarchive`);
+  static async unarchiveProviderGroup(id, tenantName) {
+    return AppDataService.patch(
+      `${PG_URL}/${id}/unarchive`,
+      {},
+      {
+        headers: {
+          'tenant-name': tenantName,
+        },
+      },
+    );
   }
 
   // ─── Provider Group Providers ─────────────────────

@@ -158,23 +158,27 @@ export default function SubOrgList() {
           sortable: true,
           render: (row) => formatDate(row.createdAt),
         },
-        {
-          id: 'status',
-          header: 'Status',
-          accessorKey: 'status',
-          width: 100,
-          sortable: true,
-          render: (row) => (
-            <ToggleSwitch
-              name={`status-${row.id}`}
-              checked={row.status === 'ACTIVE'}
-              showLabel={false}
-              onChangeCb={() =>
-                dispatch(setStatusModal({ open: true, step: 1, row }))
-              }
-            />
-          ),
-        },
+        ...(isOrgAdmin
+          ? [
+              {
+                id: 'status',
+                header: 'Status',
+                accessorKey: 'status',
+                width: 100,
+                sortable: true,
+                render: (row) => (
+                  <ToggleSwitch
+                    name={`status-${row.id}`}
+                    checked={row.status === 'ACTIVE'}
+                    showLabel={false}
+                    onChangeCb={() =>
+                      dispatch(setStatusModal({ open: true, step: 1, row }))
+                    }
+                  />
+                ),
+              },
+            ]
+          : []),
         {
           id: 'actions',
           header: 'Action',

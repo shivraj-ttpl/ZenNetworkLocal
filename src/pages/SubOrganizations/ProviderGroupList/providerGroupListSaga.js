@@ -139,14 +139,14 @@ function* changeStatusSaga(action) {
 }
 
 function* archiveProviderGroupSaga(action) {
-  const { id, isArchived } = action.payload;
+  const { id, isArchived, tenantName } = action.payload;
 
   yield* apiCall({
     loadingKey: LOADING_KEYS.PROVIDER_GROUP_LIST_PATCH_ARCHIVE,
     apiFunc: () =>
       isArchived
-        ? ProviderGroupDataService.unarchiveProviderGroup(id)
-        : ProviderGroupDataService.archiveProviderGroup(id),
+        ? ProviderGroupDataService.unarchiveProviderGroup(id, tenantName)
+        : ProviderGroupDataService.archiveProviderGroup(id, tenantName),
     onSuccess: function* () {
       yield put(
         addNotification({

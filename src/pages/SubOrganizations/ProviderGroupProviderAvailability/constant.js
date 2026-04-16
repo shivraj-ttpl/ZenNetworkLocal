@@ -23,6 +23,8 @@ export const BOOKING_WINDOW_OPTIONS = [
   { label: '12 Weeks', value: 12 },
 ];
 
+export const ALL_APPOINTMENT_MODE_OPTION = { label: 'All', value: null };
+
 export const APPOINTMENT_MODE_OPTIONS = [
   { label: 'In Person', value: 'IN_PERSON' },
   { label: 'Virtual', value: 'VIRTUAL' },

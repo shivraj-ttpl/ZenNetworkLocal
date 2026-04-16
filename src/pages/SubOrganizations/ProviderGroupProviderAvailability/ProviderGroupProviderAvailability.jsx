@@ -18,7 +18,10 @@ import AvailableSlotsModal from './Components/AvailableSlotsModal';
 import ConfigureAvailabilityDrawer from './Components/ConfigureAvailabilityDrawer';
 import ConfigureDateAvailabilityDrawer from './Components/ConfigureDateAvailabilityDrawer';
 import EditBlockDayModal from './Components/EditBlockDayModal';
-import { APPOINTMENT_MODE_OPTIONS } from './constant';
+import {
+  ALL_APPOINTMENT_MODE_OPTION,
+  APPOINTMENT_MODE_OPTIONS,
+} from './constant';
 import { availabilityActions } from './providerGroupProviderAvailabilitySaga';
 import {
   componentKey,
@@ -121,7 +124,7 @@ export default function ProviderGroupProviderAvailability() {
   useFlexCleanup(componentKey);
 
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [appointmentMode, setAppointmentMode] = useState(null);
+  const [appointmentMode, setAppointmentMode] = useState(ALL_APPOINTMENT_MODE_OPTION);
 
   const {
     calendarData = [],
@@ -204,10 +207,10 @@ export default function ProviderGroupProviderAvailability() {
           <SelectDropdown
             name="appointmentMode"
             placeholder="Select Mode"
-            options={APPOINTMENT_MODE_OPTIONS}
+            options={[ALL_APPOINTMENT_MODE_OPTION, ...APPOINTMENT_MODE_OPTIONS]}
             value={appointmentMode}
-            onChange={(val) => setAppointmentMode(val)}
-            isClearable
+            isClearable={!!appointmentMode?.value}
+            onChange={(val) => setAppointmentMode(val ?? ALL_APPOINTMENT_MODE_OPTION)}
           />
         </div>
         <Button

@@ -27,6 +27,8 @@ import {
   setOpenUploadModal,
 } from './providerGroupPatientsSlice';
 
+const ALL_ACTION_OPTION = { label: 'All', value: null };
+
 const SELECT_ACTION_OPTIONS = [
   { label: 'Enroll', value: 'Enroll' },
   { label: 'Discharge', value: 'Discharge' },
@@ -55,7 +57,7 @@ export default function ProviderGroupPatients() {
   const [limit, setLimit] = useState(20);
   const [search, setSearch] = useState('');
   const [showInactivePatients, setShowInactivePatients] = useState(false);
-  const [selectAction, setSelectAction] = useState(null);
+  const [selectAction, setSelectAction] = useState(ALL_ACTION_OPTION);
   const [sortKey, setSortKey] = useState(null);
   const [sortOrder, setSortOrder] = useState(null);
 
@@ -134,9 +136,10 @@ export default function ProviderGroupPatients() {
           <SelectDropdown
             name="selectAction"
             placeholder="Select Action"
-            options={SELECT_ACTION_OPTIONS}
+            options={[ALL_ACTION_OPTION, ...SELECT_ACTION_OPTIONS]}
             value={selectAction}
-            onChange={(val) => setSelectAction(val)}
+            isClearable={!!selectAction?.value}
+            onChange={(val) => setSelectAction(val ?? ALL_ACTION_OPTION)}
           />
         </div>
         <Button

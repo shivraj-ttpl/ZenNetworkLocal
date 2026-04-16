@@ -351,6 +351,7 @@ export default function ProviderGroupList() {
                           archiveProviderGroup({
                             id: row.id,
                             isArchived: row.isArchived,
+                            tenantName,
                           }),
                         ),
                     });
